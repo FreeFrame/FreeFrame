@@ -88,7 +88,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1026;
+    APIMinorVersion:=1027;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -118,12 +118,12 @@ begin
   inc(tempPointer);
   inc(pVideoInfoStruct);
   pVideoInfoStruct^:=tempPointer^;   // Bit Depth
-  result:=pointer(95);
+  result:=pointer(0);
 end;
 
 function DeInitialise(pParam: pointer): pointer;
 begin
-  result:=pointer(894);
+  result:=pointer(0);
 end;
 
 function ProcessFrame(pParam: pointer): pointer;
@@ -155,7 +155,7 @@ begin
     1: result:=pointer(integer(pParameterNameStruct)+16);
     2: result:=pointer(integer(pParameterNameStruct)+32);
     3: result:=pointer(integer(pParameterNameStruct)+48);
-    else result:=pointer(999);
+    else result:=pointer($FFFFFFFF);
   end;
 end;
 
@@ -169,15 +169,18 @@ begin
       result:=pointer(tempSingle);
     end;
     1: begin
+      // Not yet implemented
       result:=pointer(80);
     end;
     2: begin
+      // Not yet implemented
       result:=pointer(10);
     end;
     3: begin
+      // Not yet implemented
       result:=pointer(90);
     end;
-    else result:=pointer(9999);
+    else result:=pointer($FFFFFFFF);
   end;
 end;
 
@@ -186,8 +189,8 @@ begin
   case integer(pParam) of
     0: begin
       //tempstring:=copy(inttostr(round(parameterarray[0]*10)),0,2);
-      //for
-      ParameterDisplayValue:='Brightness Value';       //copy(inttostr(round(parameterarray[0]*10)),0,2);   //'Brightness Value';
+      //copy(inttostr(round(parameterarray[0]*10)),0,2);   //'Brightness Value';
+      ParameterDisplayValue:='Brightness Value';
       result:=@ParameterDisplayValue;
     end;
     1: begin
@@ -219,22 +222,21 @@ begin
   case integer(tempPDWparam^) of
     0: begin
       copymemory(@ParameterArray[0],tempPDWvalue,4);
-      //ParameterArray[0]:=tempPDWvalue^;
-      result:=pointer(439);
+      result:=pointer(0);
     end;
     1: begin
       ParameterArray[1]:=tempPDWvalue^;
-      result:=pointer(751);
+      result:=pointer(0);
     end;
     2: begin
       ParameterArray[2]:=tempPDWvalue^;
-      result:=pointer(752);
+      result:=pointer(0);
     end;
     3: begin
       ParameterArray[3]:=tempPDWvalue^;
-      result:=pointer(753);
+      result:=pointer(0);
     end;
-    else result:=pointer(4368);
+    else result:=pointer($FFFFFFFF);
   end;
 end;
 
@@ -254,7 +256,7 @@ begin
     0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
     1: result:=pointer(1);   // 1=24bit - supported
     2: result:=pointer(0);   // 2=32bit
-    else result:=pointer(23)   // unknown PluginCapsIndex
+    else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;
 

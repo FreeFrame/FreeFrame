@@ -88,7 +88,7 @@ begin
     10: begin
       result:=GetPluginCaps(pParam);
     end;
-    else result:=pointer(8765);
+    else result:=pointer($FFFFFFFF);
   end;
 end;
 
