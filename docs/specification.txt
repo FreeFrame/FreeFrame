@@ -1,7 +1,7 @@
 **************************************************************************************************
 * FreeFrame Open Video Plugin System Specification						 *
 **************************************************************************************************
-* Version 0.80 - Ongoing specification development towards next release version - FreeFrame 1.0  *
+* Version 1.0 - First full public release                                                        *
 **************************************************************************************************
 
 Copyright (c) 2002,2003 www.freeframe.org
@@ -523,6 +523,15 @@ The following types are used:
    
    Return Values: (32-bit unsigned integer)
    number of parameters in plugin
+   
+   Plugin developers should normally expect hosts to expose up to 8 parameters
+   Some hosts may only expose 1 or 4 parameters, some may expose larger numbers.
+   All parameters should have sensible defaults incase the user is unable to 
+   control them from the host.
+   
+   Host developers should try to implement at least the first 4 parameters.
+   8 is the recommended number to expose.
+   
    FF_FAIL on error
   
   
