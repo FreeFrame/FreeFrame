@@ -102,7 +102,7 @@ var
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1032;
+    APIMinorVersion:=1050;
     PluginUniqueID:='GREY';
     PluginName:='Greyscale';
     PluginType:=0;

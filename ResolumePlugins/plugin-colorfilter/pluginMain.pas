@@ -98,7 +98,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1032;
+    APIMinorVersion:=1050;
     PluginUniqueID:='COLO';
     PluginName:='Colour filter';
     PluginType:=0;

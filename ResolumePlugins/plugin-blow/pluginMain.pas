@@ -80,7 +80,7 @@ function CopyMemory(dst: pointer; src: pointer; size: integer): pointer;
 procedure InitLib;
 
 const
-  NumParameters: dword = 1;
+  NumParameters: dword = 2;
 
 var
   PluginInfoStruct: TPluginInfoStruct;
@@ -98,13 +98,13 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1032;
+    APIMinorVersion:=1050;
     PluginUniqueID:='BLOW';
     PluginName:='Blow';
     PluginType:=0;
   end;
-  ParameterNameStruct.Parameter0Name:='Blow            ';
-  ParameterNameStruct.Parameter1Name:='unused param1   ';
+  ParameterNameStruct.Parameter0Name:='Blow x          ';
+  ParameterNameStruct.Parameter1Name:='Blow y          ';
   ParameterNameStruct.Parameter2Name:='unused param2   ';
   //ParameterNameStruct[3]:='sdkYYYYYYYYefwke';
 end;
@@ -154,25 +154,28 @@ end;
 
 function ProcessFrame(pParam: pointer): pointer;
 var
-  i,j,blow : integer;
+  i,j,blowx,blowy : integer;
   Ptr : PByteArray;
   Pitch : integer;
   c: dword;
   v1,v2,r,g,b : byte;
 begin
-  blow := round(VideoInfoStruct.FrameWidth  * parameterarray[0]);
+  blowx := round(VideoInfoStruct.FrameWidth  * parameterarray[0]);
+  blowy := round(VideoInfoStruct.FrameHeight * parameterarray[1]);
+  blowy := VideoInfoStruct.FrameHeight - blowy;
+
   //pitch depends on the bitdepth
   if VideoInfoStruct.BitDepth = 0 then begin
-    Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
+    Pitch := VideoInfoStruct.FrameWidth * 2; // because 2 bytes (16 / 8) are reserved for each pixel when bitdepth is 24 bit
     Ptr := PByteArray(Integer(pParam));
-    for i:=0 to VideoInfoStruct.FrameHeight do begin
-     for j:= blow to VideoInfoStruct.FrameWidth-1 do begin
-       if j = blow then begin
-        v1 := Ptr^[j shl 1];
-        v2 := Ptr^[j shl 1 +1];
+    for i:= (blowy div 2) to (VideoInfoStruct.FrameHeight - (blowy div 2)) do begin
+     for j:= blowx to VideoInfoStruct.FrameWidth-1 do begin
+       if j = blowx then begin
+        v1 := Ptr^[(j shl 1)];
+        v2 := Ptr^[(j shl 1) +1];
        end else begin
-        Ptr^[j shl 1]    := v1;
-        Ptr^[j shl 1 +1] := v2;
+        Ptr^[j shl 1]      := v1;
+        Ptr^[(j shl 1) +1] := v2;
        end;
      end;
      Ptr := PByteArray(Integer(pParam) + (i*Pitch));
@@ -180,9 +183,10 @@ begin
   end else if VideoInfoStruct.BitDepth = 1 then begin
     Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
     Ptr := PByteArray(Integer(pParam));
-    for i:=0 to VideoInfoStruct.FrameHeight do begin
-     for j:= blow to VideoInfoStruct.FrameWidth-1 do begin
-       if j = blow then begin
+
+    for i:= (blowy div 2) to (VideoInfoStruct.FrameHeight - (blowy div 2)) do begin
+     for j:= blowx to VideoInfoStruct.FrameWidth-1 do begin
+       if j = blowx then begin
         r := Ptr^[j*3];
         g := Ptr^[j*3 +1];
         b := Ptr^[j*3 +2];
@@ -197,9 +201,9 @@ begin
   end else if VideoInfoStruct.BitDepth = 2 then begin
     Pitch := VideoInfoStruct.FrameWidth * 4; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
     Ptr := PByteArray(Integer(pParam));
-    for i:=0 to VideoInfoStruct.FrameHeight do begin
-     for j:= blow to VideoInfoStruct.FrameWidth-1 do begin
-       if j = blow then begin
+    for i:= (blowy div 2) to (VideoInfoStruct.FrameHeight - (blowy div 2)) do begin
+     for j:= blowx to VideoInfoStruct.FrameWidth-1 do begin
+       if j = blowx then begin
         r := Ptr^[j shl 2];
         g := Ptr^[j shl 2 +1];
         b := Ptr^[j shl 2 +2];
@@ -244,8 +248,8 @@ begin
       result:=pointer(tempSingle);
     end;
     1: begin
-      // Not yet implemented
-      result:=pointer(80);
+      tempSingle:=1.0;
+      result:=pointer(tempSingle);
     end;
     2: begin
       // Not yet implemented
@@ -263,14 +267,10 @@ function GetParameterDisplay(pParam: pointer): pointer;
 begin
   case integer(pParam) of
     0: begin
-      //tempstring:=copy(inttostr(round(parameterarray[0]*10)),0,2);
-      //copy(inttostr(round(parameterarray[0]*10)),0,2);   //'Brightness Value';
-
       result:=pointer(inttostr(round(VideoInfoStruct.FrameWidth  * parameterarray[0])));
     end;
     1: begin
-      ParameterDisplayValue:='dummy value1    ';
-      result:=@ParameterDisplayValue;
+      result:=pointer(inttostr(round(VideoInfoStruct.FrameHeight  * parameterarray[1])));
     end;
     2: begin
       ParameterDisplayValue:='dummy value2    ';
@@ -300,7 +300,7 @@ begin
       result:=pointer(0);
     end;
     1: begin
-      ParameterArray[1]:=tempPDWvalue^;
+      copymemory(@ParameterArray[1],tempPDWvalue,4);
       result:=pointer(0);
     end;
     2: begin

@@ -104,7 +104,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1028;
+    APIMinorVersion:=1050;
     PluginUniqueID:='ELIP';
     PluginName:='Ellipses';
     PluginType:=0;

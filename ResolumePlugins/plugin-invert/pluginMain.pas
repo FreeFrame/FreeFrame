@@ -100,7 +100,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1032;
+    APIMinorVersion:=1050;
     PluginUniqueID:='INVT';
     PluginName:='Invert';
     PluginType:=0;

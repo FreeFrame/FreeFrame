@@ -43,7 +43,7 @@ uses
   Types,
   windows,
   pluginMain in 'pluginMain.pas',
-  utils in 'utils.pas';
+  utils;
 
 {$R *.res}
 
@@ -54,7 +54,7 @@ end;
 
 //  todo: do all the casting here so these funcions take and return the right types
 
-function plugMain(functionCode: dword; pParam: pointer): Pointer; stdcall;
+function plugMain(functionCode: dword; pParam: pointer; reserved: dword): Pointer; stdcall;
 begin
   case functionCode of
     0: begin

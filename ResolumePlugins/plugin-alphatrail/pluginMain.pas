@@ -103,7 +103,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1032;
+    APIMinorVersion:=1050;
     PluginUniqueID:='ATRA';
     PluginName:='Alpha trail';
     PluginType:=0;
