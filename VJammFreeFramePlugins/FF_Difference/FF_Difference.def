@@ -1,0 +1,3 @@
+LIBRARY			FF_Difference
+DESCRIPTION		'Difference Plugin'
+EXPORTS			plugMain
