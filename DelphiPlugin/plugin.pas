@@ -26,6 +26,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 }
 
+// todo: orientation in video info struct
+
 unit plugin;
 
 interface
@@ -47,10 +49,19 @@ type
     PluginName: array [0..15] of char;       // 16 characters = 4 Dwords
     PluginType: dword; // (effect, source);  // woz effect / synth - but could be other than synth eg. live video input
   end;
+  TPluginExtendedInfoStruct = record
+    PluginMajorVersion: dword;
+    PluginMinorVersion: dword;
+    pDescription: pointer;
+    pAbout: pointer;
+    FreeFrameExtendedDataSize: dword;
+    FreeFrameExtendedDataBlock: pointer;
+  end;
   TVideoInfoStruct = record
     FrameWidth: dword;
     FrameHeight: dword;
     BitDepth: dword;     // 0 = 16 bit 5-6-5   1 = 24bit packed   2 = 32bit
+    Orientation: dword;
   end;
   TParameterNameStruct = record
     Parameter0Name: array [0..15] of char;
@@ -96,7 +107,6 @@ const
   NumParameters: dword = 3;
 
 var
-  PluginArray: array of TFreeFramePlugin;
   ParameterNameStruct: TParameterNameStruct;
   pParameterNameStruct: pointer;
 
@@ -121,6 +131,9 @@ begin
   inc(tempPointer);
   inc(pVideoInfoStruct);
   pVideoInfoStruct^:=tempPointer^;   // Bit Depth
+  inc(tempPointer);
+  inc(pVideoInfoStruct);
+  pVideoInfoStruct^:=tempPointer^;   // Orientation
   ParameterArray[0]:=0.4;
   result:=pointer(0);
 end;
@@ -288,6 +301,7 @@ begin
     0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
     1: result:=pointer(1);   // 1=24bit - supported
     2: result:=pointer(1);   // 2=32bit
+    3: result:=pointer(0);   // this plugin dosen't support copy yet
     else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;

@@ -39,6 +39,7 @@ library PascalSamplePlugin;
   using PChar or ShortString parameters. }
 
 uses
+  madExcept,
   SysUtils,
   Classes,
 {$IFDEF LINUX}
@@ -53,7 +54,9 @@ uses
 
 var
   PluginInfoStruct: TPluginInfoStruct;
-  pPluginInfoStruct: pdw;
+  PluginExtendedInfoStruct: TPluginExtendedInfoStruct;
+  pPluginInfoStruct: pointer;
+  pPluginExtendedInfoStruct: pointer;
   FreeFramePlugin: TFreeFramePlugin;
 
 procedure InitLibrary;
@@ -83,7 +86,7 @@ begin
     0: begin
       with PluginInfoStruct do begin
         APIMajorVersion:=0;
-        APIMinorVersion:=700;
+        APIMinorVersion:=750;
         PluginUniqueID:='PTST';
         PluginName:='PascalTestPlugin';
         PluginType:=0;   // effect plugin
@@ -91,13 +94,10 @@ begin
       pPluginInfoStruct:=@pluginInfoStruct;
       result:=pointer(pPluginInfoStruct);
     end;
-    1: begin    // Plugin Initialise
-      // can't think of anything to put here
+    1: begin    // Plugin Initislise
+      result:=nil;
     end;
     2: begin    // Plugin DeInitislise
-      // check to see if pluginInstances have been destroyed
-      if assigned(PluginArray) then for i:=0 to high(PluginArray)
-       do if assigned(PluginArray[i]) then PluginArray[i].destroy;
       result:=nil;
     end;
     3: begin
@@ -131,10 +131,8 @@ begin
     11: begin    // Instantiate Plugin
       result:=pointer($FFFFFFFF);
       try
-        if assigned(PluginArray) then SetLength(PluginArray, length(PluginArray)) else SetLength(PluginArray, 1);
         NewPluginInstance:=TFreeFramePlugin.create;
         NewPluginInstance.InitialiseInstance(pParam);
-        PluginArray[high(PluginArray)]:=NewPluginInstance;
         result:=pointer(NewPluginInstance);
       except
         result:=pointer($FFFFFFFF);
@@ -148,6 +146,31 @@ begin
       except
         result:=pointer($FFFFFFFF);
       end;
+    end;
+    13: begin // GetExtendedInfo
+         // IN:  Nothing
+         // OUT: Pointer to PluginExtendedInfoStruct
+      with PluginExtendedInfoStruct do begin
+        PluginMajorVersion:=0;
+        PluginMinorVersion:=753;
+        pDescription:= nil;
+        pAbout:= nil;
+        FreeFrameExtendedDataSize:= 0;
+        FreeFrameExtendedDataBlock:= nil;
+      end;
+      pPluginExtendedInfoStruct:=@pluginExtendedInfoStruct;
+      result:=pointer(pPluginExtendedInfoStruct);
+    end;
+    14: begin // ProcessFrameCopy
+         // IN: Pointer to ProcessFrameCopyStruct
+         // OUT: Success/Error Code
+         // not yet supported in PTST
+      result:=pointer($FFFFFFFF);
+    end;
+    15: begin // GetParamaterType
+         // IN: ParameterNumber
+         // OUT: Parameter Type
+      result:=pointer(10); // all parameters on this plugin will be 'standard' for the moment
     end;
   end;
 end;
