@@ -68,6 +68,7 @@ protected:
 	// new/delete	
 	float*	m_pFreeFrameParameters;
 	VideoInfoStruct m_VideoInfo;
+	U32 m_InstanceCookie;
 
 };
 
@@ -171,6 +172,7 @@ BOOL	CFreeFrameDfx::Initialize()
 	m_nYRes = sz.cy;
 
 	if (m_pFreeFrameMain!=NULL) {
+		m_pFreeFrameMain(FF_DEINSTANTIATE,NULL,m_InstanceCookie);
 		m_pFreeFrameMain(FF_DEINITIALISE,NULL,0);
 		m_pFreeFrameMain=NULL;
 	}
@@ -182,7 +184,7 @@ BOOL	CFreeFrameDfx::Initialize()
 	
 	m_hFreeFrameModule=LoadLibrary(&m_pFreeFrameFileName[0]);
 
-	if (m_hFreeFrameModule!=INVALID_HANDLE_VALUE) {
+	if (m_hFreeFrameModule!=NULL) {
 
 		FF_Main_FuncPtr pFreeFrameMain=
 			(FF_Main_FuncPtr)
@@ -245,9 +247,22 @@ BOOL	CFreeFrameDfx::Initialize()
 			ResultAsU32=(U32)m_pFreeFrameMain(FF_GETPARAMETERDEFAULT,pCastCount,0);
 			m_pFreeFrameParameters[nCount]=*((float*)&ResultAsU32);
 
-			RegisterFloat(m_pEngine,&(m_pFreeFrameParameters[nCount]),pName,0.0f,1.0f);
+			static U32 Type;
+			Type=(U32)m_pFreeFrameMain(FF_GETPARAMETERTYPE,pCastCount,0);
+		
+			if (Type==FF_TYPE_BOOLEAN) {
+
+				RegisterBool(m_pEngine,&(m_pFreeFrameParameters[nCount]),pName);
+			
+			} else {
+
+				RegisterFloat(m_pEngine,&(m_pFreeFrameParameters[nCount]),pName,0.0f,1.0f);
+			
+			}
 
 		}
+
+		m_InstanceCookie=(U32)(m_pFreeFrameMain(FF_INSTANTIATE,&m_VideoInfo,0));
 
 	}
 
@@ -268,42 +283,72 @@ BOOL	CFreeFrameDfx::Render(CScreen **ppInput, CScreen *pOutput)
 	int nCount;
 	for (nCount=0; nCount<nNumParameters; nCount+=1) {
 
+		void* pCastCount=(void*)(nCount);
+
+		static U32 Type;
+		Type=(U32)m_pFreeFrameMain(FF_GETPARAMETERTYPE,pCastCount,0);
+
 		SetParameterStruct ArgStruct;
-		ArgStruct.index=nCount;
-		ArgStruct.value=pParameterData[nCount];
-		m_pFreeFrameMain(FF_SETPARAMETER,&ArgStruct,0);
+			ArgStruct.index=nCount;
+
+		if (Type!=FF_TYPE_BOOLEAN) {
+
+			ArgStruct.value=pParameterData[nCount];
+	
+		} else {
+
+			BOOL bIsOn=*((BOOL*)(&pParameterData[nCount]));
+
+			if (bIsOn==TRUE) {
+				ArgStruct.value=1.0f;
+			} else {
+				ArgStruct.value=0.0f;
+			}
+
+		}
+
+		m_pFreeFrameMain(FF_SETPARAMETER,&ArgStruct,m_InstanceCookie);
 
 	}
 
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
+	DWORD** ppInputMemArray = &pInputMem;
 
 	const int nNumPixels=m_nXRes*m_nYRes;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
 
-	switch (m_VideoInfo.bitDepth) {
+//	switch (m_VideoInfo.bitDepth) {
+//
+//		case 2: {
+//			memcpy(pOutputMem,pInputMem,nNumBytes);
+//			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,m_InstanceCookie);
+//		}break;
+//	
+//		case 1: {
+//			Pete_CopyAndConvert32BitTo24Bit(pInputMem,pOutputMem,nNumPixels);
+//			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
+//			Pete_InPlaceConvert24BitTo32Bit(pOutputMem,nNumPixels);
+//		}break;
+//	
+//		case 0: {
+//			memcpy(pOutputMem,pInputMem,nNumBytes);
+//			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,m_InstanceCookie);
+//		}break;
+//	
+//		default: {
+//			ASSERT(FALSE);
+//		}break;
+//
+//	}
 
-		case 2: {
-			memcpy(pOutputMem,pInputMem,nNumBytes);
-			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
-		}break;
-	
-		case 1: {
-			Pete_CopyAndConvert32BitTo24Bit(pInputMem,pOutputMem,nNumPixels);
-			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
-			Pete_InPlaceConvert24BitTo32Bit(pOutputMem,nNumPixels);
-		}break;
-	
-		case 0: {
-			memcpy(pOutputMem,pInputMem,nNumBytes);
-			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
-		}break;
-	
-		default: {
-			ASSERT(FALSE);
-		}break;
+	ProcessFrameCopyStruct PFCData;
 
-	}
+	PFCData.numInputFrames=1;
+	PFCData.InputFrames=(void**)ppInputMemArray;
+	PFCData.OutputFrame=pOutputMem;
+
+	m_pFreeFrameMain(FF_PROCESSFRAMECOPY,(void*)(&PFCData),m_InstanceCookie);
 
 	return TRUE;
 
