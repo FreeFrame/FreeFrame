@@ -3,7 +3,19 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "FF_Mosaic"=.\FF_Mosaic.dsp - Package Owner=<4>
+Project: "FF_Difference"=.\FF_Difference\FF_Difference.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "FF_Mosaic"=.\FF_Mosaic\FF_Mosaic.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
