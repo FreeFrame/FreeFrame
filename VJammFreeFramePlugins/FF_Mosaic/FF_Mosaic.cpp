@@ -210,6 +210,7 @@ float getParameterDefault(DWORD index)
 
 char* getParameterDisplay(DWORD index)
 {
+	try {
 	int iValue;
 	// fill the array with spaces first
 	for (int n=0; n<16; n++) {
@@ -228,6 +229,9 @@ char* getParameterDisplay(DWORD index)
 	}
 	sprintf(parameters[index].displayValue, "%d",iValue);
 	return parameters[index].displayValue;
+	}
+	catch (...) {
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -246,19 +250,22 @@ char* getParameterDisplay(DWORD index)
 
 DWORD setParameter(SetParameterStruct* pParam)
 {
-	parameters[pParam->index].value = pParam->value;
-	int iValue = (int) (pParam->value * 99) +1;
-	switch (pParam->index) {
-	case 0:
-		blockWidth = iValue;
-		break;
-	case 1:
-		blockHeight = iValue;
-		break;
-	default:
-		return FF_FAIL;
+	try {
+		parameters[pParam->index].value = pParam->value;
+		switch (pParam->index) {
+		case 0:
+			blockWidth = (int) ((pParam->value * (videoInfo.frameWidth-1)) + 1);
+			break;
+		case 1:
+			blockHeight = (int) ((pParam->value * (videoInfo.frameHeight-1)) + 1);
+			break;
+		default:
+			return FF_FAIL;
+		}
+		return FF_SUCCESS;
 	}
-	return FF_SUCCESS;
+	catch (...) {
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -294,66 +301,70 @@ float getParameter(DWORD index)
 
 DWORD processFrame(LPVOID pFrame)
 {
-	BYTE *pBuffer = (BYTE*) pFrame;
-	BYTE *tempPtr;
-	DWORD x=0;
-	DWORD y=0;
-
-	long averageBlue = 0;
-	long averageGreen = 0;
-	long averageRed = 0;
-
-	VideoPixel24bit avPixel;
-	DWORD sx, sy;
-
-	
-	DWORD tempBlockWidth, tempBlockHeight;
-
-	if (blockWidth == 1 && blockHeight == 1)
-		return FF_SUCCESS;
-
-	for (y = 0; y < videoInfo.frameHeight; y+=blockHeight) {
-		if (videoInfo.frameHeight - y < blockHeight)
-			tempBlockHeight = videoInfo.frameHeight - y;
-		else
-			tempBlockHeight = blockHeight;
-		for (x = 0; x < videoInfo.frameWidth; x+=blockWidth) {
-			tempPtr = pBuffer;
-			if (videoInfo.frameWidth - x < blockWidth)
-				tempBlockWidth = videoInfo.frameWidth - x;
+	try {
+		BYTE *pBuffer = (BYTE*) pFrame;
+		BYTE *tempPtr;
+		DWORD x=0;
+		DWORD y=0;
+		
+		long averageBlue = 0;
+		long averageGreen = 0;
+		long averageRed = 0;
+		
+		VideoPixel24bit avPixel;
+		DWORD sx, sy;
+		
+		
+		DWORD tempBlockWidth, tempBlockHeight;
+		
+		if (blockWidth == 1 && blockHeight == 1)
+			return FF_SUCCESS;
+		
+		for (y = 0; y < videoInfo.frameHeight; y+=blockHeight) {
+			if (videoInfo.frameHeight - y < blockHeight)
+				tempBlockHeight = videoInfo.frameHeight - y;
 			else
-				tempBlockWidth = blockWidth;
-			DWORD byteWidth;
-			for (sy=0; sy<tempBlockHeight; sy++) {
-				for (sx=0; sx<tempBlockWidth; sx++) {
-					byteWidth = sx * 3;
-					averageBlue += *(tempPtr + byteWidth);
-					averageGreen += *(tempPtr + byteWidth + 1); 
-					averageRed += *(tempPtr + byteWidth + 2);
+				tempBlockHeight = blockHeight;
+			for (x = 0; x < videoInfo.frameWidth; x+=blockWidth) {
+				tempPtr = pBuffer;
+				if (videoInfo.frameWidth - x < blockWidth)
+					tempBlockWidth = videoInfo.frameWidth - x;
+				else
+					tempBlockWidth = blockWidth;
+				DWORD byteWidth;
+				for (sy=0; sy<tempBlockHeight; sy++) {
+					for (sx=0; sx<tempBlockWidth; sx++) {
+						byteWidth = sx * 3;
+						averageBlue += *(tempPtr + byteWidth);
+						averageGreen += *(tempPtr + byteWidth + 1); 
+						averageRed += *(tempPtr + byteWidth + 2);
+					}
+					tempPtr += videoInfo.frameWidth * 3;
 				}
-				tempPtr += videoInfo.frameWidth * 3;
-			}
-			tempPtr = pBuffer;
-			int numPixels = tempBlockHeight * tempBlockWidth;
-			avPixel.blue = (BYTE) (averageBlue / numPixels);
-			avPixel.green = (BYTE) (averageGreen / numPixels);
-			avPixel.red = (BYTE) (averageRed / numPixels);
-			averageBlue = averageGreen = averageRed = 0;
-			for (sy=0; sy<tempBlockHeight; sy++) {
-				for (sx=0; sx<tempBlockWidth; sx++) {
-					byteWidth = sx * 3;
-					*(tempPtr + byteWidth) = avPixel.blue;
-					*(tempPtr + byteWidth + 1) = avPixel.green;
-					*(tempPtr + byteWidth + 2) = avPixel.red;
+				tempPtr = pBuffer;
+				int numPixels = tempBlockHeight * tempBlockWidth;
+				avPixel.blue = (BYTE) (averageBlue / numPixels);
+				avPixel.green = (BYTE) (averageGreen / numPixels);
+				avPixel.red = (BYTE) (averageRed / numPixels);
+				averageBlue = averageGreen = averageRed = 0;
+				for (sy=0; sy<tempBlockHeight; sy++) {
+					for (sx=0; sx<tempBlockWidth; sx++) {
+						byteWidth = sx * 3;
+						*(tempPtr + byteWidth) = avPixel.blue;
+						*(tempPtr + byteWidth + 1) = avPixel.green;
+						*(tempPtr + byteWidth + 2) = avPixel.red;
+					}
+					tempPtr += videoInfo.frameWidth * 3;
 				}
-				tempPtr += videoInfo.frameWidth * 3;
+				pBuffer += tempBlockWidth * 3;
 			}
-			pBuffer += tempBlockWidth * 3;
+			pBuffer += videoInfo.frameWidth*(tempBlockHeight -1) * 3;
 		}
-		pBuffer += videoInfo.frameWidth*(tempBlockHeight -1) * 3;
+		
+		return FF_SUCCESS;
 	}
-
-  return FF_SUCCESS;
+	catch (...) {
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
