@@ -173,8 +173,8 @@ object fmMain: TfmMain
     Caption = 'Plugin processing time:'
   end
   object lAPIversion: TLabel
-    Left = 23
-    Top = 421
+    Left = 31
+    Top = 349
     Width = 51
     Height = 13
     Caption = 'APIversion'
@@ -765,6 +765,120 @@ object fmMain: TfmMain
     TickMarks = tmBottomRight
     TickStyle = tsAuto
     OnChange = tbParamChange
+  end
+  object gbSecondInstance: TGroupBox
+    Left = 24
+    Top = 416
+    Width = 537
+    Height = 265
+    Caption = ' Second Plugin Instance Tester '
+    TabOrder = 36
+    object PaintBox2: TPaintBox
+      Left = 336
+      Top = 128
+      Width = 177
+      Height = 121
+    end
+    object lSIParam0Name: TLabel
+      Left = 33
+      Top = 196
+      Width = 64
+      Height = 13
+      Caption = 'Param0Name'
+    end
+    object lSIParam0value: TLabel
+      Left = 192
+      Top = 220
+      Width = 63
+      Height = 13
+      Caption = 'Param0Value'
+    end
+    object lSIparam0dword: TLabel
+      Left = 190
+      Top = 236
+      Width = 67
+      Height = 13
+      Caption = 'Param0Dword'
+    end
+    object ebSIfilename: TEdit
+      Left = 27
+      Top = 30
+      Width = 289
+      Height = 21
+      TabOrder = 0
+    end
+    object bSIbrowse: TButton
+      Left = 344
+      Top = 29
+      Width = 75
+      Height = 25
+      Caption = 'Browse'
+      TabOrder = 1
+    end
+    object bSIrunUpAVI: TButton
+      Left = 24
+      Top = 85
+      Width = 75
+      Height = 25
+      Caption = 'Run up AVI'
+      TabOrder = 2
+    end
+    object bSIshutDownAVI: TButton
+      Left = 16
+      Top = 125
+      Width = 97
+      Height = 25
+      Caption = 'Shut Down AVI'
+      TabOrder = 3
+    end
+    object tbSISlider: TTrackBar
+      Left = 19
+      Top = 218
+      Width = 150
+      Height = 33
+      Max = 100
+      Orientation = trHorizontal
+      Frequency = 10
+      Position = 0
+      SliderVisible = False
+      SelEnd = 0
+      SelStart = 0
+      TabOrder = 4
+      TickMarks = tmBottomRight
+      TickStyle = tsAuto
+    end
+    object bRunUpSI: TButton
+      Left = 128
+      Top = 85
+      Width = 177
+      Height = 25
+      Caption = 'Run up Second Plugin Instance'
+      TabOrder = 5
+    end
+    object bShutDownSI: TButton
+      Left = 120
+      Top = 125
+      Width = 201
+      Height = 25
+      Caption = 'Shut Down Second Plugin Instance'
+      TabOrder = 6
+    end
+    object bSIplay: TButton
+      Left = 344
+      Top = 80
+      Width = 73
+      Height = 25
+      Caption = 'Play '
+      TabOrder = 7
+    end
+    object bSIStop: TButton
+      Left = 432
+      Top = 80
+      Width = 73
+      Height = 25
+      Caption = 'Stop'
+      TabOrder = 8
+    end
   end
   object odAVI: TOpenDialog
     Left = 392
