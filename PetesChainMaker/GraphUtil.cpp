@@ -1076,7 +1076,11 @@ bool GraphUtil_LoadPlugin(SPete_GraphData* pGraph,SPete_PluginInfo* pResult,char
 
 	PlugInfoStruct* pPluginInfoData=(PlugInfoStruct*)((*pMainFunc)(FF_GETINFO,NULL,0));
 
-	if (pPluginInfoData->APIMinorVersion<=500) {
+	const int nPluginVersion=
+		(pPluginInfoData->APIMajorVersion*1000)+
+		(pPluginInfoData->APIMinorVersion*1);
+
+	if (nPluginVersion<=500) {
 		char MessageString[1024];
 		sprintf(MessageString,"Plugin DLL '%s' is a 0.5 version plugin, not supported",pFileName);
 		MessageBox(NULL,MessageString,"",MB_OK);

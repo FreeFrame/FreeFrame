@@ -7,7 +7,7 @@
 </h3>
 <h3>Command Lines</h3>
 Creating command line "rc.exe /l 0x409 /fo"Release/PetesChainMaker.res" /d "NDEBUG" "C:\projects\PetesChainMaker\PetesChainMaker.rc"" 
-Creating temporary file "C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP3B.tmp" with contents
+Creating temporary file "C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP75E.tmp" with contents
 [
 /nologo /ML /W3 /GX /O2 /I "..\MSVCPlugin" /I "..\PetesChain" /I "..\PetesPlugins\Core" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fp"Release/PetesChainMaker.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
 "C:\projects\PetesChainMaker\EditGraph.cpp"
@@ -16,8 +16,8 @@ Creating temporary file "C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP3B.tmp" with cont
 "C:\projects\PetesChainMaker\StdAfx.cpp"
 "C:\projects\PetesChainMaker\WinMain.cpp"
 ]
-Creating command line "cl.exe @C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP3B.tmp" 
-Creating temporary file "C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP3C.tmp" with contents
+Creating command line "xicl6.exe @C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP75E.tmp" 
+Creating temporary file "C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP75F.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /incremental:no /pdb:"Release/PeteFreeChain.pdb" /machine:I386 /out:"PeteFreeChain.exe" 
 .\Release\EditGraph.obj
@@ -27,30 +27,22 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 .\Release\WinMain.obj
 .\Release\PetesChainMaker.res
 ]
-Creating command line "link.exe @C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP3C.tmp"
+Creating command line "xilink6.exe @C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP75F.tmp"
 <h3>Output Window</h3>
 Compiling resources...
 Compiling...
 EditGraph.cpp
-C:\projects\PetesChainMaker\EditGraph.cpp(1976) : warning C4101: 'EndPos' : unreferenced local variable
-C:\projects\PetesChainMaker\EditGraph.cpp(2003) : warning C4101: 'EndPos' : unreferenced local variable
-C:\projects\PetesChainMaker\EditGraph.cpp(2058) : warning C4101: 'EndPos' : unreferenced local variable
-C:\projects\PetesChainMaker\EditGraph.cpp(2559) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-C:\projects\PetesChainMaker\EditGraph.cpp(2715) : warning C4244: '=' : conversion from 'double' to 'float', possible loss of data
-C:\projects\PetesChainMaker\EditGraph.cpp(3101) : warning C4244: 'initializing' : conversion from 'int' to 'const float', possible loss of data
-C:\projects\PetesChainMaker\EditGraph.cpp(3102) : warning C4244: 'initializing' : conversion from 'int' to 'const float', possible loss of data
-C:\projects\PetesChainMaker\EditGraph.cpp(3114) : warning C4244: 'initializing' : conversion from 'double' to 'const float', possible loss of data
-C:\projects\PetesChainMaker\EditGraph.cpp(3140) : warning C4244: 'initializing' : conversion from 'double' to 'const float', possible loss of data
 GraphUtil.cpp
 RunGraph.cpp
 StdAfx.cpp
 WinMain.cpp
 Linking...
+xilink6: executing 'C:\PROGRA~1\MICROS~2\VC98\Bin\link.exe'
 
 
 
 <h3>Results</h3>
-PeteFreeChain.exe - 0 error(s), 9 warning(s)
+PeteFreeChain.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>
