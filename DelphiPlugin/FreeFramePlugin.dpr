@@ -59,8 +59,12 @@ begin
 end;
 
 //  todo: do all the casting here so these funcions take and return the right types
-
-function plugMain(functionCode: dword; pParam: pointer; reserved: dword): Pointer; stdcall;
+{$IFDEF WIN32}
+function plugMain(functionCode: dword;pParam: pointer; reserved: dword): Pointer; stdcall
+{$ENDIF}
+{$IFDEF LINUX}
+procedure plugMain(var Result: Pointer;functionCode: dword; pParam: pointer; reserved: dword); cdecl;
+{$ENDIF}
 begin
   case functionCode of
     0: begin
