@@ -78,7 +78,7 @@ type
 var
   PluginInfoStruct: TPluginInfoStruct;
   PluginExtendedInfoStruct: TPluginExtendedInfoStruct;
-  VideoInfoStruct: TVideoInfoStruct;
+  VideoInfoStruct: array [0..1] of TVideoInfoStruct;   //now we have 2 possible instances
   plugMain:tPlugMainFunction;
 
 implementation

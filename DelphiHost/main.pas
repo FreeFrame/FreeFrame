@@ -154,8 +154,6 @@ type
     lSIparam0dword: TLabel;
     bRunUpSI: TButton;
     bShutDownSI: TButton;
-    bSIplay: TButton;
-    bSIStop: TButton;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -183,6 +181,12 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure bSIbrowseClick(Sender: TObject);
+    procedure bSIrunUpAVIClick(Sender: TObject);
+    procedure bSIshutDownAVIClick(Sender: TObject);
+    procedure bRunUpSIClick(Sender: TObject);
+    procedure bShutDownSIClick(Sender: TObject);
+    procedure tbSISliderChange(Sender: TObject);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
@@ -192,7 +196,7 @@ type
     ParamValues: array [0..7] of TLabel;
     ParamDwords: array [0..7] of TLabel;
     procedure GetPlugins;
-    procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
+    procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader; channel: integer);
     procedure ProfileAndProcessFrame(pFrame: pointer; PluginInstance: dword);     // This is the main frame processing procedure
     procedure LoadPlugin;
   public
@@ -201,20 +205,21 @@ type
   end;
 
 const
-  AppVersion: string='0.752';
+  AppVersion: string='0.753';
   APIversion: string='0.750';
 
 var
   fmMain: TfmMain;
-  CurrentFrame: integer;
-  NumFrames: integer;
+  CurrentFrame: array [0..1] of integer;
+  NumFrames: array [0..1] of integer;
   CurrentPlug: thandle = 0;
   bits: pointer;
   lpBitmapInfoHeader: pBitmapInfoHeader;
   NumParams: integer;
-  AVIloaded: boolean;
+  AVIloaded: array [0..1] of boolean;
   PluginLoaded: boolean;
-  PluginInstance: dword;
+  PluginInstance: array [0..1] of dword; // Plugin Instance Identifier
+  InstanceReady: array [0..1] of boolean;
 
 implementation
 
@@ -228,7 +233,7 @@ var
 procedure TfmMain.bInitClick(Sender: TObject);
 begin
   AVI.Init;
-  CurrentFrame:=0;
+  CurrentFrame[0]:=0;
 end;
 
 procedure TfmMain.bDeInitClick(Sender: TObject);
@@ -238,20 +243,20 @@ end;
 
 procedure TfmMain.bOpenAVIClick(Sender: TObject);
 begin
-  PluginHost.VideoInfoStruct:=AVI.OpenAVI(ebAVIfilename.text);
+  PluginHost.VideoInfoStruct[0]:=AVI.OpenAVI(ebAVIfilename.text,0);
   // Display VideoInfoStruct ...
-  lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct.FrameWidth);
-  lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct.FrameHeight);
-  case PluginHost.VideoInfoStruct.BitDepth of
+  lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct[0].FrameWidth);
+  lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct[0].FrameHeight);
+  case PluginHost.VideoInfoStruct[0].BitDepth of
     0: lBitDepth.Caption:='16 bit';
     1: lBitDepth.Caption:='24 bit';
     2: lBitDepth.Caption:='32 bit';
   end;
-  case VideoInfoStruct.orientation of
+  case VideoInfoStruct[0].orientation of
     1: lOrientation.caption:='Right Way Up';
     2: lOrientation.caption:='Upside Down';
   end;
-  AVIloaded:=true;
+  AVIloaded[0]:=true;
 end;
 
 procedure TfmMain.ebAVIFilenameChange(Sender: TObject);
@@ -262,14 +267,14 @@ end;
 procedure TfmMain.bCloseAVIClick(Sender: TObject);
 begin
   if tPlay.Enabled then tPlay.Enabled:=false;
-  AVI.CloseAVI;
+  AVI.CloseAVI(0);
 end;
 
 procedure TfmMain.bGetFrameClick(Sender: TObject);
 begin
-  inc(currentFrame);
-  lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
-  displayframe(lpbitmapinfoheader);
+  inc(currentFrame[0]);
+  lpbitmapinfoheader:=AVI.GetFrame(currentFrame[0],0);
+  displayframe(lpbitmapinfoheader,0);
 end;
 
 procedure TfmMain.bgetInfoClick(Sender: TObject);
@@ -293,12 +298,12 @@ begin
   if tempPluginCaps[1] then l24bit.Caption:='24bit: yes' else l24bit.Caption:='24bit: no';
   if tempPluginCaps[2] then l32bit.Caption:='32bit: yes' else l32bit.Caption:='32bit: no';
   if not tempPluginCaps[1] and tempPluginCaps[2] then begin
-    VideoInfoStruct.BitDepth:=2;
+    VideoInfoStruct[0].BitDepth:=2;
     lBitDepth.Caption:='32 bit';
-    p32bitFrame:=Utils.Make32bitBuffer(VideoInfoStruct);
+    p32bitFrame:=Utils.Make32bitBuffer(VideoInfoStruct[0]);
   end;
   // Set Video orientation to upside down (VFW)
-  VideoInfoStruct.orientation:=2;
+  VideoInfoStruct[0].orientation:=2;
   lOrientation.caption:='Upside Down';
   // Get PluginExtendedInfoStruct and display its data
   PluginHost.getExtendedInfo;
@@ -326,25 +331,25 @@ begin
     if cbAutoLoadAVI.Checked then begin
       // InitAVI ....
       AVI.Init;
-      CurrentFrame:=0;
+      CurrentFrame[0]:=0;
       // OpenAVI ....
-      PluginHost.VideoInfoStruct:=AVI.OpenAVI(ebAVIfilename.text);
-      lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct.FrameWidth);
-      lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct.FrameHeight);
-      case PluginHost.VideoInfoStruct.BitDepth of
+      PluginHost.VideoInfoStruct[0]:=AVI.OpenAVI(ebAVIfilename.text,0);
+      lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct[0].FrameWidth);
+      lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct[0].FrameHeight);
+      case PluginHost.VideoInfoStruct[0].BitDepth of
         0: lBitDepth.Caption:='16 bit';
         1: lBitDepth.Caption:='24 bit';
         2: lBitDepth.Caption:='32 bit';
       end;
       // GetFrame ....
-      inc(currentFrame);
-      lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
+      inc(currentFrame[0]);
+      lpbitmapinfoheader:=AVI.GetFrame(currentFrame[0],0);
       bGetInfo.SetFocus;
-      AVIloaded:=true;
+      AVIloaded[0]:=true;
     end;
   end;
   getPlugins;
-  if (cbAutoLoadPlugin.Checked) and AVIloaded and (cbPlugins.Items.Count>0) then begin
+  if (cbAutoLoadPlugin.Checked) and AVIloaded[0] and (cbPlugins.Items.Count>0) then begin
     LoadPlugin;
     bPlayAndProcess.SetFocus;
   end;
@@ -357,7 +362,7 @@ begin
   bgetInfoClick(nil);
   // Init Plugin ...
   lInitPlugin.caption:=inttostr(PluginHost.InitialisePlugin);
-  PluginInstance:=PluginHost.InstantiatePlugin(VideoInfoStruct);
+  PluginInstance[0]:=PluginHost.InstantiatePlugin(VideoInfoStruct[0]);
   PluginLoaded:=true; // todo: when plugins are returning correct init responses we could only set pluginLoaded to true when we get a success response from the plugin
   // Get Num Params ...
   bGetNumParametersClick(nil);
@@ -369,29 +374,31 @@ begin
   bGetParamDisplayValuesClick(nil);
   // Get Param Actual Values ...
   bGetParamActualValuesClick(nil);
+  InstanceReady[0]:=true;
 end;
 
 
 procedure TfmMain.bInitPluginClick(Sender: TObject);
 begin
   lInitPlugin.caption:=inttostr(PluginHost.InitialisePlugin);
-  PluginInstance:=PluginHost.InstantiatePlugin(VideoInfoStruct);
+  PluginInstance[0]:=PluginHost.InstantiatePlugin(VideoInfoStruct[0]);
   PluginLoaded:=true; // todo: when plugins are returning correct init responses we could only set pluginLoaded to true when we get a success response from the plugin
+  InstanceReady[0]:=true; // todo: not sure if this is totally sorted yet
 end;
 
 procedure TfmMain.bDeInitPluginClick(Sender: TObject);
 begin
-  DeInstantiatePlugin(PluginInstance);
+  DeInstantiatePlugin(PluginInstance[0]);
   lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialisePlugin);
 end;
 
 procedure TfmMain.bProcessFrameClick(Sender: TObject);
 begin
-  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)),PluginInstance);
-  DisplayFrame(lpbitmapinfoheader);
+  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)),PluginInstance[0]);
+  DisplayFrame(lpbitmapinfoheader,0);
 end;
 
-procedure TfmMain.DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
+procedure TfmMain.DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader; channel: integer);
 type
   pdw = ^dword;
 var
@@ -412,7 +419,10 @@ begin
     tempBitmap:=TBitmap.create;
     try
       tempBitmap.Handle:=hBmp;
-      with PaintBox1 do Canvas.StretchDraw(rect(0,0,width,height),tempBitmap);
+      case channel of
+        0: with PaintBox1 do Canvas.StretchDraw(rect(0,0,width,height),tempBitmap);
+        1: with PaintBox2 do Canvas.StretchDraw(rect(0,0,width,height),tempBitmap);
+      end;  
     finally
       tempBitmap.free;
     end;
@@ -463,7 +473,7 @@ begin
     // Stop Playing AVI
     tPlay.Enabled:=false;
     // Run down our one instance of this plugin
-    PluginHost.DeInstantiatePlugin(PluginInstance);
+    PluginHost.DeInstantiatePlugin(PluginInstance[0]);
     // DeInit Plugin
     lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialisePlugin);
     StartingApp:=false;
@@ -522,7 +532,7 @@ var
   i: integer;
 begin
   // Get Parameter Display Values ...
-  for i:=0 to 7 do if NumParams>i then ParamValues[i].Caption:=GetParameterDisplay(i,PluginInstance);
+  for i:=0 to 7 do if NumParams>i then ParamValues[i].Caption:=GetParameterDisplay(i,PluginInstance[0]);
 end;
 
 procedure TfmMain.tbParamChange(Sender: TObject);    // the OnChange procedure for all the param sliders
@@ -537,9 +547,9 @@ begin
   tempParam:=tempTrackbar.Tag;
   tempInt:=tempTrackbar.position;
   tempSingle:=tempInt/100;
-  PluginHost.SetParameter(tempParam,tempSingle,PluginInstance);
-  ParamValues[tempParam].caption:=GetParameterDisplay(tempParam,PluginInstance);
-  tempSingle:=pluginHost.GetParameter(tempParam,PluginInstance);
+  PluginHost.SetParameter(tempParam,tempSingle,PluginInstance[0]);
+  ParamValues[tempParam].caption:=GetParameterDisplay(tempParam,PluginInstance[0]);
+  tempSingle:=pluginHost.GetParameter(tempParam,PluginInstance[0]);
   ParamDwords[tempParam].caption:=floattostr(tempSingle);
 end;
 
@@ -551,7 +561,7 @@ begin
   for i:=0 to 7 do begin
     if NumParams>i then begin
       // Get Parameter actual Values ...
-      tempSingle:=pluginHost.GetParameter(i,PluginInstance);
+      tempSingle:=pluginHost.GetParameter(i,PluginInstance[0]);
       ParamDwords[i].caption:=floattostr(tempSingle);
     end;
   end;
@@ -560,13 +570,13 @@ end;
 procedure TfmMain.bGetAndProcessClick(Sender: TObject);
 begin
   // Get frame
-  inc(currentFrame);
-  lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
+  inc(currentFrame[0]);
+  lpbitmapinfoheader:=AVI.GetFrame(currentFrame[0],0);
   // Display it unprocessed ...
   // displayframe(lpbitmapinfoheader);
   // process frame and display it again ...
-  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)),PluginInstance);
-  DisplayFrame(lpbitmapinfoheader);
+  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)),PluginInstance[0]);
+  DisplayFrame(lpbitmapinfoheader,0);
 end;
 
 procedure TfmMain.bBrowseClick(Sender: TObject);
@@ -590,8 +600,8 @@ begin
   pFrameToProcess:=pFrame;
 
   // Convert to 32bit if plugin only does 32bit
-  if VideoInfoStruct.BitDepth=2 then begin
-    Utils.Convert24to32(pFrameToProcess, p32bitFrame, VideoInfoStruct);
+  if VideoInfoStruct[0].BitDepth=2 then begin
+    Utils.Convert24to32(pFrameToProcess, p32bitFrame, VideoInfoStruct[0]);
     pFrameToProcess:=p32bitFrame;
   end;
 
@@ -601,15 +611,15 @@ begin
   lProfile.Caption:=inttostr(gettickcount-before)+' msec/frame';
 
   // Convert it back again if we're running in 32bit plugin
-  if VideoInfoStruct.BitDepth=2 then Utils.Convert32to24(p32bitFrame, pFrame, VideoInfoStruct);
+  if VideoInfoStruct[0].BitDepth=2 then Utils.Convert32to24(p32bitFrame, pFrame, VideoInfoStruct[0]);
 
 end;
 
 procedure TfmMain.bPlayAndProcessClick(Sender: TObject);
 begin
-  if not AVIloaded then exit;
+  if not AVIloaded[0] then exit;
   if not PluginLoaded then exit;
-  currentFrame:=0;
+  currentFrame[0]:=0;
   tPlay.Enabled:=true;
 end;
 
@@ -618,24 +628,46 @@ var
   pFrameToProcess, pBits: pointer;
   FrameSize: integer; // in bytes
 begin
-  // Get frame from AVI if effect - if source just pass on pointer to framebuffer ...
-  inc(currentFrame);
-  if currentFrame>(numFrames-1) then currentFrame:=1;
-  case plugininfostruct.PluginType of
-    0: begin // effect
-      lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
-      pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
-      pFrameToProcess:=pBits;
+  if InstanceReady[0] then begin
+    // Get frame from AVI if effect - if source just pass on pointer to framebuffer ...
+    inc(currentFrame[0]);
+    if currentFrame[0]>(numFrames[0]-1) then currentFrame[0]:=1;
+    case plugininfostruct.PluginType of
+      0: begin // effect
+        lpbitmapinfoheader:=AVI.GetFrame(currentFrame[0],0);
+        pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+        pFrameToProcess:=pBits;
+      end;
+      1: begin // source
+        pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+        pFrameToProcess:=pBits;
+      end;
     end;
-    1: begin // source
-      pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
-      pFrameToProcess:=pBits;
-    end;
+    // Process frame through plugin
+    if cbPluginProcessFrames.Checked then ProfileAndProcessFrame(pFrameToProcess, PluginInstance[0]);
+    // Display the frame
+    DisplayFrame(lpbitmapinfoheader,0);
   end;
-  // Process frame through plugin
-  if cbPluginProcessFrames.Checked then ProfileAndProcessFrame(pFrameToProcess, PluginInstance);
-  // Display the frame
-  DisplayFrame(lpbitmapinfoheader);
+  if InstanceReady[1] then begin
+    // Get frame from AVI if effect - if source just pass on pointer to framebuffer ...
+    inc(currentFrame[1]);
+    if currentFrame[1]>(numFrames[1]-1) then currentFrame[1]:=1;
+    case plugininfostruct.PluginType of
+      0: begin // effect
+        lpbitmapinfoheader:=AVI.GetFrame(currentFrame[1],1);      // channel 1
+        pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+        pFrameToProcess:=pBits;
+      end;
+      1: begin // source
+        pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+        pFrameToProcess:=pBits;
+      end;
+    end;
+    // Process frame through plugin
+    ProfileAndProcessFrame(pFrameToProcess, PluginInstance[1]);
+    // Display the frame
+    DisplayFrame(lpbitmapinfoheader,1);
+  end;
 end;
 
 procedure TfmMain.bStopClick(Sender: TObject);
@@ -645,17 +677,22 @@ end;
 
 procedure TfmMain.bRunIn32bitClick(Sender: TObject);
 begin
-  VideoInfoStruct.BitDepth:=2;
+  VideoInfoStruct[0].BitDepth:=2;
   lBitDepth.Caption:='32 bit';
-  p32bitFrame:=Utils.Make32bitBuffer(VideoInfoStruct);
+  p32bitFrame:=Utils.Make32bitBuffer(VideoInfoStruct[0]);
 end;
 
 procedure TfmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
   inifile: TInifile;
+  i: integer;
 begin
   // Free the 32 bit framebuffer if we're in 32 bit mode ...
-  if VideoInfoStruct.bitdepth=2 then utils.free32bitBuffer(p32bitFrame, VideoInfoStruct);
+  if VideoInfoStruct[0].bitdepth=2 then utils.free32bitBuffer(p32bitFrame, VideoInfoStruct[0]);
+  if pluginloaded then begin
+    for i:=0 to 1 do if instanceReady[i] then DeInstantiatePlugin(PluginInstance[i]);
+    DeInitialisePlugin; 
+  end;
   // Save Settings ...
   inifile:=Tinifile.Create('FreeFrame.ini');
   inifile.WriteBool('HostTestContainerSettings','AutoLoadAVI',cbAutoLoadAVI.checked);
@@ -668,7 +705,8 @@ end;
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
   StartingApp:=true;
-  AVIloaded:=false;
+  AVIloaded[0]:=false;
+  AVIloaded[1]:=false;
   PluginLoaded:=false;
 end;
 
@@ -709,6 +747,90 @@ begin
   ParamDwords[5]:=lParam5Dword;
   ParamDwords[6]:=lParam6Dword;
   ParamDwords[7]:=lParam7Dword;
+end;
+
+procedure TfmMain.bSIbrowseClick(Sender: TObject);
+begin
+  if odAVI.Execute then ebSIfilename.text:=odAVI.FileName;
+end;
+
+procedure TfmMain.bSIrunUpAVIClick(Sender: TObject);
+var
+  tempFilename: string;
+begin
+  tempFilename:=ebSIfilename.Text;
+  if not fileExists(tempFilename) then exit;
+
+    // InitAVI should already have been done by the primary instance controls ...
+    CurrentFrame[1]:=0;
+
+    // OpenAVI ....
+    PluginHost.VideoInfoStruct[1]:=AVI.OpenAVI(ebSIfilename.text,1);
+
+    AVIloaded[1]:=true;
+
+end;
+
+procedure TfmMain.bSIshutDownAVIClick(Sender: TObject);
+begin
+
+  instanceReady[1]:=false;
+  AVIloaded[1]:=false;
+
+  // close AVI
+  if tPlay.Enabled then tPlay.Enabled:=false;
+  AVI.CloseAVI(1);
+
+end;
+
+procedure TfmMain.bRunUpSIClick(Sender: TObject);
+var
+  tempSingle: single;
+begin
+  PluginInstance[1]:=InstantiatePlugin(VideoInfoStruct[1]);
+
+  // Setup Second Instance Single Parameter control ...
+
+  lSIparam0Name.Caption:='';
+  if NumParams>0 then begin
+    tbSIslider.SliderVisible:=true;
+    // Get Param Name ...
+    lSIparam0Name.Caption:=GetParameterName(0);
+
+    // Get Parameter Default Value ...
+    tbSIslider.Position:=round(PluginHost.GetParameterDefault(0)*100);
+
+    // Get Parameter Display Value ...
+    lSIParam0value.Caption:=GetParameterDisplay(0,PluginInstance[1]);
+
+    // Get Param actual value ...
+    tempSingle:=pluginHost.GetParameter(0,PluginInstance[1]);
+    lSIparam0dword.caption:=floattostr(tempSingle);
+  end;
+
+  InstanceReady[1]:=true;
+end;
+
+procedure TfmMain.bShutDownSIClick(Sender: TObject);
+begin
+  instanceReady[1]:=false;
+  DeInstantiatePlugin(PluginInstance[1]);
+end;
+
+procedure TfmMain.tbSISliderChange(Sender: TObject);
+var
+  tempInt: integer;
+  tempSingle: single;
+  tempTrackbar: Ttrackbar;
+begin
+
+  tempInt:=tbSIslider.position;
+  tempSingle:=tempInt/100;
+
+  PluginHost.SetParameter(0,tempSingle,PluginInstance[1]);
+  lSIparam0value.caption:=GetParameterDisplay(0,PluginInstance[1]);
+  tempSingle:=pluginHost.GetParameter(0,PluginInstance[1]);
+  lSIparam0dword.caption:=floattostr(tempSingle);
 end;
 
 end.

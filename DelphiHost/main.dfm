@@ -173,8 +173,8 @@ object fmMain: TfmMain
     Caption = 'Plugin processing time:'
   end
   object lAPIversion: TLabel
-    Left = 31
-    Top = 349
+    Left = 55
+    Top = 373
     Width = 51
     Height = 13
     Caption = 'APIversion'
@@ -767,73 +767,76 @@ object fmMain: TfmMain
     OnChange = tbParamChange
   end
   object gbSecondInstance: TGroupBox
-    Left = 24
-    Top = 416
+    Left = 20
+    Top = 431
     Width = 537
-    Height = 265
+    Height = 242
     Caption = ' Second Plugin Instance Tester '
     TabOrder = 36
     object PaintBox2: TPaintBox
-      Left = 336
-      Top = 128
-      Width = 177
-      Height = 121
+      Left = 344
+      Top = 72
+      Width = 160
+      Height = 120
     end
     object lSIParam0Name: TLabel
-      Left = 33
-      Top = 196
+      Left = 45
+      Top = 165
       Width = 64
       Height = 13
       Caption = 'Param0Name'
     end
     object lSIParam0value: TLabel
-      Left = 192
-      Top = 220
+      Left = 204
+      Top = 189
       Width = 63
       Height = 13
       Caption = 'Param0Value'
     end
     object lSIparam0dword: TLabel
-      Left = 190
-      Top = 236
+      Left = 202
+      Top = 205
       Width = 67
       Height = 13
       Caption = 'Param0Dword'
     end
     object ebSIfilename: TEdit
-      Left = 27
-      Top = 30
+      Left = 123
+      Top = 31
       Width = 289
       Height = 21
       TabOrder = 0
     end
     object bSIbrowse: TButton
-      Left = 344
+      Left = 32
       Top = 29
       Width = 75
       Height = 25
       Caption = 'Browse'
       TabOrder = 1
+      OnClick = bSIbrowseClick
     end
     object bSIrunUpAVI: TButton
-      Left = 24
+      Left = 19
       Top = 85
-      Width = 75
+      Width = 97
       Height = 25
-      Caption = 'Run up AVI'
+      Caption = 'Run up 2nd AVI'
       TabOrder = 2
+      OnClick = bSIrunUpAVIClick
     end
     object bSIshutDownAVI: TButton
       Left = 16
       Top = 125
-      Width = 97
+      Width = 105
       Height = 25
-      Caption = 'Shut Down AVI'
+      Caption = 'Shut Down 2nd AVI'
       TabOrder = 3
+      OnClick = bSIshutDownAVIClick
     end
     object tbSISlider: TTrackBar
-      Left = 19
-      Top = 218
+      Left = 31
+      Top = 187
       Width = 150
       Height = 33
       Max = 100
@@ -846,38 +849,25 @@ object fmMain: TfmMain
       TabOrder = 4
       TickMarks = tmBottomRight
       TickStyle = tsAuto
+      OnChange = tbSISliderChange
     end
     object bRunUpSI: TButton
-      Left = 128
+      Left = 136
       Top = 85
       Width = 177
       Height = 25
       Caption = 'Run up Second Plugin Instance'
       TabOrder = 5
+      OnClick = bRunUpSIClick
     end
     object bShutDownSI: TButton
-      Left = 120
+      Left = 128
       Top = 125
       Width = 201
       Height = 25
       Caption = 'Shut Down Second Plugin Instance'
       TabOrder = 6
-    end
-    object bSIplay: TButton
-      Left = 344
-      Top = 80
-      Width = 73
-      Height = 25
-      Caption = 'Play '
-      TabOrder = 7
-    end
-    object bSIStop: TButton
-      Left = 432
-      Top = 80
-      Width = 73
-      Height = 25
-      Caption = 'Stop'
-      TabOrder = 8
+      OnClick = bShutDownSIClick
     end
   end
   object odAVI: TOpenDialog
