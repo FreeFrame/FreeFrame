@@ -137,8 +137,7 @@ extern "C" {
 		retval.ivalue = (DWORD) getExtendedInfo();
 		break;
 	case FF_PROCESSFRAMECOPY:
-		// not implemented yet
-		retval.ivalue = FF_FAIL;
+		retval.ivalue = pPlugObj->processFrameCopy((ProcessFrameCopyStruct*)pParam);
 		break;
 	case FF_GETPARAMETERTYPE:		
 		// not implemented yet
