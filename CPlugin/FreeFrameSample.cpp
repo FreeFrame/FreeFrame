@@ -52,7 +52,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 PlugInfoStruct plugInfo;
 VideoInfoStruct videoInfo;
 ParameterStruct parameters[NUM_PARAMS];
-int vidmode;
 
 /////////////////////////////////////////////////////
 //
@@ -109,10 +108,8 @@ DWORD initialise(VideoInfoStruct* pVideoInfo)
 	videoInfo.frameHeight = pVideoInfo->frameHeight;
 	videoInfo.bitDepth = pVideoInfo->bitDepth;
 
-	// this shouldn't happen if the host is checking the capabilities properly
-	vidmode = videoInfo.bitDepth;
-	if (vidmode >2 || vidmode < 0) {
-	  return FF_FAIL;
+	if (getPluginCaps(videoInfo.bitDepth)!=FF_TRUE) {
+		return FF_FAIL;
 	}
 
 	// populate the parameters structs
@@ -263,6 +260,46 @@ float getParameter(DWORD index)
 	return parameters[index].value;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////
+// processFrameTemplate
+//
+// process a frame of video
+//
+// parameters:
+// 32-bit pointer to byte array containing frame of video
+//
+// return values (DWORD):
+// FF_SUCCESS
+// FF_FAIL on error
+//
+// special:
+// the type VideoPixel is a template, which is filled in by the calls made in
+// processFrame, this way the implementation is valid for both 24 and 32 bit modes
+// 
+
+template <class VideoPixel>
+DWORD processFrameTemplate(LPVOID pFrame) {
+	VideoPixel* pPixel = (VideoPixel*) pFrame;
+	DWORD x, y, width, height;
+	width=videoInfo.frameWidth;
+	height=videoInfo.frameHeight;
+	float parameter0, parameter1, parameter2;
+	parameter0=parameters[0].value;
+	parameter1=parameters[1].value;
+	parameter2=parameters[2].value;
+
+	for (y = 0; y < height; y++) {
+		for (x = 0; x < width; x++) {
+			pPixel->blue = (BYTE) (pPixel->blue * parameter0);
+			pPixel->green = (BYTE) (pPixel->green * parameter1);
+			pPixel->red = (BYTE) (pPixel->red * parameter2);
+			pPixel++;
+		}
+	}
+	return FF_SUCCESS;
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////
 // processFrame
 //
@@ -275,21 +312,19 @@ float getParameter(DWORD index)
 // FF_SUCCESS
 // FF_FAIL on error
 //
-
 DWORD processFrame(LPVOID pFrame)
 {
-	VideoPixel24bit* pPixel = (VideoPixel24bit*) pFrame;
-	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
-	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
-	    // this is very slow! Should be a lookup table
-	    pPixel->blue = (BYTE) (pPixel->blue * parameters[0].value);
-	    pPixel->green = (BYTE) (pPixel->green * parameters[1].value);
-	    pPixel->red = (BYTE) (pPixel->red * parameters[2].value);
-	    pPixel++;
-	  }
+	switch (videoInfo.bitDepth) {
+	case 0:
+		return FF_FAIL;
+	case 1:
+		return processFrameTemplate<VideoPixel24bit>(pFrame);
+	case 2:
+		return processFrameTemplate<VideoPixel32bit>(pFrame);
+	default:
+		return FF_FAIL;
 	}
 
-	return FF_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -317,7 +352,7 @@ DWORD getPluginCaps(DWORD index)
 	case 1:
 		return FF_TRUE;
 	case 2:
-		return FF_FALSE;
+		return FF_TRUE;
 	default:
 		return FF_FALSE;
 	}
