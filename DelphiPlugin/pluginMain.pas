@@ -42,6 +42,7 @@ type
   TVideoInfoStruct = record
     FrameWidth: dword;
     FrameHeight: dword;
+    BitDepth: dword;     // 0 = 16 bit 5-6-5   1 = 24bit packed   2 = 32bit
   end;
   TParameterNameStruct = record
     Parameter0Name: array [0..15] of char;
@@ -85,7 +86,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1021;
+    APIMinorVersion:=1022;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -108,10 +109,13 @@ var
 begin
   tempPointer:=pDw(pParam);
   pVideoInfoStruct:=@VideoInfoStruct;
-  pVideoInfoStruct^:=tempPointer^;
+  pVideoInfoStruct^:=tempPointer^;   // Frame Width
   inc(tempPointer);
   inc(pVideoInfoStruct);
-  pVideoInfoStruct^:=tempPointer^;
+  pVideoInfoStruct^:=tempPointer^;   // Frame Height
+  inc(tempPointer);
+  inc(pVideoInfoStruct);
+  pVideoInfoStruct^:=tempPointer^;   // Bit Depth
   result:=pointer(95);
 end;
 
@@ -126,10 +130,12 @@ var
   x: integer;
 begin
   tempPbyte:= pb(pParam);
+  // 24 bit brghtness control (more darkness really) ...........................
   for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
     tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
     inc(tempPbyte);
   end;
+  // ...........................................................................
   result:=pointer(VideoInfoStruct.FrameWidth);
 end;
 
