@@ -5,13 +5,14 @@
 #define PETE_PLUGINS_MAX (128)
 
 void GraphUtil_InitPluginInfo(SPete_GraphData* pGraph);
-bool GraphUtil_LoadPlugin(SPete_PluginInfo* pResult,char* pFileName);
+bool GraphUtil_LoadPlugin(SPete_GraphData* pGraph,SPete_PluginInfo* pResult,char* pFileName);
 void GraphUtil_GetPluginName(FF_Main_FuncPtr pFreeFrameMain,char* poutName);
 bool GraphUtil_MakeListEntry(SPete_GraphData* pGraph,SPete_Node* pNode);
 void GraphUtil_FreeNode(SPete_Node* pNode);
 void GraphUtil_FreePluginNode(SPete_Node* pNode);
 void GraphUtil_FreeInputNode(SPete_Node* pNode);
 void GraphUtil_FreeOutputNode(SPete_Node* pNode);
+void GraphUtil_FreeSwitcherNode(SPete_Node* pNode);
 void GraphUtil_FreeExternalParamNode(SPete_Node* pNode);
 void GraphUtil_FreeConstantParamNode(SPete_Node* pNode);
 void GraphUtil_FreeKeyboardParamNode(SPete_Node* pNode);
@@ -24,10 +25,13 @@ int GraphUtil_FlattenNode(SPete_Node* pNode,SPete_GraphData* pGraph,char* pCurre
 U32 GraphUtil_GetNodeOffset(SPete_Node* pNode,SPete_NodeListEntry* pNodeListHead);
 int GraphUtil_UnFlattenNode(SPete_Node* pNode,SPete_GraphData* pGraph,char* pCurrentData);
 void GraphUtil_DoIterate(SPete_Node* pNode,Iterate_FuncPtr pfnAction,void* pCookie,U32 CurrentVisitTime);
+void GraphUtil_DoPrunedIterate(SPete_Node* pNode,Iterate_FuncPtr pfnAction,void* pCookie,U32 CurrentVisitTime);
+bool GraphUtil_DoLoadFlattenedDLL(SPete_GraphData* pGraph,SPete_PluginInfo* pPluginInfo);
 
 void GraphUtil_Init(SPete_GraphData* pGraph) {
 
 	Pete_ZeroMemory(pGraph,sizeof(*pGraph));
+	pGraph->m_nStructSize=sizeof(*pGraph);
 
 	GraphUtil_InitPluginInfo(pGraph);
 
@@ -205,6 +209,17 @@ void GraphUtil_Init(SPete_GraphData* pGraph) {
 
 	pGraph->m_bIsValid=true;
 
+	strcpy(pGraph->m_pName,"FreeChain Plugin");
+
+	pGraph->m_pUniqueID[0]='F';
+	pGraph->m_pUniqueID[1]='C';
+	pGraph->m_pUniqueID[2]='H';
+	pGraph->m_pUniqueID[3]='N';
+	pGraph->m_pUniqueID[4]='\0';
+
+	strcpy(pGraph->m_pDescription,"No description written");
+
+	pGraph->m_bStorePluginCopies=true;
 
 }
 
@@ -219,6 +234,9 @@ void GraphUtil_InitFromFlat(SPete_GraphData* pGraph,char* pFlatData,int nFlatDat
 
 	SPete_GraphData* pFlatGraph=(SPete_GraphData*)(pCurrentData);
 
+	*pGraph=*pFlatGraph;
+	pGraph->m_bIsValid=false;
+
 	pGraph->m_nFlattenedDataSize=nFlatDataSize;
 	pGraph->m_nPluginInfoCount=pFlatGraph->m_nPluginInfoCount;
 	pGraph->m_pRootNode=(SPete_Node*)
@@ -229,13 +247,13 @@ void GraphUtil_InitFromFlat(SPete_GraphData* pGraph,char* pFlatData,int nFlatDat
 		(pDataStart+((U32)(pFlatGraph->m_pPluginInfo)));
 	pGraph->m_PluginInfoAllocType=eAlloc_Flattened;
 
-	pCurrentData+=sizeof(SPete_GraphData);
+	pCurrentData+=pGraph->m_nStructSize;
 
 	const int nPluginInfoCount=pGraph->m_nPluginInfoCount;
 
 	SPete_PluginInfo* pPluginInfo=pGraph->m_pPluginInfo;
 
-	pCurrentData+=sizeof(SPete_PluginInfo)*nPluginInfoCount;
+	pCurrentData+=(sizeof(pPluginInfo[0]))*nPluginInfoCount;
 
 	int nCount;
 	for (nCount=0; nCount<nPluginInfoCount; nCount+=1) {
@@ -301,7 +319,7 @@ void GraphUtil_DeInit(SPete_GraphData* pGraph) {
 }
 
 
-bool GraphUtil_DoLoadPlugin(SPete_PluginInfo* pPluginInfo) {
+bool GraphUtil_DoLoadPlugin(SPete_GraphData* pGraph,SPete_PluginInfo* pPluginInfo) {
 
 	bool bLoadSucceeded=false;
 
@@ -315,7 +333,7 @@ bool GraphUtil_DoLoadPlugin(SPete_PluginInfo* pPluginInfo) {
 
 	pPluginInfo->m_hModuleHandle=LoadLibrary(pPluginInfo->m_pDLLPath);
 
-	if (pPluginInfo->m_hModuleHandle!=INVALID_HANDLE_VALUE) {
+	if (pPluginInfo->m_hModuleHandle!=NULL) {
 
 		FF_Main_FuncPtr pFreeFrameMain=
 			(FF_Main_FuncPtr)
@@ -328,6 +346,24 @@ bool GraphUtil_DoLoadPlugin(SPete_PluginInfo* pPluginInfo) {
 			bLoadSucceeded=true;
 		} else {
 			FreeLibrary(pPluginInfo->m_hModuleHandle);
+		}
+
+	} else {
+
+		const bool bFlatDLLAvailable=
+			((pGraph->m_nFlattenedDataSize>0)&&
+			(pPluginInfo->m_FlattenedDLLImageSize>0)&&
+			(pPluginInfo->m_FlattenedDLLImageOffset>0));
+
+		if (bFlatDLLAvailable) {
+
+			bLoadSucceeded=
+				GraphUtil_DoLoadFlattenedDLL(pGraph,pPluginInfo);
+
+		} else {
+			
+			bLoadSucceeded=false;
+
 		}
 
 	}
@@ -375,6 +411,8 @@ void GraphUtil_FlattenGraph(SPete_GraphData* pGraph) {
 
 	SPete_GraphData* pFlatGraph=(SPete_GraphData*)(pCurrentData);
 
+	*pFlatGraph=*pGraph;
+
 	pFlatGraph->m_nFlattenedDataSize=pGraph->m_nFlattenedDataSize;
 	pFlatGraph->m_nPluginInfoCount=pGraph->m_nPluginInfoCount;
 	pFlatGraph->m_pRootNode=(SPete_Node*)
@@ -389,6 +427,9 @@ void GraphUtil_FlattenGraph(SPete_GraphData* pGraph) {
 	const int nPluginInfoCount=pGraph->m_nPluginInfoCount;
 
 	SPete_PluginInfo* pPluginInfo=pGraph->m_pPluginInfo;
+	SPete_PluginInfo* pFlatPluginInfo=
+		(SPete_PluginInfo*)
+		(pCurrentData);
 
 	int nCount;
 	for (nCount=0; nCount<nPluginInfoCount; nCount+=1) {
@@ -399,8 +440,7 @@ void GraphUtil_FlattenGraph(SPete_GraphData* pGraph) {
 		SPete_PluginInfo* pFlatInfo=
 			(SPete_PluginInfo*)(pCurrentData);
 
-		pFlatInfo->m_FlattenedDLLImageOffset=
-			pCurrentInfo->m_FlattenedDLLImageOffset;
+		pFlatInfo->m_FlattenedDLLImageOffset=0;
 
 		pFlatInfo->m_FlattenedDLLImageSize=
 			pCurrentInfo->m_FlattenedDLLImageSize;
@@ -412,6 +452,7 @@ void GraphUtil_FlattenGraph(SPete_GraphData* pGraph) {
 		strcpy(pFlatInfo->m_pDLLPath,pCurrentInfo->m_pDLLPath);
 		pFlatInfo->m_pMainFunc=NULL;
 		strcpy(pFlatInfo->m_pName,pCurrentInfo->m_pName);
+		pFlatInfo->m_FlattenedInfoOffset=pCurrentInfo->m_FlattenedInfoOffset;
 		
 		const int nParamTotal=pCurrentInfo->m_nParameterCount;
 
@@ -430,7 +471,10 @@ void GraphUtil_FlattenGraph(SPete_GraphData* pGraph) {
 	for (nCount=0; nCount<nPluginInfoCount; nCount+=1) {
 
 		SPete_PluginInfo* pCurrentInfo=
-			&pPluginInfo[nCount];
+			&pFlatPluginInfo[nCount];
+
+		pCurrentInfo->m_FlattenedDLLImageOffset=
+			(pCurrentData-pDataStart);
 
 		GraphUtil_FlattenDLL(pCurrentInfo,pCurrentData);
 	
@@ -596,7 +640,61 @@ SPete_Node* GraphUtil_MakeInputNode(SPete_GraphData* pGraph,int nInputIndex,int 
 
 }
 
-SPete_Node* GraphUtil_MakeExternalParamNode(SPete_GraphData* pGraph,int nIndex,char* pName,float Default,int nPosX,int nPosY) {
+SPete_Node* GraphUtil_MakeSwitcherNode(SPete_GraphData* pGraph,int nSwitcherInputCount,int nPosX,int nPosY) {
+
+	SPete_EffectNode* pResult=(SPete_EffectNode*)
+		malloc(sizeof(SPete_EffectNode));
+
+	if (pResult==NULL) {
+		return NULL;
+	}
+
+	Pete_ZeroMemory(pResult,sizeof(*pResult));
+
+	pResult->m_eType=eType_Effect_Switcher;
+	pResult->m_Size.nX=50;
+	pResult->m_Size.nY=40;
+	pResult->m_Pos.nX=nPosX;
+	pResult->m_Pos.nY=nPosY;
+	pResult->m_AllocationType=eAlloc_Heap;
+
+	pResult->m_nSwitcherInputCount=nSwitcherInputCount;
+
+	const int nInputCount=PETE_MAX_SWITCHER_INPUTS;
+	const int nInputByteCount=(nInputCount*sizeof(SPete_EffectNode*));
+
+	pResult->m_ppInputs=(SPete_EffectNode**)
+		malloc(nInputByteCount);
+	if (pResult->m_ppInputs==NULL) {
+		return NULL;
+	}
+
+	Pete_ZeroMemory(pResult->m_ppInputs,nInputByteCount);
+
+	const int nParameterCount=GraphUtil_GetParameterCount(pResult);
+	const int nParameterByteCount=
+		(nParameterCount*sizeof(SPete_ParameterNode*));
+
+	pResult->m_ppParameters=(SPete_ParameterNode**)
+		malloc(nParameterByteCount);
+	if (pResult->m_ppParameters==NULL) {
+		return NULL;
+	}
+
+	Pete_ZeroMemory(pResult->m_ppParameters,nParameterByteCount);
+
+	const bool bMakeListEntryResult=
+		GraphUtil_MakeListEntry(pGraph,pResult);
+
+	if (bMakeListEntryResult==false) {
+		return NULL;
+	}
+
+	return pResult;
+
+}
+
+SPete_Node* GraphUtil_MakeExternalParamNode(SPete_GraphData* pGraph,int nIndex,char* pName,float Default,U32 Type,int nPosX,int nPosY) {
 
 	SPete_ParameterNode* pResult=(SPete_ParameterNode*)
 		malloc(sizeof(SPete_ParameterNode));
@@ -622,6 +720,8 @@ SPete_Node* GraphUtil_MakeExternalParamNode(SPete_GraphData* pGraph,int nIndex,c
 	pResult->m_ExternalDefault=Default;
 
 	pResult->m_nExternalIndex=nIndex;
+
+	pResult->m_ExternalType=Type;
 
 	const bool bMakeListEntryResult=
 		GraphUtil_MakeListEntry(pGraph,pResult);
@@ -654,6 +754,11 @@ int GraphUtil_GetInputCount(SPete_Node* pNode) {
 			nResult=pPluginInfo->m_nInputCount;
 		}break;
 
+		case eType_Effect_Switcher: {
+			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
+			nResult=pEffectNode->m_nSwitcherInputCount;
+		}break;
+
 		default: {
 			nResult=0;
 		}break;
@@ -682,6 +787,10 @@ int GraphUtil_GetParameterCount(SPete_Node* pNode) {
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 			SPete_PluginInfo* pPluginInfo=pEffectNode->m_pPluginInfo;
 			nResult=(pPluginInfo->m_nParameterCount+1);
+		}break;
+
+		case eType_Effect_Switcher: {
+			nResult=1;
 		}break;
 
 		default: {
@@ -764,9 +873,36 @@ SPete_PluginInfo* GraphUtil_AddPluginInfo(SPete_GraphData* pGraph,char* pFileNam
 
 	}
 
+	const int nNewPluginCount=nPluginCount+1;
+	SPete_PluginInfo* pNewPluginInfo=(SPete_PluginInfo*)
+		(malloc(sizeof(SPete_PluginInfo)*nNewPluginCount));
+	
+	memcpy(pNewPluginInfo,pPluginInfo,sizeof(SPete_PluginInfo)*nPluginCount);
+
+	SPete_NodeListEntry* pCurrentEntry=pGraph->m_pNodeListHead;
+	while (pCurrentEntry!=NULL) {
+
+		SPete_Node* pNode=pCurrentEntry->m_pNode;
+		if (pNode->m_eType==eType_Effect_Plugin) {
+
+			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
+
+			SPete_PluginInfo* pOldPluginPointer=pEffectNode->m_pPluginInfo;
+			const int nPluginInfoOffset=(pOldPluginPointer-pPluginInfo);
+			pEffectNode->m_pPluginInfo=(pNewPluginInfo+nPluginInfoOffset);
+
+		}
+
+		pCurrentEntry=pCurrentEntry->m_pNext;
+
+	}
+
+	pGraph->m_pPluginInfo=pNewPluginInfo;
+	pPluginInfo=pNewPluginInfo;
+
 	SPete_PluginInfo* pNewPlugin=&pPluginInfo[nPluginCount];
 
-	bool bLoadPluginResult=GraphUtil_LoadPlugin(pNewPlugin,pFileName);
+	bool bLoadPluginResult=GraphUtil_LoadPlugin(pGraph,pNewPlugin,pFileName);
 
 	if (bLoadPluginResult==false) {
 
@@ -774,7 +910,7 @@ SPete_PluginInfo* GraphUtil_AddPluginInfo(SPete_GraphData* pGraph,char* pFileNam
 
 	}
 
-	pGraph->m_nPluginInfoCount+=1;
+	pGraph->m_nPluginInfoCount=nNewPluginCount;
 
 	return pNewPlugin;
 	
@@ -822,7 +958,8 @@ bool GraphUtil_HasParameterOutput(SPete_Node* pNode) {
 
 		case eType_Effect_Output:
 		case eType_Effect_Input:
-		case eType_Effect_Plugin: {
+		case eType_Effect_Plugin:
+		case eType_Effect_Switcher: {
 
 			bResult=false;								  
 
@@ -858,7 +995,8 @@ bool GraphUtil_HasImageOutput(SPete_Node* pNode) {
 		}break;
 
 		case eType_Effect_Input:
-		case eType_Effect_Plugin: {
+		case eType_Effect_Plugin:
+		case eType_Effect_Switcher: {
 
 			bResult=true;
 
@@ -883,11 +1021,20 @@ bool GraphUtil_HasImageOutput(SPete_Node* pNode) {
 
 }
 
+void GraphUtil_PrunedIterate(SPete_Node* pNode,Iterate_FuncPtr pfnAction,void* pCookie) {
+
+	U32 CurrentTime=(pNode->m_LastVisitTime+1);	
+
+	GraphUtil_DoPrunedIterate(pNode,pfnAction,pCookie,CurrentTime);
+
+}
+
+
 /*---------------------------------------------------------------------------*/
 
 void GraphUtil_InitPluginInfo(SPete_GraphData* pGraph) {
 
-	pGraph->m_nPluginInfoCount=4;
+	pGraph->m_nPluginInfoCount=0;
 
 	pGraph->m_pPluginInfo=(SPete_PluginInfo*)
 		malloc(sizeof(SPete_PluginInfo)*PETE_PLUGINS_MAX);
@@ -899,24 +1046,24 @@ void GraphUtil_InitPluginInfo(SPete_GraphData* pGraph) {
 		return;
 	}
 
-	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[0],"C:\\projects\\delphihost\\pluginsbackup\\peteburn.dll");
-
-	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[1],"C:\\projects\\delphihost\\pluginsbackup\\petedodge.dll");
-
-	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[2],"C:\\projects\\delphihost\\pluginsbackup\\peteexclusion.dll");
-
-	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[3],"C:\\projects\\delphihost\\pluginsbackup\\petefisheye.dll");
+//	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[0],"C:\\projects\\delphihost\\pluginsbackup\\peteburn.dll");
+//
+//	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[1],"C:\\projects\\delphihost\\pluginsbackup\\petedodge.dll");
+//
+//	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[2],"C:\\projects\\delphihost\\pluginsbackup\\peteexclusion.dll");
+//
+//	GraphUtil_LoadPlugin(&pGraph->m_pPluginInfo[3],"C:\\projects\\delphihost\\pluginsbackup\\petefisheye.dll");
 
 }
 
-bool GraphUtil_LoadPlugin(SPete_PluginInfo* pResult,char* pFileName) {
+bool GraphUtil_LoadPlugin(SPete_GraphData* pGraph,SPete_PluginInfo* pResult,char* pFileName) {
 	
 	Pete_ZeroMemory(pResult,sizeof(*pResult));
 
 	strcpy(pResult->m_pDLLPath,pFileName);
 	pResult->m_nReferenceCount=0;
 
-	const bool bLoadSucceeded=GraphUtil_DoLoadPlugin(pResult);
+	const bool bLoadSucceeded=GraphUtil_DoLoadPlugin(pGraph,pResult);
 
 	if (!bLoadSucceeded) {
 		char MessageString[1024];
@@ -1111,6 +1258,10 @@ void GraphUtil_FreeNode(SPete_Node* pNode) {
 			GraphUtil_FreePluginNode(pNode);			
 		}break;
 
+		case eType_Effect_Switcher: {
+			GraphUtil_FreeSwitcherNode(pNode);			
+		}break;
+
 		case eType_Parameter_External: {
 			GraphUtil_FreeExternalParamNode(pNode);			
 		}break;
@@ -1143,6 +1294,7 @@ void GraphUtil_FreePluginNode(SPete_Node* pNode) {
 	free(pEffectNode->m_ppInputs);
 
 	free(pEffectNode);
+
 }
 
 void GraphUtil_FreeInputNode(SPete_Node* pNode) {
@@ -1154,6 +1306,17 @@ void GraphUtil_FreeInputNode(SPete_Node* pNode) {
 void GraphUtil_FreeOutputNode(SPete_Node* pNode) {
 
 	free(pNode);
+
+}
+
+void GraphUtil_FreeSwitcherNode(SPete_Node* pNode) {
+
+	SPete_EffectNode* pEffectNode=
+		(SPete_EffectNode*)(pNode);
+
+	free(pEffectNode->m_ppInputs);
+
+	free(pEffectNode);
 
 }
 
@@ -1267,9 +1430,16 @@ int GraphUtil_CalcFlattenedNodeSize(SPete_Node* pNode) {
 
 		case eType_Effect_Input:
 		case eType_Effect_Output:
-		case eType_Effect_Plugin: {
+		case eType_Effect_Plugin:
+		case eType_Effect_Switcher: {
 
-			const int nInputCount=GraphUtil_GetInputCount(pNode);
+			int nInputCount;
+			if (pNode->m_eType==eType_Effect_Switcher) {
+				nInputCount=PETE_MAX_SWITCHER_INPUTS;
+			} else {
+				nInputCount=GraphUtil_GetInputCount(pNode);
+			}
+
 			const int nInputByteCount=(nInputCount*sizeof(SPete_EffectNode*));
 
 			const int nParameterCount=GraphUtil_GetParameterCount(pNode);
@@ -1341,9 +1511,16 @@ int GraphUtil_FlattenNode(SPete_Node* pNode,SPete_GraphData* pGraph,char* pCurre
 
 		case eType_Effect_Input:
 		case eType_Effect_Output:
-		case eType_Effect_Plugin: {
+		case eType_Effect_Plugin:
+		case eType_Effect_Switcher: {
 
-			const int nInputCount=GraphUtil_GetInputCount(pNode);
+			int nInputCount;
+			if (pNode->m_eType==eType_Effect_Switcher) {
+				nInputCount=PETE_MAX_SWITCHER_INPUTS;
+			} else {
+				nInputCount=GraphUtil_GetInputCount(pNode);
+			}
+
 			const int nInputByteCount=(nInputCount*sizeof(SPete_EffectNode*));
 
 			const int nParameterCount=GraphUtil_GetParameterCount(pNode);
@@ -1361,6 +1538,8 @@ int GraphUtil_FlattenNode(SPete_Node* pNode,SPete_GraphData* pGraph,char* pCurre
 			pFlatEffectNode->m_pInternalOutputBuffer=NULL;
 			pFlatEffectNode->m_Pos=pEffectNode->m_Pos;
 			pFlatEffectNode->m_pOutput=NULL;
+			pFlatEffectNode->m_nSwitcherInputCount=pEffectNode->m_nSwitcherInputCount;
+			pFlatEffectNode->m_pExternalOutputBuffer=NULL;
 
 			if (nInputCount==0) {
 	
@@ -1471,6 +1650,7 @@ int GraphUtil_FlattenNode(SPete_Node* pNode,SPete_GraphData* pGraph,char* pCurre
 			strcpy(pFlatParamNode->m_pExternalLabel,pParamNode->m_pExternalLabel);
 			pFlatParamNode->m_ExternalDefault=pParamNode->m_ExternalDefault;
 			pFlatParamNode->m_nExternalIndex=pParamNode->m_nExternalIndex;
+			pFlatParamNode->m_ExternalType=pParamNode->m_ExternalType;
 
 			if (nParameterCount==0) {
 	
@@ -1550,7 +1730,8 @@ int GraphUtil_UnFlattenNode(SPete_Node* pNode,SPete_GraphData* pGraph,char* pCur
 
 		case eType_Effect_Input:
 		case eType_Effect_Output:
-		case eType_Effect_Plugin: {
+		case eType_Effect_Plugin:
+		case eType_Effect_Switcher: {
 
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 			
@@ -1561,7 +1742,12 @@ int GraphUtil_UnFlattenNode(SPete_Node* pNode,SPete_GraphData* pGraph,char* pCur
 
 			}
 			
-			const int nInputCount=GraphUtil_GetInputCount(pNode);
+			int nInputCount;
+			if (pNode->m_eType==eType_Effect_Switcher) {
+				nInputCount=PETE_MAX_SWITCHER_INPUTS;
+			} else {
+				nInputCount=GraphUtil_GetInputCount(pNode);
+			}
 			const int nInputByteCount=(nInputCount*sizeof(SPete_EffectNode*));
 
 			const int nParameterCount=GraphUtil_GetParameterCount(pNode);
@@ -1710,5 +1896,146 @@ void GraphUtil_DoIterate(SPete_Node* pNode,Iterate_FuncPtr pfnAction,void* pCook
 	}
 
 	(*pfnAction)(pNode,pCookie);
+
+}
+
+void GraphUtil_DoPrunedIterate(SPete_Node* pNode,Iterate_FuncPtr pfnAction,void* pCookie,U32 CurrentVisitTime) {
+
+	if (pNode==NULL) {
+		return;
+	}
+
+	if (pNode->m_LastVisitTime==CurrentVisitTime) {
+		return;
+	} else {
+		pNode->m_LastVisitTime=CurrentVisitTime;
+	}
+	
+	const int nParamCount=GraphUtil_GetParameterCount(pNode);
+
+	int nCount;
+	for (nCount=0; nCount<nParamCount; nCount+=1) {
+
+		SPete_ParameterNode* pParamNode=pNode->m_ppParameters[nCount];
+		
+		GraphUtil_DoPrunedIterate(pParamNode,pfnAction,pCookie,CurrentVisitTime);
+
+	}
+
+	if (pNode->m_eType==eType_Effect_Switcher) {
+
+		SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
+
+		const int nInputCount=pEffectNode->m_nSwitcherInputCount;
+		const float ParamValue=pEffectNode->m_ppParameters[0]->m_OutputValue;
+		const int nCurrentInput=(int)((ParamValue*(nInputCount-1))+0.5f);
+
+		SPete_EffectNode* pInputNode=pEffectNode->m_ppInputs[nCurrentInput];
+		GraphUtil_DoPrunedIterate(pInputNode,pfnAction,pCookie,CurrentVisitTime);
+
+	} else {
+
+		const int nInputCount=GraphUtil_GetInputCount(pNode);
+		for (nCount=0; nCount<nInputCount; nCount+=1) {
+
+			SPete_EffectNode* pCurrentEffect=(SPete_EffectNode*)(pNode);
+
+			SPete_EffectNode* pInputNode=pCurrentEffect->m_ppInputs[nCount];
+
+			GraphUtil_DoPrunedIterate(pInputNode,pfnAction,pCookie,CurrentVisitTime);
+
+		}
+
+	}
+
+	(*pfnAction)(pNode,pCookie);
+
+}
+
+bool GraphUtil_DoLoadFlattenedDLL(SPete_GraphData* pGraph,SPete_PluginInfo* pPluginInfo) {
+
+	char* pRawImageData=(char*)
+		(pGraph->m_pFlattenedData+pPluginInfo->m_FlattenedDLLImageOffset);
+	const int nRawImageByteCount=
+		pPluginInfo->m_FlattenedDLLImageSize;
+
+	char TempPathString[1024];
+	DWORD GetTempPathResult=
+		GetTempPath(1024,TempPathString);
+	
+	if (GetTempPathResult==0) {
+		strcpy(TempPathString,".\\");
+	}
+
+	char TempFileName[MAX_PATH];
+	DWORD GetTempFileNameResult=
+		GetTempFileName(TempPathString,"FRF",0,TempFileName);
+
+	HANDLE hTempFile=CreateFile(
+		TempFileName,
+		GENERIC_READ|GENERIC_WRITE,
+		FILE_SHARE_DELETE|FILE_SHARE_READ|FILE_SHARE_WRITE,
+		NULL,
+		CREATE_ALWAYS,
+		FILE_ATTRIBUTE_NORMAL,
+		NULL);
+
+	if (hTempFile==INVALID_HANDLE_VALUE) {
+		char MessageString[1024];
+		sprintf(MessageString,"Temp file '%s' could not be created",TempFileName);
+		MessageBox(NULL,MessageString,"",MB_OK);
+		return false;
+	}
+
+	DWORD nBytesWritten;
+	BOOL bWriteFileResult=WriteFile(
+		hTempFile,
+		pRawImageData,
+		nRawImageByteCount,
+		&nBytesWritten,
+		NULL);
+
+	if (bWriteFileResult==0) {
+		char MessageString[1024];
+		sprintf(MessageString,"Temp file '%s' could not be written",TempFileName);
+		MessageBox(NULL,MessageString,"",MB_OK);
+		return false;
+	}
+
+	CloseHandle(hTempFile);
+	
+	bool bLoadSucceded=false;
+
+	pPluginInfo->m_hModuleHandle=LoadLibrary(TempFileName);
+
+	if (pPluginInfo->m_hModuleHandle!=NULL) {
+
+		FF_Main_FuncPtr pFreeFrameMain=
+			(FF_Main_FuncPtr)
+			GetProcAddress(
+			pPluginInfo->m_hModuleHandle,
+			"plugMain");
+
+		if (pFreeFrameMain!=NULL) {
+			pPluginInfo->m_pMainFunc=pFreeFrameMain;
+			bLoadSucceded=true;
+		} else {
+			FreeLibrary(pPluginInfo->m_hModuleHandle);
+		}
+
+	}
+
+	if (!bLoadSucceded) {
+		char MessageString[1024];
+		sprintf(MessageString,"Plugin '%s' could not be loaded",TempFileName);
+		MessageBox(NULL,MessageString,"",MB_OK);
+		return false;
+	}
+
+//	char MessageString[1024];
+//	sprintf(MessageString,"Plugin '%s' loaded successfully",TempFileName);
+//	MessageBox(NULL,MessageString,"",MB_OK);
+
+	return true;
 
 }

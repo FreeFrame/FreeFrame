@@ -59,5 +59,6 @@ void EditGraph_LoadFreeFrameDLL(SPete_GraphData* pGraph,char* pFileName);
 void EditGraph_InitUI(SPete_GraphData* pGraph);
 void EditGraph_DeInitUI(SPete_GraphData* pGraph);
 bool EditGraph_UIEvent(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,int nPosX,int nPosY,void* pExtraData);
+void EditGraph_FilePropertiesDialog(SPete_GraphData* pGraph);
 
 #endif // INCLUDE_PETESCHAINMAKER_H

@@ -16,6 +16,7 @@ void EditGraph_DrawNode(HWND hWindow,HDC hDeviceContext,SPete_Node* pNode);
 void EditGraph_DrawOutputNode(HWND hWindow,HDC hDeviceContext,SPete_EffectNode* pEffectNode,SPete_UISelection* pSelection);
 void EditGraph_DrawInputNode(HWND hWindow,HDC hDeviceContext,SPete_EffectNode* pEffectNode,SPete_UISelection* pSelection);
 void EditGraph_DrawPluginNode(HWND hWindow,HDC hDeviceContext,SPete_EffectNode* pEffectNode,SPete_UISelection* pSelection);
+void EditGraph_DrawSwitcherNode(HWND hWindow,HDC hDeviceContext,SPete_EffectNode* pEffectNode,SPete_UISelection* pSelection);
 void EditGraph_DrawExternalParamNode(HWND hWindow,HDC hDeviceContext,SPete_ParameterNode* pParamNode,SPete_UISelection* pSelection);
 void EditGraph_DrawConstantParamNode(HWND hWindow,HDC hDeviceContext,SPete_ParameterNode* pParamNode,SPete_UISelection* pSelection);
 void EditGraph_DrawKeyboardParamNode(HWND hWindow,HDC hDeviceContext,SPete_ParameterNode* pParamNode,SPete_UISelection* pSelection);
@@ -55,6 +56,8 @@ void EditGraph_GetParameterLine(SPete_Node* pNode,int nParamIndex,SPete_UILine* 
 void EditGraph_GetInputLine(SPete_Node* pNode,int nInputIndex,SPete_UILine* poutLine);
 bool EditGraph_IsNearLine(SPete_UIPos* pPos,SPete_UILine* pLine,int nTolerance);
 bool EditGraph_WriteResourceAsFile(char* pFileName);
+BOOL CALLBACK EditGraph_SwitcherProperties_Callback(HWND hDialogBox,UINT Message,WPARAM wParam,LPARAM lParam);
+BOOL CALLBACK EditGraph_FileProperties_Callback(HWND hDialogBox,UINT Message,WPARAM wParam,LPARAM lParam);
 
 typedef struct SPete_DialogArgs {
 	SPete_GraphData* m_pGraph;
@@ -66,7 +69,7 @@ char* pTemplateFileName="FFTemplate.dll";
 
 const int nInputTridentStartHeight=16;
 const int nInputTridentEndHeight=8;
-const int nInputTridentSeperation=6;
+const int nInputTridentSeperation=12;
 const int nInputTridentWidth=2;
 
 const int nOutputSpikeHeight=16;
@@ -259,6 +262,16 @@ void EditGraph_DrawNode(HWND hWindow,HDC hDeviceContext,SPete_Node* pNode) {
 		case eType_Effect_Plugin: {
 
 			EditGraph_DrawPluginNode(
+				hWindow,
+				hDeviceContext,
+				(SPete_EffectNode*)pNode,
+				pSelection);
+
+		}break;
+
+		case eType_Effect_Switcher: {
+
+			EditGraph_DrawSwitcherNode(
 				hWindow,
 				hDeviceContext,
 				(SPete_EffectNode*)pNode,
@@ -488,6 +501,75 @@ void EditGraph_DrawPluginNode(HWND hWindow,HDC hDeviceContext,SPete_EffectNode* 
 
 		}
 
+
+	}
+
+}
+
+void EditGraph_DrawSwitcherNode(HWND hWindow,HDC hDeviceContext,SPete_EffectNode* pEffectNode,SPete_UISelection* pSelection) {
+
+	const bool bIsSelected=
+		((pSelection!=NULL)&&
+		(pSelection->m_eType==eSelect_Body));
+
+	U32 BoxFillColour=0x00996699;
+	U32 BoxLineColour=0x00000000;
+	U32 LabelColour=0x00FFFFC0;
+
+	if (bIsSelected) {
+		BoxFillColour^=0x00ffffff;
+		BoxLineColour^=0x00ffffff;
+		LabelColour^=0x00ffffff;
+	}
+
+	const int nOriginX=pEffectNode->m_Pos.nX;
+	const int nOriginY=pEffectNode->m_Pos.nY;
+
+	const int nBoxWidth=pEffectNode->m_Size.nX;
+	const int nBoxHeight=pEffectNode->m_Size.nY;
+
+	const int nLeftX=(nOriginX-(nBoxWidth/2));
+	const int nTopY=(nOriginY-(nBoxHeight/2));
+
+	EditGraph_DrawFilledBox(hDeviceContext,nLeftX,nTopY,nBoxWidth,nBoxHeight,BoxFillColour);
+	EditGraph_DrawUnfilledBox(hDeviceContext,nLeftX,nTopY,nBoxWidth,nBoxHeight,BoxLineColour,1);
+
+	EditGraph_DrawEffectConnections(hDeviceContext,pEffectNode,pSelection);
+	EditGraph_DrawParameterConnections(hDeviceContext,pEffectNode,pSelection);
+
+	char* pLabelText="Switcher";
+
+	EditGraph_DrawText(
+		hDeviceContext,
+		pEffectNode->m_Pos.nX,pEffectNode->m_Pos.nY,
+		pEffectNode->m_Size.nX,pEffectNode->m_Size.nY,
+		pLabelText,
+		"Arial",nDefaultFontSize,
+		LabelColour,
+		eJustify_Centre);
+
+	if (bIsSelected) {
+
+		SPete_UIPos ParamPos;
+		EditGraph_GetParameterPos(pEffectNode,0,1,&ParamPos);
+
+		const int nLeftX=(ParamPos.nX-100);
+		const int nRightX=(ParamPos.nX+80);
+		const int nTopY=(ParamPos.nY-5);
+		const int nBottomY=(ParamPos.nY+1);
+
+		const U32 ParamColour=0x00000000;
+
+		char* pParamName="Selector";
+
+		EditGraph_DrawText(
+			hDeviceContext,
+			nLeftX,nTopY,
+			(nRightX-nLeftX),(nBottomY-nTopY),
+			pParamName,
+			"Arial",nSmallFontSize,
+			ParamColour,
+			eJustify_Right);
 
 	}
 
@@ -1279,7 +1361,7 @@ void EditGraph_RunGraph(SPete_GraphData* pGraph) {
 	const int nScreenByteCount=
 		(nWidth*nHeight*sizeof(U32));
 
-	RunGraph_Init(pGraph->m_pRootNode,nWidth,nHeight,&Environment);
+	RunGraph_Init(pGraph,nWidth,nHeight,&Environment);
 
 	Environment.m_pOutput=(U32*)(malloc(nScreenByteCount));
 
@@ -1483,6 +1565,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 						CandidateNode.m_ExternalDefault=0.0f;
 						CandidateNode.m_pExternalLabel[0]='\0';
 						CandidateNode.m_nExternalIndex=(nHighestFFParam+1);
+						CandidateNode.m_ExternalType=FF_TYPE_STANDARD;
 
 						SPete_DialogArgs DialogArgs;
 						DialogArgs.m_pGraph=pGraph;
@@ -1503,6 +1586,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 								CandidateNode.m_nExternalIndex,
 								CandidateNode.m_pExternalLabel,
 								CandidateNode.m_ExternalDefault,
+								CandidateNode.m_ExternalType,
 								nPosX,nPosY);
 
 						}
@@ -1560,6 +1644,44 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 
 					}break;
 
+					case IDM_NEWSWITCHER: {
+
+						SPete_EffectNode CandidateNode;
+
+						int nHighestInputIndex=-1;
+
+						CandidateNode.m_eType=eType_Effect_Switcher;
+						CandidateNode.m_nSwitcherInputCount=2;
+
+						SPete_DialogArgs DialogArgs;
+						DialogArgs.m_pGraph=pGraph;
+						DialogArgs.m_pNode=&CandidateNode;
+
+						const int nDialogBoxResult=
+							DialogBoxParam(
+							g_hWindowInstance,
+							MAKEINTRESOURCE(IDD_PROPERTIES_SWITCHER),
+							g_hWindow,
+							EditGraph_SwitcherProperties_Callback,
+							(U32)(&DialogArgs));
+
+						if (nDialogBoxResult==IDOK) {
+
+							GraphUtil_MakeSwitcherNode(
+								pGraph,
+								CandidateNode.m_nSwitcherInputCount,
+								nPosX,nPosY);
+
+						}
+
+					}break;
+
+					case IDM_FILE_PROPERTIES: {
+
+						EditGraph_FilePropertiesDialog(pGraph);
+												   
+					}break;
+
 					default: {
 						// do nothing
 					}break;
@@ -1586,7 +1708,8 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 				} else {
 
 					if ((eNodeType==eType_Parameter_External)||
-						(eNodeType==eType_Effect_Input)) {
+						(eNodeType==eType_Effect_Input)||
+						(eNodeType==eType_Effect_Switcher)) {
 
 						ResourceID=IDC_NODEPOPUP;
 
@@ -1677,6 +1800,34 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 									MAKEINTRESOURCE(IDD_PROPERTIES_INPUT),
 									g_hWindow,
 									EditGraph_InputProperties_Callback,
+									(U32)(&DialogArgs));
+
+								if (nDialogBoxResult==IDOK) {
+
+									*pEffectNode=CandidateNode;
+
+								}
+
+														   
+							}break;
+
+							case eType_Effect_Switcher: {
+
+								SPete_EffectNode* pEffectNode=
+									(SPete_EffectNode*)(pNode);
+
+								SPete_EffectNode CandidateNode=*pEffectNode;
+
+								SPete_DialogArgs DialogArgs;
+								DialogArgs.m_pGraph=pGraph;
+								DialogArgs.m_pNode=&CandidateNode;
+
+								const int nDialogBoxResult=
+									DialogBoxParam(
+									g_hWindowInstance,
+									MAKEINTRESOURCE(IDD_PROPERTIES_SWITCHER),
+									g_hWindow,
+									EditGraph_SwitcherProperties_Callback,
 									(U32)(&DialogArgs));
 
 								if (nDialogBoxResult==IDOK) {
@@ -1862,10 +2013,10 @@ bool EditGraph_UIEvent_Dragging(SPete_GraphData* pGraph,EEditGraph_UIEvent eEven
 							if ((pOtherNode->m_eType==eType_Parameter_External)&&
 								(pNode->m_eType==eType_Effect_Plugin)) {
 
-								char* pDefaultName;
+								char pDefaultName[1024];
 								float DefaultValue;
 								if (nParamIndex==0) {
-									pDefaultName="Bypass Effect";
+									sprintf(pDefaultName,"%d-Bypass Effect",pOtherNode->m_nExternalIndex);
 									DefaultValue=0.0f;
 								} else {
 
@@ -1876,8 +2027,12 @@ bool EditGraph_UIEvent_Dragging(SPete_GraphData* pGraph,EEditGraph_UIEvent eEven
 									SPete_PluginParameter* pParamInfo=
 										&pPluginInfo->m_pParameterInfo[nParamIndex-1];
 
-									pDefaultName=pParamInfo->m_pName;
+									sprintf(pDefaultName,"%d-%s",
+										pOtherNode->m_nExternalIndex,
+										pParamInfo->m_pName);
+
 									DefaultValue=pParamInfo->m_Default;
+
 								}
 
 								strcpy(pOtherNode->m_pExternalLabel,pDefaultName);
@@ -2479,20 +2634,20 @@ BOOL CALLBACK EditGraph_FFParamProperties_Callback(HWND hDialogBox,UINT Message,
 				0,
 				(LPARAM)(pDefaultString));
 
-//			UINT CheckState;
-//
-//			if (strlen(pParamNode->m_pExternalLabel)>0) {
-//				CheckState=BST_UNCHECKED;
-//			} else {
-//				CheckState=BST_CHECKED;
-//			}
-//
-//			SendDlgItemMessage(
-//				hDialogBox,
-//				IDC_USEEFFECTSETTINGS,
-//				CheckState,
-//				BST_CHECKED,
-//				0);
+			UINT CheckState;
+
+			if (pParamNode->m_ExternalType==FF_TYPE_BOOLEAN) {
+				CheckState=BST_CHECKED;
+			} else {
+				CheckState=BST_UNCHECKED;
+			}
+
+			SendDlgItemMessage(
+				hDialogBox,
+				IDC_FFISBOOLEAN,
+				BM_SETCHECK,
+				CheckState,
+				0);
 
 			return TRUE;
 
@@ -2559,16 +2714,18 @@ BOOL CALLBACK EditGraph_FFParamProperties_Callback(HWND hDialogBox,UINT Message,
 
 				pParamNode->m_ExternalDefault=atof(pDefaultString);
 
-//				UINT CheckState=SendDlgItemMessage(
-//					hDialogBox,
-//					IDC_USEEFFECTSETTINGS,
-//					BM_GETCHECK,
-//					0,
-//					0);
-//
-//				if (CheckState==BST_CHECKED) {
-//					strcpy(pParamNode->m_pExternalLabel,"");
-//				}
+				UINT CheckState=SendDlgItemMessage(
+					hDialogBox,
+					IDC_FFISBOOLEAN,
+					BM_GETCHECK,
+					0,
+					0);
+
+				if (CheckState==BST_CHECKED) {
+					pParamNode->m_ExternalType=FF_TYPE_BOOLEAN;
+				} else {
+					pParamNode->m_ExternalType=FF_TYPE_STANDARD;
+				}
 
 				EndDialog(hDialogBox, LOWORD(wParam));
 				return TRUE;				
@@ -2873,6 +3030,8 @@ BOOL CALLBACK EditGraph_InputProperties_Callback(HWND hDialogBox,UINT Message,WP
 					break;
 				}
 
+				pEffectNode->m_nInputIndex=nInputIndex;
+
 				EndDialog(hDialogBox, LOWORD(wParam));
 				return TRUE;				
 				
@@ -3039,5 +3198,250 @@ bool EditGraph_WriteResourceAsFile(char* pFileName) {
 	UnlockResource(hFlatDLL);
 
 	return true;
+
+}
+
+BOOL CALLBACK EditGraph_SwitcherProperties_Callback(HWND hDialogBox,UINT Message,WPARAM wParam,LPARAM lParam) {
+
+	static SPete_EffectNode* pEffectNode=NULL;
+	static SPete_GraphData* pGraph=NULL;
+
+	switch (Message) {
+
+		case WM_INITDIALOG: {
+
+			HWND hwndOwner; 
+			RECT rc, rcDlg, rcOwner; 
+ 
+			if ((hwndOwner = GetParent(hDialogBox)) == NULL) 
+			{
+				hwndOwner = GetDesktopWindow(); 
+			}
+
+			GetWindowRect(hwndOwner, &rcOwner); 
+			GetWindowRect(hDialogBox, &rcDlg); 
+			CopyRect(&rc, &rcOwner); 
+ 
+			 // Offset the owner and dialog box rectangles so that 
+			 // right and bottom values represent the width and 
+			 // height, and then offset the owner again to discard 
+			 // space taken up by the dialog box. 
+ 
+			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top); 
+			OffsetRect(&rc, -rc.left, -rc.top); 
+			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom); 
+ 
+			 // The new position is the sum of half the remaining 
+			 // space and the owner's original position. 
+ 
+			SetWindowPos(hDialogBox, 
+				HWND_TOP, 
+				rcOwner.left + (rc.right / 2), 
+				rcOwner.top + (rc.bottom / 2), 
+				0, 0,          // ignores size arguments 
+				SWP_NOSIZE); 
+ 
+			SPete_DialogArgs* pDialogArgs=(SPete_DialogArgs*)(lParam);
+
+			pEffectNode=(SPete_EffectNode*)(pDialogArgs->m_pNode);
+			pGraph=pDialogArgs->m_pGraph;
+
+			char pInputCountString[256];
+
+			sprintf(pInputCountString,"%d",pEffectNode->m_nSwitcherInputCount);
+
+			SendDlgItemMessage(
+				hDialogBox,
+				IDC_INPUTCOUNT,
+				WM_SETTEXT,
+				0,
+				(LPARAM)(pInputCountString));
+
+			return TRUE;
+
+		}break;
+
+		case WM_COMMAND: {
+
+			if (LOWORD(wParam)==IDOK) {
+
+				char pInputCountString[256];
+
+				SendDlgItemMessage(
+					hDialogBox,
+					IDC_INPUTCOUNT,
+					WM_GETTEXT,
+					256,
+					(LPARAM)(pInputCountString));
+
+				const int nInputCount=atoi(pInputCountString);
+
+				if (nInputCount<1) {
+					MessageBox(g_hWindow,"You must have at least one switcher input","",MB_OK);
+					break;
+				} else if (nInputCount>=PETE_MAX_SWITCHER_INPUTS) {
+					char pMessageString[1024];
+					sprintf(pMessageString,"You cannot have more that %d switcher inputs",PETE_MAX_SWITCHER_INPUTS);
+					MessageBox(g_hWindow,pMessageString,"",MB_OK);
+					break;
+				}
+
+				pEffectNode->m_nSwitcherInputCount=nInputCount;
+
+				EndDialog(hDialogBox, LOWORD(wParam));
+				return TRUE;				
+				
+			} else if (LOWORD(wParam)==IDCANCEL) {
+
+				EndDialog(hDialogBox, LOWORD(wParam));
+				return TRUE;
+			}
+
+		}break;
+
+	}
+
+	return FALSE;
+
+}
+
+void EditGraph_FilePropertiesDialog(SPete_GraphData* pGraph) {
+
+	SPete_GraphData CandidateGraph=*pGraph;
+
+	const int nDialogBoxResult=
+		DialogBoxParam(
+		g_hWindowInstance,
+		MAKEINTRESOURCE(IDD_PROPERTIES_FILE),
+		g_hWindow,
+		EditGraph_FileProperties_Callback,
+		(U32)(&CandidateGraph));
+
+	if (nDialogBoxResult==IDOK) {
+
+		*pGraph=CandidateGraph;
+
+	}
+
+}
+
+BOOL CALLBACK EditGraph_FileProperties_Callback(HWND hDialogBox,UINT Message,WPARAM wParam,LPARAM lParam) {
+
+	static SPete_GraphData* pGraph=NULL;
+
+	switch (Message) {
+
+		case WM_INITDIALOG: {
+
+			HWND hwndOwner; 
+			RECT rc, rcDlg, rcOwner; 
+ 
+			if ((hwndOwner = GetParent(hDialogBox)) == NULL) 
+			{
+				hwndOwner = GetDesktopWindow(); 
+			}
+
+			GetWindowRect(hwndOwner, &rcOwner); 
+			GetWindowRect(hDialogBox, &rcDlg); 
+			CopyRect(&rc, &rcOwner); 
+ 
+			 // Offset the owner and dialog box rectangles so that 
+			 // right and bottom values represent the width and 
+			 // height, and then offset the owner again to discard 
+			 // space taken up by the dialog box. 
+ 
+			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top); 
+			OffsetRect(&rc, -rc.left, -rc.top); 
+			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom); 
+ 
+			 // The new position is the sum of half the remaining 
+			 // space and the owner's original position. 
+ 
+			SetWindowPos(hDialogBox, 
+				HWND_TOP, 
+				rcOwner.left + (rc.right / 2), 
+				rcOwner.top + (rc.bottom / 2), 
+				0, 0,          // ignores size arguments 
+				SWP_NOSIZE); 
+ 
+			pGraph=(SPete_GraphData*)(lParam);
+
+			SendDlgItemMessage(
+				hDialogBox,
+				IDC_PLUGIN_NAME,
+				WM_SETTEXT,
+				0,
+				(LPARAM)(pGraph->m_pName));
+
+			SendDlgItemMessage(
+				hDialogBox,
+				IDC_PLUGIN_4_LETTER_ID,
+				WM_SETTEXT,
+				0,
+				(LPARAM)(pGraph->m_pUniqueID));
+
+			SendDlgItemMessage(
+				hDialogBox,
+				IDC_PLUGIN_DESCRIPTION,
+				WM_SETTEXT,
+				0,
+				(LPARAM)(pGraph->m_pDescription));
+
+			return TRUE;
+
+		}break;
+
+		case WM_COMMAND: {
+
+			if (LOWORD(wParam)==IDOK) {
+
+				SendDlgItemMessage(
+					hDialogBox,
+					IDC_PLUGIN_NAME,
+					WM_GETTEXT,
+					sizeof(pGraph->m_pName)-1,
+					(LPARAM)(pGraph->m_pName));
+
+				char pUniqueIDString[256];
+
+				SendDlgItemMessage(
+					hDialogBox,
+					IDC_PLUGIN_4_LETTER_ID,
+					WM_GETTEXT,
+					255,
+					(LPARAM)(pUniqueIDString));
+
+				if (strlen(pUniqueIDString)!=4) {
+					MessageBox(g_hWindow,"The ID must be 4 letters long","",MB_OK);
+					break;
+				}
+
+				pGraph->m_pUniqueID[0]=pUniqueIDString[0];
+				pGraph->m_pUniqueID[1]=pUniqueIDString[1];
+				pGraph->m_pUniqueID[2]=pUniqueIDString[2];
+				pGraph->m_pUniqueID[3]=pUniqueIDString[3];
+				pGraph->m_pUniqueID[4]='\0';
+
+				SendDlgItemMessage(
+					hDialogBox,
+					IDC_PLUGIN_DESCRIPTION,
+					WM_GETTEXT,
+					sizeof(pGraph->m_pDescription)-1,
+					(LPARAM)(pGraph->m_pDescription));
+
+				EndDialog(hDialogBox, LOWORD(wParam));
+				return TRUE;				
+				
+			} else if (LOWORD(wParam)==IDCANCEL) {
+
+				EndDialog(hDialogBox, LOWORD(wParam));
+				return TRUE;
+			}
+
+		}break;
+
+	}
+
+	return FALSE;
 
 }
