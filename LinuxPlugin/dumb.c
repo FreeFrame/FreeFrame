@@ -15,6 +15,16 @@ DWORD DeInitPlugin(TVideoInfoStruct *tVidInfo) {
   /* Move along, nothing to see here */
 };
 
+TPluginInfoStruct *GetInfo() {
+  pInfo.APIMajorVersion=0;
+  pInfo.APIMinorVersion=1022;
+  pInfo.PluginUniqueID='Dumb';
+  pInfo.PluginName="No Effect";
+  pInfo.PluginType = 0; /* Effect */
+  pInfo.BitDepth = 7; /* 16 bit, 24 bit packed, and 32 bit (4+2+1=7;4|2|1=7) */
+  return &pInfo;
+}
+
 DWORD ProccessFrame(DWORD *src,DWORD *dst) {
 	memcpy(dst,src,sizeof(DWORD)*(bpp/8));
 }
