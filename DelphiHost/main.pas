@@ -120,7 +120,7 @@ type
   end;
 
 const
-  version: string='0.1021';
+  version: string='0.1022';
 
 var
   fmMain: TfmMain;
@@ -264,6 +264,10 @@ begin
     while findnext(t) = 0 do if checkValid(plugins+t.name) then cbPlugins.items.add(t.name);
     findclose(t);
   end;
+  if cbPlugins.Items.Count>0 then begin
+    cbPlugins.ItemIndex:=0;
+    cbPluginsChange(nil);
+  end;
 end;
 
 
@@ -348,9 +352,9 @@ begin
   // Get frame
   inc(currentFrame);
   lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
-  // Display it unprocessed
+  // Display it unprocessed ...
   // displayframe(lpbitmapinfoheader);
-  // process frame and display it again
+  // process frame and display it again ...
   bits := Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
   lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(bits)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
   DisplayFrame(lpbitmapinfoheader);

@@ -51,6 +51,7 @@ begin
       AGetFrame := AVIStreamGetFrameOpen(pVideoStream,nil);
       tempVideoInfoStruct.Framewidth:=streaminfo.rcFrame.Right;
       tempVideoInfoStruct.FrameHeight:=streaminfo.rcFrame.Bottom;
+      tempVideoInfoStruct.BitDepth:=1; // 1=24bit packed MCI standard
       result:=tempVideoInfoStruct;
       exit;
       //numframes := AVIStreamEnd(pVideoStream);

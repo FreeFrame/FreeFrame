@@ -58,6 +58,7 @@ type
   TVideoInfoStruct = record
     FrameWidth: dword;
     FrameHeight: dword;
+    BitDepth: dword;   // 0=16bit 1=24bit 2=32bit
   end;
   //TParameterNameStruct = array [0..2] of array [0..15] of char;
   pdw = ^dword;
