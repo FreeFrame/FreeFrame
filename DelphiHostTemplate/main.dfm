@@ -1,12 +1,12 @@
 object fmMain: TfmMain
-  Left = 93
-  Top = 146
+  Left = 80
+  Top = 156
   HorzScrollBar.Visible = False
   VertScrollBar.Visible = False
   BorderStyle = bsSingle
   Caption = 'FreeFrame Delphi Host Test Container'
-  ClientHeight = 279
-  ClientWidth = 632
+  ClientHeight = 304
+  ClientWidth = 804
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,93 +17,115 @@ object fmMain: TfmMain
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  object Shape1: TShape
+    Left = 3
+    Top = 62
+    Width = 320
+    Height = 240
+    Brush.Color = clBlack
+  end
   object PaintBox1: TPaintBox
     Left = 3
     Top = 62
-    Width = 280
-    Height = 210
+    Width = 320
+    Height = 240
     Color = clBlack
     ParentColor = False
+    OnMouseMove = PaintBox1MouseMove
   end
   object lParam0Name: TLabel
-    Left = 409
+    Left = 449
     Top = 89
     Width = 3
     Height = 13
   end
   object lParam1Name: TLabel
-    Left = 409
+    Left = 449
     Top = 140
     Width = 3
     Height = 13
   end
   object lParam2Name: TLabel
-    Left = 409
+    Left = 449
     Top = 190
     Width = 3
     Height = 13
   end
   object lParam3Name: TLabel
-    Left = 409
+    Left = 449
     Top = 238
     Width = 3
     Height = 13
   end
   object lParam0Value: TLabel
-    Left = 557
+    Left = 597
     Top = 100
     Width = 63
     Height = 13
     AutoSize = False
   end
   object lParam1Value: TLabel
-    Left = 557
+    Left = 597
     Top = 151
     Width = 63
     Height = 13
     AutoSize = False
   end
   object lParam2Value: TLabel
-    Left = 557
+    Left = 597
     Top = 201
     Width = 63
     Height = 13
     AutoSize = False
   end
   object lParam3Value: TLabel
-    Left = 557
+    Left = 597
     Top = 249
     Width = 63
     Height = 13
     AutoSize = False
   end
   object lParam0dword: TLabel
-    Left = 558
+    Left = 598
     Top = 116
     Width = 67
     Height = 13
     AutoSize = False
   end
   object lParam1dword: TLabel
-    Left = 558
+    Left = 598
     Top = 167
     Width = 67
     Height = 13
     AutoSize = False
   end
   object lParam2dword: TLabel
-    Left = 558
+    Left = 598
     Top = 217
     Width = 67
     Height = 13
     AutoSize = False
   end
   object lParam3dword: TLabel
-    Left = 558
+    Left = 598
     Top = 265
     Width = 67
     Height = 13
     AutoSize = False
+  end
+  object lbEffect1: TLabel
+    Left = 449
+    Top = 4
+    Width = 39
+    Height = 13
+    Caption = 'effect 1:'
+  end
+  object lbEffect2: TLabel
+    Left = 449
+    Top = 47
+    Width = 39
+    Height = 13
+    Caption = 'effect 2:'
   end
   object bInit: TButton
     Left = 82
@@ -132,10 +154,10 @@ object fmMain: TfmMain
     OnChange = ebAVIFilenameChange
   end
   object GroupBox1: TGroupBox
-    Left = 288
-    Top = -1
+    Left = 328
+    Top = 2
     Width = 113
-    Height = 111
+    Height = 103
     Caption = ' PluginInfoStruct '
     TabOrder = 6
     object lPluginMajorVersion: TLabel
@@ -175,10 +197,10 @@ object fmMain: TfmMain
     end
   end
   object GroupBox2: TGroupBox
-    Left = 288
-    Top = 192
+    Left = 328
+    Top = 176
     Width = 113
-    Height = 80
+    Height = 74
     Caption = ' VideoInfoStruct '
     TabOrder = 7
     object lVideoWidth: TLabel
@@ -204,7 +226,7 @@ object fmMain: TfmMain
     end
   end
   object tbParam0: TTrackBar
-    Left = 401
+    Left = 441
     Top = 101
     Width = 150
     Height = 33
@@ -217,7 +239,7 @@ object fmMain: TfmMain
     OnChange = tbParam0Change
   end
   object tbParam1: TTrackBar
-    Left = 401
+    Left = 441
     Top = 152
     Width = 150
     Height = 33
@@ -230,7 +252,7 @@ object fmMain: TfmMain
     OnChange = tbParam1Change
   end
   object tbParam2: TTrackBar
-    Left = 401
+    Left = 441
     Top = 202
     Width = 150
     Height = 33
@@ -243,7 +265,7 @@ object fmMain: TfmMain
     OnChange = tbParam2Change
   end
   object tbParam3: TTrackBar
-    Left = 401
+    Left = 441
     Top = 250
     Width = 150
     Height = 33
@@ -265,10 +287,10 @@ object fmMain: TfmMain
     OnClick = bBrowseClick
   end
   object gbPluginCaps: TGroupBox
-    Left = 288
-    Top = 112
+    Left = 328
+    Top = 106
     Width = 113
-    Height = 79
+    Height = 69
     Caption = ' Plugin Capabilities '
     TabOrder = 12
     object l16bit: TLabel
@@ -311,47 +333,84 @@ object fmMain: TfmMain
     TabOrder = 4
     OnClick = bStopClick
   end
-  object cbEffect1: TComboBox
-    Tag = 1
-    Left = 407
-    Top = 4
-    Width = 145
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 13
-    Text = 'choose effect...'
-    OnChange = SetEffect
-  end
-  object cbEffect2: TComboBox
-    Tag = 2
-    Left = 407
-    Top = 27
-    Width = 145
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 14
-    Text = 'choose effect...'
-    OnChange = SetEffect
-  end
   object cbEffect1Active: TCheckBox
-    Left = 560
-    Top = 8
-    Width = 56
-    Height = 17
+    Left = 547
+    Top = 18
+    Width = 17
+    Height = 15
     Checked = True
     State = cbChecked
-    TabOrder = 15
+    TabOrder = 13
   end
   object cbEffect2Active: TCheckBox
-    Left = 560
-    Top = 29
-    Width = 49
+    Left = 547
+    Top = 60
+    Width = 25
     Height = 17
     Checked = True
     State = cbChecked
+    TabOrder = 14
+  end
+  object lbPlugins: TListBox
+    Left = 664
+    Top = 3
+    Width = 137
+    Height = 299
+    DragMode = dmAutomatic
+    ItemHeight = 13
+    TabOrder = 15
+  end
+  object pPlugin1: TPanel
+    Tag = 1
+    Left = 448
+    Top = 19
+    Width = 97
+    Height = 25
+    BevelOuter = bvNone
+    BorderWidth = 1
+    BorderStyle = bsSingle
+    Caption = '[none]'
+    Ctl3D = False
+    ParentCtl3D = False
     TabOrder = 16
+    OnClick = pPlugin1Click
+    OnDragDrop = pPluginDragDrop
+    OnDragOver = pPluginDragOver
+  end
+  object Panel1: TPanel
+    Tag = 2
+    Left = 448
+    Top = 62
+    Width = 97
+    Height = 25
+    BevelOuter = bvNone
+    BorderWidth = 1
+    BorderStyle = bsSingle
+    Caption = '[none]'
+    Ctl3D = False
+    ParentCtl3D = False
+    TabOrder = 17
+    OnClick = Panel1Click
+    OnDragDrop = pPluginDragDrop
+    OnDragOver = pPluginDragOver
+  end
+  object rgMouse0: TRadioGroup
+    Left = 328
+    Top = 251
+    Width = 114
+    Height = 51
+    Caption = 'mouse coord.'
+    Columns = 2
+    ItemIndex = 0
+    Items.Strings = (
+      'none'
+      'x'
+      'y'
+      'x/y')
+    TabOrder = 18
   end
   object odAVI: TOpenDialog
+    Filter = '*.avi'
     Left = 40
     Top = 64
   end
@@ -373,7 +432,7 @@ object fmMain: TfmMain
     PluginIndex = 0
     Autoloadplugin = False
     NumParameters = 0
-    Left = 408
-    Top = 56
+    Left = 104
+    Top = 64
   end
 end

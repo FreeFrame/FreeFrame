@@ -353,7 +353,14 @@ begin
   //if FPluginIndex = Value then Exit;
   FPluginIndex := Value;
 
-  if FPluginIndex < 0 then exit;
+  if FPluginIndex < 0 then begin //set pluginindex to -1 to deinitialise the current plugin
+   if currentPlug <> 0 then begin
+    DeInitialisePlugin;
+    freeLibrary(currentPlug);
+   end;
+   plugMain:=nil;
+   exit;
+  end;
 
   if currentPlug<>0 then begin
    DeInitialisePlugin;

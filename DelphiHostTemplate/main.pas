@@ -87,10 +87,15 @@ type
     tPlay: TTimer;
     FreeFrame1: TFreeFrame;
     FreeFrame2: TFreeFrame;
-    cbEffect1: TComboBox;
-    cbEffect2: TComboBox;
     cbEffect1Active: TCheckBox;
     cbEffect2Active: TCheckBox;
+    lbPlugins: TListBox;
+    pPlugin1: TPanel;
+    Panel1: TPanel;
+    lbEffect1: TLabel;
+    lbEffect2: TLabel;
+    Shape1: TShape;
+    rgMouse0: TRadioGroup;
     procedure bInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
     procedure ebAVIFilenameChange(Sender: TObject);
@@ -103,8 +108,15 @@ type
     procedure bPlayAndProcessClick(Sender: TObject);
     procedure tPlayTimer(Sender: TObject);
     procedure bStopClick(Sender: TObject);
-    procedure SetEffect(Sender: TObject);
+    procedure SetEffect(freeframeindex,pluginindex : integer);
     procedure FormShow(Sender: TObject);
+    procedure pPluginDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure pPluginDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure pPlugin1Click(Sender: TObject);
+    procedure Panel1Click(Sender: TObject);
+    procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
@@ -127,6 +139,8 @@ var
   lpBitmapInfoHeader: pBitmapInfoHeader;
   NumParams: integer;
   Currenteffect : integer = 1;
+  //
+  gX,gY : integer;
 
 implementation
 
@@ -306,16 +320,16 @@ begin
 end;
 
 
-procedure TfmMain.SetEffect(Sender: TObject);
+procedure TfmMain.SetEffect(freeframeindex,pluginindex : integer);
 var
  TempFreeFrame : TFreeFrame;
 begin
-  Currenteffect := (sender as TComboBox).Tag;
+  Currenteffect := freeframeindex;
   
-  if (sender as TComboBox).Tag = 1 then TempFreeFrame := FreeFrame1
+  if freeframeindex = 1 then TempFreeFrame := FreeFrame1
   else TempFreeFrame := FreeFrame2;
 
-  TempFreeFrame.PluginIndex :=(sender as TComboBox).ItemIndex;
+  TempFreeFrame.PluginIndex   := pluginindex;
 
   lPluginMajorVersion.caption := inttostr(TempFreeFrame.PluginMajorVersion);
   lPluginMinorVersion.caption := inttostr(TempFreeFrame.PluginMinorVersion);
@@ -372,26 +386,71 @@ end;
 procedure TfmMain.FormShow(Sender: TObject);
 var
  i : integer;
+
 begin
 
  FreeFrame1.Directory := extractfilepath(application.exename) + 'plugins\';
  FreeFrame1.Autoloadplugin := true;
  FreeFrame1.Getplugins;
- if not FreeFrame1.Pluginsfound then showmessage('no plugins found');
+ if not FreeFrame1.Pluginsfound then showmessage('no plugins found for freeframe 1');
 
  for i := 0 to FreeFrame1.Plugins.Count-1 do begin
-  cbEffect1.Items.Add(FreeFrame1.Plugins.Strings[i]);
+  lbPlugins.Items.AddObject(FreeFrame1.Plugins.Strings[i],FreeFrame1.Plugins.Objects[i]);
  end;
 
  FreeFrame2.Directory := extractfilepath(application.exename) + 'plugins\';
  FreeFrame2.Autoloadplugin := true;
  FreeFrame2.Getplugins;
- if not FreeFrame2.Pluginsfound then showmessage('no plugins found');
-
- for i := 0 to FreeFrame2.Plugins.Count-1 do begin
-  cbEffect2.Items.Add(FreeFrame2.Plugins.Strings[i]);
- end;
+ if not FreeFrame2.Pluginsfound then showmessage('no plugins found for freeframe 2');
  
+end;
+
+procedure TfmMain.pPluginDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+  accept := false;
+  if (source as TObject) is TListBox then begin
+   accept := true;
+  end;
+end;
+
+procedure TfmMain.pPluginDragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+ pli : TPluginListInfo;
+begin
+  if (source as TObject) is TListBox then begin
+   if (Source as TListBox).ItemIndex = -1 then exit;
+   pli := TPluginListInfo((Source as TListBox).Items.Objects[(Source as TListBox).ItemIndex]);
+   (Sender as TPanel).Caption := pli.PluginName;
+
+   SetEffect((Sender as TPanel).Tag,(Source as TListBox).ItemIndex);
+  end;
+end;
+procedure TfmMain.pPlugin1Click(Sender: TObject);
+begin
+ SetEffect((Sender as TPanel).Tag,FreeFrame1.PluginIndex);
+end;
+
+procedure TfmMain.Panel1Click(Sender: TObject);
+begin
+SetEffect((Sender as TPanel).Tag,FreeFrame2.PluginIndex);
+end;
+
+procedure TfmMain.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+ gX := x;
+ gY := y;
+
+ case rgMouse0.ItemIndex of
+ 1 : tbParam0.Position := Round( (100 / PaintBox1.Width) * gX);
+ 2 : tbParam1.Position := Round( (100 / PaintBox1.Height) * gY);
+ 3 : begin
+      tbParam0.Position := Round( (100 / PaintBox1.Width) * gX);
+      tbParam1.Position := Round( (100 / PaintBox1.Height) * gY);
+     end;
+ end;
+
 end;
 
 end.
