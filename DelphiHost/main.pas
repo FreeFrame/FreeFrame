@@ -1,6 +1,7 @@
 // FreeFrame Open Video Plugin Host Test Container Prototype
 // Delphi Version
 
+// www.freeframe.org
 // boblists@brightonart.org
 
 {
@@ -16,7 +17,7 @@ Redistribution and use in source and binary forms, with or without modification,
      notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the
      distribution.
-   * Neither the name of the <ORGANIZATION> nor the names of its
+   * Neither the name of FreeFrame nor the names of its
      contributors may be used to endorse or promote products derived
      from this software without specific prior written permission.
 
@@ -32,7 +33,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, ComCtrls;
+  StdCtrls, ExtCtrls, ComCtrls, inifiles;
 
 type
   TfmMain = class(TForm)
@@ -125,7 +126,7 @@ type
   end;
 
 const
-  version: string='0.1023';
+  version: string='0.1024';
 
 var
   fmMain: TfmMain;
@@ -200,8 +201,15 @@ begin
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
+var
+  inifile: TInifile;
 begin
   lTestContainerVersion.Caption:='v'+version;
+  // Get current AVI filename from freeframe.ini
+  inifile:=Tinifile.Create('FreeFrame.ini');
+  ebAVIfilename.Text:=inifile.ReadString('Filenames','CurrentAVI','');
+  inifile.Free;
+  // ...........................................
   getPlugins;
 end;
 
@@ -376,8 +384,15 @@ begin
 end;
 
 procedure TfmMain.bBrowseClick(Sender: TObject);
+var
+  inifile: TInifile;
 begin
-  if odAVI.Execute then ebAVIfilename.text:=odAVI.FileName;
+  if odAVI.Execute then begin
+    ebAVIfilename.text:=odAVI.FileName;
+    inifile:=Tinifile.Create('FreeFrame.ini');
+    inifile.WriteString('Filenames','CurrentAVI',odAVI.filename);
+    inifile.Free;
+  end;
 end;
 
 end.

@@ -22,35 +22,35 @@ object fmMain: TfmMain
   end
   object lTestContainerVersion: TLabel
     Left = 15
-    Top = 357
+    Top = 397
     Width = 34
     Height = 13
     Caption = 'version'
   end
   object lInitPlugin: TLabel
-    Left = 485
-    Top = 128
+    Left = 496
+    Top = 136
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lDeInitPlugin: TLabel
     Left = 496
-    Top = 300
+    Top = 316
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lGetPluginInfo: TLabel
-    Left = 487
-    Top = 77
+    Left = 496
+    Top = 85
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lProcessFrame: TLabel
-    Left = 486
-    Top = 177
+    Left = 496
+    Top = 185
     Width = 25
     Height = 13
     Caption = 'result'
@@ -155,7 +155,7 @@ object fmMain: TfmMain
   end
   object Label2: TLabel
     Left = 120
-    Top = 352
+    Top = 376
     Width = 350
     Height = 13
     Caption = 
@@ -177,7 +177,7 @@ object fmMain: TfmMain
     Width = 75
     Height = 25
     Caption = 'DeInit AVI'
-    TabOrder = 15
+    TabOrder = 14
     OnClick = bDeInitClick
   end
   object bOpenAVI: TButton
@@ -194,7 +194,7 @@ object fmMain: TfmMain
     Top = 97
     Width = 289
     Height = 21
-    TabOrder = 14
+    TabOrder = 16
     Text = 'C:\gig av\03Lavalamp A\gloup1bottomviewx.avi'
     OnChange = ebAVIFilenameChange
   end
@@ -217,8 +217,8 @@ object fmMain: TfmMain
     OnClick = bGetFrameClick
   end
   object bgetInfo: TButton
-    Left = 464
-    Top = 52
+    Left = 463
+    Top = 60
     Width = 91
     Height = 25
     Caption = 'Plugin getInfo'
@@ -231,7 +231,7 @@ object fmMain: TfmMain
     Width = 113
     Height = 105
     Caption = ' PluginInfoStruct '
-    TabOrder = 16
+    TabOrder = 17
     object lPluginMajorVersion: TLabel
       Left = 9
       Top = 19
@@ -298,8 +298,8 @@ object fmMain: TfmMain
     end
   end
   object bInitPlugin: TButton
-    Left = 472
-    Top = 100
+    Left = 471
+    Top = 108
     Width = 75
     Height = 25
     Caption = 'Init Plugin'
@@ -307,8 +307,8 @@ object fmMain: TfmMain
     OnClick = bInitPluginClick
   end
   object bProcessFrame: TButton
-    Left = 467
-    Top = 150
+    Left = 464
+    Top = 158
     Width = 89
     Height = 25
     Caption = 'Process Frame'
@@ -316,12 +316,12 @@ object fmMain: TfmMain
     OnClick = bProcessFrameClick
   end
   object bDeInitPlugin: TButton
-    Left = 480
-    Top = 271
+    Left = 471
+    Top = 287
     Width = 75
     Height = 25
     Caption = 'DeInit Plugin'
-    TabOrder = 17
+    TabOrder = 15
     OnClick = bDeInitPluginClick
   end
   object cbPlugins: TComboBox
@@ -446,7 +446,7 @@ object fmMain: TfmMain
   end
   object bGetAndProcess: TButton
     Left = 456
-    Top = 200
+    Top = 232
     Width = 105
     Height = 25
     Caption = 'Get and Process'
