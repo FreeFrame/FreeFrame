@@ -153,7 +153,7 @@ type
   end;
 
 const
-  AppVersion: string='0.51';
+  AppVersion: string='0.52';
   APIversion: string='0.1050';
 
 var
@@ -397,6 +397,10 @@ begin
     end;
   end;
   if not assigned(plugMain) then showmessage('problem loading plugin');
+  if cbAutoLoadPlugin.Checked then begin
+    LoadPlugin;
+    bPlayAndProcess.SetFocus;
+  end;
 end;
 
 procedure TfmMain.bGetNumParametersClick(Sender: TObject);
