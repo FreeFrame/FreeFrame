@@ -1083,7 +1083,23 @@ bool GraphUtil_LoadPlugin(SPete_GraphData* pGraph,SPete_PluginInfo* pResult,char
 	if (nPluginVersion<=500) {
 		char MessageString[1024];
 		sprintf(MessageString,"Plugin DLL '%s' is a 0.5 version plugin, not supported",pFileName);
-		MessageBox(NULL,MessageString,"",MB_OK);
+		MessageBox(NULL,MessageString,"FreeChain Error",MB_OK);
+		return false;
+	}
+
+	void* pInitializeResult=(*pMainFunc)(FF_INITIALISE,NULL,0);
+	if (pInitializeResult==(void*)FF_FAIL) {
+		char MessageString[1024];
+		sprintf(MessageString,"Plugin DLL '%s' failed to initialize",pFileName);
+		MessageBox(NULL,MessageString,"FreeChain Error",MB_OK);
+		return false;
+	}
+
+	void* p32BitVideoResult=(*pMainFunc)(FF_GETPLUGINCAPS,(void*)FF_CAP_32BITVIDEO,0);
+	if (((DWORD)p32BitVideoResult)==FF_FALSE) {
+		char MessageString[1024];
+		sprintf(MessageString,"Plugin DLL '%s' doesn't support 32 bit rendering, needed by FreeChain",pFileName);
+		MessageBox(NULL,MessageString,"FreeChain Error",MB_OK);
 		return false;
 	}
 
@@ -1119,6 +1135,8 @@ bool GraphUtil_LoadPlugin(SPete_GraphData* pGraph,SPete_PluginInfo* pResult,char
 		pCurrentParam->m_Default=Default;
 	
 	}
+
+	(*pMainFunc)(FF_DEINITIALISE,NULL,0);
 
 	GraphUtil_DoUnLoadPlugin(pResult);
 
