@@ -43,7 +43,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include <stdio.h>
 
 #define NUM_PARAMS 3
-
+#define NUM_INPUTS 1
 /////////////////////////////////////////////////////
 //
 // Plugin Globals
@@ -261,17 +261,166 @@ float plugClass::getParameter(DWORD index)
 
 DWORD plugClass::processFrame(LPVOID pFrame)
 {
+	switch (videoInfo.bitDepth) {
+		case 1:
+			return processFrame24Bit(pFrame);
+		case 2:
+			return processFrame32Bit(pFrame);
+		default:
+			return FF_FAIL;
+	}
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// processFrame24Bit
+//
+// process a frame of 24 bit video
+//
+// parameters:
+// 32-bit pointer to byte array containing frame of video
+//
+// return values (DWORD):
+// FF_SUCCESS
+// FF_FAIL on error
+//
+
+DWORD plugClass::processFrame24Bit(LPVOID pFrame)
+{
 	VideoPixel24bit* pPixel = (VideoPixel24bit*) pFrame;
 	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
 	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
 	    // this is very slow! Should be a lookup table
-	    pPixel->blue = (BYTE) (pPixel->blue * paramDynamicData[0].value);
+	    pPixel->red = (BYTE) (pPixel->red * paramDynamicData[0].value);
 	    pPixel->green = (BYTE) (pPixel->green * paramDynamicData[1].value);
-	    pPixel->red = (BYTE) (pPixel->red * paramDynamicData[2].value);
+	    pPixel->blue = (BYTE) (pPixel->blue * paramDynamicData[2].value);
 	    pPixel++;
 	  }
 	}
 
+	return FF_SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// processFrame32Bit
+//
+// process a frame of 32 bit video
+//
+// parameters:
+// 32-bit pointer to byte array containing frame of video
+//
+// return values (DWORD):
+// FF_SUCCESS
+// FF_FAIL on error
+//
+
+DWORD plugClass::processFrame32Bit(LPVOID pFrame)
+{
+	VideoPixel32bit* pPixel = (VideoPixel32bit*) pFrame;
+	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
+	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
+	    // this is very slow! Should be a lookup table
+	    pPixel->red = (BYTE) (pPixel->red * paramDynamicData[0].value);
+	    pPixel->green = (BYTE) (pPixel->green * paramDynamicData[1].value);
+	    pPixel->blue = (BYTE) (pPixel->blue * paramDynamicData[2].value);
+	    pPixel++;
+	  }
+	}
+
+	return FF_SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// processFrameCopy
+//
+// processes a frame of video from one buffer to another 
+//
+// parameters:
+// 32-bit pointer to a structure containing a pointer to an array of input
+// buffers, the number of input buffers, and a pointer to an output frame
+// buffer
+//
+// return values (DWORD):
+// FF_SUCCESS
+// FF_FAIL on error
+//
+
+DWORD plugClass::processFrameCopy(ProcessFrameCopyStruct* pFrameData)
+{
+	if (pFrameData->numInputFrames<NUM_INPUTS) {
+		return FF_FAIL;
+	}
+
+	switch (videoInfo.bitDepth) {
+		case 1:
+			return processFrameCopy24Bit(pFrameData);
+		case 2:
+			return processFrameCopy32Bit(pFrameData);
+		default:
+			return FF_FAIL;
+	}
+
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// processFrameCopy24Bit
+//
+// process a frame of 24 bit video
+//
+// parameters:
+// 32-bit pointer to byte array containing frame of video
+//
+// return values (DWORD):
+// FF_SUCCESS
+// FF_FAIL on error
+//
+
+DWORD plugClass::processFrameCopy24Bit(ProcessFrameCopyStruct* pFrameData)
+{
+	VideoPixel24bit* pInputPixel = (VideoPixel24bit*) pFrameData->InputFrames[0];
+	VideoPixel24bit* pOutputPixel = (VideoPixel24bit*) pFrameData->OutputFrame;
+	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
+	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
+	    // this is very slow! Should be a lookup table
+	    pOutputPixel->red = (BYTE) (pInputPixel->red * paramDynamicData[0].value);
+	    pOutputPixel->green = (BYTE) (pInputPixel->green * paramDynamicData[1].value);
+	    pOutputPixel->blue = (BYTE) (pInputPixel->blue * paramDynamicData[2].value);
+	    pInputPixel++;
+		pOutputPixel++;
+	  }
+	}
+
+	return FF_SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// processFrameCopy32Bit
+//
+// process a frame of 32 bit video
+//
+// parameters:
+// 32-bit pointer to byte array containing frame of video
+//
+// return values (DWORD):
+// FF_SUCCESS
+// FF_FAIL on error
+//
+
+DWORD plugClass::processFrameCopy32Bit(ProcessFrameCopyStruct* pFrameData)
+{
+	VideoPixel32bit* pInputPixel = (VideoPixel32bit*) pFrameData->InputFrames[0];
+	VideoPixel32bit* pOutputPixel = (VideoPixel32bit*) pFrameData->OutputFrame;
+	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
+	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
+	    // this is very slow! Should be a lookup table
+	    pOutputPixel->red = (BYTE) (pInputPixel->red * paramDynamicData[0].value);
+	    pOutputPixel->green = (BYTE) (pInputPixel->green * paramDynamicData[1].value);
+	    pOutputPixel->blue = (BYTE) (pInputPixel->blue * paramDynamicData[2].value);
+	    pInputPixel++;
+		pOutputPixel++;
+	  }
+	}
+	
 	return FF_SUCCESS;
 }
 
@@ -295,12 +444,28 @@ DWORD plugClass::processFrame(LPVOID pFrame)
 DWORD getPluginCaps(DWORD index)
 {
 	switch (index) {
-	case 0:
+
+	case FF_CAP_16BITVIDEO:
 		return FF_FALSE;
-	case 1:
+
+	case FF_CAP_24BITVIDEO:
 		return FF_TRUE;
-	case 2:
+
+	case FF_CAP_32BITVIDEO:
+		return FF_TRUE;
+
+	case FF_CAP_PROCESSFRAMECOPY:
 		return FF_FALSE;
+
+	case FF_CAP_MINIMUMINPUTFRAMES:
+		return NUM_INPUTS;
+
+	case FF_CAP_MAXIMUMINPUTFRAMES:
+		return NUM_INPUTS;
+
+	case FF_CAP_COPYORINPLACE:
+		return FF_FALSE;
+
 	default:
 		return FF_FALSE;
 	}
