@@ -219,8 +219,7 @@ otherwise.
 </table>
 
 
-<h4>Remarks:</4>
-</h4>
+<h4>Remarks:</h4>
 <ul type=disc>
 	<li>
 		In functions that return error codes any value other than 0 is assumed to be an
@@ -541,6 +540,14 @@ pixelformats.
 </tr>
 </table>
 
+<h4>Remarks:</h4>
+<p>
+The range of values permitted for all variables (except text) is strictly 0-1. This also holds for xpos/ypos variables (where,
+for example, xpos=0 corresponds to a screen x-coordinate of 0, and xpos=1 corresponds to an actual x-coordinate
+of FrameWidth-1. See <a href="#VideoInfoStruct">VideoInfoStruct</a>).
+
+</p>
+
 <hr>
 
 <!-- /****************** InputChannel******************/  -->
@@ -706,6 +713,10 @@ VideoInfoStruct {
 
 <h4>Remarks:</h4>
 <p>
+All video data in FreeFrame is pixel ordered, so the R, G, B values of a single pixel are located at consecutive memory
+locations. A video buffer consists of FrameWidth x FrameHeight pixels.
+</p>
+<p>
 Plugins using 32-bit as byte aligned 24-bit video should be careful not to
 overwrite the alpha (4th) byte of each pixel (e.g. by using it as a processing
 space) as this may be used soon by hosts with 32-bit video processing becoming
@@ -830,9 +841,11 @@ PluginExtendedInfoStruct{
 </table>
 
 <h4>Remarks:</h4>
+<p>
 FreeFrame PluginMinorVersion numbers should always have 3 digits - so divide the
 minor version number by 1000 and add the major version number to get the full
 version number.  Example: 0.751 APIMajorVersion=0, APIMinorVersion=751
+</p>
 
 <hr>
 
@@ -1353,10 +1366,11 @@ parameter index is.<br>
 Returns <a href="#FF_FAIL">FF_FAIL</a> on error.
 
 <h4>Remarks:</h4>
+<p>
 Hosts may decide to present an appropriate visual interface
 depending on the parameter type. All FreeFrame data for the moment is
 passed as 32-bit floats from 0-1, except text data.
-
+</p>
 
 
 
@@ -1451,7 +1465,18 @@ Returns <a href="#FF_FAIL">FF_FAIL</a> if failed.
 Returns <a href="#FF_SUCCESS">FF_SUCCESS</a> if successful or <a href="#FF_FAIL">FF_FAIL</a> if failed
 
 <h4>Remarks:</h4>
+<p>
 Sets the value of a parameter.
+</p>
+<table border=0>
+<tr>
+	<td valign=top>PLUGIN:</td>
+	<td>
+		A plugin shouldn't change parameter values by itself. All
+		parameters are set by the plugin host through this function.
+	</td>
+</tr>
+</table>
 
 <hr>
 
@@ -1476,8 +1501,10 @@ Sets the value of a parameter.
 A <a href="#ParameterValue">ParameterValue</a> or <a href="#FF_FAIL">FF_FAIL</a> on error.
 
 <h4>Remarks:</h4>
+<p>
 Returns value of a parameter. Note that the return value has different interpretations,
 depending on the type of the parameter (see <a href="#ParameterValue">ParameterValue</a>).
+</p>
 
 <hr>
 
