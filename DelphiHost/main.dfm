@@ -51,11 +51,11 @@ object fmMain: TfmMain
     Caption = 'result'
   end
   object Label1: TLabel
-    Left = 448
+    Left = 396
     Top = 5
-    Width = 62
+    Width = 68
     Height = 13
-    Caption = 'Select Plugin'
+    Caption = 'Select Plugin :'
   end
   object lNumParameters: TLabel
     Left = 604
@@ -66,28 +66,28 @@ object fmMain: TfmMain
   end
   object lParam0Name: TLabel
     Left = 584
-    Top = 222
+    Top = 220
     Width = 64
     Height = 13
     Caption = 'Param0Name'
   end
   object lParam1Name: TLabel
     Left = 584
-    Top = 273
+    Top = 271
     Width = 64
     Height = 13
     Caption = 'Param1Name'
   end
   object lParam2Name: TLabel
     Left = 584
-    Top = 323
+    Top = 321
     Width = 64
     Height = 13
     Caption = 'Param2Name'
   end
   object lParam3Name: TLabel
     Left = 584
-    Top = 371
+    Top = 369
     Width = 64
     Height = 13
     Caption = 'Param3Name'

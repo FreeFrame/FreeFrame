@@ -46,6 +46,15 @@ Version
          drop down box
 
 ================================================================================
+
+0.54  -  Promotion of FreeFrame API to v0.5
+	 Trap AVI disappeared
+	 Trap auto loading plugins when no avi loaded
+	 Trap auto loading plugins when there is no /plugins dir there or no plugins in it
+	 Clear Param names before loading new ones
+	 Trap pressing play when there is no plugin loaded / no avi loaded
+	 Few more comments
+
 ================================================================================
 ================================================================================
 ================================================================================

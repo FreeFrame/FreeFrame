@@ -36,6 +36,13 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 }
 
+// trap AVI disappeared
+// trap auto loading plugins when no avi loaded
+// trap auto loading plugins when there is no /plugins dir there or no plugins in it
+// clear Param names before loading new ones
+// trap pressing play when there is no plugin loaded / no avi loaded
+// Few more comments
+
 unit main;
 
 interface
@@ -156,8 +163,8 @@ type
   end;
 
 const
-  AppVersion: string='0.53';
-  APIversion: string='0.1050';
+  AppVersion: string='0.54';
+  APIversion: string='0.5';
 
 var
   fmMain: TfmMain;
@@ -167,6 +174,8 @@ var
   bits: pointer;
   lpBitmapInfoHeader: pBitmapInfoHeader;
   NumParams: integer;
+  AVIloaded: boolean;
+  PluginLoaded: boolean;
 
 implementation
 
@@ -198,6 +207,7 @@ begin
     1: lBitDepth.Caption:='24 bit';
     2: lBitDepth.Caption:='32 bit';
   end;
+  AVIloaded:=true;
 end;
 
 procedure TfmMain.ebAVIFilenameChange(Sender: TObject);
@@ -248,37 +258,42 @@ end;
 procedure TfmMain.FormShow(Sender: TObject);
 var
   inifile: TInifile;
+  tempFilename: string;
 begin
   fmMain.Caption:='Delphi FreeFrame Test Container v'+AppVersion;
   lAPIversion.Caption:='for FreeFrame API v'+APIversion;
   // Get current AVI filename from freeframe.ini
   inifile:=Tinifile.Create('FreeFrame.ini');
   with inifile do begin
-    ebAVIfilename.Text:=ReadString('Filenames','CurrentAVI','');
+    tempFilename:=ReadString('Filenames','CurrentAVI','');
     cbAutoLoadAVI.Checked:=ReadBool('HostTestContainerSettings','AutoLoadAVI',true);
     cbAutoLoadPlugin.Checked:=ReadBool('HostTestContainerSettings','AutoLoadPlugin',true);
   end;
   inifile.Free;
-  if cbAutoLoadAVI.Checked then begin
-    // InitAVI ....
-    AVI.Init;
-    CurrentFrame:=0;
-    // OpenAVI ....
-    PluginHost.VideoInfoStruct:=AVI.OpenAVI(ebAVIfilename.text);
-    lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct.FrameWidth);
-    lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct.FrameHeight);
-    case PluginHost.VideoInfoStruct.BitDepth of
-      0: lBitDepth.Caption:='16 bit';
-      1: lBitDepth.Caption:='24 bit';
-      2: lBitDepth.Caption:='32 bit';
+  if fileExists(tempFilename) then begin
+    ebAVIfilename.Text:=tempFilename;
+    if cbAutoLoadAVI.Checked then begin
+      // InitAVI ....
+      AVI.Init;
+      CurrentFrame:=0;
+      // OpenAVI ....
+      PluginHost.VideoInfoStruct:=AVI.OpenAVI(ebAVIfilename.text);
+      lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct.FrameWidth);
+      lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct.FrameHeight);
+      case PluginHost.VideoInfoStruct.BitDepth of
+        0: lBitDepth.Caption:='16 bit';
+        1: lBitDepth.Caption:='24 bit';
+        2: lBitDepth.Caption:='32 bit';
+      end;
+      // GetFrame ....
+      inc(currentFrame);
+      lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
+      bGetInfo.SetFocus;
+      AVIloaded:=true;
     end;
-    // GetFrame ....
-    inc(currentFrame);
-    lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
-    bGetInfo.SetFocus;
   end;
   getPlugins;
-  if cbAutoLoadPlugin.Checked then begin
+  if (cbAutoLoadPlugin.Checked) and AVIloaded and (cbPlugins.Items.Count>0) then begin
     LoadPlugin;
     bPlayAndProcess.SetFocus;
   end;
@@ -291,6 +306,7 @@ begin
   bgetInfoClick(nil);
   // Init Plugin ...
   lInitPlugin.caption:=inttostr(PluginHost.Initialise);
+  PluginLoaded:=true; // todo: when plugins are returning correct init responses we could only set pluginLoaded to true when we get a success response from the plugin
   // Get Num Params ...
   bGetNumParametersClick(nil);
   // Get Param Names ...
@@ -307,6 +323,7 @@ end;
 procedure TfmMain.bInitPluginClick(Sender: TObject);
 begin
   lInitPlugin.caption:=inttostr(PluginHost.Initialise);
+  PluginLoaded:=true; // todo: when plugins are returning correct init responses we could only set pluginLoaded to true when we get a success response from the plugin
 end;
 
 procedure TfmMain.bDeInitPluginClick(Sender: TObject);
@@ -418,10 +435,12 @@ procedure TfmMain.bGetNumParametersClick(Sender: TObject);
 begin
   NumParams:=PluginHost.GetNumParameters;
   lNumParameters.caption:='Num Params: '+inttostr(NumParams);
+  // Clear Sliders ...
   tbParam0.SliderVisible:=false;
   tbParam1.SliderVisible:=false;
   tbParam2.SliderVisible:=false;
   tbParam3.SliderVisible:=false;
+  // Enable Sliders implemented by this plugin ...
   if NumParams>0 then tbParam0.SliderVisible:=true;
   if NumParams>1 then tbParam1.SliderVisible:=true;
   if NumParams>2 then tbParam2.SliderVisible:=true;
@@ -430,6 +449,12 @@ end;
 
 procedure TfmMain.bGetParameterNamesClick(Sender: TObject);
 begin
+  // Clear Param Names ...
+  lParam0Name.caption:='';
+  lParam1Name.caption:='';
+  lParam2Name.caption:='';
+  lParam3Name.caption:='';
+  // Load new Param Names ...
   if NumParams>0 then lParam0Name.caption:=GetParameterName(0);
   if NumParams>1 then lParam1Name.caption:=GetParameterName(1);
   if NumParams>2 then lParam2Name.caption:=GetParameterName(2);
@@ -576,6 +601,8 @@ end;
 
 procedure TfmMain.bPlayAndProcessClick(Sender: TObject);
 begin
+  if not AVIloaded then exit;
+  if not PluginLoaded then exit;
   currentFrame:=0;
   tPlay.Enabled:=true;
 end;
@@ -635,6 +662,8 @@ end;
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
   StartingApp:=true;
+  AVIloaded:=false;
+  PluginLoaded:=false;
 end;
 
 end.
