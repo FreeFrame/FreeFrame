@@ -36,6 +36,11 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 }
 
+//  v1.003
+//  source plugin shutdown VFW for testing PeteLiveFeed
+//    - and trying to get petelivefeed composite source live effects plugins working
+
+// I think this is the v1.002 additions ...
 // trap AVI disappeared
 // trap auto loading plugins when no avi loaded
 // trap auto loading plugins when there is no /plugins dir there or no plugins in it
@@ -204,7 +209,7 @@ type
   end;
 
 const
-  AppVersion: string='1.002';
+  AppVersion: string='1.003';
   APIversion: string='1.000';
 
 var
@@ -218,6 +223,7 @@ var
   PluginLoaded: boolean;
   PluginInstance: array [0..1] of dword; // Plugin Instance Identifier
   InstanceReady: array [0..1] of boolean;
+  //AVIready: array [0..1] of boolean;
 
 implementation
 
@@ -264,6 +270,7 @@ end;
 procedure TfmMain.bCloseAVIClick(Sender: TObject);
 begin
   if tPlay.Enabled then tPlay.Enabled:=false;
+  //AVIready[0]:=false;
   AVI.CloseAVI(0);
 end;
 
@@ -373,7 +380,6 @@ begin
   InstanceReady[0]:=true;
 end;
 
-
 procedure TfmMain.bInitPluginClick(Sender: TObject);
 begin
   lInitPlugin.caption:=inttostr(PluginHost.InitialisePlugin);
@@ -386,6 +392,7 @@ procedure TfmMain.bDeInitPluginClick(Sender: TObject);
 begin
   if tPlay.Enabled then tPlay.Enabled:=false;
   DeInstantiatePlugin(PluginInstance[0]);
+  InstanceReady[0]:=false;
   lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialisePlugin);
 end;
 
@@ -419,7 +426,7 @@ begin
       case channel of
         0: with PaintBox1 do Canvas.StretchDraw(rect(0,0,width,height),tempBitmap);
         1: with PaintBox2 do Canvas.StretchDraw(rect(0,0,width,height),tempBitmap);
-      end;  
+      end;
     finally
       tempBitmap.free;
     end;
@@ -467,14 +474,13 @@ var
   inifile: TInifile;
 begin
   if cbAutoLoadPlugin.Checked and not startingApp then begin
-    // Stop Playing AVI
-    tPlay.Enabled:=false;
-    // Run down our one instance of this plugin
+    instanceReady[0]:=false;
+    // Run down this instance 0 of this plugin
     PluginHost.DeInstantiatePlugin(PluginInstance[0]);
     // DeInit Plugin
     lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialisePlugin);
-    StartingApp:=false;
   end;
+  StartingApp:=false;
   if cbPlugins.itemindex<0 then exit;
   plugMain:=nil;
   if currentPlug<>0 then freeLibrary(currentPlug);
@@ -490,7 +496,7 @@ begin
   if cbAutoLoadPlugin.Checked then begin
     // Load new plugin
     LoadPlugin;
-    bPlayAndProcess.SetFocus;
+    //bPlayAndProcess.SetFocus;
   end;
 end;
 
@@ -618,6 +624,7 @@ begin
   if not PluginLoaded then exit;
   currentFrame[0]:=0;
   tPlay.Enabled:=true;
+  cbPlugins.SetFocus;
 end;
 
 procedure TfmMain.tPlayTimer(Sender: TObject);

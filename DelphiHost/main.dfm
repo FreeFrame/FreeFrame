@@ -1,6 +1,6 @@
 object fmMain: TfmMain
-  Left = 227
-  Top = 227
+  Left = 446
+  Top = 336
   Width = 917
   Height = 726
   Caption = 'FreeFrame Delphi Host Test Container'
@@ -264,11 +264,11 @@ object fmMain: TfmMain
     Caption = 'Param7Dword'
   end
   object bInit: TButton
-    Left = 48
+    Left = 40
     Top = 32
-    Width = 75
+    Width = 83
     Height = 25
-    Caption = '1 - Init AVI'
+    Caption = '1 - AVIFileInit'
     TabOrder = 1
     OnClick = bInitClick
   end
@@ -277,14 +277,14 @@ object fmMain: TfmMain
     Top = 280
     Width = 83
     Height = 25
-    Caption = '16 - DeInit AVI'
+    Caption = '16 - AVIFileExit'
     TabOrder = 16
     OnClick = bDeInitClick
   end
   object bOpenAVI: TButton
-    Left = 48
+    Left = 40
     Top = 94
-    Width = 75
+    Width = 83
     Height = 25
     Caption = '2 - Open AVI'
     TabOrder = 2
@@ -299,18 +299,18 @@ object fmMain: TfmMain
     OnChange = ebAVIFilenameChange
   end
   object bCloseAVI: TButton
-    Left = 48
+    Left = 40
     Top = 218
-    Width = 75
+    Width = 83
     Height = 25
     Caption = '15 - Close AVI'
     TabOrder = 15
     OnClick = bCloseAVIClick
   end
   object bGetFrame: TButton
-    Left = 48
+    Left = 40
     Top = 156
-    Width = 75
+    Width = 83
     Height = 25
     Caption = '3 - Get Frame'
     TabOrder = 3
