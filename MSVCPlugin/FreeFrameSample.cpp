@@ -75,11 +75,12 @@ int vidmode;
 
 PlugInfoStruct* getInfo() 
 {
-	plugInfo.APIMajorVersion = 0;
-	plugInfo.APIMinorVersion = 1050; // lets keep this in sync with the delphi host for now
-	char ID[5] = "MPB1";		 // this *must* be unique to your plugin 
+	plugInfo.APIMajorVersion = 0;		// number before decimal point in version nums
+	plugInfo.APIMinorVersion = 500;		// this is the number after the decimal point
+										// so version 0.511 has major num 0, minor num 501
+	char ID[5] = "FFP1";		 // this *must* be unique to your plugin 
 								 // see www.freeframe.org for a list of ID's already taken
-	char name[17] = "MSVC_Plugin_Base";
+	char name[17] = "CStd_Plugin_Base";
 	
 	memcpy(plugInfo.uniqueID, ID, 4);
 	memcpy(plugInfo.pluginName, name, 16);

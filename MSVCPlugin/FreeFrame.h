@@ -7,7 +7,7 @@ extern "C" {
 // FreeFrame.h
 //
 // FreeFrame Open Video Plugin Prototype
-// ANSI C Version
+// C Version
 
 // www.freeframe.org
 // marcus@freeframe.org
@@ -138,7 +138,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
                        DWORD  ul_reason_for_call, 
                        LPVOID lpReserved );
 
-__declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved);
+__declspec(dllexport) plugMainUnion __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved);
 
 typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID,DWORD);
 

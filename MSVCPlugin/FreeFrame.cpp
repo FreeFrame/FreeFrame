@@ -70,7 +70,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 //
 
 #ifdef WIN32
- __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved ) 
+ __declspec(dllexport) plugMainUnion __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved ) 
 #elif LINUX
 extern "C" {
    plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved )
@@ -120,15 +120,9 @@ extern "C" {
 		retval.ivalue = FF_FAIL;
 		break;
 	}
-#ifdef linux	
 	return retval;
 }
+#ifdef linux	
 
 } /* extern "C" */
-#elif WIN32
-	LPVOID winRetval;
-	memcpy(&winRetval, &retval, sizeof(LPVOID));
-
-	return (LPVOID) winRetval;
-}
 #endif
