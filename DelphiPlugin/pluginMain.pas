@@ -30,7 +30,7 @@ unit pluginMain;
 interface
 
 uses
-  windows, sysutils;
+  sysutils,types;
 
 type
   TPluginInfoStruct = record
@@ -66,6 +66,7 @@ function GetParameterDisplay(pParam: pointer): pointer;
 function SetParameter(pParam: pointer): pointer;
 function GetParameter(pParam: pointer): pointer;
 function GetPluginCaps(pParam: pointer): pointer;
+function CopyMemory(dst: pointer; src: pointer; size: integer): pointer;
 
 procedure InitLib;
 
@@ -105,6 +106,22 @@ begin
   result:=pointer(pPluginInfoBlock);
 end;
 
+function CopyMemory(dst: pointer;src: pointer; size: integer): pointer;
+var
+temps: pb;
+tempd: pb;
+x: integer;
+begin
+        temps:=pb(src);
+        tempd:=pb(dst);
+        for x:=0 to (size-1) do begin
+
+                tempd^:=temps^;
+                inc(tempd);
+                inc(temps);
+        end;
+        result:=pointer(0);
+end;
 function Initialise(pParam: pointer):pointer;
 var
   tempPointer: pDw;

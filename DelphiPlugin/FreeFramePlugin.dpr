@@ -40,10 +40,10 @@ library FreeFramePlugin;
 uses
   SysUtils,
   Classes,
-  windows,
+  Types,
   pluginMain in 'pluginMain.pas';
 
-{$R *.RES}
+{$R *.res}
 
 procedure InitLibrary;
 begin
@@ -94,6 +94,7 @@ end;
 
 exports
   plugMain;
+
 begin
   InitLibrary;
 end.
