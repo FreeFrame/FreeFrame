@@ -283,6 +283,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				}break;
 
+				case IDM_FILE_PROPERTIES: {
+
+					EditGraph_FilePropertiesDialog(&g_GraphData);
+
+				}break;
+
 				case IDM_EXIT:
 					GraphUtil_DeInit(&g_GraphData);
 					DestroyWindow(hWnd);
