@@ -120,8 +120,15 @@ extern "C" {
 		retval.ivalue = FF_FAIL;
 		break;
 	}
+#ifdef linux	
 	return retval;
 }
-#ifdef linux
+
 } /* extern "C" */
+#elif WIN32
+	LPVOID winRetval;
+	memcpy(&winRetval, &retval, sizeof(LPVOID));
+
+	return (LPVOID) winRetval;
+}
 #endif
