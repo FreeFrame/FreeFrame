@@ -46,6 +46,16 @@ type
   end;
   pdw = ^dword;
 
+// this type is used to see immediately in the list wether a plugin is a source or effect etc...
+//
+type
+  TPluginListInfo = class
+   PluginName : string;
+   PluginType : string;
+   NumParams  : integer;
+   DllPath    : string;
+end;
+
 type
   TFreeFrame = class(TComponent)
   private
@@ -269,37 +279,52 @@ begin
 end;
 
 function TFreeFrame.GetPlugins: boolean;
-  function checkValid(name: string):boolean;
-  const
-    functionName = 'plugMain';
+
+  function checkAndAdd(name: string):boolean;
   var
-    h: thandle;
-    proc: pointer;
+    pli : TPluginListInfo;
   begin
     result:=false;
     if not (compareText(copy(name,length(name)-3,4),'.dll')=0) then exit; //findfirst returns filenames containing dll, not just ending
-    h := LoadLibrary(pchar(name));
-    if h <> 0 then begin //its a dll!
-      Proc := GetProcAddress(h, functionName);
-      if Proc <> nil then result:=true;
-      FreeLibrary(h);
+    plugmain := nil;
+    currentplug := LoadLibrary(pchar(name));
+    if currentplug <> 0 then begin //its a dll!
+      plugmain := GetProcAddress(currentplug, 'plugMain');
+      if @plugmain <> nil then begin
+       pli := TPluginListInfo.Create;
+       GetInfo;
+       pli.PluginName := PluginInfoStruct.PluginName;
+       pli.NumParams  := GetNumParameters;
+       pli.DllPath    := name;
+       case PluginInfoStruct.PluginType of
+        0: pli.PluginType := 'effect';
+        1: pli.PluginType := 'source';
+       end;
+       FPlugins.AddObject(pli.PluginName,TObject(pli));
+       result:=true;
+      end;
+      FreeLibrary(currentplug);
     end;
   end;
 var
   t: TSearchRec;
+  listindex : integer;
 begin
   FPlugins.clear;
-
+  listindex := 0;
   if findfirst(FDirectory+'*.dll', faAnyFile, t) = 0 then begin
-    if checkValid(FDirectory+t.name) then FPlugins.add(t.name);
-    while findnext(t) = 0 do if checkValid(FDirectory+t.name) then FPlugins.add(t.name);
+    checkAndAdd(FDirectory+t.name);
+    while findnext(t) = 0 do begin
+     checkAndAdd(FDirectory+t.name);
+    end;
+    currentPlug := 0;
+    plugmain := nil;
     findclose(t);
   end;
   if FPlugins.Count>0 then begin
     FPluginsfound := true;
     FPluginIndex := 0;
   end else FPluginsfound := False;
-
 end;
 
 
@@ -337,7 +362,9 @@ begin
 
   plugMain:=nil;
 
-  currentPlug := LoadLibrary(pchar(FDirectory +'/'+FPlugins.Strings[PluginIndex]));
+
+  currentPlug := LoadLibrary(pchar(TPluginListInfo(FPlugins.Objects[PluginIndex]).DllPath));
+
   if currentPlug <> 0 then begin //its a dll!
     plugMain := GetProcAddress(currentPlug, 'plugMain');
     if @plugMain = nil then begin

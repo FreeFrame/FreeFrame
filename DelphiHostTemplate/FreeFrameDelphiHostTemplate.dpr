@@ -42,7 +42,8 @@ uses
   Forms,
   main in 'main.pas' {fmMain},
   AVI in 'AVI.pas',
-  utils in 'utils.pas';
+  utils in 'utils.pas',
+  FreeFrame in 'FreeFrame.pas';
 
 {$R *.RES}
 

@@ -28,30 +28,26 @@ object fmMain: TfmMain
   object lParam0Name: TLabel
     Left = 409
     Top = 89
-    Width = 64
+    Width = 3
     Height = 13
-    Caption = 'Param0Name'
   end
   object lParam1Name: TLabel
     Left = 409
     Top = 140
-    Width = 64
+    Width = 3
     Height = 13
-    Caption = 'Param1Name'
   end
   object lParam2Name: TLabel
     Left = 409
     Top = 190
-    Width = 64
+    Width = 3
     Height = 13
-    Caption = 'Param2Name'
   end
   object lParam3Name: TLabel
     Left = 409
     Top = 238
-    Width = 64
+    Width = 3
     Height = 13
-    Caption = 'Param3Name'
   end
   object lParam0Value: TLabel
     Left = 557
@@ -59,7 +55,6 @@ object fmMain: TfmMain
     Width = 63
     Height = 13
     AutoSize = False
-    Caption = 'Param0Value'
   end
   object lParam1Value: TLabel
     Left = 557
@@ -67,7 +62,6 @@ object fmMain: TfmMain
     Width = 63
     Height = 13
     AutoSize = False
-    Caption = 'Param1Value'
   end
   object lParam2Value: TLabel
     Left = 557
@@ -75,7 +69,6 @@ object fmMain: TfmMain
     Width = 63
     Height = 13
     AutoSize = False
-    Caption = 'Param2Value'
   end
   object lParam3Value: TLabel
     Left = 557
@@ -83,7 +76,6 @@ object fmMain: TfmMain
     Width = 63
     Height = 13
     AutoSize = False
-    Caption = 'Param3Value'
   end
   object lParam0dword: TLabel
     Left = 558
@@ -91,7 +83,6 @@ object fmMain: TfmMain
     Width = 67
     Height = 13
     AutoSize = False
-    Caption = 'Param0Dword'
   end
   object lParam1dword: TLabel
     Left = 558
@@ -99,7 +90,6 @@ object fmMain: TfmMain
     Width = 67
     Height = 13
     AutoSize = False
-    Caption = 'Param1Dword'
   end
   object lParam2dword: TLabel
     Left = 558
@@ -107,7 +97,6 @@ object fmMain: TfmMain
     Width = 67
     Height = 13
     AutoSize = False
-    Caption = 'Param2Dword'
   end
   object lParam3dword: TLabel
     Left = 558
@@ -115,7 +104,6 @@ object fmMain: TfmMain
     Width = 67
     Height = 13
     AutoSize = False
-    Caption = 'Param3Dword'
   end
   object bInit: TButton
     Left = 82
@@ -145,9 +133,9 @@ object fmMain: TfmMain
   end
   object GroupBox1: TGroupBox
     Left = 288
-    Top = 94
+    Top = -1
     Width = 113
-    Height = 105
+    Height = 111
     Caption = ' PluginInfoStruct '
     TabOrder = 6
     object lPluginMajorVersion: TLabel
@@ -187,29 +175,29 @@ object fmMain: TfmMain
     end
   end
   object GroupBox2: TGroupBox
-    Left = 287
-    Top = -1
+    Left = 288
+    Top = 192
     Width = 113
-    Height = 73
+    Height = 80
     Caption = ' VideoInfoStruct '
     TabOrder = 7
     object lVideoWidth: TLabel
-      Left = 13
-      Top = 16
+      Left = 10
+      Top = 19
       Width = 28
       Height = 13
       Caption = 'Width'
     end
     object lVideoHeight: TLabel
-      Left = 13
-      Top = 32
+      Left = 10
+      Top = 35
       Width = 31
       Height = 13
       Caption = 'Height'
     end
     object lBitDepth: TLabel
-      Left = 13
-      Top = 48
+      Left = 10
+      Top = 51
       Width = 44
       Height = 13
       Caption = 'Bit Depth'
@@ -222,8 +210,10 @@ object fmMain: TfmMain
     Height = 33
     Max = 100
     Frequency = 10
-    SliderVisible = False
     TabOrder = 8
+    TickMarks = tmBoth
+    TickStyle = tsNone
+    Visible = False
     OnChange = tbParam0Change
   end
   object tbParam1: TTrackBar
@@ -233,8 +223,10 @@ object fmMain: TfmMain
     Height = 33
     Max = 100
     Frequency = 10
-    SliderVisible = False
     TabOrder = 9
+    TickMarks = tmBoth
+    TickStyle = tsNone
+    Visible = False
     OnChange = tbParam1Change
   end
   object tbParam2: TTrackBar
@@ -244,8 +236,10 @@ object fmMain: TfmMain
     Height = 33
     Max = 100
     Frequency = 10
-    SliderVisible = False
     TabOrder = 10
+    TickMarks = tmBoth
+    TickStyle = tsNone
+    Visible = False
     OnChange = tbParam2Change
   end
   object tbParam3: TTrackBar
@@ -255,8 +249,10 @@ object fmMain: TfmMain
     Height = 33
     Max = 100
     Frequency = 10
-    SliderVisible = False
     TabOrder = 11
+    TickMarks = tmBoth
+    TickStyle = tsNone
+    Visible = False
     OnChange = tbParam3Change
   end
   object bBrowse: TButton
@@ -270,9 +266,9 @@ object fmMain: TfmMain
   end
   object gbPluginCaps: TGroupBox
     Left = 288
-    Top = 199
+    Top = 112
     Width = 113
-    Height = 73
+    Height = 79
     Caption = ' Plugin Capabilities '
     TabOrder = 12
     object l16bit: TLabel
@@ -323,7 +319,7 @@ object fmMain: TfmMain
     Height = 21
     ItemHeight = 13
     TabOrder = 13
-    Text = 'cbEffect1'
+    Text = 'choose effect...'
     OnChange = SetEffect
   end
   object cbEffect2: TComboBox
@@ -334,8 +330,26 @@ object fmMain: TfmMain
     Height = 21
     ItemHeight = 13
     TabOrder = 14
-    Text = 'cbEffect2'
+    Text = 'choose effect...'
     OnChange = SetEffect
+  end
+  object cbEffect1Active: TCheckBox
+    Left = 560
+    Top = 8
+    Width = 56
+    Height = 17
+    Checked = True
+    State = cbChecked
+    TabOrder = 15
+  end
+  object cbEffect2Active: TCheckBox
+    Left = 560
+    Top = 29
+    Width = 49
+    Height = 17
+    Checked = True
+    State = cbChecked
+    TabOrder = 16
   end
   object odAVI: TOpenDialog
     Left = 40
@@ -359,7 +373,7 @@ object fmMain: TfmMain
     PluginIndex = 0
     Autoloadplugin = False
     NumParameters = 0
-    Left = 568
-    Top = 8
+    Left = 408
+    Top = 56
   end
 end

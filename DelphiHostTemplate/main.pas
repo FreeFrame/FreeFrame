@@ -89,6 +89,8 @@ type
     FreeFrame2: TFreeFrame;
     cbEffect1: TComboBox;
     cbEffect2: TComboBox;
+    cbEffect1Active: TCheckBox;
+    cbEffect2Active: TCheckBox;
     procedure bInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
     procedure ebAVIFilenameChange(Sender: TObject);
@@ -206,7 +208,6 @@ var
 begin
   if Currenteffect =1 then TempFreeFrame := FreeFrame1
   else  TempFreeFrame := FreeFrame2;
-  
   tempInt:=tbParam0.position;
   tempSingle:=tempInt/100;
   TempFreeFrame.SetParameter(0,tempSingle);
@@ -293,8 +294,8 @@ begin
   pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
 
   // Process frame through plugin
-  if FreeFrame1.currentPlug <> 0 then FreeFrame1.ProcessFrame(pBits); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
-  if FreeFrame2.currentPlug <> 0 then FreeFrame2.ProcessFrame(pBits);
+  if ( (cbEffect1Active.Checked) and (FreeFrame1.currentPlug <> 0) ) then FreeFrame1.ProcessFrame(pBits); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
+  if ( (cbEffect2Active.Checked) and (FreeFrame2.currentPlug <> 0) ) then FreeFrame2.ProcessFrame(pBits);
   // Display the frame
   DisplayFrame(lpbitmapinfoheader);
 end;
@@ -328,15 +329,20 @@ begin
   if TempFreeFrame.Support32bit then l32bit.Caption:='32bit: yes' else l32bit.Caption:='32bit: no';
   //
   NumParams:=TempFreeFrame.GetNumParameters;
-  tbParam0.SliderVisible:=false;
-  tbParam1.SliderVisible:=false;
-  tbParam2.SliderVisible:=false;
-  tbParam3.SliderVisible:=false;
-  if NumParams>0 then tbParam0.SliderVisible:=true;
-  if NumParams>1 then tbParam1.SliderVisible:=true;
-  if NumParams>2 then tbParam2.SliderVisible:=true;
-  if NumParams>3 then tbParam3.SliderVisible:=true;
+  tbParam0.Visible:=false;
+  tbParam1.Visible:=false;
+  tbParam2.Visible:=false;
+  tbParam3.Visible:=false;
+  if NumParams>0 then tbParam0.Visible:=true;
+  if NumParams>1 then tbParam1.Visible:=true;
+  if NumParams>2 then tbParam2.Visible:=true;
+  if NumParams>3 then tbParam3.Visible:=true;
   //
+  lParam0Name.caption:='';
+  lParam1Name.caption:='';
+  lParam2Name.caption:='';
+  lParam3Name.caption:='';
+
   if NumParams>0 then lParam0Name.caption:=TempFreeFrame.GetParameterName(0);
   if NumParams>1 then lParam1Name.caption:=TempFreeFrame.GetParameterName(1);
   if NumParams>2 then lParam2Name.caption:=TempFreeFrame.GetParameterName(2);
@@ -347,10 +353,20 @@ begin
   if NumParams>2 then tbParam2.Position:=round(TempFreeFrame.GetParameterDefault(2)*100);
   if NumParams>3 then tbParam3.Position:=round(TempFreeFrame.GetParameterDefault(3)*100);
   //
+  lParam0Value.caption:='';
+  lParam1Value.caption:='';
+  lParam2Value.caption:='';
+  lParam3Value.caption:='';
+
   if NumParams>0 then lParam0Value.caption:=TempFreeFrame.GetParameterDisplay(0);
   if NumParams>1 then lParam1Value.caption:=TempFreeFrame.GetParameterDisplay(1);
   if NumParams>2 then lParam2Value.caption:=TempFreeFrame.GetParameterDisplay(2);
   if NumParams>3 then lParam3Value.caption:=TempFreeFrame.GetParameterDisplay(3);
+
+  lParam0dword.caption:='';
+  lParam1dword.caption:='';
+  lParam2dword.caption:='';
+  lParam3dword.caption:='';
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
