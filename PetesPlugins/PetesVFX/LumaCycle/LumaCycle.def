@@ -1,0 +1,3 @@
+LIBRARY			PeteLumaCycle
+DESCRIPTION		'LumaCycle plugin'
+EXPORTS			plugMain

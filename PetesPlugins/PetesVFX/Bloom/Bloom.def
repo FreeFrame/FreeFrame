@@ -1,0 +1,3 @@
+LIBRARY			PeteBloom
+DESCRIPTION		'Bloom plugin'
+EXPORTS			plugMain

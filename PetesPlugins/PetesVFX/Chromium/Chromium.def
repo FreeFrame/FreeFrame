@@ -1,0 +1,3 @@
+LIBRARY			PeteChromium
+DESCRIPTION		'Chromium plugin'
+EXPORTS			plugMain

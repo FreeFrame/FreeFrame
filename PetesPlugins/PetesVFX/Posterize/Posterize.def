@@ -1,0 +1,3 @@
+LIBRARY			PetePosterize
+DESCRIPTION		'Posterize plugin'
+EXPORTS			plugMain

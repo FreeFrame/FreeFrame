@@ -1,0 +1,3 @@
+LIBRARY			PeteLumaOffset
+DESCRIPTION		'LumaOffset plugin'
+EXPORTS			plugMain

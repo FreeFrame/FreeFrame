@@ -1,0 +1,3 @@
+LIBRARY			PeteRefraction
+DESCRIPTION		'Refraction plugin'
+EXPORTS			plugMain

@@ -1,0 +1,3 @@
+LIBRARY			PeteSquash
+DESCRIPTION		'Squash plugin'
+EXPORTS			plugMain

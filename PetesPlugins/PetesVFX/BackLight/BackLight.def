@@ -1,0 +1,3 @@
+LIBRARY			PeteBackLight
+DESCRIPTION		'BackLight plugin'
+EXPORTS			plugMain

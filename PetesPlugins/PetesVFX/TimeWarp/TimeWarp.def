@@ -1,0 +1,3 @@
+LIBRARY			PeteTimeWarp
+DESCRIPTION		'TimeWarp plugin'
+EXPORTS			plugMain

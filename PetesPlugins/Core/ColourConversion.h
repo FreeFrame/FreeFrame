@@ -1,0 +1,9 @@
+#ifndef INCLUDE_COLOURCONVERSION_H
+#define INCLUDE_COLOURCONVERSION_H
+
+#include "PeteHelpers.h"
+
+U32 Pete_ConvertRGBToHSV(U32 ColourRGB);
+U32 Pete_ConvertHSVToRGB(U32 ColourHSV);
+
+#endif // INCLUDE_COLOURCONVERSION_H

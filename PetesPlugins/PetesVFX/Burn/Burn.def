@@ -1,0 +1,3 @@
+LIBRARY			PeteBurn
+DESCRIPTION		'Burn plugin'
+EXPORTS			plugMain

@@ -1,0 +1,3 @@
+LIBRARY			PeteColourWarp
+DESCRIPTION		'ColourWarp plugin'
+EXPORTS			plugMain

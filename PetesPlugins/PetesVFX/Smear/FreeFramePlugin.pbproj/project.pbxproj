@@ -1,0 +1,193 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 38;
+	objects = {
+		59092BE70433B75C0066DF6B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = FreeFrame.h;
+			path = ../../FreeFrame/FreeFrame.h;
+			refType = 2;
+		};
+		59092BE80433B75C0066DF6B = {
+			fileRef = 59092BE70433B75C0066DF6B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		59092BE90433B77C0066DF6B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			path = SmearVFX.cpp;
+			refType = 2;
+		};
+		59092BEA0433B77C0066DF6B = {
+			fileRef = 59092BE90433B77C0066DF6B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		59092BEB0433B79F0066DF6B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = Smear.cpp;
+			path = ../../Core/Smear.cpp;
+			refType = 2;
+		};
+		59092BEC0433B79F0066DF6B = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = Smear.h;
+			path = ../../Core/Smear.h;
+			refType = 2;
+		};
+		59092BED0433B79F0066DF6B = {
+			fileRef = 59092BEB0433B79F0066DF6B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		59092BEE0433B79F0066DF6B = {
+			fileRef = 59092BEC0433B79F0066DF6B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		59CA1A5D0431160F00547454 = {
+			children = (
+				59CA1A680431162F00547454,
+				59CA1A6F0431201D00547454,
+				59092BEB0433B79F0066DF6B,
+				59092BEC0433B79F0066DF6B,
+				59092BE90433B77C0066DF6B,
+				59092BE70433B75C0066DF6B,
+			);
+			isa = PBXGroup;
+			refType = 4;
+		};
+		59CA1A5F0431160F00547454 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		59CA1A600431160F00547454 = {
+			buildRules = (
+			);
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+		59CA1A610431160F00547454 = {
+			buildStyles = (
+				59CA1A5F0431160F00547454,
+				59CA1A600431160F00547454,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = 59CA1A5D0431160F00547454;
+			productRefGroup = 59CA1A680431162F00547454;
+			projectDirPath = "";
+			targets = (
+				59CA1A660431162F00547454,
+			);
+		};
+		59CA1A620431162F00547454 = {
+			buildActionMask = 2147483647;
+			files = (
+				59092BE80433B75C0066DF6B,
+				59092BEE0433B79F0066DF6B,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59CA1A630431162F00547454 = {
+			buildActionMask = 2147483647;
+			files = (
+				59CA1A700431201D00547454,
+				59092BEA0433B77C0066DF6B,
+				59092BED0433B79F0066DF6B,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59CA1A640431162F00547454 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59CA1A650431162F00547454 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		59CA1A660431162F00547454 = {
+			buildPhases = (
+				59CA1A620431162F00547454,
+				59CA1A630431162F00547454,
+				59CA1A640431162F00547454,
+				59CA1A650431162F00547454,
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				EXPORTED_SYMBOLS_FILE = FreeFramePlugin.exp;
+				HEADER_SEARCH_PATHS = "/Users/petewarden/Projects/PetesVFX /Users/petewarden/Projects/Core /Users/petewarden/Projects/FreeFrame";
+				INSTALL_PATH = /Users/petewarden/Projects/FreeFrameHost/Plugins;
+				LIBRARY_STYLE = BUNDLE;
+				OTHER_CFLAGS = "-DPETE_MAC_OSX";
+				OTHER_LIBTOOL_FLAGS = "\U0001";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = /users/petewarden/projects/freeframehost/plugins/Smear.frf;
+				REZ_EXECUTABLE = YES;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			dependencies = (
+			);
+			isa = PBXLibraryTarget;
+			name = FreeFramePlugin;
+			productInstallPath = /Users/petewarden/Projects/FreeFrameHost/Plugins;
+			productName = FreeFramePlugin;
+			productReference = 59CA1A670431162F00547454;
+		};
+		59CA1A670431162F00547454 = {
+			isa = PBXLibraryReference;
+			path = /users/petewarden/projects/freeframehost/plugins/Smear.frf;
+			refType = 3;
+		};
+		59CA1A680431162F00547454 = {
+			children = (
+				59CA1A670431162F00547454,
+			);
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+		};
+		59CA1A6F0431201D00547454 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			path = FreeFramePlugin.exp;
+			refType = 4;
+		};
+		59CA1A700431201D00547454 = {
+			fileRef = 59CA1A6F0431201D00547454;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+	};
+	rootObject = 59CA1A610431160F00547454;
+}

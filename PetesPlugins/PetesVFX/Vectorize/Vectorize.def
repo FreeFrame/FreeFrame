@@ -1,0 +1,3 @@
+LIBRARY			PeteVectorize
+DESCRIPTION		'Vectorize plugin'
+EXPORTS			plugMain

@@ -1,0 +1,3 @@
+LIBRARY			PeteBackDropKey
+DESCRIPTION		'BackDropKey plugin'
+EXPORTS			plugMain

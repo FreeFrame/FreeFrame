@@ -1,0 +1,3 @@
+LIBRARY			PeteMixer
+DESCRIPTION		'Mixer plugin'
+EXPORTS			plugMain

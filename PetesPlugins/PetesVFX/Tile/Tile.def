@@ -1,0 +1,3 @@
+LIBRARY			PeteTile
+DESCRIPTION		'Tile plugin'
+EXPORTS			plugMain

@@ -1,0 +1,3 @@
+LIBRARY			PetePanSpinZoom
+DESCRIPTION		'PanSpinZoom plugin'
+EXPORTS			plugMain

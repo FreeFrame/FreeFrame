@@ -1,0 +1,3 @@
+LIBRARY			PeteRadialBlur
+DESCRIPTION		'RadialBlur plugin'
+EXPORTS			plugMain

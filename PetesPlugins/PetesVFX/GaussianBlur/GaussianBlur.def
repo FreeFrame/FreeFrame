@@ -1,0 +1,3 @@
+LIBRARY			PeteGaussianBlur
+DESCRIPTION		'GaussianBlur plugin'
+EXPORTS			plugMain

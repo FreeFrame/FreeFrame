@@ -1,0 +1,3 @@
+LIBRARY			PeteRectDistort
+DESCRIPTION		'RectDistort plugin'
+EXPORTS			plugMain

@@ -1,0 +1,3 @@
+LIBRARY			PeteMetaImage
+DESCRIPTION		'MetaImage plugin'
+EXPORTS			plugMain

@@ -1,0 +1,3 @@
+LIBRARY			PeteGlow
+DESCRIPTION		'Glow plugin'
+EXPORTS			plugMain

@@ -1,0 +1,3 @@
+LIBRARY			PeteDirectionalBlur
+DESCRIPTION		'DirectionalBlur plugin'
+EXPORTS			plugMain

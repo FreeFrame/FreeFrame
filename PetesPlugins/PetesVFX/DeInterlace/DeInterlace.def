@@ -1,0 +1,3 @@
+LIBRARY			PeteDeInterlace
+DESCRIPTION		'DeInterlace plugin'
+EXPORTS			plugMain

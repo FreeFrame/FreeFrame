@@ -1,0 +1,3 @@
+LIBRARY			PeteTimeSlice
+DESCRIPTION		'TimeSlice plugin'
+EXPORTS			plugMain

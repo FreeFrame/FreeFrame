@@ -1,0 +1,3 @@
+LIBRARY			PeteLionelBlur
+DESCRIPTION		'LionelBlur plugin'
+EXPORTS			plugMain

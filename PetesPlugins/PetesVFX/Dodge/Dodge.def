@@ -1,0 +1,3 @@
+LIBRARY			PeteDodge
+DESCRIPTION		'Dodge plugin'
+EXPORTS			plugMain

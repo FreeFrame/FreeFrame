@@ -1,0 +1,3 @@
+LIBRARY			PeteLiveFeed
+DESCRIPTION		'LiveFeed plugin'
+EXPORTS			plugMain

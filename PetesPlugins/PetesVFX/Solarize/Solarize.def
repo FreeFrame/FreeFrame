@@ -1,0 +1,3 @@
+LIBRARY			PeteSolarize
+DESCRIPTION		'Solarize plugin'
+EXPORTS			plugMain

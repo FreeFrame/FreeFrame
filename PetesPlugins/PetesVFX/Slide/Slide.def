@@ -1,0 +1,3 @@
+LIBRARY			PeteSlide
+DESCRIPTION		'Slide plugin'
+EXPORTS			plugMain

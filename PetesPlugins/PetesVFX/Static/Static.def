@@ -1,0 +1,3 @@
+LIBRARY			PeteStatic
+DESCRIPTION		'Static plugin'
+EXPORTS			plugMain
