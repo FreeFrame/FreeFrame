@@ -126,10 +126,11 @@ char *GetParameterName(DWORD i) {
 	return nope;
 }
 
-FloatStruct *GetParameterDefault(DWORD i) {
-  static FloatStruct foo;
-  foo.value = 0.0;
-	return &foo;
+DWORD *GetParameterDefault(DWORD i) {
+  DWORD *d;
+  float f=0.0;
+  d=(DWORD *)&f;
+  return d;
 }
 char *GetParameterDisplay(DWORD i) {
   char *nope="Nothing";
@@ -139,14 +140,15 @@ DWORD SetParameter(DWORD i,float f) {
 
   return 0;
 }
-FloatStruct *GetParameter(DWORD i) {
-  static FloatStruct foo;
-  foo.value = 0.0;
-  return &foo;
+DWORD *GetParameter(DWORD i) {
+  static float f;
+  DWORD *d;
+  d=(DWORD *)&f;
+  return d;
 }
 #endif
 
-#ifdef HAVE_GETPLUGINCAPS
+#ifndef HAVE_GETPLUGINCAPS
 
 DWORD GetPluginCaps(DWORD i) {
   switch(i) {

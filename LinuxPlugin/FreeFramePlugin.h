@@ -59,9 +59,7 @@ struct ProcessFrameStruct {
   DWORD *dst;
 };
 
-struct FloatStruct {
-  float value;
-};
+
 struct TVideoInfoStruct {
   DWORD FrameWidth;
   DWORD FrameHeight;
@@ -81,9 +79,9 @@ DWORD DeInitPlugin();
 DWORD ProcessFrame(DWORD *src,DWORD *dst);
 DWORD GetNumParameters();
 char *GetParameterName(DWORD);
-FloatStruct *GetParameterDefault(DWORD);
+DWORD *GetParameterDefault(DWORD);
 char *GetParameterDisplay(DWORD);
 DWORD SetParameter(DWORD, float);
-FloatStruct *GetParameter(DWORD);
+DWORD *GetParameter(DWORD);
 DWORD GetPluginCaps(DWORD);
 
