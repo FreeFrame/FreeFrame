@@ -39,7 +39,6 @@ library PascalSamplePlugin;
   using PChar or ShortString parameters. }
 
 uses
-  madExcept,
   SysUtils,
   Classes,
 {$IFDEF LINUX}
@@ -84,7 +83,7 @@ begin
     0: begin
       with PluginInfoStruct do begin
         APIMajorVersion:=0;
-        APIMinorVersion:=550;
+        APIMinorVersion:=700;
         PluginUniqueID:='PTST';
         PluginName:='PascalTestPlugin';
         PluginType:=0;   // effect plugin
@@ -92,7 +91,7 @@ begin
       pPluginInfoStruct:=@pluginInfoStruct;
       result:=pointer(pPluginInfoStruct);
     end;
-    1: begin    // Plugin Initislise
+    1: begin    // Plugin Initialise
       // can't think of anything to put here
     end;
     2: begin    // Plugin DeInitislise
