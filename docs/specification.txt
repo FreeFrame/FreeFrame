@@ -1,0 +1,141 @@
+FreeFrame Open Video Plugin System Specification
+
+www.freeframe.org
+
+FreeFrame Plugins export a single function: plugMain
+This is passed 2 values: a dword Function Code and an Input Value cast as an untyped dword pointer.
+It returns an Output Value cast as an untyped dword pointer.
+
+
+  =============================================================================================
+  Function Code Table
+  =============================================================================================
+  Code   Function		Input Value			Output Value
+  =====  =====================  ==============================  ===============================
+  0      GetInfo		Unused				Pointer to PluginInfoStruct
+  1      Initialize		Pointer to VideoInfoStruct	Success/Fail
+  2      DeInitialize		Unused				Success/Fail
+  3      ProcessFrame		Pointer to a frame of video	Success/Fail
+  4      GetNumParameters	Unused				NumParameters
+  5      GetParameterName	ParamaterNumber			Pointer to ParameterName
+  6      GetParameterDefault	ParamaterNumber			ParameterDefaultValue
+  7      GetParameterDisplay	ParamaterNumber			Pointer to ParameterDisplayValue
+  8      SetParameter		Pointer to SetParameterStruct	Success/Fail
+  9      GetParameter		Paramater number		ParameterValue	
+  10     GetPluginCaps		PluginCapsIndex			Supported/Unsupported
+  =====  =====================  ==============================  ================================
+  
+  
+  
+  ================================================================================
+  PluginInfoStruct
+  ================================================================================
+  APIMajorVersion: dword
+  APIMinorVersion: dword
+  PluginUniqueID: array of 4 char (= 1 dword, not null terminated)
+  PluginName: array of 16 char (= 4 dwords, not null terminated)
+  PluginType: dword (0=effect 1=source)
+  ================================================================================
+  Plugins of PluginType effect are passed frames of video, which they then modify
+  Source Plugins are simply passed a pointer where they paint frames of video
+  One example of a source plugin would by a visual synthesiser which uses the 
+  paramaters to synthesize video.
+  ================================================================================
+
+
+  ================================================================================
+  VideoInfoStruct
+  ================================================================================
+  FrameWidth: dword
+  FrameHeight: dword
+  BitDepth: dword (0=16bit 1=24bit 2=32bit)
+  ================================================================================
+  BitDepth: 
+  16bit is 5-6-5 packed
+  24bit is packed
+  32bit is also suitable for dword aligned 24bit
+  ================================================================================
+  
+  
+  ================================================================================
+  NumParamaters: dword cast as untyped pointer
+  ================================================================================
+  The number of paramaters that the plugin implements
+  ================================================================================
+  
+  
+  ================================================================================
+  ParamaterNumber: dword cast as untyped pointer
+  ================================================================================
+  Paramater Numbers start at 0
+  ================================================================================
+  
+  
+  ================================================================================
+  ParamaterName: array of 16 char (= 4 dwords, not null terminated)
+  ================================================================================
+  The name of the Paramater as it will be displayed by the host on the UI
+  ================================================================================
+  
+  
+  ================================================================================
+  ParamaterDefaultValue: 32bit float cast as untyped dword pointer
+  ================================================================================
+  The initial default value for this paramater.
+  Plugins should always specify default values.
+  Sometimes a host may not implement all paramaters on a plugin,
+  so the plugin must use default values untill told to do otherwise by the host.
+  FreeFrame parameter values are always 32bit floats,
+  and the range of values permitted is STRICTLY 0-1.
+  This allows faster processing and a good range of values.
+  ================================================================================
+  
+  
+  ================================================================================
+  ParamaterDisplayValue: array of 16 char (= 4 dwords, not null terminated)
+  ================================================================================
+  The current display value of this parameter. The plugin can display whatever it
+  likes here  eg. just the float, a rounded 0-100 '%' representation for the user
+  words representing states like 'on' / 'off'
+  different effects that the one plugin can do .. etc. etc. 
+  ================================================================================
+  
+  
+  ================================================================================
+  SetParamaterStruct
+  ================================================================================
+  ParamaterNumber: dword
+  NewParamaterValue: 32bit float cast as untyped dword pointer
+  ================================================================================
+  
+  
+  ================================================================================
+  Parameter Value: 32bit float cast as untyped dword pointer
+  ================================================================================
+  FreeFrame parameter values are always 32bit floats,
+  and the range of values permitted is STRICTLY 0-1.
+  This allows faster processing and a good range of values over a standard 
+  range, so the host can run up sliders or whatever for the plugin.
+  Use of any values outside this range will result in hideous incompatabilities.
+  The ParamaterDisplayValue can be used to display whatever actual values 
+  the plugin likes eg. 0-255 0-767 1-256 or whatever.
+  The plugin should translate the standard 0-1 float range into the values it
+  needs for its processing.
+  ================================================================================
+  
+  
+  ================================================================================
+  PluginCapsIndex: dword cast as untyped pointer
+  ================================================================================
+  0 = 16bit 5-6-5
+  1 = 24bit packed
+  2 = 32bit / 24bit dword aligned
+  ================================================================================
+  The PluginCapsIndex specifies certain capabilities of a plugin that the host may
+  want to enquire about. For now there is only the bitdepth format of the video.
+  The host will asks the plugin if it is capable of its favourite bit depth, 
+  and use that if it is available. If not the host may decide not to use the 
+  plugin and deinitialise it, or it may as if a second choice format is supported.
+  ================================================================================
+  Supported/Unsupported: 0=unsupported 1=supported
+  ================================================================================
