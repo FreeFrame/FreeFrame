@@ -96,7 +96,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=5;
+    APIMinorVersion:=500;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
