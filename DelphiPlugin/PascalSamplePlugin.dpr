@@ -39,7 +39,6 @@ library PascalSamplePlugin;
   using PChar or ShortString parameters. }
 
 uses
-  madExcept,
   SysUtils,
   Classes,
 {$IFDEF LINUX}
@@ -69,11 +68,11 @@ end;
 //  todo: get paramater display value processing sorted in this sample plugin
 
 {$IFDEF WIN32}
-  function plugMain(functionCode: dword;pParam: pointer; instanceID: dword): Pointer; stdcall
+  function plugMain(functionCode: dword; pParam: pointer; instanceID: dword): Pointer; stdcall
 {$ENDIF}
 
 {$IFDEF LINUX}
-  procedure plugMain(var Result: Pointer;functionCode: dword; pParam: pointer; instanceID: dword); cdecl;
+  procedure plugMain(var Result: Pointer; functionCode: dword; pParam: pointer; instanceID: dword); cdecl;
 {$ENDIF}
 
 var
@@ -152,7 +151,7 @@ begin
          // OUT: Pointer to PluginExtendedInfoStruct
       with PluginExtendedInfoStruct do begin
         PluginMajorVersion:=0;
-        PluginMinorVersion:=753;
+        PluginMinorVersion:=754;
         pDescription:= nil;
         pAbout:= nil;
         FreeFrameExtendedDataSize:= 0;
