@@ -29,3 +29,10 @@
 * added additional parameter checking
 
 * fixed 24bit RGB order problem
+
+***********************************************************************
+10TH August 2004 Marcus Clements marcus@freeframe.org
+
+* added orientation to VideoInfoStruct
+
+* added float cast to GetParameter and GetParameterDefault return values
