@@ -29,7 +29,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "Freeframe.h"
 #include "..\CPLUGIN\FreeFrame.h"	// Added by ClassView
 
 typedef union paramUnionTag {
@@ -66,11 +65,15 @@ public:
 	void getParameterName(DWORD);
 	Parameter ** parameters;
 	DWORD numParameters;
+	DWORD instance;
 	void getNumParameters();
 	bool isInitialised;
 	void deInitialise();
 	DWORD processFrame(LPVOID pFrame);
 	DWORD initialise(VideoInfoStruct* videoInfo);
+	bool isInstantiated;
+	DWORD instantiate(VideoInfoStruct* videoInfo);
+	DWORD deInstantiate();
 	void getPlugInfo();
 	void unloadPlugin();
 	PlugInfoStruct *pPlugInfo;

@@ -161,6 +161,7 @@ BEGIN_MESSAGE_MAP(CFreeframeMFCDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON4, OnPause)
 	ON_BN_CLICKED(IDC_BUTTON5, OnPlugInfo)
 	ON_BN_CLICKED(IDC_BUTTON6, OnPlugInitialise)
+	ON_BN_CLICKED(IDC_BUTTON7I, OnPlugInstantiate)
 	ON_BN_CLICKED(IDC_GET_EFF_FRAME, OnGetEffFrame)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDC_PLAY_EFFECTED, OnPlayEffected)
@@ -173,6 +174,7 @@ BEGIN_MESSAGE_MAP(CFreeframeMFCDlg, CDialog)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER1, OnReleasedcaptureSlider1)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER2, OnReleasedcaptureSlider2)
 	ON_NOTIFY(NM_RELEASEDCAPTURE, IDC_SLIDER3, OnReleasedcaptureSlider3)
+	ON_BN_CLICKED(IDC_DEINSTANTIATE, OnDeinstantiate)
 	ON_BN_CLICKED(IDC_DEINITIALISE, OnDeinitialise)
 	ON_BN_CLICKED(IDC_BUTTON8, OnButton8)
 	ON_LBN_SELCHANGE(IDC_CHOOSE_PLUGIN, OnSelchangeChoosePlugin)
@@ -411,6 +413,29 @@ void CFreeframeMFCDlg::OnPlugInitialise()
 	if (result) {
 		char tempStr[32];
 		sprintf(tempStr, "Initialise Error %d", result);
+		MessageBox(tempStr);
+	}
+}
+
+void CFreeframeMFCDlg::OnPlugInstantiate() 
+{
+	DWORD result = plugHost.instantiate(&player.videoInfo);
+	if (result == FF_FAIL) {
+		char tempStr[32];
+		sprintf(tempStr, "Instantiate Error %d", result);
+		MessageBox(tempStr);
+	}
+	char tempStr[32];
+	sprintf(tempStr, "Instantiate OK %d", result);
+	MessageBox(tempStr);
+}
+
+void CFreeframeMFCDlg::OnDeinstantiate() 
+{
+	DWORD result = plugHost.deInstantiate();
+	if (result) {
+		char tempStr[32];
+		sprintf(tempStr, "Deinstantiate Error %d", result);
 		MessageBox(tempStr);
 	}
 }

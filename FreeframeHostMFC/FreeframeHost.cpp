@@ -85,7 +85,7 @@ void FreeframeHost::loadPlugin(char* pluginFile)
    BOOL fRunTimeLinkSuccess = FALSE; 
 
     // Get a handle to the DLL module.
-   CString plugFileFull("C:\\stuff\\projects\\FreeFrame\\FreeframeMFC\\plugins\\");
+   CString plugFileFull("C:\\xdk85_win\\FreeframeHostMFC\\Release\\plugins\\");
  
    plugFileFull += pluginFile;
 
@@ -104,6 +104,10 @@ void FreeframeHost::loadPlugin(char* pluginFile)
 void FreeframeHost::unloadPlugin()
 {
 	//De-initialise if not already done
+	if (isInstantiated) {
+		deInstantiate();
+		isInstantiated = 0;
+	}
 	if (isInitialised) {
 		deInitialise();
 		isInitialised = 0;
@@ -128,9 +132,35 @@ DWORD FreeframeHost::initialise(VideoInfoStruct* videoInfo)
 	return (DWORD)(plugMain)(FF_INITIALISE, (void*)videoInfo, 0);
 }
 
+DWORD FreeframeHost::instantiate(VideoInfoStruct* videoInfo)
+{
+	DWORD res = (DWORD)(plugMain)(FF_INSTANTIATE, (void*)videoInfo, 0);
+	if (res != FF_FAIL) {
+		isInstantiated = true;
+		instance = res;
+		return FF_SUCCESS;
+	}
+	return FF_FAIL;
+}
+
+DWORD FreeframeHost::deInstantiate()
+{
+	if (isInstantiated) {
+		DWORD res = (DWORD)(plugMain)(FF_DEINSTANTIATE, 0, instance);
+		if (res != FF_FAIL) {
+			instance = 0;
+			isInstantiated = false;
+		}
+	} else {
+		return FF_FAIL;
+	}
+	return FF_SUCCESS;
+}
+
+
 DWORD FreeframeHost::processFrame(LPVOID pFrame)
 {
-	return (DWORD)(plugMain)(FF_PROCESSFRAME, pFrame, 0);
+	return (DWORD)(plugMain)(FF_PROCESSFRAME, pFrame, instance);
 
 }
 
@@ -175,13 +205,12 @@ void FreeframeHost::getParameterDefaults()
 	for (DWORD n=0; n<numParameters; n++) {
 		getParameterDefault(n);
 	}
-	
 }
 
 void FreeframeHost::getParameter(DWORD index)
 {
 	paramUnion uvalue;
-	uvalue.pvalue = (plugMain)(FF_GETPARAMETER, (LPVOID)index, 0);
+	uvalue.pvalue = (plugMain)(FF_GETPARAMETER, (LPVOID)index, instance);
 	parameters[index]->value = uvalue.fvalue;
 }
 
@@ -190,12 +219,11 @@ void FreeframeHost::getParameters()
 	for (DWORD n=0; n<numParameters; n++) {
 		getParameter(n);
 	}
-
 }
 
 void FreeframeHost::getParameterDisplay(DWORD index)
 {
-	char *pDisplay = (char *)(plugMain)(FF_GETPARAMETERDISPLAY, (LPVOID)index, 0); 
+	char *pDisplay = (char *)(plugMain)(FF_GETPARAMETERDISPLAY, (LPVOID)index, instance); 
 	memcpy(parameters[index]->displayValue, pDisplay, 16);
 }
 
@@ -213,7 +241,7 @@ void FreeframeHost::setParameter(DWORD index, float value)
 		paramStruct.index = index;
 		paramStruct.value = value;
 		parameters[index]->value = value;
-		if ((plugMain)(FF_SETPARAMETER, &paramStruct, 0) != FF_SUCCESS) MessageBox(0,"setParameter error","",MB_OK); 
+		if ((plugMain)(FF_SETPARAMETER, &paramStruct, instance) != FF_SUCCESS) MessageBox(0,"setParameter error","",MB_OK); 
 		LPVOID test = (plugMain)(FF_GETPARAMETER, (LPVOID)index, 0);
 	}
 }

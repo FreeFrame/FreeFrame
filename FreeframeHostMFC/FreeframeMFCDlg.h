@@ -117,6 +117,7 @@ protected:
 	afx_msg void OnPause();
 	afx_msg void OnPlugInfo();
 	afx_msg void OnPlugInitialise();
+	afx_msg void OnPlugInstantiate();
 	afx_msg void OnGetEffFrame();
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnPlayEffected();
@@ -129,6 +130,7 @@ protected:
 	afx_msg void OnReleasedcaptureSlider1(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnReleasedcaptureSlider2(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnReleasedcaptureSlider3(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDeinstantiate();
 	afx_msg void OnDeinitialise();
 	afx_msg void OnButton8();
 	afx_msg void OnChooseAvi();
