@@ -96,6 +96,10 @@ type
     l24bit: TLabel;
     l32bit: TLabel;
     lProfile: TLabel;
+    bPlayAndProcess: TButton;
+    bStop: TButton;
+    tPlay: TTimer;
+    Label3: TLabel;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -119,6 +123,9 @@ type
     procedure tbParam1Change(Sender: TObject);
     procedure tbParam2Change(Sender: TObject);
     procedure tbParam3Change(Sender: TObject);
+    procedure bPlayAndProcessClick(Sender: TObject);
+    procedure tPlayTimer(Sender: TObject);
+    procedure bStopClick(Sender: TObject);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
@@ -131,11 +138,12 @@ type
   end;
 
 const
-  version: string='0.1025';
+  version: string='0.1026';
 
 var
   fmMain: TfmMain;
   CurrentFrame: integer;
+  NumFrames: integer;
   CurrentPlug: thandle = 0;
   bits: pointer;
   lpBitmapInfoHeader: pBitmapInfoHeader;
@@ -190,7 +198,7 @@ end;
 procedure TfmMain.bgetInfoClick(Sender: TObject);
 begin
   // Get PluginInfoStruct and display its data
-  lGetPluginInfo.caption:=inttostr(PluginHost.GetPluginInfoStruct);
+  lGetPluginInfo.caption:=inttostr(PluginHost.GetInfo);
   lPluginMajorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMajorVersion);
   lPluginMinorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMinorVersion);
   lPluginUniqueID.caption:=PluginHost.PluginInfoStruct.PluginUniqueID;
@@ -220,12 +228,12 @@ end;
 
 procedure TfmMain.bInitPluginClick(Sender: TObject);
 begin
-  lInitPlugin.caption:=inttostr(PluginHost.InitPlugin);
+  lInitPlugin.caption:=inttostr(PluginHost.Initialise);
 end;
 
 procedure TfmMain.bDeInitPluginClick(Sender: TObject);
 begin
-  lDeInitPlugin.caption:=inttostr(PluginHost.DeInitPlugin);
+  lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialise);
 end;
 
 procedure TfmMain.bProcessFrameClick(Sender: TObject);
@@ -460,6 +468,28 @@ begin
   lProfile.Caption:=inttostr(gettickcount-before)+' msec/frame';
 end;
 
+procedure TfmMain.bPlayAndProcessClick(Sender: TObject);
+begin
+  currentFrame:=0;
+  tPlay.Enabled:=true;
+end;
 
+procedure TfmMain.tPlayTimer(Sender: TObject);
+begin
+  // Get frame
+  inc(currentFrame);
+  if currentFrame>(numFrames-1) then currentFrame:=1;
+  lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
+  // Display it unprocessed ...
+  // displayframe(lpbitmapinfoheader);
+  // process frame and display it again ...
+  ProfileAndProcessFrame;
+  DisplayFrame(lpbitmapinfoheader);
+end;
+
+procedure TfmMain.bStopClick(Sender: TObject);
+begin
+  tPlay.Enabled:=false;
+end;
 
 end.

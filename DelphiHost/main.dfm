@@ -36,7 +36,7 @@ object fmMain: TfmMain
   end
   object lDeInitPlugin: TLabel
     Left = 496
-    Top = 316
+    Top = 350
     Width = 25
     Height = 13
     Caption = 'result'
@@ -154,7 +154,7 @@ object fmMain: TfmMain
     Caption = 'Param3Dword'
   end
   object Label2: TLabel
-    Left = 120
+    Left = 80
     Top = 376
     Width = 350
     Height = 13
@@ -163,11 +163,18 @@ object fmMain: TfmMain
       'e this .exe is'
   end
   object lProfile: TLabel
-    Left = 496
-    Top = 352
+    Left = 472
+    Top = 392
     Width = 29
     Height = 13
     Caption = 'Profile'
+  end
+  object Label3: TLabel
+    Left = 456
+    Top = 376
+    Width = 108
+    Height = 13
+    Caption = 'Plugin processing time:'
   end
   object bInit: TButton
     Left = 48
@@ -184,7 +191,7 @@ object fmMain: TfmMain
     Width = 75
     Height = 25
     Caption = 'DeInit AVI'
-    TabOrder = 14
+    TabOrder = 16
     OnClick = bDeInitClick
   end
   object bOpenAVI: TButton
@@ -201,7 +208,7 @@ object fmMain: TfmMain
     Top = 97
     Width = 289
     Height = 21
-    TabOrder = 16
+    TabOrder = 18
     Text = 'C:\gig av\03Lavalamp A\gloup1bottomviewx.avi'
     OnChange = ebAVIFilenameChange
   end
@@ -211,7 +218,7 @@ object fmMain: TfmMain
     Width = 75
     Height = 25
     Caption = 'Close AVI'
-    TabOrder = 13
+    TabOrder = 15
     OnClick = bCloseAVIClick
   end
   object bGetFrame: TButton
@@ -238,7 +245,7 @@ object fmMain: TfmMain
     Width = 113
     Height = 105
     Caption = ' PluginInfoStruct '
-    TabOrder = 17
+    TabOrder = 19
     object lPluginMajorVersion: TLabel
       Left = 9
       Top = 19
@@ -281,7 +288,7 @@ object fmMain: TfmMain
     Width = 113
     Height = 73
     Caption = ' VideoInfoStruct '
-    TabOrder = 18
+    TabOrder = 20
     object lVideoWidth: TLabel
       Left = 13
       Top = 16
@@ -324,21 +331,21 @@ object fmMain: TfmMain
   end
   object bDeInitPlugin: TButton
     Left = 471
-    Top = 287
+    Top = 320
     Width = 75
     Height = 25
     Caption = 'DeInit Plugin'
-    TabOrder = 15
+    TabOrder = 17
     OnClick = bDeInitPluginClick
   end
   object cbPlugins: TComboBox
-    Left = 429
+    Left = 408
     Top = 20
-    Width = 145
+    Width = 166
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 23
+    TabOrder = 25
     OnChange = cbPluginsChange
   end
   object bGetNumParameters: TButton
@@ -362,7 +369,7 @@ object fmMain: TfmMain
     SliderVisible = False
     SelEnd = 0
     SelStart = 0
-    TabOrder = 19
+    TabOrder = 21
     TickMarks = tmBottomRight
     TickStyle = tsAuto
     OnChange = tbParam0Change
@@ -379,7 +386,7 @@ object fmMain: TfmMain
     SliderVisible = False
     SelEnd = 0
     SelStart = 0
-    TabOrder = 20
+    TabOrder = 22
     TickMarks = tmBottomRight
     TickStyle = tsAuto
     OnChange = tbParam1Change
@@ -396,7 +403,7 @@ object fmMain: TfmMain
     SliderVisible = False
     SelEnd = 0
     SelStart = 0
-    TabOrder = 21
+    TabOrder = 23
     TickMarks = tmBottomRight
     TickStyle = tsAuto
     OnChange = tbParam2Change
@@ -413,7 +420,7 @@ object fmMain: TfmMain
     SliderVisible = False
     SelEnd = 0
     SelStart = 0
-    TabOrder = 22
+    TabOrder = 24
     TickMarks = tmBottomRight
     TickStyle = tsAuto
     OnChange = tbParam3Change
@@ -456,7 +463,7 @@ object fmMain: TfmMain
   end
   object bGetAndProcess: TButton
     Left = 456
-    Top = 232
+    Top = 208
     Width = 105
     Height = 25
     Caption = 'Get and Process'
@@ -478,7 +485,7 @@ object fmMain: TfmMain
     Width = 113
     Height = 73
     Caption = ' Plugin Capabilities '
-    TabOrder = 24
+    TabOrder = 26
     object l16bit: TLabel
       Left = 9
       Top = 19
@@ -501,8 +508,33 @@ object fmMain: TfmMain
       Caption = '32 bit'
     end
   end
+  object bPlayAndProcess: TButton
+    Left = 456
+    Top = 245
+    Width = 105
+    Height = 25
+    Caption = 'Play and Process'
+    TabOrder = 13
+    OnClick = bPlayAndProcessClick
+  end
+  object bStop: TButton
+    Left = 472
+    Top = 281
+    Width = 75
+    Height = 25
+    Caption = 'Stop'
+    TabOrder = 14
+    OnClick = bStopClick
+  end
   object odAVI: TOpenDialog
     Left = 392
     Top = 40
+  end
+  object tPlay: TTimer
+    Enabled = False
+    Interval = 40
+    OnTimer = tPlayTimer
+    Left = 176
+    Top = 24
   end
 end

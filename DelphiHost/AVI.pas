@@ -15,6 +15,8 @@ function GetFrame(FrameNumber: integer): pointer;
 
 implementation
 
+uses main;
+
 var
   pAnAviFile: PAviFile;          //The Avi File
   pVideoStream: pAviStream;      //Pointer to Video Stream
@@ -53,8 +55,8 @@ begin
       tempVideoInfoStruct.FrameHeight:=streaminfo.rcFrame.Bottom;
       tempVideoInfoStruct.BitDepth:=1; // 1=24bit packed MCI standard
       result:=tempVideoInfoStruct;
+      numframes := AVIStreamEnd(pVideoStream);
       exit;
-      //numframes := AVIStreamEnd(pVideoStream);
     end;
   end;
 end;

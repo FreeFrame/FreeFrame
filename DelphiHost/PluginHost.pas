@@ -23,23 +23,7 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-  =============================================================================================
-  Function Code Table
-  =============================================================================================
-  Code   Function		Input Value			Output Value
-  =====  =====================  ==============================  ===============================
-  0      GetInfo		Unused				Pointer to PluginInfoStruct
-  1      Initialize		Pointer to VideoInfoStruct	Success/Fail
-  2      DeInitialize		Unused				Success/Fail
-  3      ProcessFrame		Pointer to a frame of video	Success/Fail
-  4      GetNumParameters	Unused				NumParameters
-  5      GetParameterName	ParameterNumber			Pointer to ParameterName
-  6      GetParameterDefault	ParameterNumber			ParameterDefaultValue
-  7      GetParameterDisplay	ParameterNumber			Pointer to ParameterDisplayValue
-  8      SetParameter		Pointer to SetParameterStruct	Success/Fail
-  9      GetParameter		Parameter number		ParameterValue	
-  10     GetPluginCaps		PluginCapsIndex			Supported/Unsupported
-  =====  =====================  ==============================  ================================
+See specification.txt in the docs module on FreeFrame CVS at SourcdForge for uptodate function code table and function specifications
 
 }
 
@@ -66,9 +50,9 @@ type
   //TParameterNameStruct = array [0..2] of array [0..15] of char;
   pdw = ^dword;
 
-function GetPluginInfoStruct: dword;
-function InitPlugin: dword;
-function DeInitPlugin: dword;
+function GetInfo: dword;
+function Initialise: dword;
+function DeInitialise: dword;
 function ProcessFrame(pFrame: pointer): dword;
 function GetNumParameters: dword;
 function GetParameterName(Param: dword): string;
@@ -89,7 +73,7 @@ var
 
 implementation
 
-function GetPluginInfoStruct: dword;
+function GetInfo: dword;
 var
   dllReturnValue: pointer;
   functionCode: dword;
@@ -124,7 +108,7 @@ begin
   result:=dword(pPluginInfoStruct);
 end;
 
-function InitPlugin: dword;
+function Initialise: dword;
 var
   pVideoInfoStruct: pointer;
 begin
@@ -132,7 +116,7 @@ begin
   result:=dword(plugMain(1,pVideoInfoStruct));
 end;
 
-function DeInitPlugin: dword;
+function DeInitialise: dword;
 begin
   result:=dword(plugMain(2,nil));
 end;
