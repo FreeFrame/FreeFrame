@@ -6,13 +6,16 @@
 --------------------Configuration: FFTemplate - Win32 Release--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\DOCUME~1\pete\LOCALS~1\Temp\RSP7D3.tmp" with contents
+Creating command line "rc.exe /l 0x409 /fo"resource.res" /d "NDEBUG" "C:\projects\PetesChainMaker\FFTemplate\FFTemplate.rc"" 
+Creating temporary file "C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP2E.tmp" with contents
 [
 /nologo /MT /W3 /GX /O2 /I "..\Core" /I "..\VisualsFX" /I "..\..\MSVCPlugin" /I "..\..\PetesPlugins\Core" /I "..\\" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /Fp"Release/FFTemplate.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
 "C:\projects\PetesChainMaker\FFTemplate\FFTemplate.cpp"
+"C:\projects\PetesChainMaker\GraphUtil.cpp"
+"C:\projects\PetesChainMaker\RunGraph.cpp"
 ]
-Creating command line "xicl6.exe @C:\DOCUME~1\pete\LOCALS~1\Temp\RSP7D3.tmp" 
-Creating temporary file "C:\DOCUME~1\pete\LOCALS~1\Temp\RSP7D4.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP2E.tmp" 
+Creating temporary file "C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP2F.tmp" with contents
 [
 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /incremental:no /pdb:"Release/FFTemplate.pdb" /machine:I386 /def:".\FFTemplate.def" /out:"..\FFTemplate.dll" /implib:"Release/FFTemplate.lib" 
 .\Release\FFTemplate.obj
@@ -20,18 +23,21 @@ kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32
 .\Release\RunGraph.obj
 .\resource.res
 ]
-Creating command line "xilink6.exe @C:\DOCUME~1\pete\LOCALS~1\Temp\RSP7D4.tmp"
+Creating command line "link.exe @C:\DOCUME~1\PETENE~1\LOCALS~1\Temp\RSP2F.tmp"
 <h3>Output Window</h3>
+Compiling resources...
 Compiling...
 FFTemplate.cpp
+C:\projects\PetesChainMaker\FFTemplate\FFTemplate.cpp(41) : warning C4091: 'typedef ' : ignored on left of 'struct SPete_InstanceData' when no variable is declared
+GraphUtil.cpp
+RunGraph.cpp
 Linking...
-xilink6: executing 'C:\PROGRA~1\MICROS~2\VC98\Bin\link.exe'
    Creating library Release/FFTemplate.lib and object Release/FFTemplate.exp
 
 
 
 <h3>Results</h3>
-FFTemplate.dll - 0 error(s), 0 warning(s)
+FFTemplate.dll - 0 error(s), 1 warning(s)
 </pre>
 </body>
 </html>

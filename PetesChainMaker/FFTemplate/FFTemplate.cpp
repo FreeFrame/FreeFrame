@@ -41,8 +41,9 @@ typedef struct SPete_InstanceData {
 };
 
 void					FFTemplate_Init(HMODULE hModule);
+void					FFTemplate_InitGraphData(HMODULE hModule);
 void					FFTemplate_DeInit(void);
-struct PlugInfoStruct*	FFTemplate_GetInfo(SPete_InstanceData* pInstanceData);
+PlugInfoStruct*	FFTemplate_GetInfo(SPete_InstanceData* pInstanceData);
 int						FFTemplate_ProcessFrame(SPete_InstanceData* pInstanceData,void* pParam);
 int						FFTemplate_GetNumParameters(SPete_InstanceData* pInstanceData);
 char*					FFTemplate_GetParameterName(SPete_InstanceData* pInstanceData,int nIndex);
@@ -64,8 +65,10 @@ HMODULE g_hModule;
 
 SPete_GraphData g_GraphTemplate;
 SPete_RunTimeEnvironment g_EnvTemplate;
+bool g_bIsGraphDataInitialized=false;
+bool g_bIsPluginInitialized=false;
 
-static struct PlugInfoStruct g_PluginInfo={
+static PlugInfoStruct g_PluginInfo={
 	PETE_FF_MAJORVERSION,
 	PETE_FF_MINORVERSION,
 	{'C','H','N','0'},
@@ -85,7 +88,6 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 		case DLL_PROCESS_ATTACH:{
 
 			g_hModule=(HMODULE)(hModule);
-			FFTemplate_Init(g_hModule);
 
 		}break;
 
@@ -101,10 +103,26 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 void FFTemplate_Init(HMODULE hModule) {
 
+	FFTemplate_InitGraphData(hModule);
+
+	RunGraph_Init(&g_GraphTemplate,
+		16,16,
+		&g_EnvTemplate);
+	
+}
+
+/*-------------------------------------------------*/
+
+void FFTemplate_InitGraphData(HMODULE hModule) {
+
+	if (g_bIsGraphDataInitialized) {
+		return;
+	}
+
 	HRSRC hChainDataResource=FindResource(
-		hModule,
-		MAKEINTRESOURCE(CHAIN_DATA_RESOURCE_ID),
-		"GRAPH");
+	hModule,
+	MAKEINTRESOURCE(CHAIN_DATA_RESOURCE_ID),
+	"GRAPH");
 
 	if (hChainDataResource==NULL) {
 		MessageBox(NULL,"CHAIN_DATA resource not found","",MB_OK);
@@ -146,9 +164,7 @@ void FFTemplate_Init(HMODULE hModule) {
 
 	GraphUtil_InitFromFlat(&g_GraphTemplate,pFlatDataCopy,nSizeOfChainData);
 
-	RunGraph_Init(g_GraphTemplate.m_pRootNode,
-		16,16,
-		&g_EnvTemplate);
+	g_bIsGraphDataInitialized=true;
 
 }
 
@@ -171,6 +187,11 @@ extern "C" void* plugMain(DWORD functionCode,void* pParam,DWORD InstanceCookie)
 	void* pResult;
 
 	SPete_InstanceData* pInstanceData=(SPete_InstanceData*)(InstanceCookie);
+
+	if (!g_bIsPluginInitialized) {
+		FFTemplate_Init(g_hModule);
+		g_bIsPluginInitialized=true;
+	}
 
 	switch (functionCode) {
 
@@ -265,7 +286,17 @@ extern "C" void* plugMain(DWORD functionCode,void* pParam,DWORD InstanceCookie)
 
 /*-------------------------------------------------*/
 
-struct PlugInfoStruct*	FFTemplate_GetInfo(SPete_InstanceData* pInstanceData) {
+PlugInfoStruct*	FFTemplate_GetInfo(SPete_InstanceData* pInstanceData) {
+
+	FFTemplate_InitGraphData(g_hModule);
+
+	g_PluginInfo.uniqueID[0]=g_GraphTemplate.m_pUniqueID[0];	
+	g_PluginInfo.uniqueID[1]=g_GraphTemplate.m_pUniqueID[1];	
+	g_PluginInfo.uniqueID[2]=g_GraphTemplate.m_pUniqueID[2];	
+	g_PluginInfo.uniqueID[3]=g_GraphTemplate.m_pUniqueID[3];	
+
+	strncpy((char*)g_PluginInfo.pluginName,g_GraphTemplate.m_pName,15);	
+
 	return &g_PluginInfo;
 }
 
@@ -471,7 +502,7 @@ SPete_InstanceData* FFTemplate_Instantiate(VideoInfoStruct* pVideoInfo) {
 
 	SPete_RunTimeEnvironment* pEnv=&pInstanceData->m_Environment;
 
-	RunGraph_Init(pGraph->m_pRootNode,
+	RunGraph_Init(pGraph,
 		pVideoInfo->frameWidth,pVideoInfo->frameHeight,
 		pEnv);
 
@@ -536,7 +567,9 @@ int FFTemplate_ProcessFrameCopy(SPete_InstanceData* pInstanceData,ProcessFrameCo
 
 int FFTemplate_GetParameterType(SPete_InstanceData* pInstanceData,int nIndex) {
 
-	return FF_TYPE_STANDARD;
+	SPete_RunTimeEnvironment* pEnv=&g_EnvTemplate;
+
+	return pEnv->m_pParamsInfo[nIndex].m_ExternalType;
 
 }
 
