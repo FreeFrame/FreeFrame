@@ -1,7 +1,7 @@
 **************************************************************************************************
 * FreeFrame Open Video Plugin System Specification						 *
 **************************************************************************************************
-* Version 1.0 - First full public release                                                        *
+* Version 1.0 - 02                                                                               *
 **************************************************************************************************
 
 Copyright (c) 2002,2003 www.freeframe.org
@@ -478,7 +478,7 @@ The following types are used:
   ================================================================================
    
    Parameters:
-   32-bit pointer to a VideoInfoStruct
+   none
    
    Return Values: (32-bit unsigned integer)
    FF_SUCCESS - success
@@ -487,13 +487,10 @@ The following types are used:
 
    Prepare the Plug-in for processing.  
    Set default values, allocate memory
-   When the plug-in returns from this function it must be ready to proces a frame
+   When the plug-in returns from this function it must be ready to accept calls to
+   instantiate
     
-   HOST:    This function *must* return before a call to processFrame.  Pointer to 
-            videoInfoStruct *must* be valid until function returns
-   PLUGIN:  make a copy of the videoInfoStruct locally as pointer may not be valid after
-            function returns
-  
+   HOST:    This function *must* return before a call to instantiate.    
   
   ================================================================================
    deInitialise
@@ -677,7 +674,7 @@ The following types are used:
    32-bit pointer to a VideoInfoStruct
    
    Return Values: (32-bit unsigned integer)
-   FF_SUCCESS - success
+   InstanceIdentifier
    FF_FAIL 
    (meaningful error values to be defined)
 
@@ -686,9 +683,13 @@ The following types are used:
    When the plug-in returns from this function it must be ready to proces a frame
     
    HOST:    This function *must* return before a call to processFrame.  Pointer to 
-            videoInfoStruct *must* be valid until function returns
-   PLUGIN:  make a copy of the videoInfoStruct locally as pointer may not be valid after
-            function returns
+            videoInfoStruct *must* be valid until function returns. The 
+            InstanceIdentifier provided by the plugin is your handle to this
+            instance of the plugin. The host must keep this instance identifier,
+            and provide it in all calls to the plugin regarding that instance.
+   PLUGIN:  Make a copy of the videoInfoStruct locally as pointer may not be valid after
+            function returns. The instance identifier you provide to the host must
+            be the unique identifier of this instance until a call to deinitialise.
   
   
   ================================================================================
@@ -696,7 +697,7 @@ The following types are used:
   ================================================================================
    
    Parameters:
-   none
+   InstanceIdentifier
    
    Return Values: (32-bit unsigned integer)
    FF_SUCCESS - success
