@@ -13,7 +13,7 @@
 {           directshow baseclass translations for delphi           }
 {           provided by http://www.progdigy.com                    }
 {           (need to be included in the searchpath if you          }
-{           want to compile this filter)                           }                                                                }
+{           want to compile this filter)                           }
 {                                                                  }
 {                                                                  }
 { The contents of this file are used with permission, subject to   }
@@ -32,9 +32,9 @@
 
  {
  todo:
- - find out what happens if format changes and prevent from crash in that case
  - request a mediaformat for the connections that is available from the current plugin
  - save propertypage info per instance
+ - still crashes with certain formats (analog rgb32 786x576)
  }
 
 unit main;
@@ -54,6 +54,15 @@ const
   FF_FALSE = 0;
   FF_SUPPORTED = 1;
   FF_UNSUPPORTED = 0;
+
+  FreeFramePinTypes : TRegPinTypes =
+    (clsMajorType: @MEDIATYPE_Video;
+     clsMinorType: @MEDIASUBTYPE_RGB24);
+
+  FreeFramePins : array[0..1] of TRegFilterPins =
+    ((strName: 'Input'; bRendered: FALSE; bOutput: FALSE; bZero: FALSE; bMany: FALSE; oFilter: nil; strConnectsToPin: nil; nMediaTypes: 1; lpMediaType: @FreeFramePinTypes),
+     (strName: 'Output'; bRendered: FALSE; bOutput: TRUE; bZero: FALSE; bMany: FALSE; oFilter: nil; strConnectsToPin: nil; nMediaTypes: 1; lpMediaType: @FreeFramePinTypes));
+
 
 type
   IFFParameters = interface
@@ -120,18 +129,6 @@ type
 
   PDWord = ^dword;
 
-  TFreeFrameInputPin = class(TBCTransformInputPin)
-  public
-    constructor Create(Filter: TBCTransformFilter; out hr: HRESULT);
-    function CheckMediaType(pmt: PAMMediaType): HRESULT; override;
-  end;
-
-  TFreeFrameOutputPin = class(TBCTransformOutputPin)
-  public
-    constructor Create(Filter: TBCTransformFilter; out hr: HRESULT);
-    function CheckMediaType(pmt: PAMMediaType): HRESULT; override;
-  end;
-
   TFreeFrameWrapperFilter = class(TBCTransformFilter, IFFPlugIn, IFFParameters, 
       ISpecifyPropertyPages, IFFPropertySaves)
   private
@@ -146,6 +143,9 @@ type
     FInstantiated: Boolean;
     procedure InitializePlugin;
     procedure DeInitializePlugin;
+    function CanTransform(mtIn: PAMMediaType): Boolean;
+    procedure InstantiatePlugin;
+    procedure DeInstantiatePlugin;
   public
     constructor Create(Unk: IUnKnown; out hr: HRESULT);
     destructor Destroy; override;
@@ -158,7 +158,6 @@ type
     function DecideBufferSize(Alloc: IMemAllocator; Properties: PAllocatorProperties): HRESULT; override;
     function CompleteConnect(direction: TPinDirection; ReceivePin: IPin): HRESULT; override;
     function GetPages(out pages: TCAGUID): HResult; stdcall;
-
     //IFFParameters
     function GetCount(out Count: DWord): HResult; stdcall;
     function GetName(Index: Integer; out Name: String): HResult; stdcall;
@@ -190,108 +189,58 @@ implementation
 uses Dialogs, SysUtils, Forms;
 
 
-function TFreeFrameInputPin.CheckMediaType(pmt: PAMMediaType): HRESULT;
-begin
-  if IsEqualGUID(pmt.majortype, MEDIATYPE_Video)
-  and IsEqualGUID(pmt.subtype, MEDIASUBTYPE_RGB24) then
-       result := S_OK
-  else result := S_FALSE;
-end;
-
-constructor TFreeFrameInputPin.Create(Filter: TBCTransformFilter;
-  out hr: HRESULT);
-begin
-  inherited Create('FreeFrame pin', Filter, hr, 'in0');
-end;
-
 //-----------------------------------------------------------------------------
-
-function TFreeFrameOutputPin.CheckMediaType(pmt: PAMMediaType): HRESULT;
-begin
-  if IsEqualGUID(pmt.majortype, MEDIATYPE_Video)
-  and IsEqualGUID(pmt.subtype, MEDIASUBTYPE_RGB24) then
-       result := S_OK
-  else result := S_FALSE;
-end;
-
-constructor TFreeFrameOutputPin.Create(Filter: TBCTransformFilter;
-  out hr: HRESULT);
-begin
-  inherited Create('FreeFrame pin', Filter, hr, 'out0');
-end;
 
 //-----------------------------------------------------------------------------
 
 
 procedure TFreeFrameWrapperFilter.InitializePlugin;
-var
-  pVideoInfoStruct: pointer;
 begin
   if not FInitialized then
-  begin
-    if DWord(FPlugMain(1, nil, 0)) = 0 then                     //initialize
+    if DWord(FPlugMain(1, nil, 0)) = FF_SUCCESS then
       FInitialized := true;
+end;
 
-    pVideoInfoStruct := pointer(@FVideoInfoStruct);
-    FPlugInstance := DWord(FPlugMain(11, pVideoInfoStruct, 0)); //instantiate
-    if FPlugInstance <> FF_FAIL then
-      FInstantiated := true;
-  end;
+procedure TFreeFrameWrapperFilter.InstantiatePlugin;
+var
+  pVideoInfoStruct: Pointer;
+begin
+  DeInstantiatePlugin;
+
+  pVideoInfoStruct := Pointer(@FVideoInfoStruct);
+  FPlugInstance := DWord(FPlugMain(11, pVideoInfoStruct, 0));
+  if FPlugInstance <> FF_FAIL then
+    FInstantiated := true;
 end;
 
 procedure TFreeFrameWrapperFilter.DeInitializePlugin;
 begin
-  if Assigned(FPlugMain) then
-  begin
-    if DWord(FPlugMain(12, nil, FPlugInstance)) = FF_SUCCESS then  //deinstantiate
-      FInstantiated := false;
+  DeInstantiatePlugin;
 
+  if FInitialized then
     try
-      FPlugMain(2, nil, 0);                                        //deinitialize
+      FPlugMain(2, nil, 0);
     finally
       FInitialized := false;
       FPlugMain := nil;
       FreeLibrary(FCurrentPlug);
     end;
-  end;
+end;
+
+procedure TFreeFrameWrapperFilter.DeInstantiatePlugin;
+begin
+  if FInstantiated then
+    if DWord(FPlugMain(12, nil, FPlugInstance)) = FF_SUCCESS then  //deinstantiate
+      FInstantiated := false;
 end;
 
 constructor TFreeFrameWrapperFilter.Create(Unk: IUnknown; out hr: HRESULT);
-var
-  pOut: TBCTransformOutputPin;
-  pIn : TFreeFrameInputPin;
 begin
   inherited Create('DirectShow FreeFrameWrapper Filter', Unk, CLSID_DSFreeFrameWrapper);
 
   FCritSec := TBCCritSec.Create;
 
   ASSERT(FOutput = nil, 'WrapperFilterCreate');
-  if SUCCEEDED(hr) then
-  begin
-      // Create an output pin so we can have control over the connection
-      // media type.
-      pIn := TFreeFrameInputPin.Create(self, hr);
-      if(pIn <> nil) then
-        begin
-          if SUCCEEDED(hr) then
-               FInput := pIn
-          else pIn.Free;
-        end
-      else
-        hr := E_OUTOFMEMORY;
-
-      // Create an output pin so we can have control over the connection
-      // media type.
-      pOut := TFreeFrameOutputPin.Create(self, hr);
-      if(pOut <> nil) then
-        begin
-          if SUCCEEDED(hr) then
-               FOutput := pOut
-          else pOut.Free;
-        end
-      else
-        hr := E_OUTOFMEMORY;
-  end;
 
   FInitialized := false;
   FInstantiated := false;
@@ -320,9 +269,9 @@ begin
   try
     result := Copy(pIn, pOut);
     pOut.GetPointer(pData);
-  
+
     if FInstantiated then
-      FPlugMain(3, Pointer(pData), FPlugInstance)
+      FPlugMain(3, Pointer(pData), FPlugInstance);
   finally
     FCritSec.UnLock;
   end;
@@ -365,17 +314,28 @@ end;
 
 function TFreeFrameWrapperFilter.CheckInputType(mtIn: PAMMediaType): HRESULT;
 begin
-  if IsEqualGUID(mtIn.formattype, FORMAT_VideoInfo) then
-       result := S_OK
-  else result := S_FALSE;
+  //The Input.CheckMediaType member function is implemented to call the CheckInputType member function of the derived filter class
+  if not IsEqualGUID(mtIn.formattype, FORMAT_None)
+  and not IsEqualGUID(mtIn.formattype, FORMAT_WaveFormatEx)
+  and not IsEqualGUID(mtIn.formattype, GUID_NULL)
+  and CanTransform(mtIn) then
+    Result := S_OK
+  else
+    Result := VFW_E_TYPE_NOT_ACCEPTED;
 end;
 
 function TFreeFrameWrapperFilter.CheckTransform(mtIn,
   mtOut: PAMMediaType): HRESULT;
 begin
-  result := CheckInputType(mtIn);
-  if FAILED(result) then exit;
-  result := NOERROR;
+  //called when
+  //    Output is already connected during connection of input
+  //    Output.CheckMediaType is called
+
+  Result := CheckInputType(mtOut);
+  if Result = VFW_E_TYPE_NOT_ACCEPTED then
+    exit;
+
+  Result := NOERROR;
 end;
 
 function TFreeFrameWrapperFilter.GetMediaType(Position: integer;
@@ -388,7 +348,7 @@ begin
     result := S_OK;
     exit;
   end;
-  result := VFW_S_NO_MORE_ITEMS;
+  result := VFW_S_NO_MORE_ITEMS;   
 end;
 
 function TFreeFrameWrapperFilter.DecideBufferSize(Alloc: IMemAllocator;
@@ -397,7 +357,6 @@ var
   InProps, Actual: TAllocatorProperties;
   InAlloc: IMemAllocator;
 begin
-
   // Is the input pin connected
   if not FInput.IsConnected then
     begin
@@ -451,6 +410,9 @@ begin
   result := S_OK;
 
   ReceivePin.ConnectionMediaType(mType);
+  if not Assigned(mType.pbFormat) then
+    exit;
+
   vIH := TVideoInfoHeader(mType.pbFormat^);
   bIH := TBitmapInfoHeader(vIH.bmiHeader);
 
@@ -469,26 +431,27 @@ begin
   else
     FVideoInfoStruct.orientation := 2;
 
-  if Assigned(FPlugMain) then
-    InitializePlugin;
+  if FInitialized then
+    InstantiatePlugin;
 end;
 
 function TFreeFrameWrapperFilter.GetPages(out pages: TCAGUID): HResult; stdcall;
 begin
-    Pages.cElems := 1;
-    Pages.pElems := CoTaskMemAlloc(sizeof(TGUID));
-    if (Pages.pElems = nil) then
-      begin
-        result := E_OUTOFMEMORY;
-        exit;
-      end;
-   Pages.pElems^[0] := CLSID_FreeFrameWrapperPropertyPage;
-   result := NOERROR;
+  Pages.cElems := 1;
+  Pages.pElems := CoTaskMemAlloc(sizeof(TGUID));
+  if (Pages.pElems = nil) then
+  begin
+    result := E_OUTOFMEMORY;
+    exit;
+  end;
+
+  Pages.pElems^[0] := CLSID_FreeFrameWrapperPropertyPage;
+  Result := NOERROR;
 end;
 
 function TFreeFrameWrapperFilter.GetCount(out Count: DWord): HResult; stdcall;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     Count := DWord(FPlugMain(4, nil, 0));
     Result := S_OK;
@@ -504,9 +467,9 @@ var
   tempDestPointer: PDWord;
   i: Integer;
 begin
-  if FInstantiated then
+  if FInitialized then
   begin
-    tempSourcePointer := PDWord(FPlugMain(5, Pointer(Index), FPlugInstance));
+    tempSourcePointer := PDWord(FPlugMain(5, Pointer(Index), 0));
     tempDestPointer := PDWord(@tempParamDisplay);
 
     for i := 0 to 3 do
@@ -525,7 +488,7 @@ end;
 
 function TFreeFrameWrapperFilter.GetType(Index: Integer; out Typ: DWord): HResult; stdcall;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     Typ := DWord(FPlugMain(15, Pointer(Index), 0));
     Result := S_OK;
@@ -538,7 +501,7 @@ function TFreeFrameWrapperFilter.GetDefault(Index: Integer; out Default: Single)
 var
   tempDWord: DWord;
 begin
- if Assigned(FPlugMain) then
+ if FInitialized then
  begin
    tempDWord := DWord(FPlugMain(6, Pointer(Index), 0));
    CopyMemory(@Default, @tempDword, 4);
@@ -629,6 +592,7 @@ begin
     end;
 
     InitializePlugin;
+    InstantiatePlugin;
   finally
     FCritSec.UnLock;
   end;
@@ -638,7 +602,7 @@ function TFreeFrameWrapperFilter.GetVersion(out Version: String): HResult; stdca
 var
   pPluginInfoStruct: Pointer;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     pPluginInfoStruct := FPlugMain(0, nil, 0);
     if pPluginInfoStruct <> nil then
@@ -657,7 +621,7 @@ function TFreeFrameWrapperFilter.GetUniqueID(out ID: String): HResult; stdcall;
 var
   pPluginInfoStruct: Pointer;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     pPluginInfoStruct := FPlugMain(0, nil, 0);
     if pPluginInfoStruct <> nil then
@@ -676,7 +640,7 @@ function TFreeFrameWrapperFilter.GetPluginName(out Name: String): HResult; stdca
 var
   pPluginInfoStruct: Pointer;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     pPluginInfoStruct := FPlugMain(0, nil, 0);
     if pPluginInfoStruct <> nil then
@@ -695,7 +659,7 @@ function TFreeFrameWrapperFilter.GetPluginType(out Typ: DWord): HResult; stdcall
 var
   pPluginInfoStruct: Pointer;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     pPluginInfoStruct := FPlugMain(0, nil, 0);
     if pPluginInfoStruct <> nil then
@@ -714,7 +678,7 @@ function TFreeFrameWrapperFilter.GetDescription(out Description: String): HResul
 var
   pPluginExtendedInfoStruct: Pointer;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     pPluginExtendedInfoStruct := FPlugMain(13, nil, 0);
     if pPluginExtendedInfoStruct <> nil then
@@ -733,7 +697,7 @@ function TFreeFrameWrapperFilter.GetAbout(out About: String): HResult; stdcall;
 var
   pPluginExtendedInfoStruct: Pointer;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     pPluginExtendedInfoStruct := FPlugMain(13, nil, 0);
     if pPluginExtendedInfoStruct <> nil then
@@ -750,7 +714,7 @@ end;
 
 function TFreeFrameWrapperFilter.GetCaps(CapsIndex: Integer; out CapsResult: DWord): HResult; stdcall;
 begin
-  if Assigned(FPlugMain) then
+  if FInitialized then
   begin
     Result := S_OK;
     if CapsIndex <= 3 then
@@ -788,7 +752,23 @@ begin
   Result := S_OK;
 end;
 
+function TFreeFrameWrapperFilter.CanTransform(mtIn: PAMMediaType): Boolean;
+var
+  vIH: TVideoInfoHeader;
+begin
+  vIH := TVideoInfoHeader(mtIn.pbFormat^);
+
+  if IsEqualGUID(mtIn.majortype, MEDIATYPE_Video)
+  and IsEqualGUID(mtIn.subtype, MEDIASUBTYPE_RGB24)
+  and (vIH.bmiHeader.biBitCount = 24) then
+    Result := true
+  else
+    Result := false;
+end;
+
+
 initialization
   TBCClassFactory.CreateFilter(TFreeFrameWrapperFilter, 'DSFreeFrameWrapper', CLSID_DSFreeFrameWrapper,
-    CLSID_LegacyAmFilterCategory, MERIT_DO_NOT_USE, 0, nil);
+    CLSID_LegacyAmFilterCategory, MERIT_DO_NOT_USE, 2, @FreeFramePins);
 end.
+

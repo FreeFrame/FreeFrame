@@ -13,7 +13,7 @@
 {           directshow baseclass translations for delphi           }
 {           provided by http://www.progdigy.com                    }
 {           (need to be included in the searchpath if you          }
-{           want to compile this filter)                           }                                                                }
+{           want to compile this filter)                           }
 {                                                                  }
 {                                                                  }
 { The contents of this file are used with permission, subject to   }
@@ -314,3 +314,4 @@ initialization
 TBCClassFactory.CreatePropertyPage(TPropertyPage, CLSID_FreeFrameWrapperPropertyPage);
 
 end.
+

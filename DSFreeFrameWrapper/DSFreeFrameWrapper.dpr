@@ -13,7 +13,7 @@
 {           directshow baseclass translations for delphi           }
 {           provided by http://www.progdigy.com                    }
 {           (need to be included in the searchpath if you          }
-{           want to compile this filter)                           }                                                                }
+{           want to compile this filter)                           }
 {                                                                  }
 {                                                                  }
 { The contents of this file are used with permission, subject to   }
@@ -29,6 +29,8 @@
 {                                                                  }
 { 12-12-2003: initial release                                      }
 { 25-12-2003: added propertypage, improved stability               }
+{ 13-02-2004: removed extra pinclasses for easier handling         }
+{             of formatchanges, now also deals with dv-streams     }
 {~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}
 
 
@@ -49,3 +51,4 @@ exports
 begin
 
 end.
+

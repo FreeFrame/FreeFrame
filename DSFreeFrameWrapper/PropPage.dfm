@@ -41,7 +41,7 @@ object PropertyPage: TPropertyPage
       Top = 0
       Width = 261
       Height = 13
-      Caption = 'DSFreeFrameWrapper 0.1 written by http://joreg.ath.cx'
+      Caption = 'DSFreeFrameWrapper 0.2 written by http://joreg.ath.cx'
     end
     object Label3: TLabel
       Left = 0
