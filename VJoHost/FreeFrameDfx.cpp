@@ -28,42 +28,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #include "DfxMemoryHelper.h"
 #include "FreeFrame.h"
 
-static inline void Pete_CopyAndConvert32BitTo24Bit(DWORD* pSource,DWORD* pOutput,int nPixelCount) {
-
-	char* pSourceEnd=((char*)pSource)+(nPixelCount*4);
-	char* pCurrentSource=((char*)pSource);
-	char* pCurrentOutput=((char*)pOutput);
-
-	while (pCurrentSource<pSourceEnd) {
-
-		*((DWORD*)pCurrentOutput)=
-		*((DWORD*)pCurrentSource);
-
-		pCurrentSource+=4;
-		pCurrentOutput+=3;
-
-	}
-
-}
-
-static inline void Pete_InPlaceConvert24BitTo32Bit(DWORD* pBuffer,int nPixelCount) {
-
-	char* pBufferStart=(char*)pBuffer;
-	
-	char* pBuffer32Current=(pBufferStart+((nPixelCount-1)*4));
-	char* pBuffer24Current=(pBufferStart+((nPixelCount-1)*3));
-
-	while (pBuffer32Current>=pBufferStart) {
-
-		*((DWORD*)pBuffer32Current)=
-		*((DWORD*)pBuffer24Current);
-
-		pBuffer32Current-=4;
-		pBuffer24Current-=3;
-
-	}
-
-}
+#include "PeteHelpers.h"
 
 class CFreeFrameDfx: public CDFX
 {
@@ -150,7 +115,7 @@ CFreeFrameDfx::~CFreeFrameDfx()
 {
 
 	if (m_pFreeFrameMain!=NULL) {
-		m_pFreeFrameMain(FF_DEINITIALISE,NULL);
+		m_pFreeFrameMain(FF_DEINITIALISE,NULL,0);
 	}
 
 	if (m_pFreeFrameParameters!=NULL) {
@@ -206,7 +171,7 @@ BOOL	CFreeFrameDfx::Initialize()
 	m_nYRes = sz.cy;
 
 	if (m_pFreeFrameMain!=NULL) {
-		m_pFreeFrameMain(FF_DEINITIALISE,NULL);
+		m_pFreeFrameMain(FF_DEINITIALISE,NULL,0);
 		m_pFreeFrameMain=NULL;
 	}
 
@@ -236,19 +201,19 @@ BOOL	CFreeFrameDfx::Initialize()
 		m_VideoInfo.frameWidth=m_nXRes;
 		m_VideoInfo.frameHeight=m_nYRes;
 		
-		if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)2)==FF_TRUE) {
+		if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)2,0)==FF_TRUE) {
 			m_VideoInfo.bitDepth=2;
-		} else if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)1)==FF_TRUE) {
+		} else if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)1,0)==FF_TRUE) {
 			m_VideoInfo.bitDepth=1;
-		} else if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)0)==FF_TRUE) {
+		} else if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)0,0)==FF_TRUE) {
 			m_VideoInfo.bitDepth=0;
 		} else {
 			ASSERT(FALSE);
 			m_VideoInfo.bitDepth=2;
 		}	
 
-		m_pFreeFrameMain(FF_INITIALISE,&m_VideoInfo);
-		const int nNumParameters=(int)m_pFreeFrameMain(FF_GETNUMPARAMETERS,NULL);
+		m_pFreeFrameMain(FF_INITIALISE,&m_VideoInfo,0);
+		const int nNumParameters=(int)m_pFreeFrameMain(FF_GETNUMPARAMETERS,NULL,0);
 		
 		if (m_pFreeFrameParameters!=NULL) {
 			free(m_pFreeFrameParameters);
@@ -261,7 +226,7 @@ BOOL	CFreeFrameDfx::Initialize()
 			static void* pCastCount;
 			pCastCount=reinterpret_cast<void*>(nCount);
 			
-			char* pName=(char*)(m_pFreeFrameMain(FF_GETPARAMETERNAME,pCastCount));
+			char* pName=(char*)(m_pFreeFrameMain(FF_GETPARAMETERNAME,pCastCount,0));
 			
 			bool bNullCharFound=false;
 			int nCharCount;
@@ -276,9 +241,9 @@ BOOL	CFreeFrameDfx::Initialize()
 				pName="<NULL>";
 			}
 
-			static DWORD ResultAsDWORD;
-			ResultAsDWORD=(DWORD)m_pFreeFrameMain(FF_GETPARAMETERDEFAULT,pCastCount);
-			m_pFreeFrameParameters[nCount]=*((float*)&ResultAsDWORD);
+			static U32 ResultAsU32;
+			ResultAsU32=(U32)m_pFreeFrameMain(FF_GETPARAMETERDEFAULT,pCastCount,0);
+			m_pFreeFrameParameters[nCount]=*((float*)&ResultAsU32);
 
 			RegisterFloat(m_pEngine,&(m_pFreeFrameParameters[nCount]),pName,0.0f,1.0f);
 
@@ -296,7 +261,7 @@ BOOL	CFreeFrameDfx::Render(CScreen **ppInput, CScreen *pOutput)
 		return FALSE;
 	}
 
-	const int nNumParameters=(int)m_pFreeFrameMain(FF_GETNUMPARAMETERS,NULL);
+	const int nNumParameters=(int)m_pFreeFrameMain(FF_GETNUMPARAMETERS,NULL,0);
 
 	float* pParameterData=m_pFreeFrameParameters;
 
@@ -306,7 +271,7 @@ BOOL	CFreeFrameDfx::Render(CScreen **ppInput, CScreen *pOutput)
 		SetParameterStruct ArgStruct;
 		ArgStruct.index=nCount;
 		ArgStruct.value=pParameterData[nCount];
-		m_pFreeFrameMain(FF_SETPARAMETER,&ArgStruct);
+		m_pFreeFrameMain(FF_SETPARAMETER,&ArgStruct,0);
 
 	}
 
@@ -314,24 +279,24 @@ BOOL	CFreeFrameDfx::Render(CScreen **ppInput, CScreen *pOutput)
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 
 	const int nNumPixels=m_nXRes*m_nYRes;
-	const int nNumBytes=(nNumPixels*sizeof(DWORD));
+	const int nNumBytes=(nNumPixels*sizeof(U32));
 
 	switch (m_VideoInfo.bitDepth) {
 
 		case 2: {
 			memcpy(pOutputMem,pInputMem,nNumBytes);
-			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem);
+			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
 		}break;
 	
 		case 1: {
 			Pete_CopyAndConvert32BitTo24Bit(pInputMem,pOutputMem,nNumPixels);
-			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem);
+			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
 			Pete_InPlaceConvert24BitTo32Bit(pOutputMem,nNumPixels);
 		}break;
 	
 		case 0: {
 			memcpy(pOutputMem,pInputMem,nNumBytes);
-			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem);
+			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
 		}break;
 	
 		default: {
