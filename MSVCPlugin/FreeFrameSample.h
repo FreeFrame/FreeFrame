@@ -58,6 +58,18 @@ typedef struct VideoPixel24bitTag {
 	BYTE blue;
 } VideoPixel24bit;
 
+typedef struct VideoPixel16bitTag {
+	BYTE fb;
+	BYTE sb;
+} VideoPixel16bit;
+
+typedef struct VideoPixel32bitTag {
+	BYTE alpha;
+	BYTE red;
+	BYTE green;
+	BYTE blue;
+
+} VideoPixel32bit;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //

@@ -1,3 +1,8 @@
+#ifdef LINUX
+extern "C" {
+#include <string.h>
+#include <stdlib.h>
+#endif
 ///////////////////////////////////////////////////////////////////////////////////
 // FreeFrame.h
 //
@@ -100,6 +105,14 @@ typedef struct SetParameterStructTag {
 	float value;
 } SetParameterStruct;
 
+typedef union plugMainUnionTag {
+	DWORD ivalue;
+	float fvalue;
+	VideoInfoStruct *VISvalue;
+	PlugInfoStruct *PISvalue;
+	char *svalue;
+} plugMainUnion;
+
 ///////////////////////////////////////////////////////////////////////////////////////
 // Function prototypes
 //
@@ -130,10 +143,12 @@ __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pPara
 typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID);
 
 #elif LINUX
-
-LPVOID plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved);
-
+plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD 
+reserved);
 #endif
 
 
+#endif
+#ifdef LINUX
+}
 #endif

@@ -72,48 +72,56 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 #ifdef WIN32
  __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved ) 
 #elif LINUX
-   LPVOID plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved )
+extern "C" {
+   plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved )
 #endif	
 {
+	plugMainUnion retval;
+
 	switch(functionCode) {
 
 	case FF_GETINFO:
-		return (LPVOID) getInfo();
-	
+		retval.PISvalue = getInfo();
+		break;
 	case FF_INITIALISE:
-		return (LPVOID) initialise( (VideoInfoStruct*) pParam);
-	
+		retval.ivalue = initialise( (VideoInfoStruct*) pParam);
+		break;
 	case FF_DEINITIALISE:
-		return (LPVOID) deInitialise();
-	
+		retval.ivalue = deInitialise();
+		break;
 	case FF_GETNUMPARAMETERS:
-		return (LPVOID) getNumParameters();
-
+		retval.ivalue = getNumParameters();
+		break;
 	case FF_GETPARAMETERNAME:
-		return (LPVOID) getParameterName( (DWORD) pParam );
-	
+		retval.svalue =  getParameterName( (DWORD) pParam );
+		break;
 	case FF_GETPARAMETERDEFAULT:
-		return (LPVOID)(DWORD) getParameterDefault( (DWORD) pParam );
-	
+		retval.fvalue =  getParameterDefault( (DWORD) pParam );
+		break;
 	case FF_GETPARAMETERDISPLAY:
-		return  (LPVOID) getParameterDisplay( (DWORD) pParam );
-	
+		retval.svalue =  getParameterDisplay( (DWORD) pParam );
+		break;	
 	// parameters are passed in here as a packed struct of two DWORDS:
 	// index and value
 	case FF_SETPARAMETER:
-		return (LPVOID) setParameter( (SetParameterStruct*) pParam );
+		retval.ivalue=  setParameter( (SetParameterStruct*) pParam );
+		break;
 	
 	case FF_PROCESSFRAME:
-		return (LPVOID) processFrame(pParam);
-
+		retval.ivalue = processFrame(pParam);
+		break;
 	case FF_GETPARAMETER:
-		return (LPVOID)(DWORD) getParameter((DWORD) pParam);
-
+		retval.fvalue =  getParameter((DWORD) pParam);
+		break;
 	case FF_GETPLUGINCAPS:
-		return (LPVOID) getPluginCaps( (DWORD) pParam);
-	
+		retval.ivalue = getPluginCaps( (DWORD) pParam);
+		break;
 	default:
-		return (LPVOID) FF_FAIL;
+		retval.ivalue = FF_FAIL;
+		break;
 	}
+	return retval;
 }
-
+#ifdef linux
+} /* extern "C" */
+#endif

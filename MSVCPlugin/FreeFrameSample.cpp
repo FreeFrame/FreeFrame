@@ -36,7 +36,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //
 
 #include "FreeFrameSample.h"
-
+#include <string.h>
 #include <stdio.h>
 
 #define NUM_PARAMS 3
@@ -52,7 +52,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 PlugInfoStruct plugInfo;
 VideoInfoStruct videoInfo;
 ParameterStruct parameters[NUM_PARAMS];
-
+int vidmode;
 
 /////////////////////////////////////////////////////
 //
@@ -109,9 +109,9 @@ DWORD initialise(VideoInfoStruct* pVideoInfo)
 	videoInfo.bitDepth = pVideoInfo->bitDepth;
 
 	// this shouldn't happen if the host is checking the capabilities properly
-	if (videoInfo.bitDepth != 1)
-	{
-		return FF_FAIL;
+	vidmode = videoInfo.bitDepth;
+	if (vidmode >2 || vidmode < 0) {
+	  return FF_FAIL;
 	}
 
 	// populate the parameters structs
@@ -279,13 +279,13 @@ DWORD processFrame(LPVOID pFrame)
 {
 	VideoPixel24bit* pPixel = (VideoPixel24bit*) pFrame;
 	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
-		for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
-// this is very slow! Should be a lookup table
-			pPixel->blue = (BYTE) (pPixel->blue * parameters[0].value);
-			pPixel->green = (BYTE) (pPixel->green * parameters[1].value);
-			pPixel->red = (BYTE) (pPixel->red * parameters[2].value);
-			pPixel++;
-		}
+	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
+	    // this is very slow! Should be a lookup table
+	    pPixel->blue = (BYTE) (pPixel->blue * parameters[0].value);
+	    pPixel->green = (BYTE) (pPixel->green * parameters[1].value);
+	    pPixel->red = (BYTE) (pPixel->red * parameters[2].value);
+	    pPixel++;
+	  }
 	}
 
 	return FF_SUCCESS;
