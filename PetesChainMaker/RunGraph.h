@@ -15,9 +15,10 @@ typedef struct SPete_RunTimeEnvironment {
 	int m_nInputsCount;
 	U32* m_pOutput;
 	U32* m_pBlankInput;
+	SPete_GraphData* m_pGraph;
 } SPete_RunTimeEnvironment;
 
-void RunGraph_Init(SPete_Node* pRootNode,int nWidth,int nHeight,SPete_RunTimeEnvironment* pEnvironment);
+void RunGraph_Init(SPete_GraphData* pGraph,int nWidth,int nHeight,SPete_RunTimeEnvironment* pEnvironment);
 void RunGraph_DeInit(SPete_Node* pRootNode,SPete_RunTimeEnvironment* pEnvironment);
 
 void RunGraph_Run(SPete_Node* pRootNode,SPete_RunTimeEnvironment* pEnvironment);

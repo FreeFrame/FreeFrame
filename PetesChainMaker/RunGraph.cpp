@@ -1,5 +1,7 @@
 #include "RunGraph.h"
 
+#include <stdio.h>
+
 #include "GraphUtil.h"
 
 void RunGraph_InitNode(SPete_Node* pNode,void* pCookie);
@@ -11,9 +13,15 @@ void RunGraph_RunPluginNode(SPete_Node* pNode,SPete_RunTimeEnvironment* pEnv);
 void RunGraph_SetFFParams(SPete_EffectNode* pEffectNode);
 float RunGraph_GetFFParamDefault(SPete_EffectNode* pEffectNode,int nIndex);
 void RunGraph_SetFFParam(SPete_EffectNode* pEffectNode,int nIndex,float Value);
+void RunGraph_RunParametersOnly(SPete_Node* pNode,void* pCookie);
+void RunGraph_RunEffectsOnly(SPete_Node* pNode,void* pCookie);
 
-void RunGraph_Init(SPete_Node* pRootNode,int nWidth,int nHeight,SPete_RunTimeEnvironment* pEnv) {
-	
+void RunGraph_Init(SPete_GraphData* pGraph,int nWidth,int nHeight,SPete_RunTimeEnvironment* pEnv) {
+
+	SPete_Node* pRootNode=pGraph->m_pRootNode;
+
+	pEnv->m_pGraph=pGraph;
+
 	pEnv->m_nVideoWidth=nWidth;
 	pEnv->m_nVideoHeight=nHeight;
 
@@ -89,7 +97,10 @@ void RunGraph_DeInit(SPete_Node* pRootNode,SPete_RunTimeEnvironment* pEnv) {
 
 void RunGraph_Run(SPete_Node* pRootNode,SPete_RunTimeEnvironment* pEnv) {
 
-	GraphUtil_Iterate(pRootNode,RunGraph_RunNode,pEnv);
+//	GraphUtil_Iterate(pRootNode,RunGraph_RunNode,pEnv);
+
+	GraphUtil_Iterate(pRootNode,RunGraph_RunParametersOnly,pEnv);
+	GraphUtil_PrunedIterate(pRootNode,RunGraph_RunEffectsOnly,pEnv);
 
 }
 
@@ -122,7 +133,15 @@ void RunGraph_InitNode(SPete_Node* pNode,void* pCookie) {
 			VideoInfo.frameHeight=pEnv->m_nVideoHeight;
 			VideoInfo.bitDepth=FF_CAP_32BITVIDEO;
 			
-			GraphUtil_DoLoadPlugin(pPluginInfo);
+			const bool bLoadSucceded=
+				GraphUtil_DoLoadPlugin(pEnv->m_pGraph,pPluginInfo);
+
+			if (!bLoadSucceded) {
+				char pMessageString[1024];
+				sprintf(pMessageString,"FreeChain: Couldn't load plugin '%s'",pPluginInfo->m_pDLLPath);
+				MessageBox(NULL,pMessageString,"",MB_OK);
+				return;
+			}
 
 			FF_Main_FuncPtr pMainFunc=pPluginInfo->m_pMainFunc;
 
@@ -138,7 +157,14 @@ void RunGraph_InitNode(SPete_Node* pNode,void* pCookie) {
 			pEffectNode->m_pInternalOutputBuffer=(U32*)
 				(malloc(nScreenByteCount));
 
-			pEffectNode->m_pOutput=pEnv->m_pBlankInput;
+			pEffectNode->m_pExternalOutputBuffer=(U32*)
+				(malloc(nScreenByteCount));
+
+			pEffectNode->m_pOutput=NULL;
+
+		}break;
+
+		case eType_Effect_Switcher: {
 
 		}break;
 
@@ -176,6 +202,11 @@ void RunGraph_DeInitNode(SPete_Node* pNode,void* pCookie) {
 
 			free(pEffectNode->m_pInternalOutputBuffer);
 			pEffectNode->m_pInternalOutputBuffer=NULL;
+
+			free(pEffectNode->m_pExternalOutputBuffer);
+			pEffectNode->m_pExternalOutputBuffer=NULL;
+			
+			pEffectNode->m_pOutput=NULL;
 
 		}break;
 
@@ -229,6 +260,20 @@ void RunGraph_RunNode(SPete_Node* pNode,void* pCookie) {
 
 		}break;
 
+		case eType_Effect_Switcher: {
+			
+			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
+
+			const int nInputCount=pEffectNode->m_nSwitcherInputCount;
+
+			const float ParamValue=pEffectNode->m_ppParameters[0]->m_OutputValue;
+
+			const int nCurrentInput=(int)((ParamValue*(nInputCount-1))+0.5f);
+
+			pEffectNode->m_pOutput=pEffectNode->m_ppInputs[nCurrentInput]->m_pOutput;
+
+		}break;
+		
 		case eType_Parameter_External: {
 
 			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
@@ -287,6 +332,7 @@ void RunGraph_SetFFParamsInfo(SPete_Node* pNode,void* pCookie) {
 
 			strcpy(pParamsInfo[nFFIndex].m_pName,pParamNode->m_pExternalLabel);
 			pParamsInfo[nFFIndex].m_Default=pParamNode->m_ExternalDefault;
+			pParamsInfo[nFFIndex].m_ExternalType=pParamNode->m_ExternalType;
 
 		}break;
 
@@ -357,16 +403,21 @@ void RunGraph_RunPluginNode(SPete_Node* pNode,SPete_RunTimeEnvironment* pEnv) {
 		RunGraph_SetFFParams(pEffectNode);
 
 		(*pMainFunc)(FF_PROCESSFRAMECOPY,(void*)(&PFCData),pEffectNode->m_InstanceCookie);
-	
-		pEffectNode->m_pOutput=pEffectNode->m_pInternalOutputBuffer;
+
+		U32* pSwapTemp=pEffectNode->m_pInternalOutputBuffer;
+		pEffectNode->m_pInternalOutputBuffer=pEffectNode->m_pExternalOutputBuffer;
+		pEffectNode->m_pExternalOutputBuffer=pSwapTemp;
+
+		pEffectNode->m_pOutput=pEffectNode->m_pExternalOutputBuffer;
 
 	} else {
 
+		const int nScreenByteCount=(sizeof(U32)*pEnv->m_nVideoWidth*pEnv->m_nVideoHeight);
+		
 		if (nInputCount>0) {
 
 			SPete_EffectNode* pInputNode=pEffectNode->m_ppInputs[0];
 
-			U32* pInputData;
 			if (pInputNode==NULL) {
 				pEffectNode->m_pOutput=pEnv->m_pBlankInput;
 			} else {
@@ -440,5 +491,133 @@ void RunGraph_SetFFParam(SPete_EffectNode* pEffectNode,int nIndex,float Value) {
 	ArgStruct.value=Value;
 
 	(*pMainFunc)(FF_SETPARAMETER,&ArgStruct,pEffectNode->m_InstanceCookie);
+
+}
+
+void RunGraph_RunParametersOnly(SPete_Node* pNode,void* pCookie) {
+
+	SPete_RunTimeEnvironment* pEnv=(SPete_RunTimeEnvironment*)(pCookie);
+
+	const int nScreenByteCount=
+		(pEnv->m_nVideoWidth*pEnv->m_nVideoHeight)*
+		sizeof(U32);
+
+	switch (pNode->m_eType) {
+		
+		case eType_Parameter_External: {
+
+			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
+
+			const int nFFIndex=pParamNode->m_nExternalIndex;
+
+			pParamNode->m_OutputValue=pEnv->m_pFFParams[nFFIndex];
+
+		}break;
+
+		case eType_Parameter_Constant: {
+
+			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
+
+			pParamNode->m_OutputValue=0.0f;
+
+		}break;
+
+		case eType_Parameter_Keyboard: {
+
+			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
+
+			pParamNode->m_OutputValue=0.0f;
+
+		}break;
+
+		case eType_Parameter_Midi: {	
+
+			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
+
+			pParamNode->m_OutputValue=0.0f;
+			
+		}break;
+
+		default: {
+			// do nothing
+		}break;
+
+	}
+
+
+}
+
+void RunGraph_RunEffectsOnly(SPete_Node* pNode,void* pCookie) {
+
+	SPete_RunTimeEnvironment* pEnv=(SPete_RunTimeEnvironment*)(pCookie);
+
+	const int nScreenByteCount=
+		(pEnv->m_nVideoWidth*pEnv->m_nVideoHeight)*
+		sizeof(U32);
+
+	switch (pNode->m_eType) {
+
+		case eType_Effect_Output: {
+
+			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
+
+			U32* pInput=pEffectNode->m_ppInputs[0]->m_pOutput;
+			U32* pOutput=pEnv->m_pOutput;
+			memcpy(pOutput,pInput,nScreenByteCount);
+
+		}break;
+
+		case eType_Effect_Input: {
+			
+			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
+
+			int nInputIndex=pEffectNode->m_nInputIndex;
+			const int nInputTotal=pEnv->m_nInputsCount;
+
+			if (nInputIndex>=(nInputTotal)) {
+				nInputIndex=(nInputTotal-1);
+			}
+
+			pEffectNode->m_pOutput=pEnv->m_ppInputs[nInputIndex];
+
+		}break;
+
+		case eType_Effect_Plugin: {
+
+			RunGraph_RunPluginNode(pNode,pEnv);
+
+		}break;
+
+		case eType_Effect_Switcher: {
+			
+			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
+
+			const int nInputCount=pEffectNode->m_nSwitcherInputCount;
+
+			SPete_ParameterNode* pSelectorNode=pEffectNode->m_ppParameters[0];
+
+			float ParamValue;
+			if (pSelectorNode==NULL) {
+				ParamValue=0.0f;
+			} else {
+				ParamValue=pSelectorNode->m_OutputValue;
+			}
+
+			const int nCurrentInput=(int)((ParamValue*(nInputCount-1))+0.5f);
+
+			SPete_EffectNode* pInputNode=pEffectNode->m_ppInputs[nCurrentInput];
+			if (pInputNode==NULL) {
+				pEffectNode->m_pOutput=pEnv->m_pBlankInput;
+			} else {
+				pEffectNode->m_pOutput=pInputNode->m_pOutput;
+			}
+
+		}break;
+
+		default: {
+			// do nothing
+		}break;
+
+	}
 
 }
