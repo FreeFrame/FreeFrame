@@ -1,0 +1,3 @@
+LIBRARY			FFTemplate
+DESCRIPTION		'FFTemplate plugin'
+EXPORTS			plugMain
