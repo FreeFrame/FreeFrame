@@ -1,0 +1,269 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Russian resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+#ifdef _WIN32
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\pkgSamples.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Russian resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG_LEVELS DIALOGEX 0, 0, 186, 95
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Levels Configuration"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,45,62,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,101,62,50,14
+    COMBOBOX        IDC_LEVELS_STYLE_LIST,63,10,90,58,CBS_DROPDOWNLIST | 
+                    CBS_DISABLENOSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Method:",IDC_STATIC,9,12,53,8,0,WS_EX_RIGHT
+END
+
+IDD_DIALOG_TIMEWARP DIALOGEX 0, 0, 185, 82
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "TimeWarp Configuration"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,35,58,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,105,58,50,14
+    COMBOBOX        IDC_TIMEWARP_PLAYBACKSTYLE_LIST,63,10,90,58,
+                    CBS_DROPDOWNLIST | CBS_DISABLENOSCROLL | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Playback Style:",IDC_STATIC,9,12,53,8,0,WS_EX_RIGHT
+    EDITTEXT        IDC_TIMEWARP_FRAMESTOSTORE_EDIT,85,34,26,12,
+                    ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Frames to Store:",IDC_STATIC,29,35,55,9,0,WS_EX_RIGHT
+END
+
+IDD_DIALOG_TEXTOVERLAY DIALOG DISCARDABLE  0, 0, 185, 82
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "TextOverlay Configuration"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,35,58,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,105,58,50,14
+    PUSHBUTTON      "Choose Font...",ID_CHOOSEFONT,61,8,50,14
+    PUSHBUTTON      "Load Text...",ID_LOADTEXT,62,31,50,14
+END
+
+IDD_DIALOG_METAIMAGE DIALOGEX 0, 0, 185, 57
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "MetaImage Configuration"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,33,37,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,95,37,50,14
+    EDITTEXT        IDC_METAIMAGE_NUMBEROFINPUTS_EDIT,88,9,26,12,
+                    ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Number of inputs:",-1,29,11,55,9,0,WS_EX_RIGHT
+END
+
+IDD_DIALOG_TIMESLICE DIALOGEX 0, 0, 185, 82
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "TimeSlice Configuration"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,35,58,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,105,58,50,14
+    COMBOBOX        IDC_TIMESLICE_PLAYBACKSTYLE_LIST,63,10,90,58,
+                    CBS_DROPDOWNLIST | CBS_DISABLENOSCROLL | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Playback Style:",IDC_STATIC,9,12,53,8,0,WS_EX_RIGHT
+    EDITTEXT        IDC_TIMESLICE_FRAMESTOSTORE_EDIT,85,34,26,12,
+                    ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Frames to Store:",IDC_STATIC,29,35,55,9,0,WS_EX_RIGHT
+END
+
+IDD_DIALOG_PSHOPFILTERS DIALOGEX 0, 0, 185, 82
+STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "PShop Filters Configuration"
+FONT 8, "MS Sans Serif", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,35,58,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,105,58,50,14
+    COMBOBOX        IDC_PSHOPFILTERS_FILTER_LIST,55,11,90,58,
+                    CBS_DROPDOWNLIST | CBS_DISABLENOSCROLL | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Filter:",-1,0,13,53,8,0,WS_EX_RIGHT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_DIALOG_LEVELS DLGINIT
+BEGIN
+    IDC_LEVELS_STYLE_LIST, 0x403, 8, 0
+0x6e55, 0x6669, 0x726f, 0x006d, 
+    IDC_LEVELS_STYLE_LIST, 0x403, 13, 0
+0x6553, 0x6570, 0x6172, 0x6574, 0x5220, 0x4247, "\000" 
+    IDC_LEVELS_STYLE_LIST, 0x403, 13, 0
+0x7541, 0x6f74, 0x552d, 0x696e, 0x6f66, 0x6d72, "\000" 
+    IDC_LEVELS_STYLE_LIST, 0x403, 18, 0
+0x7541, 0x6f74, 0x532d, 0x7065, 0x7265, 0x7461, 0x2065, 0x4752, 0x0042, 
+
+    0
+END
+
+IDD_DIALOG_TIMEWARP DLGINIT
+BEGIN
+    IDC_TIMEWARP_PLAYBACKSTYLE_LIST, 0x403, 7, 0
+0x6f50, 0x616c, 0x6972, "\000" 
+    IDC_TIMEWARP_PLAYBACKSTYLE_LIST, 0x403, 9, 0
+0x6953, 0x656e, 0x6c53, 0x7275, "\000" 
+    IDC_TIMEWARP_PLAYBACKSTYLE_LIST, 0x403, 8, 0
+0x7453, 0x7475, 0x6574, 0x0072, 
+    IDC_TIMEWARP_PLAYBACKSTYLE_LIST, 0x403, 10, 0
+0x7543, 0x7473, 0x6d6f, 0x2e2e, 0x002e, 
+    0
+END
+
+IDD_DIALOG_TIMESLICE DLGINIT
+BEGIN
+    IDC_TIMESLICE_PLAYBACKSTYLE_LIST, 0x403, 7, 0
+0x6f50, 0x616c, 0x6972, "\000" 
+    IDC_TIMESLICE_PLAYBACKSTYLE_LIST, 0x403, 9, 0
+0x6953, 0x656e, 0x6c53, 0x7275, "\000" 
+    IDC_TIMESLICE_PLAYBACKSTYLE_LIST, 0x403, 8, 0
+0x7453, 0x7475, 0x6574, 0x0072, 
+    IDC_TIMESLICE_PLAYBACKSTYLE_LIST, 0x403, 10, 0
+0x7543, 0x7473, 0x6d6f, 0x2e2e, 0x002e, 
+    IDC_TIMESLICE_PLAYBACKSTYLE_LIST, 0x403, 9, 0
+0x6d49, 0x6761, 0x4d65, 0x7061, "\000" 
+    0
+END
+
+IDD_DIALOG_PSHOPFILTERS DLGINIT
+BEGIN
+    IDC_PSHOPFILTERS_FILTER_LIST, 0x403, 5, 0
+0x7542, 0x6e72, "\000" 
+    IDC_PSHOPFILTERS_FILTER_LIST, 0x403, 9, 0
+0x6843, 0x6f72, 0x696d, 0x6d75, "\000" 
+    IDC_PSHOPFILTERS_FILTER_LIST, 0x403, 6, 0
+0x6f44, 0x6764, 0x0065, 
+    IDC_PSHOPFILTERS_FILTER_LIST, 0x403, 10, 0
+0x7845, 0x6c63, 0x7375, 0x6f69, 0x006e, 
+    IDC_PSHOPFILTERS_FILTER_LIST, 0x403, 10, 0
+0x6f50, 0x7473, 0x7265, 0x7a69, 0x0065, 
+    IDC_PSHOPFILTERS_FILTER_LIST, 0x403, 9, 0
+0x6f53, 0x616c, 0x6972, 0x657a, "\000" 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_DIALOG_LEVELS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 88
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\pkgSamples.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
