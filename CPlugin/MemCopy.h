@@ -60,12 +60,19 @@ typedef char BYTE;
 
 #endif
 
-#ifdef NOT_INTEL || LINUX
+#ifdef NOT_INTEL
+#define NO_MEMCOPY
+#endif
+#ifdef LINUX
+#define NO_MEMCOPY
+#endif
+
+
+#ifdef NO_MEMCOPY
 
 #define memcopy(a, b, c) memcpy((a), (b), (c))
 
-#endif
-#ifndef NOT_INTEL || LINUX
+#else
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // Function prototypes

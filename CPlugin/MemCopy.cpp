@@ -41,7 +41,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #include "MemCopy.h"
 
-#ifndef NOT_INTEL || LINUX
+#ifndef NO_MEMCOPY
 
 /////////////////////////////////////////////////////////////////////////////////////////
 // #defines
