@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
 // FreeFrameSample.cpp
 //
 // FreeFrame Open Video Plugin 
@@ -16,6 +16,9 @@ All rights reserved.
 
 FreeFrame 1.0 upgrade by Russell Blakeborough
 email: boblists@brightonart.org
+
+Extra parameter checking added by Dan Kent (10/07/2004)
+email: dan@syzygy-visuals.co.uk
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -54,7 +57,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 PlugInfoStruct plugInfo;
 PlugExtendedInfoStruct plugExtInfo;
-ParamConstantsStruct paramConstants[3];
+ParamConstantsStruct paramConstants[NUM_PARAMS];
 
 
 /////////////////////////////////////////////////////
@@ -108,6 +111,7 @@ DWORD initialise()
 	char tempName1[17] = "red";
 	char tempName2[17] = "green";
 	char tempName3[17] = "blue";
+
 	memcpy(paramConstants[0].name, tempName1, 16);
 	memcpy(paramConstants[1].name, tempName2, 16);
 	memcpy(paramConstants[2].name, tempName3, 16);
@@ -157,12 +161,16 @@ DWORD getNumParameters()
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
-// FF_FAIL on error
+// pointer to empty string if param index is not valid
 //
 
 char* getParameterName(DWORD index)
 {
-	return paramConstants[index].name;
+	//check that the param index is valid
+	if(index >= 0 && index < NUM_PARAMS)
+		return paramConstants[index].name;
+	else
+		return "";
 }
 
 
@@ -181,7 +189,11 @@ char* getParameterName(DWORD index)
 
 float getParameterDefault(DWORD index)
 {
-	return paramConstants[index].defaultValue;
+	//check that the param index is valid
+	if(index >= 0 && index < NUM_PARAMS)
+		return paramConstants[index].defaultValue;
+	else
+		return FF_FAIL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -195,17 +207,23 @@ float getParameterDefault(DWORD index)
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
-// FF_FAIL on error
+// pointer to empty string if the parameter index is not valid
 //
 
 char* plugClass::getParameterDisplay(DWORD index)
 {
-	// fill the array with spaces first
-	for (int n=0; n<16; n++) {
-		paramDynamicData[index].displayValue[n] = ' ';
+	//check that the param index is valid
+	if(index >= 0 && index < NUM_PARAMS)
+	{
+		// fill the array with spaces first
+		for (int n=0; n<16; n++) {
+			paramDynamicData[index].displayValue[n] = ' ';
+		}
+		sprintf(paramDynamicData[index].displayValue, "%f",paramDynamicData[index].value);
+		return paramDynamicData[index].displayValue;
 	}
-	sprintf(paramDynamicData[index].displayValue, "%f",paramDynamicData[index].value);
-	return paramDynamicData[index].displayValue;
+	else
+		return "";
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -224,8 +242,16 @@ char* plugClass::getParameterDisplay(DWORD index)
 
 DWORD plugClass::setParameter(SetParameterStruct* pParam)
 {
-	paramDynamicData[pParam->index].value = pParam->value;
-	return FF_SUCCESS;
+	//check that the param index is valid
+	if(pParam->index >= 0 && pParam->index < NUM_PARAMS)
+	{
+		paramDynamicData[pParam->index].value = pParam->value;
+		return FF_SUCCESS;
+	}
+	else
+	{
+		return FF_FAIL;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -243,7 +269,11 @@ DWORD plugClass::setParameter(SetParameterStruct* pParam)
 
 float plugClass::getParameter(DWORD index)
 {
-	return paramDynamicData[index].value;
+	//check that the param index is valid
+	if(index >= 0 && index < NUM_PARAMS)
+		return paramDynamicData[index].value;
+	else
+		return FF_FAIL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -291,10 +321,12 @@ DWORD plugClass::processFrame24Bit(LPVOID pFrame)
 	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
 	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
 	    // this is very slow! Should be a lookup table
-	    pPixel->red = (BYTE) (pPixel->red * paramDynamicData[0].value);
+
+		pPixel->red = (BYTE) (pPixel->red * paramDynamicData[0].value);
 	    pPixel->green = (BYTE) (pPixel->green * paramDynamicData[1].value);
 	    pPixel->blue = (BYTE) (pPixel->blue * paramDynamicData[2].value);
-	    pPixel++;
+
+		pPixel++;
 	  }
 	}
 
@@ -489,7 +521,8 @@ LPVOID instantiate(VideoInfoStruct* pVideoInfo)
 
 	// Create local pointer to plugObject
 	plugClass *pPlugObj;
-	// create new instance of plugClass
+
+	// create new instance of plugClassq
 	pPlugObj = new plugClass;
 
 	// make a copy of the VideoInfoStruct
