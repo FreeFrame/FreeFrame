@@ -23,28 +23,28 @@ object fmMain: TfmMain
   end
   object lInitPlugin: TLabel
     Left = 496
-    Top = 136
+    Top = 140
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lDeInitPlugin: TLabel
     Left = 496
-    Top = 350
+    Top = 354
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lGetPluginInfo: TLabel
     Left = 496
-    Top = 85
+    Top = 89
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lProcessFrame: TLabel
     Left = 496
-    Top = 185
+    Top = 189
     Width = 25
     Height = 13
     Caption = 'result'
@@ -233,7 +233,7 @@ object fmMain: TfmMain
   end
   object bgetInfo: TButton
     Left = 463
-    Top = 60
+    Top = 64
     Width = 91
     Height = 25
     Caption = '4 - Plugin getInfo'
@@ -314,7 +314,7 @@ object fmMain: TfmMain
   end
   object bInitPlugin: TButton
     Left = 471
-    Top = 108
+    Top = 112
     Width = 75
     Height = 25
     Caption = '5 - Init Plugin'
@@ -323,7 +323,7 @@ object fmMain: TfmMain
   end
   object bProcessFrame: TButton
     Left = 456
-    Top = 158
+    Top = 162
     Width = 105
     Height = 25
     Caption = '11 - Process Frame'
@@ -332,7 +332,7 @@ object fmMain: TfmMain
   end
   object bDeInitPlugin: TButton
     Left = 463
-    Top = 320
+    Top = 324
     Width = 90
     Height = 25
     Caption = '17 - DeInit Plugin'
@@ -340,9 +340,9 @@ object fmMain: TfmMain
     OnClick = bDeInitPluginClick
   end
   object cbPlugins: TComboBox
-    Left = 408
+    Left = 392
     Top = 20
-    Width = 166
+    Width = 193
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
@@ -464,7 +464,7 @@ object fmMain: TfmMain
   end
   object bGetAndProcess: TButton
     Left = 452
-    Top = 208
+    Top = 212
     Width = 113
     Height = 25
     Caption = '12 - Get and Process'
@@ -511,7 +511,7 @@ object fmMain: TfmMain
   end
   object bPlayAndProcess: TButton
     Left = 448
-    Top = 245
+    Top = 249
     Width = 121
     Height = 25
     Caption = '13 - Play and Process'
@@ -520,7 +520,7 @@ object fmMain: TfmMain
   end
   object bStop: TButton
     Left = 471
-    Top = 281
+    Top = 285
     Width = 75
     Height = 25
     Caption = '14 - Stop'
@@ -545,6 +545,14 @@ object fmMain: TfmMain
     Checked = True
     State = cbChecked
     TabOrder = 28
+  end
+  object cbAutoLoadPlugin: TCheckBox
+    Left = 432
+    Top = 44
+    Width = 129
+    Height = 17
+    Caption = 'Auto Load Plugin'
+    TabOrder = 29
   end
   object odAVI: TOpenDialog
     Left = 392

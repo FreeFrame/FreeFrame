@@ -111,6 +111,7 @@ type
     bRunIn32bit: TButton;
     cbAutoLoadAVI: TCheckBox;
     lAPIversion: TLabel;
+    cbAutoLoadPlugin: TCheckBox;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -145,13 +146,14 @@ type
     procedure GetPlugins;
     procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
     procedure ProfileAndProcessFrame(pFrame: pointer);     // This is the main frame processing procedure
+    procedure LoadPlugin;
   public
     { Public declarations }
     AHDC: HDC;                   // Handle
   end;
 
 const
-  AppVersion: string='0.5';
+  AppVersion: string='0.51';
   APIversion: string='0.1050';
 
 var
@@ -251,6 +253,7 @@ begin
   with inifile do begin
     ebAVIfilename.Text:=ReadString('Filenames','CurrentAVI','');
     cbAutoLoadAVI.Checked:=ReadBool('HostTestContainerSettings','AutoLoadAVI',true);
+    cbAutoLoadPlugin.Checked:=ReadBool('HostTestContainerSettings','AutoLoadPlugin',true);
   end;
   inifile.Free;
   if cbAutoLoadAVI.Checked then begin
@@ -271,9 +274,32 @@ begin
     lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
     bGetInfo.SetFocus;
   end;
-  // ...........................................
   getPlugins;
+  if cbAutoLoadPlugin.Checked then begin
+    LoadPlugin;
+    bPlayAndProcess.SetFocus;
+  end;
+  // ...........................................
 end;
+
+procedure TfmMain.LoadPlugin;
+begin
+  // Get Info ...
+  bgetInfoClick(nil);
+  // Init Plugin ...
+  lInitPlugin.caption:=inttostr(PluginHost.Initialise);
+  // Get Num Params ...
+  bGetNumParametersClick(nil);
+  // Get Param Names ...
+  bGetParameterNamesClick(nil);
+  // Get Param Defaults ...
+  bGetParamDefaultsClick(nil);
+  // Get Param Display Values ...
+  bGetParamDisplayValuesClick(nil);
+  // Get Param Actual Values ...
+  bGetParamActualValuesClick(nil);
+end;
+
 
 procedure TfmMain.bInitPluginClick(Sender: TObject);
 begin
@@ -356,6 +382,8 @@ begin
 end;
 
 procedure TfmMain.cbPluginsChange(Sender: TObject);
+var
+  inifile: TInifile;
 begin
   if cbPlugins.itemindex<0 then exit;
   plugMain:=nil;
@@ -583,6 +611,7 @@ begin
   // Save Settings ...
   inifile:=Tinifile.Create('FreeFrame.ini');
   inifile.WriteBool('HostTestContainerSettings','AutoLoadAVI',cbAutoLoadAVI.checked);
+  inifile.WriteBool('HostTestContainerSettings','AutoLoadPlugin',cbAutoLoadPlugin.Checked);
   inifile.Free;
   // CloseDown ...
   CanClose:=true;
