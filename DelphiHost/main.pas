@@ -141,7 +141,7 @@ type
   end;
 
 const
-  version: string='0.1032';
+  version: string='0.1050';
 
 var
   fmMain: TfmMain;

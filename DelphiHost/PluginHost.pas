@@ -34,7 +34,7 @@ interface
 uses windows, sysutils;
 
 type
-  tPlugMainFunction = function(functionCode: dword; pParam: pointer): pointer; stdcall;
+  tPlugMainFunction = function(functionCode: dword; pParam: pointer; reserved: dword): pointer; stdcall;
   TPluginInfoStruct = record
     APIMajorVersion: dword;
     APIMinorVersion: dword;
@@ -82,7 +82,7 @@ var
   tempFCC: array [0..3] of char;
   tempName: array [0..15] of char;
 begin
-  pPluginInfoStruct:=plugMain(0,nil);
+  pPluginInfoStruct:=plugMain(0,nil,0);
   with PluginInfoStruct do begin
     pParam:=pPluginInfoStruct;
     APIMajorVersion:=dword(pParam^);
@@ -109,22 +109,22 @@ var
   pVideoInfoStruct: pointer;
 begin
   pVideoInfoStruct:=pointer(@VideoInfoStruct);
-  result:=dword(plugMain(1,pVideoInfoStruct));
+  result:=dword(plugMain(1,pVideoInfoStruct,0));
 end;
 
 function DeInitialise: dword;
 begin
-  result:=dword(plugMain(2,nil));
+  result:=dword(plugMain(2,nil,0));
 end;
 
 function ProcessFrame(pFrame: pointer): dword;
 begin
-  result:=dword(plugMain(3,pFrame));
+  result:=dword(plugMain(3,pFrame,0));
 end;
 
 function GetNumParameters: dword;
 begin
-  result:=dword(plugMain(4,nil));
+  result:=dword(plugMain(4,nil,0));
 end;
 
 function GetParameterName(Param: dword): string;
@@ -134,7 +134,7 @@ var
   tempDestPointer: pdw;
   i: integer;
 begin
-  tempSourcePointer:=pdw(plugMain(5,pointer(Param)));
+  tempSourcePointer:=pdw(plugMain(5,pointer(Param),0));
   tempDestPointer:=pdw(@tempParamName);
   for i:=0 to 3 do begin
     tempDestPointer^:=tempSourcePointer^;
@@ -149,7 +149,7 @@ var
   tempSingle: single;
   tempDword: dword;
 begin
-  tempDword:=dword(plugMain(6,pointer(Param)));
+  tempDword:=dword(plugMain(6,pointer(Param),0));
   copymemory(@tempSingle,@tempDword,4);
   result:=tempSingle;
 end;
@@ -161,7 +161,7 @@ var
   tempDestPointer: pdw;
   i: integer;
 begin
-  tempSourcePointer:=pdw(plugMain(7,pointer(Param)));
+  tempSourcePointer:=pdw(plugMain(7,pointer(Param),0));
   tempDestPointer:=pdw(@tempParamDisplay);
   for i:=0 to 3 do begin
     tempDestPointer^:=tempSourcePointer^;
@@ -181,7 +181,7 @@ begin
   SetParamStruct[0]:=Param;
   tempPdword:=@value;
   SetParamStruct[1]:=tempPdword^;
-  result:=dword(plugMain(8,@SetParamStruct));
+  result:=dword(plugMain(8,@SetParamStruct,0));
 end;
 
 function GetParameter(Param: dword): single;
@@ -191,7 +191,7 @@ var
   tempSingle: single;
   tempPsingle: pointer;
 begin
-  tempdword:=dword(plugMain(9,pointer(Param)));
+  tempdword:=dword(plugMain(9,pointer(Param),0));
   tempPdword:=@tempDword;
   tempPsingle:=@tempSingle;
   copymemory(tempPsingle,tempPdword,4);
@@ -200,7 +200,7 @@ end;
 
 function GetPluginCaps(Param: dword): boolean;
 begin
-  case dword(plugMain(10,pointer(Param))) of
+  case dword(plugMain(10,pointer(Param),0)) of
     0: result:=false;
     1: result:=true;
   end;
