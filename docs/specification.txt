@@ -1,7 +1,7 @@
 **************************************************************************************************
 * FreeFrame Open Video Plugin System Specification
 **************************************************************************************************
-* Version 0.70 - Ongoing specification development towards next release version - FreeFrame 1.0
+* Version 0.75 - Ongoing specification development towards next release version - FreeFrame 1.0
 **************************************************************************************************
 Copyright (c) 2002,2003 www.freeframe.org
 All rights reserved.
@@ -85,8 +85,11 @@ The following types are used:
   FF_FAIL       (hex) FFFFFFFF
   FF_SUCCESS    0 
 
-  note: In functions that return error codes any other value other than 0 is assumed to be an 
-        error code these are be defined in each function below.
+  notes: 1 - In functions that return error codes any other value other than 0 is assumed to be an 
+            error code these are be defined in each function below.
+        
+         2 - In fuctions that return a pointer, FFFFFFFF also represents a faliure condition
+        
 
   FF_TRUE       1
   FF_FALSE      0
@@ -145,7 +148,7 @@ The following types are used:
   Orientation current meaningful values:
   1=origin at top left 
   2=origin at bottom left
-  so in mode 1 the first pixel at the pointer to the frame is the top left
+  Note: In mode 1 the first pixel at the pointer to the frame is the top left
   in mode 2 it is the bottom left. This is particuarly important for text and
   live input.
   ================================================================================
@@ -221,21 +224,92 @@ The following types are used:
   
   
   ================================================================================
-  PluginCapsIndex: 32-bit unsigned integer cast as 32-bit untyped pointer
+  PluginCapsIndex: 32-bit unsigned integer
   ================================================================================
+  
   0 = 16bit 5-6-5
   1 = 24bit packed
   2 = 32bit (or 24bit 32-bit aligned)
+  
+  3 - Plugin Supports ProcessFrameCopy function
+    
+  return values (32-bit unsigned integer):
+  FF_TRUE
+  FF_FALSE
+
+
+  Calls to these caps indexes are only meaningful if the plugin has reported
+   that it supports ProcessFrameCopy -
+
+  10 - Minimum Input Frames
+   0 (FF_FALSE) capability not supported  (may be an API version error or something)
+   or
+   minimum number of input frames plugin requires
+
+
+  11 - Maximum Input Frames
+   0 (FF_FALSE) capability not supported  (may be an API version error or something)
+   or
+   maximum number of input frames plugin can process 
+
+
+  15 - Plugin optimised for Copy or InPlace processing
+   return values (32-bit unsigned integer):
+   0=no preference
+   1=InPlace processing is faster
+   2=Copy processing is faster
+   3=Both are optimised
+  
   ================================================================================
   The PluginCapsIndex specifies certain capabilities of a plugin that the host may
-  want to enquire about. For now there is only the bitdepth format of the video.
+  want to enquire about. 
+  Bitdepth format of the video:
   The host asks the plugin if it is capable of its favourite bit depth, 
   and use that if it is available. If not the host may decide not to use the 
   plugin and deinitialise it, or it may enquire again to see if a second choice 
   format is supported.
   ================================================================================
-  Supported/Unsupported: 0=unsupported 1=supported
+  Supported/Unsupported/Dword : 0=unsupported 1=supported
   ================================================================================
+  
+  
+  
+   returns true / false / dword value to indicate capability of feature specified by index
+    
+     parameters:
+     32-bit unsigned integer index - index of parameter 
+     allowed values:
+  
+     0 - 16 bit video
+     1 - 24 bit video
+     2 - 32 bit video
+     3 - Plugin Supports ProcessFrameCopy function
+  
+     return values (32-bit unsigned integer):
+     FF_TRUE
+     FF_FALSE
+  
+  
+     10 - Minimum Input Frames
+         0 (FF_FALSE) capability not supported  (may be an API version error or something)
+         or
+         minimum number of input frames plugin requires
+  
+  
+     11 - Maximum Input Frames
+         0 (FF_FALSE) capability not supported  (may be an API version error or something)
+         or
+         maximum number of input frames plugin can process 
+  
+    
+     15 - Plugin optimised for Copy or InPlace processing
+         return values (32-bit unsigned integer):
+         0=no preference
+         1=InPlace processing is faster
+         2=Copy processing is faster
+         3=Both are optimised
+  
+  
   
   
   =====================================================================================
@@ -255,7 +329,7 @@ The following types are used:
              - or 0 if not provided by plugin
      Author and License information
 
-  FreeFrameExtendedDataSize: size in bytes of the FreeFrameExtendedDataBlock
+  FreeFrameExtendedDataSize: dword - size in bytes of the FreeFrameExtendedDataBlock
                       - or 0 if not provided by plugin
   FreeFrameExtendedDataBlock: 32-bit pointer to a FreeFrame ExtendedDataBlock
 		      - this interface is not yet in use, but provided
@@ -305,6 +379,8 @@ The following types are used:
   6     Ypos      for x,y video interaction eg. cursor - these should denote
                   position within the video frames as specified in the 
                   VideoInfoStruct         
+
+  10    Standard  A standard paramater representing an unspecified value
 
   100   Text      A null terminated text input type - *note* only this type has a 
 		  different data type for the moment       
