@@ -56,8 +56,8 @@ type
   pb = ^byte;
 
 function GetInfo(pParam: pointer): pointer;
-function InitPlugin(pParam: pointer): pointer;
-function DeInitPlugin(pParam: pointer): pointer;
+function Initialise(pParam: pointer): pointer;
+function DeInitialise(pParam: pointer): pointer;
 function ProcessFrame(pParam: pointer): pointer;
 function GetNumParameters(pParam: pointer): pointer;
 function GetParameterName(pParam: pointer): pointer;
@@ -88,7 +88,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1025;
+    APIMinorVersion:=1026;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -105,7 +105,7 @@ begin
   result:=pointer(pPluginInfoBlock);
 end;
 
-function InitPlugin(pParam: pointer):pointer;
+function Initialise(pParam: pointer):pointer;
 var
   tempPointer: pDw;
 begin
@@ -121,7 +121,7 @@ begin
   result:=pointer(95);
 end;
 
-function DeInitPlugin(pParam: pointer): pointer;
+function DeInitialise(pParam: pointer): pointer;
 begin
   result:=pointer(894);
 end;
@@ -133,13 +133,11 @@ var
 begin
   tempPbyte:= pb(pParam);
   // 24 bit brghtness control (more darkness really) ...........................
-
   for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
-    tempPbyte^:=tempPbyte^ SHR 1;
-    //tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
+    //tempPbyte^:=tempPbyte^ SHR 1;
+    tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
     inc(tempPbyte);
   end;
-
   // ...........................................................................
   result:=pointer(VideoInfoStruct.FrameWidth);
 end;

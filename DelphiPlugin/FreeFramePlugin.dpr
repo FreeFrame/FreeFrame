@@ -23,25 +23,7 @@ Redistribution and use in source and binary forms, with or without modification,
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-  =============================================================================================
-  Function Code Table
-  =============================================================================================
-  Code   Function		Input Value			Output Value
-  =====  =====================  ==============================  ===============================
-  0      GetInfo		Unused				Pointer to PluginInfoStruct
-  1      Initialize		Pointer to VideoInfoStruct	Success/Fail
-  2      DeInitialize		Unused				Success/Fail
-  3      ProcessFrame		Pointer to a frame of video	Success/Fail
-  4      GetNumParameters	Unused				NumParameters
-  5      GetParameterName	ParameterNumber			Pointer to ParameterName
-  6      GetParameterDefault	ParameterNumber			ParameterDefaultValue
-  7      GetParameterDisplay	ParameterNumber			Pointer to ParameterDisplayValue
-  8      SetParameter		Pointer to SetParameterStruct	Success/Fail
-  9      GetParameter		Parameter number		ParameterValue	
-  10     GetPluginCaps		PluginCapsIndex			Supported/Unsupported
-  =====  =====================  ==============================  ================================       
 }
-
 
 library FreeFramePlugin;
 
@@ -77,10 +59,10 @@ begin
       result:=GetInfo(pParam);
     end;
     1: begin
-      result:=InitPlugin(pParam);
+      result:=Initialise(pParam);
     end;
     2: begin
-      result:=DeInitPlugin(pParam);
+      result:=DeInitialise(pParam);
     end;
     3: begin
       result:=ProcessFrame(pParam);
