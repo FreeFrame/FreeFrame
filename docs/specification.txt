@@ -1,8 +1,9 @@
 **************************************************************************************************
-* FreeFrame Open Video Plugin System Specification
+* FreeFrame Open Video Plugin System Specification						 *
 **************************************************************************************************
-* Version 0.75 - Ongoing specification development towards next release version - FreeFrame 1.0
+* Version 0.80 - Ongoing specification development towards next release version - FreeFrame 1.0  *
 **************************************************************************************************
+
 Copyright (c) 2002,2003 www.freeframe.org
 All rights reserved.
 
@@ -31,7 +32,6 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVI
 DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
 IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT 
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 
 **************************************************************************************************
 
@@ -75,7 +75,8 @@ The following types are used:
   12	 DeInstantiate		Unused					Success/Error code
   13	 GetExtendedInfo	Unused					Pointer to PluginExtendedInfoStruct
   14	 ProcessFrameCopy	Pointer to ProcessFrameCopyStruct	Success/Error code
-  15	 GetParamaterType	ParameterNumber				ParameterType
+  15	 GetParameterType	ParameterNumber				ParameterType
+  16     GetInputStatus		InputChannel				InputStatus
   =====  =====================  ======================================  ================================
   
 
@@ -270,8 +271,7 @@ The following types are used:
   format is supported.
   ================================================================================
   Supported/Unsupported/Dword : 0=unsupported 1=supported
-  ================================================================================
-  
+  ================================================================================  
   
   
    returns true / false / dword value to indicate capability of feature specified by index
@@ -304,12 +304,11 @@ The following types are used:
     
      15 - Plugin optimised for Copy or InPlace processing
          return values (32-bit unsigned integer):
-         0=no preference
-         1=InPlace processing is faster
-         2=Copy processing is faster
-         3=Both are optimised
-  
-  
+
+         0 = Neither Optimised - no preference
+         1 = InPlace processing is faster
+         2 = Copy processing is faster
+         3 = Both are optimised  
   
   
   =====================================================================================
@@ -386,7 +385,25 @@ The following types are used:
 		  different data type for the moment       
   
   ================================================================================
-  
+
+
+  ================================================================================
+  InputChannel				
+  ================================================================================
+  Input channel as relates to the use of Multiple Inputs in ProcessFrameCopy
+  The first channel is 0
+  ================================================================================
+
+
+  ================================================================================
+  InputStatus
+  ================================================================================
+  Status of Input Channels as relates to the use of Multiple Inputs in 
+  ProcessFrameCopy
+  0: Not in use
+  1: In Use 
+  ================================================================================
+
 
 
   ================================================================================
@@ -403,7 +420,40 @@ The following types are used:
   
    PLUGIN DEVELOPERS:  you shouldn't need to change this function
     
- 
+  ================================================================================
+
+   Global vs Instance Specific Functions:
+
+   Some Functions are specific to an instance of a plugin, and thus require a 
+   valid InstanceID in the InstanceID field, others concern global parameters
+   that are the same for all instances, and so do not require a valid InstanceID.
+
+   Global functions:
+
+    GetInfo                
+    Initialise             
+    DeInitialise           
+    ProcessFrame           
+    GetNumParameters       
+    GetParameterName       
+    GetParameterDefault         
+    GetPluginCaps  
+    GetExtendedInfo	
+    GetParameterType
+
+   Instance specific functions:
+
+    GetParameterDisplay    
+    SetParameter           
+    GetParameter  
+    Instantiate		
+    DeInstantiate
+    ProcessFrameCopy
+    GetInputStatus
+
+  ================================================================================ 
+
+
   ================================================================================
    getInfo
   ================================================================================
@@ -689,6 +739,9 @@ The following types are used:
 	   processing. This method is optional. Plugins should specify if they
 	   are capable of this kind of processing - and if they have optimised
 	   a particular method - in the Plugin Caps system.
+	   
+	   Source Plugins should not use this function as they do not require
+	   Input frames. Source Plugins should just use ProcessFrame
 
 
   ================================================================================
@@ -701,6 +754,23 @@ The following types are used:
    return values (32-bit unsigned integer):
    ParamaterType
    FF_FAIL on error
+
+
+  ================================================================================
+   getInputStatus		
+  ================================================================================
+
+   Parameter: 
+   InputChannel	- first channel is 0			
+   
+   Return Values (32-bit unsigned integer):
+   0: Not in use
+   1: In Use
+   
+   This function is provided to allow hosts to optimise the rendering of input 
+   frames. Due to user input a plugin may only plan to render certain input 
+   channels - this function allows hosts to ask the plugin which input channels
+   it plans to render.
 
 
   ================================================================================
