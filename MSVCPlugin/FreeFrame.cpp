@@ -34,6 +34,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //
 
 #include "FreeFrame.h"
+#include "FreeFrameSample.h"
+
 #include <stdio.h>
 #include <string.h>
 
