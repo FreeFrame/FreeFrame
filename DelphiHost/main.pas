@@ -180,7 +180,6 @@ type
     procedure bRunIn32bitClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
     procedure bSIbrowseClick(Sender: TObject);
     procedure bSIrunUpAVIClick(Sender: TObject);
     procedure bSIshutDownAVIClick(Sender: TObject);
@@ -205,7 +204,7 @@ type
   end;
 
 const
-  AppVersion: string='0.754';
+  AppVersion: string='0.755';
   APIversion: string='0.750';
 
 var
@@ -700,20 +699,12 @@ begin
   inifile.WriteBool('HostTestContainerSettings','AutoLoadPlugin',cbAutoLoadPlugin.Checked);
   inifile.Free;
   // freeAVI(s)
-  for i:=0 to 1 do if avi.AVIopen[i] then avi.CloseAVI(i);
+  for i:=0 to 1 do if avi.AVIopen[i] then avi.CloseAVI(i); // this is making things crash at the moment - don't know why yet
   // CloseDown ...
   CanClose:=true;
 end;
 
 procedure TfmMain.FormCreate(Sender: TObject);
-begin
-  StartingApp:=true;
-  PluginLoaded:=false;
-end;
-
-procedure TfmMain.FormActivate(Sender: TObject);
-var
-  i: integer;
 begin
   // fill parameter component arrays ...
   Sliders[0]:=tbParam0;
@@ -748,6 +739,8 @@ begin
   ParamDwords[5]:=lParam5Dword;
   ParamDwords[6]:=lParam6Dword;
   ParamDwords[7]:=lParam7Dword;
+  StartingApp:=true;
+  PluginLoaded:=false;
 end;
 
 procedure TfmMain.bSIbrowseClick(Sender: TObject);

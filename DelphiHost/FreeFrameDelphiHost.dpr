@@ -49,6 +49,7 @@ uses
 
 begin
   Application.Initialize;
+  Application.Title := 'FreeFrame Tester';
   Application.CreateForm(TfmMain, fmMain);
   Application.Run;
 end.
