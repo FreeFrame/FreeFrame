@@ -1,6 +1,7 @@
 // FreeFrame Open Video Plugin Prototype
 // Delphi Version
 
+// www.freeframe.org
 // boblists@brightonart.org
 
 {
@@ -16,7 +17,7 @@ Redistribution and use in source and binary forms, with or without modification,
      notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the
      distribution.
-   * Neither the name of the <ORGANIZATION> nor the names of its
+   * Neither the name of FreeFrame nor the names of its
      contributors may be used to endorse or promote products derived
      from this software without specific prior written permission.
 
@@ -87,7 +88,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1023;
+    APIMinorVersion:=1024;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -250,6 +251,7 @@ begin
     0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
     1: result:=pointer(1);   // 1=24bit - supported
     2: result:=pointer(0);   // 2=32bit
+    else result:=pointer(23)   // unknown PluginCapsIndex
   end;
 end;
 
