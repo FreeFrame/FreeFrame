@@ -24,18 +24,26 @@ Version
 
 ================================================================================
 
-0.5   - Introduced separate version number for this host app
-	This version is for FreeFrame API v0.1050
+0.5    - Introduced separate version number for this host app
+	 This version is for FreeFrame API v0.1050
 	
-	Auto Load AVI option
+  	 Auto Load AVI option
 	
-	Proper support for source plugins
+	 Proper support for source plugins
 
 ================================================================================
 
-================================================================================
+0.51  -  Auto Load Plugins on startup app
 
 ================================================================================
+
+0.52  -  Auto Load Plugins on select new plugin
+
+================================================================================
+
+0.53  -  Plugin Process Frame checkbox
+         Fixed issues with not de-initing on auto select new plugin from
+         drop down box
 
 ================================================================================
 ================================================================================

@@ -112,6 +112,7 @@ type
     cbAutoLoadAVI: TCheckBox;
     lAPIversion: TLabel;
     cbAutoLoadPlugin: TCheckBox;
+    cbPluginProcessFrames: TCheckBox;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -140,9 +141,11 @@ type
     procedure bStopClick(Sender: TObject);
     procedure bRunIn32bitClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
+    StartingApp: boolean;
     procedure GetPlugins;
     procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
     procedure ProfileAndProcessFrame(pFrame: pointer);     // This is the main frame processing procedure
@@ -153,7 +156,7 @@ type
   end;
 
 const
-  AppVersion: string='0.52';
+  AppVersion: string='0.53';
   APIversion: string='0.1050';
 
 var
@@ -385,6 +388,13 @@ procedure TfmMain.cbPluginsChange(Sender: TObject);
 var
   inifile: TInifile;
 begin
+  if cbAutoLoadPlugin.Checked and not startingApp then begin
+    // Stop Playing AVI
+    tPlay.Enabled:=false;
+    // DeInit Plugin
+    lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialise);
+    StartingApp:=false;
+  end;
   if cbPlugins.itemindex<0 then exit;
   plugMain:=nil;
   if currentPlug<>0 then freeLibrary(currentPlug);
@@ -398,6 +408,7 @@ begin
   end;
   if not assigned(plugMain) then showmessage('problem loading plugin');
   if cbAutoLoadPlugin.Checked then begin
+    // Load new plugin
     LoadPlugin;
     bPlayAndProcess.SetFocus;
   end;
@@ -589,7 +600,7 @@ begin
     end;
   end;
   // Process frame through plugin
-  ProfileAndProcessFrame(pFrameToProcess);
+  if cbPluginProcessFrames.Checked then ProfileAndProcessFrame(pFrameToProcess);
   // Display the frame
   DisplayFrame(lpbitmapinfoheader);
 end;
@@ -619,6 +630,11 @@ begin
   inifile.Free;
   // CloseDown ...
   CanClose:=true;
+end;
+
+procedure TfmMain.FormCreate(Sender: TObject);
+begin
+  StartingApp:=true;
 end;
 
 end.

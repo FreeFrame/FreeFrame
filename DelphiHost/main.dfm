@@ -12,6 +12,7 @@ object fmMain: TfmMain
   Font.Style = []
   OldCreateOrder = False
   OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -148,8 +149,8 @@ object fmMain: TfmMain
     Caption = 'Param3Dword'
   end
   object Label2: TLabel
-    Left = 80
-    Top = 376
+    Left = 56
+    Top = 368
     Width = 350
     Height = 13
     Caption = 
@@ -164,7 +165,7 @@ object fmMain: TfmMain
     Caption = 'Profile'
   end
   object Label3: TLabel
-    Left = 456
+    Left = 454
     Top = 376
     Width = 108
     Height = 13
@@ -205,7 +206,7 @@ object fmMain: TfmMain
     OnClick = bOpenAVIClick
   end
   object ebAVIFilename: TEdit
-    Left = 144
+    Left = 147
     Top = 97
     Width = 289
     Height = 21
@@ -464,7 +465,7 @@ object fmMain: TfmMain
   end
   object bGetAndProcess: TButton
     Left = 452
-    Top = 212
+    Top = 207
     Width = 113
     Height = 25
     Caption = '12 - Get and Process'
@@ -510,17 +511,17 @@ object fmMain: TfmMain
     end
   end
   object bPlayAndProcess: TButton
-    Left = 448
-    Top = 249
-    Width = 121
+    Left = 452
+    Top = 240
+    Width = 113
     Height = 25
-    Caption = '13 - Play and Process'
+    Caption = '13 - Play '
     TabOrder = 13
     OnClick = bPlayAndProcessClick
   end
   object bStop: TButton
     Left = 471
-    Top = 285
+    Top = 289
     Width = 75
     Height = 25
     Caption = '14 - Stop'
@@ -554,9 +555,19 @@ object fmMain: TfmMain
     Caption = 'Auto Load Plugin'
     TabOrder = 29
   end
+  object cbPluginProcessFrames: TCheckBox
+    Left = 444
+    Top = 269
+    Width = 129
+    Height = 17
+    Caption = 'Plugin Process Frames'
+    Checked = True
+    State = cbChecked
+    TabOrder = 30
+  end
   object odAVI: TOpenDialog
     Left = 392
-    Top = 40
+    Top = 48
   end
   object tPlay: TTimer
     Enabled = False
