@@ -99,6 +99,10 @@ SOURCE=.\FreeFrame.cpp
 
 SOURCE=.\FreeFrame.def
 # End Source File
+# Begin Source File
+
+SOURCE=.\FreeFrameSample.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 

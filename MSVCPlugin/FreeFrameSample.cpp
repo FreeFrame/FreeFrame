@@ -1,9 +1,11 @@
 ///////////////////////////////////////////////////////////////////////////////////
-// FreeFrame.h
+// FreeFrameSample.cpp
 //
-// FreeFrame Open Video Plugin Prototype
-// ANSI C Version
-
+// FreeFrame Open Video Plugin 
+// C Version
+//
+// Implementation of the Free Frame sample plugin
+//
 // www.freeframe.org
 // marcus@freeframe.org
 
@@ -28,40 +30,34 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-#ifndef __FREEFRAMESAMPLE_H__
-#define __FREEFRAMESAMPLE_H__
-
-//////////////////////////////////////////////////////////////////////////////////
-//
-// includes
-//
-
-
-#include "FreeFrame.h"
-
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
-// implementation specific definitions
+// includes 
 //
 
+#include "FreeFrameSample.h"
 
-typedef struct ParameterStructTag {
-	float value;
-	float defaultValue;
-	char displayValue[16];
-	char name[16];
-} ParameterStruct;
+#include <stdio.h>
 
-typedef struct VideoPixel24bitTag {
-	BYTE red;
-	BYTE green;
-	BYTE blue;
-} VideoPixel24bit;
+#define NUM_PARAMS 3
 
-
-///////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
 //
-// Function prototypes
+// Plugin Globals
+//
+// these are defined globally in this sample plugin for simplicities sake
+// Plugin developers should allocate memory from the heap for this stuff
+//
+
+PlugInfoStruct plugInfo;
+VideoInfoStruct videoInfo;
+ParameterStruct parameters[NUM_PARAMS];
+
+
+/////////////////////////////////////////////////////
+//
+// Sample Function implementation
+//
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getInfo
@@ -77,7 +73,20 @@ typedef struct VideoPixel24bitTag {
 //       the version defines the other fucntion codes that are supported
 //       supported function codes are listed in the documentation www.freeframe.org
 
-PlugInfoStruct*	getInfo();							
+PlugInfoStruct* getInfo() 
+{
+	plugInfo.APIMajorVersion = 0;
+	plugInfo.APIMinorVersion = 1050; // lets keep this in sync with the delphi host for now
+	char ID[5] = "MPB1";		 // this *must* be unique to your plugin 
+								 // see www.freeframe.org for a list of ID's already taken
+	char name[17] = "MSVC_Plugin_Base";
+	
+	memcpy(plugInfo.uniqueID, ID, 4);
+	memcpy(plugInfo.pluginName, name, 16);
+	plugInfo.pluginType = FF_EFFECT;
+
+	return &plugInfo;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // initialise
@@ -90,12 +99,37 @@ PlugInfoStruct*	getInfo();
 // FF_SUCCESS - success
 // non-zero - fail (error values to be defined)
 //
-// HOST:	This function *must* return before a call to processFrame.  Pointer to 
-//			videoInfoStruct *must* be valid until function returns
-// PLUGIN:  make a copy of the videoInfoStruct locally as pointer may not be valid after
-//			function returns
+// HOST: This function *must* return before a call to processFrame
 
-DWORD	initialise(VideoInfoStruct* videoInfo);								
+DWORD initialise(VideoInfoStruct* pVideoInfo)
+{
+	// make a copy of the VideoInfoStruct
+	videoInfo.frameWidth = pVideoInfo->frameWidth;
+	videoInfo.frameHeight = pVideoInfo->frameHeight;
+	videoInfo.bitDepth = pVideoInfo->bitDepth;
+
+	// this shouldn't happen if the host is checking the capabilities properly
+	if (videoInfo.bitDepth != 1)
+	{
+		return FF_FAIL;
+	}
+
+	// populate the parameters structs
+	parameters[0].defaultValue = 0.5f;
+	parameters[1].defaultValue = 0.5f;
+	parameters[2].defaultValue = 0.5f;
+	parameters[0].value = 0.5f;
+	parameters[1].value = 0.5f;
+	parameters[2].value = 0.5f;
+	char tempName1[17] = "red";
+	char tempName2[17] = "green";
+	char tempName3[17] = "blue";
+	memcpy(parameters[0].name, tempName1, 16);
+	memcpy(parameters[1].name, tempName2, 16);
+	memcpy(parameters[2].name, tempName3, 16);
+
+	return FF_SUCCESS;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // deinitialise
@@ -109,7 +143,10 @@ DWORD	initialise(VideoInfoStruct* videoInfo);
 //
 // HOST: This *must* be the last function called on the plugin
 
-DWORD	deInitialise();								
+DWORD deInitialise()
+{
+	return FF_SUCCESS;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getNumParameters 
@@ -121,7 +158,10 @@ DWORD	deInitialise();
 // FF_FAIL on error
 //
 
-DWORD	getNumParameters();							
+DWORD getNumParameters()
+{
+	return NUM_PARAMS;  
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameterName
@@ -136,7 +176,11 @@ DWORD	getNumParameters();
 // FF_FAIL on error
 //
 
-char*	getParameterName(DWORD index);				
+char* getParameterName(DWORD index)
+{
+	return parameters[index].name;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameterDefault
@@ -151,7 +195,10 @@ char*	getParameterName(DWORD index);
 // FF_FAIL on error
 //
 
-float	getParameterDefault(DWORD index);			
+float getParameterDefault(DWORD index)
+{
+	return parameters[index].defaultValue;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameterDisplay
@@ -167,7 +214,15 @@ float	getParameterDefault(DWORD index);
 // FF_FAIL on error
 //
 
-char*	getParameterDisplay(DWORD index);			
+char* getParameterDisplay(DWORD index)
+{
+	// fill the array with spaces first
+	for (int n=0; n<16; n++) {
+		parameters[index].displayValue[n] = ' ';
+	}
+	sprintf(parameters[index].displayValue, "%f",parameters[index].value);
+	return parameters[index].displayValue;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // setParameter
@@ -183,7 +238,11 @@ char*	getParameterDisplay(DWORD index);
 // FF_FAIL on error
 //
 
-DWORD	setParameter(SetParameterStruct* pParam);		
+DWORD setParameter(SetParameterStruct* pParam)
+{
+	parameters[pParam->index].value = pParam->value;
+	return FF_SUCCESS;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameter
@@ -198,12 +257,15 @@ DWORD	setParameter(SetParameterStruct* pParam);
 // FF_FAIL on error
 //
 
-float	getParameter(DWORD index);					
+float getParameter(DWORD index)
+{
+	return parameters[index].value;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // processFrame
 //
-// process a frame of video 'in place' 
+// process a frame of video
 //
 // parameters:
 // 32-bit pointer to byte array containing frame of video
@@ -212,16 +274,27 @@ float	getParameter(DWORD index);
 // FF_SUCCESS
 // FF_FAIL on error
 //
-// HOST: pFrame needs to be a valid pointer throughout this call as the plugin processes
-// the frame 'in place'.
 
-DWORD	processFrame(LPVOID pFrame);				
+DWORD processFrame(LPVOID pFrame)
+{
+	VideoPixel24bit* pPixel = (VideoPixel24bit*) pFrame;
+	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
+		for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
+// this is very slow! Should be a lookup table
+			pPixel->blue = (BYTE) (pPixel->blue * parameters[0].value);
+			pPixel->green = (BYTE) (pPixel->green * parameters[1].value);
+			pPixel->red = (BYTE) (pPixel->red * parameters[2].value);
+			pPixel++;
+		}
+	}
 
+	return FF_SUCCESS;
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getpluginCaps
 //
-// returns true pof false to indicate whether cappable of feature specified by index
+// returns true or false to indicate whether cappable of feature specified by index
 //
 // parameters:
 // DWORD index - index of parameter 
@@ -235,6 +308,16 @@ DWORD	processFrame(LPVOID pFrame);
 // FF_FALSE
 //
 
-DWORD	getPluginCaps(DWORD index);					
-
-#endif
+DWORD getPluginCaps(DWORD index)
+{
+	switch (index) {
+	case 0:
+		return FF_FALSE;
+	case 1:
+		return FF_TRUE;
+	case 2:
+		return FF_FALSE;
+	default:
+		return FF_FALSE;
+	}
+}
