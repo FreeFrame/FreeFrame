@@ -80,6 +80,34 @@ typedef char BYTE;
 #define FF_SETPARAMETER			8
 #define FF_GETPARAMETER			9
 #define FF_GETPLUGINCAPS		10
+#define FF_INSTANTIATE			11
+#define FF_DEINSTANTIATE		12
+#define FF_GETEXTENDEDINFO		13
+#define FF_PROCESSFRAMECOPY		14
+#define FF_GETPARAMETERTYPE		15
+
+#define FF_CAP_16BITVIDEO		0
+#define FF_CAP_24BITVIDEO		1
+#define FF_CAP_32BITVIDEO		2
+#define FF_CAP_PROCESSFRAMECOPY	3
+#define FF_CAP_MINIMUMINPUTFRAMES	10
+#define FF_CAP_MAXIMUMINPUTFRAMES	11
+#define FF_CAP_COPYORINPLACE		15
+
+#define FF_CAP_PREFER_NONE			0
+#define FF_CAP_PREFER_INPLACE		1
+#define FF_CAP_PREFER_COPY			2
+#define	FF_CAP_PREFER_BOTH			3
+
+#define FF_TYPE_BOOLEAN				0    
+#define FF_TYPE_EVENT				1
+#define FF_TYPE_RED					2 
+#define FF_TYPE_GREEN				3
+#define FF_TYPE_BLUE				4
+#define FF_TYPE_XPOS				5
+#define FF_TYPE_YPOS				6
+#define FF_TYPE_STANDARD			10
+#define FF_TYPE_TEXT				100
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -98,12 +126,27 @@ typedef struct PlugInfoStructTag {
 	DWORD	pluginType;				// Effect or source
 } PlugInfoStruct;
 
+typedef struct PlugExtendedInfoStructTag {
+	DWORD PluginMajorVersion;
+	DWORD PluginMinorVersion;
+	char* Description;
+	char* About;
+	DWORD FreeFrameExtendedDataSize;
+	void* FreeFrameExtendedDataBlock;
+} PlugExtendedInfoStruct;
+
 typedef struct VideoInfoStructTag {
 	DWORD frameWidth;				// width of frame in pixels
 	DWORD frameHeight;				// height of frame in pixels
 	DWORD bitDepth;					// enumerated indicator of bit depth of video 
 									// 0 = 16 bit 5-6-5   1 = 24bit packed   2 = 32bit
 } VideoInfoStruct;
+
+typedef struct ProcessFrameCopyStructTag {
+	DWORD numInputFrames;
+	void** InputFrames;
+	void* OutputFrame;
+} ProcessFrameCopyStruct;
 
 typedef struct SetParameterStructTag {
 	DWORD index;
