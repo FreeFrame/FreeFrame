@@ -68,7 +68,7 @@ int blockHeight;
 PlugInfoStruct* getInfo() 
 {
 	plugInfo.APIMajorVersion = 0;
-	plugInfo.APIMinorVersion = 1050; // lets keep this in sync with the delphi host for now
+	plugInfo.APIMinorVersion = 500; // lets keep this in sync with the delphi host for now
 	char ID[5] = "FFM1";		 // this *must* be unique to your plugin 
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "Mosaic 1";

@@ -69,7 +69,7 @@ PlugStruct plug;
 PlugInfoStruct* getInfo() 
 {
 	plug.plugInfo.APIMajorVersion = 0;
-	plug.plugInfo.APIMinorVersion = 1050; // lets keep this in sync with the delphi host for now
+	plug.plugInfo.APIMinorVersion = 500; // lets keep this in sync with the delphi host for now
 	char ID[5] = "Dif1";		 // this *must* be unique to your plugin 
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "Difference";
