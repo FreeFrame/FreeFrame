@@ -127,6 +127,8 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam);
 
+typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID);
+
 #elif LINUX
 
 LPVOID plugMain(DWORD functionCode,LPVOID pParam);
@@ -147,7 +149,7 @@ LPVOID plugMain(DWORD functionCode,LPVOID pParam);
 //       the version defines the other fucntion codes that are supported
 //       supported function codes are listed in the documentation www.freeframe.org
 
-PlugInfoStruct*	getInfo();							
+//PlugInfoStruct*	getInfo();							
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // initialise
@@ -165,7 +167,7 @@ PlugInfoStruct*	getInfo();
 // PLUGIN:  make a copy of the videoInfoStruct locally as pointer may not be valid after
 //			function returns
 
-DWORD	initialise(VideoInfoStruct* videoInfo);								
+//DWORD	initialise(VideoInfoStruct* videoInfo);								
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // deinitialise
@@ -179,7 +181,7 @@ DWORD	initialise(VideoInfoStruct* videoInfo);
 //
 // HOST: This *must* be the last function called on the plugin
 
-DWORD	deInitialise();								
+//DWORD	deInitialise();								
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getNumParameters 
@@ -191,7 +193,7 @@ DWORD	deInitialise();
 // FF_FAIL on error
 //
 
-DWORD	getNumParameters();							
+//DWORD	getNumParameters();							
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameterName
 //
@@ -205,7 +207,7 @@ DWORD	getNumParameters();
 // FF_FAIL on error
 //
 
-char*	getParameterName(DWORD index);				
+//char*	getParameterName(DWORD index);				
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameterDefault
@@ -220,7 +222,7 @@ char*	getParameterName(DWORD index);
 // FF_FAIL on error
 //
 
-float	getParameterDefault(DWORD index);			
+//float	getParameterDefault(DWORD index);			
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameterDisplay
@@ -236,7 +238,7 @@ float	getParameterDefault(DWORD index);
 // FF_FAIL on error
 //
 
-char*	getParameterDisplay(DWORD index);			
+//char*	getParameterDisplay(DWORD index);			
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // setParameter
@@ -252,7 +254,7 @@ char*	getParameterDisplay(DWORD index);
 // FF_FAIL on error
 //
 
-DWORD	setParameter(SetParameterStruct* pParam);		
+//DWORD	setParameter(SetParameterStruct* pParam);		
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getParameter
@@ -267,7 +269,7 @@ DWORD	setParameter(SetParameterStruct* pParam);
 // FF_FAIL on error
 //
 
-float	getParameter(DWORD index);					
+//float	getParameter(DWORD index);					
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // processFrame
@@ -284,7 +286,7 @@ float	getParameter(DWORD index);
 // HOST: pFrame needs to be a valid pointer throughout this call as the plugin processes
 // the frame 'in place'.
 
-DWORD	processFrame(LPVOID pFrame);				
+//DWORD	processFrame(LPVOID pFrame);				
 
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -304,6 +306,6 @@ DWORD	processFrame(LPVOID pFrame);
 // FF_FALSE
 //
 
-DWORD	getPluginCaps(DWORD index);					
+//DWORD	getPluginCaps(DWORD index);					
 
 #endif
