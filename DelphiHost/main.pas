@@ -138,7 +138,7 @@ type
   end;
 
 const
-  version: string='0.1026';
+  version: string='0.1027';
 
 var
   fmMain: TfmMain;
@@ -185,6 +185,7 @@ end;
 
 procedure TfmMain.bCloseAVIClick(Sender: TObject);
 begin
+  if tPlay.Enabled then tPlay.Enabled:=false;
   AVI.CloseAVI;
 end;
 
