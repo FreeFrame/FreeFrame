@@ -37,6 +37,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
   7              GetParameterDisplay
   8              SetParameter
   9              GetParameter
+  10             GetPluginCaps
   =============  ============
 }
 
@@ -54,7 +55,7 @@ library FreeFramePlugin;
   using PChar or ShortString parameters. }
 
 uses
-  SysUtils,                            
+  SysUtils,
   Classes,
   windows,
   pluginMain in 'pluginMain.pas';
@@ -98,6 +99,9 @@ begin
     end;
     9: begin
       result:=GetParameter(pParam);
+    end;
+    10: begin
+      result:=GetPluginCaps(pParam);
     end;
     else result:=pointer(8765);
   end;

@@ -64,6 +64,7 @@ function GetParameterDefault(pParam: pointer): pointer;
 function GetParameterDisplay(pParam: pointer): pointer;
 function SetParameter(pParam: pointer): pointer;
 function GetParameter(pParam: pointer): pointer;
+function GetPluginCaps(pParam: pointer): pointer;
 
 procedure InitLib;
 
@@ -86,7 +87,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1022;
+    APIMinorVersion:=1023;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -241,6 +242,15 @@ begin
   tempSingle:=ParameterArray[integer(pParam)];
   copymemory(@tempDWvalue,@tempSingle,4);
   result:=pointer(tempDWvalue);
+end;
+
+function GetPluginCaps(pParam: pointer): pointer;
+begin
+  case integer(pParam) of
+    0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
+    1: result:=pointer(1);   // 1=24bit - supported
+    2: result:=pointer(0);   // 2=32bit
+  end;
 end;
 
 end.
