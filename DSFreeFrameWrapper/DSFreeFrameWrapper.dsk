@@ -12,10 +12,34 @@ File_9=SourceModule,'X:\vvvv33\lib\core\PatchFactory.pas',0,1,1492,15,1501,0,0
 
 [Modules]
 Module0=X:\sourceforge\DSFreeFrameWrapper\DSFreeFrameWrapper.dpr
-Count=1
+Module1=X:\sourceforge\DSFreeFrameWrapper\PropPage.pas
+Module2=X:\sourceforge\DSFreeFrameWrapper\psvFolderDialog.pas
+Module3=X:\sourceforge\DSFreeFrameWrapper\main.pas
+Module4=D:\Dev\Delphi Additions\DSPack231\src\DSPack\BaseClass.pas
+Count=5
 EditWindowCount=1
 
 [X:\sourceforge\DSFreeFrameWrapper\DSFreeFrameWrapper.dpr]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[X:\sourceforge\DSFreeFrameWrapper\PropPage.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[X:\sourceforge\DSFreeFrameWrapper\psvFolderDialog.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[X:\sourceforge\DSFreeFrameWrapper\main.pas]
+ModuleType=SourceModule
+FormState=0
+FormOnTop=0
+
+[D:\Dev\Delphi Additions\DSPack231\src\DSPack\BaseClass.pas]
 ModuleType=SourceModule
 FormState=0
 FormOnTop=0
@@ -25,9 +49,13 @@ FormState=0
 FormOnTop=0
 
 [EditWindow0]
-ViewCount=1
+ViewCount=5
 CurrentView=0
 View0=0
+View1=1
+View2=2
+View3=3
+View4=4
 CodeExplorer=CodeExplorer@EditWindow0
 MessageView=MessageView@EditWindow0
 Create=1
@@ -52,7 +80,35 @@ BottomPanelData=00000400010000000B0000004D65737361676556696577000000000000000000
 [View0]
 Module=X:\sourceforge\DSFreeFrameWrapper\DSFreeFrameWrapper.dpr
 CursorX=1
-CursorY=1
+CursorY=34
+TopLine=1
+LeftCol=1
+
+[View1]
+Module=X:\sourceforge\DSFreeFrameWrapper\PropPage.pas
+CursorX=1
+CursorY=30
+TopLine=1
+LeftCol=1
+
+[View2]
+Module=X:\sourceforge\DSFreeFrameWrapper\psvFolderDialog.pas
+CursorX=37
+CursorY=7
+TopLine=1
+LeftCol=1
+
+[View3]
+Module=X:\sourceforge\DSFreeFrameWrapper\main.pas
+CursorX=1
+CursorY=32
+TopLine=1
+LeftCol=1
+
+[View4]
+Module=D:\Dev\Delphi Additions\DSPack231\src\DSPack\BaseClass.pas
+CursorX=13
+CursorY=9
 TopLine=1
 LeftCol=1
 
@@ -124,7 +180,7 @@ LRDockWidth=336
 Dockable=1
 SplitPos=85
 ArrangeBy=Name
-SelectedItem=
+SelectedItem=Caption
 ExpandedItems=
 HiddenCategories=Legacy
 ShowStatusBar=1
@@ -263,6 +319,6 @@ TBDockHeight=303
 LRDockWidth=438
 Dockable=1
 TabPosition=0
-ActiveTab=Project Manager
+ActiveTab=Grep Results
 TabDockClients=ProjectManager,MIDEXForm,PropertyInspector,CallStackWindow,WatchWindow,DebugLogView,fmGrepResults
 

@@ -1,16 +1,19 @@
 {~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}
-{  DSFreeFrameWrapper                                              }
-{    a filter for using freeframe (http://www.freeframe.org)       }
-{    plugins in a directshow graph                                 }
+{ DSFreeFrameWrapper                                               }
+{       a filter for using freeframe (http://www.freeframe.org)    }
+{       plugins in a directshow graph                              }
 {                                                                  }
 {                                                                  }
 { author: joreg@joreg.ath.cx                                       }
 {         http://joreg.ath.cx                                      }
 {                                                                  }
+{ based on: FreeFrame Delphi interface definitions by              }
+{           Russell Blakeborough - boblists@brightonart.org        }
 {                                                                  }
-{ in order to compile this filter you have to include the          }
-{ directshow baseclass translations for delphi provided by         }
-{ http://www.progdigy.com in the search paths.                     }
+{           directshow baseclass translations for delphi           }
+{           provided by http://www.progdigy.com                    }
+{           (need to be included in the searchpath if you          }
+{           want to compile this filter)                           }                                                                }
 {                                                                  }
 {                                                                  }
 { The contents of this file are used with permission, subject to   }
@@ -24,8 +27,7 @@
 { implied. See the License for the specific language governing     }
 { rights and limitations under the License.                        }
 {                                                                  }
-{ 12-12-2003: initial release                                      }
-{ 25-12-2003: added propertypage, improved stability               }
+{ change log see: DSFreeFrameWrapper.dpr                           }
 {~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~}
 
  {
