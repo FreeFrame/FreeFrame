@@ -20,3 +20,12 @@
 * rolled back bluelive commits of sat mar 29th 2003 - they don't work in MSVC
 
 * freeframe 1.0 upgrade
+
+
+***********************************************************************
+
+10th July 2004 Dan Kent (dan_syzygy) freeframe@syzygy-visuals.co.uk
+
+* added additional parameter checking
+
+* fixed 24bit RGB order problem
