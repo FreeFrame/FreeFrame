@@ -15,6 +15,9 @@ All rights reserved.
 FreeFrame 1.0 upgrade by Russell Blakeborough
 email: boblists@brightonart.org
 
+Colour order fixed by Dan Kent (10/07/2004)
+email: dan@syzygy-visuals.co.uk
+
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
    * Redistributions of source code must retain the above copyright
@@ -59,9 +62,9 @@ typedef struct ParamDynamicDataStructTag {
 } ParamDynamicDataStruct;
 
 typedef struct VideoPixel24bitTag {
-	BYTE red;
-	BYTE green;
 	BYTE blue;
+	BYTE green;
+	BYTE red;
 } VideoPixel24bit;
 
 typedef struct VideoPixel16bitTag {
