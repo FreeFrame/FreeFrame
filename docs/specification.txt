@@ -38,7 +38,8 @@ FreeFrame plugins are distributed and used as compiled shared objects (.so) in l
 Mac OSX, as Dynamically Linked Libraries (.dll) in Windows.
 
 FreeFrame Plugins export a single function: plugMain
-This is passed 2 values: a 32-bit Function Code and a 32-bit Input Value.
+This is passed 3 values: a 32-bit Function Code, a 32-bit Input Value and a 32-bit reserved 
+parameter (slated to become an instance identifier later...).
 It returns a 32-bit Output Value.
 The input values and output values have different types according to the function code.
 This may be implemented differently on different platforms in different languages, but the
