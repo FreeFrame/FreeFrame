@@ -38,6 +38,7 @@
  *
  */
 
+#include <stdio.h>
 typedef unsigned int DWORD;
 
 struct TPluginInfoStruct {
@@ -46,9 +47,21 @@ struct TPluginInfoStruct {
   char PluginUniqueID[4];
   char PluginName[16];
   DWORD PluginType; // woz effect / synth - could be live video, etc
-  DWORD BitDepth; // Supported bit depths
 };
 
+struct TSetParam {
+  DWORD index;
+  float value;
+};
+
+struct ProcessFrameStruct {
+  DWORD *src;
+  DWORD *dst;
+};
+
+struct FloatStruct {
+  float value;
+};
 struct TVideoInfoStruct {
   DWORD FrameWidth;
   DWORD FrameHeight;
@@ -56,16 +69,21 @@ struct TVideoInfoStruct {
 		     (I propose 1,2,4) */
 };
 
-TPluginInfoStruct *getInfo();
+
+TPluginInfoStruct *GetInfo();
+
 
 extern "C" {
+  DWORD *plugMain(DWORD,DWORD *); 
+}
 DWORD InitPlugin(TVideoInfoStruct *);
-DWORD DeInitPlugin(TVideoInfoStruct *);
+DWORD DeInitPlugin();
 DWORD ProcessFrame(DWORD *src,DWORD *dst);
 DWORD GetNumParameters();
-DWORD GetParameterName(DWORD);
-DWORD GetParameterDefault(DWORD);
-DWORD GetParameterDisplay(DWORD);
-DWORD SetParameter(DWORD);
-DWORD GetParameter(DWORD);
-}
+char *GetParameterName(DWORD);
+FloatStruct *GetParameterDefault(DWORD);
+char *GetParameterDisplay(DWORD);
+DWORD SetParameter(DWORD, float);
+FloatStruct *GetParameter(DWORD);
+DWORD GetPluginCaps(DWORD);
+
