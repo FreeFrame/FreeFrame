@@ -2,7 +2,7 @@ object fmMain: TfmMain
   Left = 34
   Top = 165
   Width = 917
-  Height = 450
+  Height = 531
   Caption = 'FreeFrame Delphi Host Test Container'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object fmMain: TfmMain
   TextHeight = 13
   object PaintBox1: TPaintBox
     Left = 152
-    Top = 128
+    Top = 152
     Width = 280
     Height = 210
   end
@@ -59,98 +59,98 @@ object fmMain: TfmMain
   end
   object lNumParameters: TLabel
     Left = 604
-    Top = 202
+    Top = 271
     Width = 60
     Height = 13
     Caption = 'Num Params'
   end
   object lParam0Name: TLabel
     Left = 584
-    Top = 220
+    Top = 289
     Width = 64
     Height = 13
     Caption = 'Param0Name'
   end
   object lParam1Name: TLabel
     Left = 584
-    Top = 271
+    Top = 340
     Width = 64
     Height = 13
     Caption = 'Param1Name'
   end
   object lParam2Name: TLabel
     Left = 584
-    Top = 321
+    Top = 390
     Width = 64
     Height = 13
     Caption = 'Param2Name'
   end
   object lParam3Name: TLabel
     Left = 584
-    Top = 369
+    Top = 438
     Width = 64
     Height = 13
     Caption = 'Param3Name'
   end
   object lParam0Value: TLabel
     Left = 732
-    Top = 233
+    Top = 302
     Width = 63
     Height = 13
     Caption = 'Param0Value'
   end
   object lParam1Value: TLabel
     Left = 732
-    Top = 284
+    Top = 353
     Width = 63
     Height = 13
     Caption = 'Param1Value'
   end
   object lParam2Value: TLabel
     Left = 732
-    Top = 334
+    Top = 403
     Width = 63
     Height = 13
     Caption = 'Param2Value'
   end
   object lParam3Value: TLabel
     Left = 732
-    Top = 382
+    Top = 451
     Width = 63
     Height = 13
     Caption = 'Param3Value'
   end
   object lParam0dword: TLabel
     Left = 733
-    Top = 249
+    Top = 318
     Width = 67
     Height = 13
     Caption = 'Param0Dword'
   end
   object lParam1dword: TLabel
     Left = 733
-    Top = 300
+    Top = 369
     Width = 67
     Height = 13
     Caption = 'Param1Dword'
   end
   object lParam2dword: TLabel
     Left = 733
-    Top = 350
+    Top = 419
     Width = 67
     Height = 13
     Caption = 'Param2Dword'
   end
   object lParam3dword: TLabel
     Left = 733
-    Top = 398
+    Top = 467
     Width = 67
     Height = 13
     Caption = 'Param3Dword'
   end
   object Label2: TLabel
     Left = 56
-    Top = 368
+    Top = 392
     Width = 350
     Height = 13
     Caption = 
@@ -173,7 +173,7 @@ object fmMain: TfmMain
   end
   object lAPIversion: TLabel
     Left = 23
-    Top = 397
+    Top = 421
     Width = 51
     Height = 13
     Caption = 'APIversion'
@@ -207,7 +207,7 @@ object fmMain: TfmMain
   end
   object ebAVIFilename: TEdit
     Left = 147
-    Top = 97
+    Top = 118
     Width = 289
     Height = 21
     TabOrder = 18
@@ -247,19 +247,19 @@ object fmMain: TfmMain
     Height = 105
     Caption = ' PluginInfoStruct '
     TabOrder = 19
-    object lPluginMajorVersion: TLabel
-      Left = 9
+    object lFFMajorVersion: TLabel
+      Left = 75
       Top = 19
-      Width = 63
+      Width = 18
       Height = 13
-      Caption = 'Major version'
+      Caption = '==='
     end
-    object lPluginMinorVersion: TLabel
-      Left = 9
+    object lFFMinorVersion: TLabel
+      Left = 75
       Top = 35
-      Width = 63
+      Width = 18
       Height = 13
-      Caption = 'Minor version'
+      Caption = '==='
     end
     object lPluginName: TLabel
       Left = 9
@@ -282,12 +282,26 @@ object fmMain: TfmMain
       Height = 13
       Caption = 'Unique ID'
     end
+    object Label4: TLabel
+      Left = 11
+      Top = 19
+      Width = 59
+      Height = 13
+      Caption = 'API Maj Ver:'
+    end
+    object Label5: TLabel
+      Left = 11
+      Top = 35
+      Width = 59
+      Height = 13
+      Caption = 'API Min Ver:'
+    end
   end
   object GroupBox2: TGroupBox
     Left = 256
     Top = 16
     Width = 113
-    Height = 73
+    Height = 87
     Caption = ' VideoInfoStruct '
     TabOrder = 20
     object lVideoWidth: TLabel
@@ -310,6 +324,13 @@ object fmMain: TfmMain
       Width = 44
       Height = 13
       Caption = 'Bit Depth'
+    end
+    object lOrientation: TLabel
+      Left = 13
+      Top = 64
+      Width = 51
+      Height = 13
+      Caption = 'Orientation'
     end
   end
   object bInitPlugin: TButton
@@ -360,7 +381,7 @@ object fmMain: TfmMain
   end
   object tbParam0: TTrackBar
     Left = 576
-    Top = 234
+    Top = 303
     Width = 150
     Height = 33
     Max = 100
@@ -377,7 +398,7 @@ object fmMain: TfmMain
   end
   object tbParam1: TTrackBar
     Left = 576
-    Top = 285
+    Top = 354
     Width = 150
     Height = 33
     Max = 100
@@ -394,7 +415,7 @@ object fmMain: TfmMain
   end
   object tbParam2: TTrackBar
     Left = 576
-    Top = 335
+    Top = 404
     Width = 150
     Height = 33
     Max = 100
@@ -411,7 +432,7 @@ object fmMain: TfmMain
   end
   object tbParam3: TTrackBar
     Left = 576
-    Top = 383
+    Top = 452
     Width = 150
     Height = 33
     Max = 100
@@ -473,7 +494,7 @@ object fmMain: TfmMain
   end
   object bBrowse: TButton
     Left = 152
-    Top = 64
+    Top = 85
     Width = 75
     Height = 25
     Caption = '0 - Browse'
@@ -563,6 +584,28 @@ object fmMain: TfmMain
     Checked = True
     State = cbChecked
     TabOrder = 30
+  end
+  object GroupBox3: TGroupBox
+    Left = 600
+    Top = 199
+    Width = 113
+    Height = 58
+    Caption = ' Plugin Version No. '
+    TabOrder = 31
+    object lPluginMajorVersion: TLabel
+      Left = 9
+      Top = 19
+      Width = 63
+      Height = 13
+      Caption = 'Major version'
+    end
+    object lPluginMinorVersion: TLabel
+      Left = 9
+      Top = 35
+      Width = 63
+      Height = 13
+      Caption = 'Minor version'
+    end
   end
   object odAVI: TOpenDialog
     Left = 392

@@ -62,8 +62,8 @@ type
     PaintBox1: TPaintBox;
     bgetInfo: TButton;
     GroupBox1: TGroupBox;
-    lPluginMajorVersion: TLabel;
-    lPluginMinorVersion: TLabel;
+    lFFMajorVersion: TLabel;
+    lFFMinorVersion: TLabel;
     lPluginName: TLabel;
     lPluginType: TLabel;
     lPluginUniqueID: TLabel;
@@ -120,6 +120,12 @@ type
     lAPIversion: TLabel;
     cbAutoLoadPlugin: TCheckBox;
     cbPluginProcessFrames: TCheckBox;
+    GroupBox3: TGroupBox;
+    lPluginMajorVersion: TLabel;
+    lPluginMinorVersion: TLabel;
+    lOrientation: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -163,8 +169,8 @@ type
   end;
 
 const
-  AppVersion: string='0.701';
-  APIversion: string='0.7';
+  AppVersion: string='0.751';
+  APIversion: string='0.750';
 
 var
   fmMain: TfmMain;
@@ -201,12 +207,17 @@ end;
 procedure TfmMain.bOpenAVIClick(Sender: TObject);
 begin
   PluginHost.VideoInfoStruct:=AVI.OpenAVI(ebAVIfilename.text);
+  // Display VideoInfoStruct ...
   lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct.FrameWidth);
   lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct.FrameHeight);
   case PluginHost.VideoInfoStruct.BitDepth of
     0: lBitDepth.Caption:='16 bit';
     1: lBitDepth.Caption:='24 bit';
     2: lBitDepth.Caption:='32 bit';
+  end;
+  case VideoInfoStruct.orientation of
+    1: lOrientation.caption:='Right Way Up';
+    2: lOrientation.caption:='Upside Down';
   end;
   AVIloaded:=true;
 end;
@@ -236,8 +247,8 @@ var
 begin
   // Get PluginInfoStruct and display its data
   lGetPluginInfo.caption:=inttostr(PluginHost.GetInfo);
-  lPluginMajorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMajorVersion);
-  lPluginMinorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMinorVersion);
+  lFFMajorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMajorVersion);
+  lFFMinorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMinorVersion);
   lPluginUniqueID.caption:=PluginHost.PluginInfoStruct.PluginUniqueID;
   lPluginName.caption:=PluginHost.PluginInfoStruct.PluginName;
   case PluginHost.PluginInfoStruct.PluginType of
@@ -254,6 +265,13 @@ begin
     lBitDepth.Caption:='32 bit';
     p32bitFrame:=Utils.Make32bitBuffer(VideoInfoStruct);
   end;
+  // Set Video orientation to upside down (VFW)
+  VideoInfoStruct.orientation:=2;
+  lOrientation.caption:='Upside Down';
+  // Get PluginExtendedInfoStruct and display its data
+  PluginHost.getExtendedInfo;
+  lPluginMajorVersion.caption:=inttostr(PluginHost.PluginExtendedInfoStruct.PluginMajorVersion);
+  lPluginMinorVersion.caption:=inttostr(PluginHost.PluginExtendedInfoStruct.PluginMinorVersion);
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);

@@ -94,6 +94,8 @@ begin
       // 1=24bit packed MCI standard
       // 2=32bit video, or 24bit dword aligned for the moment really, with Alpha running at 0
       if not VideoInfoStruct.BitDepth=2 then tempVideoInfoStruct.BitDepth:=2 else tempVideoInfoStruct.BitDepth:=1;
+      // Set Orientation Upsidedown
+      tempVideoInfoStruct.orientation:=2;
       result:=tempVideoInfoStruct;
       numframes := AVIStreamEnd(pVideoStream);
       exit;

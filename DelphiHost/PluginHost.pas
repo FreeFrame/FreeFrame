@@ -43,10 +43,19 @@ type
     PluginName: array [0..15] of char;       // 16 characters = 4 Dwords
     PluginType: dword; //(effect, source); // woz effect / synth - but could be other than synth eg. live video input
   end;
+  TPluginExtendedInfoStruct = record
+    PluginMajorVersion: dword;
+    PluginMinorVersion: dword;
+    pDescription: pointer;
+    pAbout: pointer;
+    FreeFrameExtendedDataSize: dword;
+    FreeFrameExtendedDataBlock: pointer;
+  end;
   TVideoInfoStruct = record
     FrameWidth: dword;
     FrameHeight: dword;
     BitDepth: dword;   // 0=16bit 1=24bit 2=32bit
+    orientation: dword;
   end;
   //TParameterNameStruct = array [0..2] of array [0..15] of char;
   pdw = ^dword;
@@ -64,9 +73,11 @@ type
   function GetPluginCaps(Param: dword): boolean;
   function InstantiatePlugin(VideoInfoStruct: TVideoInfoStruct): dword;
   function DeInstantiatePlugin(InstanceID: dword): dword;
+  function GetExtendedInfo: dword;
 
 var
   PluginInfoStruct: TPluginInfoStruct;
+  PluginExtendedInfoStruct: TPluginExtendedInfoStruct;
   VideoInfoStruct: TVideoInfoStruct;
   plugMain:tPlugMainFunction;
 
@@ -99,6 +110,26 @@ begin
     PluginType:=dword(pParam^);
   end;
   result:=dword(pPluginInfoStruct);
+end;
+
+function GetExtendedInfo: dword;
+var
+  pPluginExtendedInfoStruct: pointer;
+  pParam: pDword;
+begin
+  pPluginExtendedInfoStruct:=plugMain(13,nil,0);
+  if dword(pPluginExtendedInfoStruct)=$FFFFFFFF then begin
+    result:=$FFFFFFFF;
+    exit;
+  end;
+  with PluginExtendedInfoStruct do begin
+    pParam:=pPluginExtendedInfoStruct;
+    PluginMajorVersion:=dword(pParam^);
+    inc(pParam);
+    PluginMinorVersion:=dword(pParam^);
+    // text fields not implemented yet here
+  end;
+  result:=dword(pPluginExtendedInfoStruct);
 end;
 
 function InitialisePlugin: dword;
