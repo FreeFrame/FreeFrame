@@ -1,8 +1,8 @@
 object fmMain: TfmMain
-  Left = 227
-  Top = 227
-  Width = 917
-  Height = 726
+  Left = 208
+  Top = 348
+  Width = 952
+  Height = 409
   Caption = 'FreeFrame Delphi Host Test Container'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,273 +11,173 @@ object fmMain: TfmMain
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object PaintBox1: TPaintBox
     Left = 152
-    Top = 152
+    Top = 128
     Width = 280
     Height = 210
   end
+  object lTestContainerVersion: TLabel
+    Left = 15
+    Top = 357
+    Width = 34
+    Height = 13
+    Caption = 'version'
+  end
   object lInitPlugin: TLabel
-    Left = 496
-    Top = 140
+    Left = 485
+    Top = 128
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lDeInitPlugin: TLabel
     Left = 496
-    Top = 346
+    Top = 300
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lGetPluginInfo: TLabel
-    Left = 496
-    Top = 89
+    Left = 487
+    Top = 77
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object lProcessFrame: TLabel
-    Left = 496
-    Top = 181
+    Left = 486
+    Top = 177
     Width = 25
     Height = 13
     Caption = 'result'
   end
   object Label1: TLabel
-    Left = 396
+    Left = 448
     Top = 5
-    Width = 68
+    Width = 62
     Height = 13
-    Caption = 'Select Plugin :'
+    Caption = 'Select Plugin'
   end
-  object lNumParameters: TLabel
-    Left = 604
-    Top = 271
+  object lNumParamaters: TLabel
+    Left = 612
+    Top = 142
     Width = 60
     Height = 13
     Caption = 'Num Params'
   end
   object lParam0Name: TLabel
-    Left = 584
-    Top = 289
+    Left = 592
+    Top = 166
     Width = 64
     Height = 13
     Caption = 'Param0Name'
   end
   object lParam1Name: TLabel
-    Left = 584
-    Top = 340
+    Left = 592
+    Top = 217
     Width = 64
     Height = 13
     Caption = 'Param1Name'
   end
   object lParam2Name: TLabel
-    Left = 584
-    Top = 390
+    Left = 592
+    Top = 267
     Width = 64
     Height = 13
     Caption = 'Param2Name'
   end
   object lParam3Name: TLabel
-    Left = 584
-    Top = 438
+    Left = 592
+    Top = 315
     Width = 64
     Height = 13
     Caption = 'Param3Name'
   end
   object lParam0Value: TLabel
-    Left = 732
-    Top = 302
+    Left = 736
+    Top = 182
     Width = 63
     Height = 13
     Caption = 'Param0Value'
   end
   object lParam1Value: TLabel
-    Left = 732
-    Top = 353
+    Left = 736
+    Top = 233
     Width = 63
     Height = 13
     Caption = 'Param1Value'
   end
   object lParam2Value: TLabel
-    Left = 732
-    Top = 403
+    Left = 736
+    Top = 283
     Width = 63
     Height = 13
     Caption = 'Param2Value'
   end
   object lParam3Value: TLabel
-    Left = 732
-    Top = 451
+    Left = 736
+    Top = 331
     Width = 63
     Height = 13
     Caption = 'Param3Value'
   end
   object lParam0dword: TLabel
-    Left = 733
-    Top = 318
+    Left = 824
+    Top = 182
     Width = 67
     Height = 13
     Caption = 'Param0Dword'
   end
   object lParam1dword: TLabel
-    Left = 733
-    Top = 369
+    Left = 824
+    Top = 233
     Width = 67
     Height = 13
     Caption = 'Param1Dword'
   end
   object lParam2dword: TLabel
-    Left = 733
-    Top = 419
+    Left = 824
+    Top = 283
     Width = 67
     Height = 13
     Caption = 'Param2Dword'
   end
   object lParam3dword: TLabel
-    Left = 733
-    Top = 467
+    Left = 824
+    Top = 331
     Width = 67
     Height = 13
     Caption = 'Param3Dword'
   end
   object Label2: TLabel
-    Left = 56
-    Top = 392
+    Left = 120
+    Top = 352
     Width = 350
     Height = 13
     Caption = 
       'Plugins must be in a plugins subdirectory of the  directory wher' +
       'e this .exe is'
   end
-  object lProfile: TLabel
-    Left = 472
-    Top = 384
-    Width = 29
-    Height = 13
-    Caption = 'Profile'
-  end
-  object Label3: TLabel
-    Left = 454
-    Top = 368
-    Width = 108
-    Height = 13
-    Caption = 'Plugin processing time:'
-  end
-  object lAPIversion: TLabel
-    Left = 55
-    Top = 373
-    Width = 51
-    Height = 13
-    Caption = 'APIversion'
-  end
-  object lParam4Name: TLabel
-    Left = 584
-    Top = 487
-    Width = 64
-    Height = 13
-    Caption = 'Param4Name'
-  end
-  object lParam5Name: TLabel
-    Left = 584
-    Top = 538
-    Width = 64
-    Height = 13
-    Caption = 'Param5Name'
-  end
-  object lParam6Name: TLabel
-    Left = 584
-    Top = 588
-    Width = 64
-    Height = 13
-    Caption = 'Param6Name'
-  end
-  object lParam7Name: TLabel
-    Left = 584
-    Top = 636
-    Width = 64
-    Height = 13
-    Caption = 'Param7Name'
-  end
-  object lParam4Value: TLabel
-    Left = 732
-    Top = 500
-    Width = 63
-    Height = 13
-    Caption = 'Param4Value'
-  end
-  object lParam5Value: TLabel
-    Left = 732
-    Top = 551
-    Width = 63
-    Height = 13
-    Caption = 'Param5Value'
-  end
-  object lParam6value: TLabel
-    Left = 732
-    Top = 601
-    Width = 63
-    Height = 13
-    Caption = 'Param6Value'
-  end
-  object lParam7Value: TLabel
-    Left = 732
-    Top = 649
-    Width = 63
-    Height = 13
-    Caption = 'Param7Value'
-  end
-  object lParam4Dword: TLabel
-    Left = 733
-    Top = 516
-    Width = 67
-    Height = 13
-    Caption = 'Param4Dword'
-  end
-  object lParam5Dword: TLabel
-    Left = 733
-    Top = 567
-    Width = 67
-    Height = 13
-    Caption = 'Param5Dword'
-  end
-  object lParam6Dword: TLabel
-    Left = 733
-    Top = 617
-    Width = 67
-    Height = 13
-    Caption = 'Param6Dword'
-  end
-  object lParam7Dword: TLabel
-    Left = 733
-    Top = 665
-    Width = 67
-    Height = 13
-    Caption = 'Param7Dword'
-  end
   object bInit: TButton
     Left = 48
     Top = 32
     Width = 75
     Height = 25
-    Caption = '1 - Init AVI'
+    Caption = 'Init AVI'
     TabOrder = 1
     OnClick = bInitClick
   end
   object bDeInit: TButton
-    Left = 40
+    Left = 48
     Top = 280
-    Width = 83
+    Width = 75
     Height = 25
-    Caption = '16 - DeInit AVI'
-    TabOrder = 16
+    Caption = 'DeInit AVI'
+    TabOrder = 15
     OnClick = bDeInitClick
   end
   object bOpenAVI: TButton
@@ -285,16 +185,17 @@ object fmMain: TfmMain
     Top = 94
     Width = 75
     Height = 25
-    Caption = '2 - Open AVI'
+    Caption = 'Open AVI'
     TabOrder = 2
     OnClick = bOpenAVIClick
   end
   object ebAVIFilename: TEdit
-    Left = 147
-    Top = 118
+    Left = 152
+    Top = 81
     Width = 289
     Height = 21
-    TabOrder = 18
+    TabOrder = 14
+    Text = 'C:\gig av\03Lavalamp A\gloup1bottomviewx.avi'
     OnChange = ebAVIFilenameChange
   end
   object bCloseAVI: TButton
@@ -302,8 +203,8 @@ object fmMain: TfmMain
     Top = 218
     Width = 75
     Height = 25
-    Caption = '15 - Close AVI'
-    TabOrder = 15
+    Caption = 'Close AVI'
+    TabOrder = 13
     OnClick = bCloseAVIClick
   end
   object bGetFrame: TButton
@@ -311,39 +212,39 @@ object fmMain: TfmMain
     Top = 156
     Width = 75
     Height = 25
-    Caption = '3 - Get Frame'
+    Caption = 'Get Frame'
     TabOrder = 3
     OnClick = bGetFrameClick
   end
   object bgetInfo: TButton
-    Left = 463
-    Top = 64
-    Width = 91
+    Left = 472
+    Top = 52
+    Width = 75
     Height = 25
-    Caption = '4 - Plugin getInfo'
+    Caption = 'DLL getInfo'
     TabOrder = 4
     OnClick = bgetInfoClick
   end
   object GroupBox1: TGroupBox
     Left = 600
-    Top = 8
+    Top = 16
     Width = 113
     Height = 105
     Caption = ' PluginInfoStruct '
-    TabOrder = 19
-    object lFFMajorVersion: TLabel
-      Left = 75
+    TabOrder = 16
+    object lPluginMajorVersion: TLabel
+      Left = 9
       Top = 19
-      Width = 18
+      Width = 63
       Height = 13
-      Caption = '==='
+      Caption = 'Major version'
     end
-    object lFFMinorVersion: TLabel
-      Left = 75
+    object lPluginMinorVersion: TLabel
+      Left = 9
       Top = 35
-      Width = 18
+      Width = 63
       Height = 13
-      Caption = '==='
+      Caption = 'Minor version'
     end
     object lPluginName: TLabel
       Left = 9
@@ -366,28 +267,14 @@ object fmMain: TfmMain
       Height = 13
       Caption = 'Unique ID'
     end
-    object Label4: TLabel
-      Left = 11
-      Top = 19
-      Width = 59
-      Height = 13
-      Caption = 'API Maj Ver:'
-    end
-    object Label5: TLabel
-      Left = 11
-      Top = 35
-      Width = 59
-      Height = 13
-      Caption = 'API Min Ver:'
-    end
   end
   object GroupBox2: TGroupBox
     Left = 256
     Top = 16
     Width = 113
-    Height = 87
+    Height = 57
     Caption = ' VideoInfoStruct '
-    TabOrder = 20
+    TabOrder = 18
     object lVideoWidth: TLabel
       Left = 13
       Top = 16
@@ -402,70 +289,89 @@ object fmMain: TfmMain
       Height = 13
       Caption = 'Height'
     end
-    object lBitDepth: TLabel
-      Left = 13
-      Top = 48
-      Width = 44
-      Height = 13
-      Caption = 'Bit Depth'
-    end
-    object lOrientation: TLabel
-      Left = 13
-      Top = 64
-      Width = 51
-      Height = 13
-      Caption = 'Orientation'
-    end
   end
   object bInitPlugin: TButton
-    Left = 448
-    Top = 112
-    Width = 137
+    Left = 472
+    Top = 100
+    Width = 75
     Height = 25
-    Caption = '5 - Init && Instantiate Plugin'
+    Caption = 'Init Plugin'
     TabOrder = 5
     OnClick = bInitPluginClick
   end
   object bProcessFrame: TButton
-    Left = 456
-    Top = 154
-    Width = 105
+    Left = 467
+    Top = 150
+    Width = 89
     Height = 25
-    Caption = '11 - Process Frame'
+    Caption = 'Process Frame'
     TabOrder = 11
     OnClick = bProcessFrameClick
   end
   object bDeInitPlugin: TButton
-    Left = 440
-    Top = 316
-    Width = 129
+    Left = 480
+    Top = 271
+    Width = 75
     Height = 25
-    Caption = '17 - DeInit && DeInstance'
+    Caption = 'DeInit Plugin'
     TabOrder = 17
     OnClick = bDeInitPluginClick
   end
   object cbPlugins: TComboBox
-    Left = 392
+    Left = 429
     Top = 20
-    Width = 193
+    Width = 145
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 25
+    TabOrder = 23
     OnChange = cbPluginsChange
   end
   object bGetNumParameters: TButton
-    Left = 762
-    Top = 21
-    Width = 119
+    Left = 760
+    Top = 8
+    Width = 105
     Height = 25
-    Caption = '6 - GetNumParameters'
+    Caption = 'GetNumParamaters'
     TabOrder = 6
     OnClick = bGetNumParametersClick
   end
   object tbParam0: TTrackBar
-    Left = 576
-    Top = 303
+    Left = 584
+    Top = 178
+    Width = 150
+    Height = 33
+    Max = 100
+    Orientation = trHorizontal
+    Frequency = 10
+    Position = 0
+    SliderVisible = False
+    SelEnd = 0
+    SelStart = 0
+    TabOrder = 19
+    TickMarks = tmBottomRight
+    TickStyle = tsAuto
+    OnChange = tbParam0Change
+  end
+  object tbParam1: TTrackBar
+    Left = 584
+    Top = 229
+    Width = 150
+    Height = 33
+    Max = 100
+    Orientation = trHorizontal
+    Frequency = 10
+    Position = 0
+    SliderVisible = False
+    SelEnd = 0
+    SelStart = 0
+    TabOrder = 20
+    TickMarks = tmBottomRight
+    TickStyle = tsAuto
+  end
+  object tbParam2: TTrackBar
+    Left = 584
+    Top = 279
     Width = 150
     Height = 33
     Max = 100
@@ -478,12 +384,10 @@ object fmMain: TfmMain
     TabOrder = 21
     TickMarks = tmBottomRight
     TickStyle = tsAuto
-    OnChange = tbParamChange
   end
-  object tbParam1: TTrackBar
-    Tag = 1
-    Left = 576
-    Top = 354
+  object tbParam3: TTrackBar
+    Left = 584
+    Top = 327
     Width = 150
     Height = 33
     Max = 100
@@ -496,389 +400,63 @@ object fmMain: TfmMain
     TabOrder = 22
     TickMarks = tmBottomRight
     TickStyle = tsAuto
-    OnChange = tbParamChange
   end
-  object tbParam2: TTrackBar
-    Tag = 2
-    Left = 576
-    Top = 404
-    Width = 150
-    Height = 33
-    Max = 100
-    Orientation = trHorizontal
-    Frequency = 10
-    Position = 0
-    SliderVisible = False
-    SelEnd = 0
-    SelStart = 0
-    TabOrder = 23
-    TickMarks = tmBottomRight
-    TickStyle = tsAuto
-    OnChange = tbParamChange
-  end
-  object tbParam3: TTrackBar
-    Tag = 3
-    Left = 576
-    Top = 452
-    Width = 150
-    Height = 33
-    Max = 100
-    Orientation = trHorizontal
-    Frequency = 10
-    Position = 0
-    SliderVisible = False
-    SelEnd = 0
-    SelStart = 0
-    TabOrder = 24
-    TickMarks = tmBottomRight
-    TickStyle = tsAuto
-    OnChange = tbParamChange
-  end
-  object bGetParameterNames: TButton
-    Left = 762
-    Top = 62
-    Width = 119
+  object bGetParamaterNames: TButton
+    Left = 761
+    Top = 40
+    Width = 104
     Height = 25
-    Caption = '7 - Get Param Names'
+    Caption = 'Get Param Names'
     TabOrder = 7
-    OnClick = bGetParameterNamesClick
+    OnClick = bGetParamaterNamesClick
   end
   object bGetParamDefaults: TButton
-    Left = 762
-    Top = 102
-    Width = 119
+    Left = 761
+    Top = 72
+    Width = 104
     Height = 25
-    Caption = '8 - Get Param Defaults'
+    Caption = 'Get Param Defaults'
     TabOrder = 8
     OnClick = bGetParamDefaultsClick
   end
   object bGetParamDisplayValues: TButton
-    Left = 746
-    Top = 143
-    Width = 151
+    Left = 744
+    Top = 104
+    Width = 137
     Height = 25
-    Caption = '9 - Get Param Display Values'
+    Caption = 'Get Param Display Values'
     TabOrder = 9
     OnClick = bGetParamDisplayValuesClick
   end
   object bGetParamActualValues: TButton
-    Left = 746
-    Top = 183
-    Width = 151
+    Left = 744
+    Top = 138
+    Width = 137
     Height = 25
-    Caption = '10 - Get Param Actual Values'
+    Caption = 'Get Param Actual Values'
     TabOrder = 10
     OnClick = bGetParamActualValuesClick
   end
   object bGetAndProcess: TButton
-    Left = 452
-    Top = 199
-    Width = 113
+    Left = 456
+    Top = 200
+    Width = 105
     Height = 25
-    Caption = '12 - Get and Process'
+    Caption = 'Get and Process'
     TabOrder = 12
     OnClick = bGetAndProcessClick
   end
   object bBrowse: TButton
-    Left = 152
-    Top = 85
+    Left = 160
+    Top = 48
     Width = 75
     Height = 25
-    Caption = '0 - Browse'
+    Caption = 'Browse'
     TabOrder = 0
     OnClick = bBrowseClick
   end
-  object gbPluginCaps: TGroupBox
-    Left = 600
-    Top = 121
-    Width = 113
-    Height = 73
-    Caption = ' Plugin Capabilities '
-    TabOrder = 26
-    object l16bit: TLabel
-      Left = 9
-      Top = 19
-      Width = 26
-      Height = 13
-      Caption = '16 bit'
-    end
-    object l24bit: TLabel
-      Left = 9
-      Top = 35
-      Width = 26
-      Height = 13
-      Caption = '24 bit'
-    end
-    object l32bit: TLabel
-      Left = 9
-      Top = 50
-      Width = 26
-      Height = 13
-      Caption = '32 bit'
-    end
-  end
-  object bPlayAndProcess: TButton
-    Left = 452
-    Top = 232
-    Width = 113
-    Height = 25
-    Caption = '13 - Play '
-    TabOrder = 13
-    OnClick = bPlayAndProcessClick
-  end
-  object bStop: TButton
-    Left = 471
-    Top = 281
-    Width = 75
-    Height = 25
-    Caption = '14 - Stop'
-    TabOrder = 14
-    OnClick = bStopClick
-  end
-  object bRunIn32bit: TButton
-    Left = 128
-    Top = 24
-    Width = 113
-    Height = 25
-    Caption = 'Test Plugin in 32 bit'
-    TabOrder = 27
-    OnClick = bRunIn32bitClick
-  end
-  object cbAutoLoadAVI: TCheckBox
-    Left = 24
-    Top = 8
-    Width = 97
-    Height = 17
-    Caption = 'Auto Load AVI'
-    Checked = True
-    State = cbChecked
-    TabOrder = 28
-  end
-  object cbAutoLoadPlugin: TCheckBox
-    Left = 432
-    Top = 44
-    Width = 129
-    Height = 17
-    Caption = 'Auto Load Plugin'
-    TabOrder = 29
-  end
-  object cbPluginProcessFrames: TCheckBox
-    Left = 444
-    Top = 261
-    Width = 129
-    Height = 17
-    Caption = 'Plugin Process Frames'
-    Checked = True
-    State = cbChecked
-    TabOrder = 30
-  end
-  object GroupBox3: TGroupBox
-    Left = 600
-    Top = 199
-    Width = 113
-    Height = 58
-    Caption = ' Plugin Version No. '
-    TabOrder = 31
-    object lPluginMajorVersion: TLabel
-      Left = 9
-      Top = 19
-      Width = 63
-      Height = 13
-      Caption = 'Major version'
-    end
-    object lPluginMinorVersion: TLabel
-      Left = 9
-      Top = 35
-      Width = 63
-      Height = 13
-      Caption = 'Minor version'
-    end
-  end
-  object tbParam4: TTrackBar
-    Tag = 4
-    Left = 576
-    Top = 501
-    Width = 150
-    Height = 33
-    Max = 100
-    Orientation = trHorizontal
-    Frequency = 10
-    Position = 0
-    SliderVisible = False
-    SelEnd = 0
-    SelStart = 0
-    TabOrder = 32
-    TickMarks = tmBottomRight
-    TickStyle = tsAuto
-    OnChange = tbParamChange
-  end
-  object tbParam5: TTrackBar
-    Tag = 5
-    Left = 576
-    Top = 552
-    Width = 150
-    Height = 33
-    Max = 100
-    Orientation = trHorizontal
-    Frequency = 10
-    Position = 0
-    SliderVisible = False
-    SelEnd = 0
-    SelStart = 0
-    TabOrder = 33
-    TickMarks = tmBottomRight
-    TickStyle = tsAuto
-    OnChange = tbParamChange
-  end
-  object tbParam6: TTrackBar
-    Tag = 6
-    Left = 576
-    Top = 602
-    Width = 150
-    Height = 33
-    Max = 100
-    Orientation = trHorizontal
-    Frequency = 10
-    Position = 0
-    SliderVisible = False
-    SelEnd = 0
-    SelStart = 0
-    TabOrder = 34
-    TickMarks = tmBottomRight
-    TickStyle = tsAuto
-    OnChange = tbParamChange
-  end
-  object tbParam7: TTrackBar
-    Tag = 7
-    Left = 576
-    Top = 650
-    Width = 150
-    Height = 33
-    Max = 100
-    Orientation = trHorizontal
-    Frequency = 10
-    Position = 0
-    SliderVisible = False
-    SelEnd = 0
-    SelStart = 0
-    TabOrder = 35
-    TickMarks = tmBottomRight
-    TickStyle = tsAuto
-    OnChange = tbParamChange
-  end
-  object gbSecondInstance: TGroupBox
-    Left = 20
-    Top = 431
-    Width = 537
-    Height = 242
-    Caption = ' Second Plugin Instance Tester '
-    TabOrder = 36
-    object PaintBox2: TPaintBox
-      Left = 344
-      Top = 72
-      Width = 160
-      Height = 120
-    end
-    object lSIParam0Name: TLabel
-      Left = 45
-      Top = 165
-      Width = 64
-      Height = 13
-      Caption = 'Param0Name'
-    end
-    object lSIParam0value: TLabel
-      Left = 204
-      Top = 189
-      Width = 63
-      Height = 13
-      Caption = 'Param0Value'
-    end
-    object lSIparam0dword: TLabel
-      Left = 202
-      Top = 205
-      Width = 67
-      Height = 13
-      Caption = 'Param0Dword'
-    end
-    object ebSIfilename: TEdit
-      Left = 123
-      Top = 31
-      Width = 289
-      Height = 21
-      TabOrder = 0
-    end
-    object bSIbrowse: TButton
-      Left = 32
-      Top = 29
-      Width = 75
-      Height = 25
-      Caption = 'Browse'
-      TabOrder = 1
-      OnClick = bSIbrowseClick
-    end
-    object bSIrunUpAVI: TButton
-      Left = 19
-      Top = 85
-      Width = 97
-      Height = 25
-      Caption = 'Run up 2nd AVI'
-      TabOrder = 2
-      OnClick = bSIrunUpAVIClick
-    end
-    object bSIshutDownAVI: TButton
-      Left = 16
-      Top = 125
-      Width = 105
-      Height = 25
-      Caption = 'Shut Down 2nd AVI'
-      TabOrder = 3
-      OnClick = bSIshutDownAVIClick
-    end
-    object tbSISlider: TTrackBar
-      Left = 31
-      Top = 187
-      Width = 150
-      Height = 33
-      Max = 100
-      Orientation = trHorizontal
-      Frequency = 10
-      Position = 0
-      SliderVisible = False
-      SelEnd = 0
-      SelStart = 0
-      TabOrder = 4
-      TickMarks = tmBottomRight
-      TickStyle = tsAuto
-      OnChange = tbSISliderChange
-    end
-    object bRunUpSI: TButton
-      Left = 136
-      Top = 85
-      Width = 177
-      Height = 25
-      Caption = 'Run up Second Plugin Instance'
-      TabOrder = 5
-      OnClick = bRunUpSIClick
-    end
-    object bShutDownSI: TButton
-      Left = 128
-      Top = 125
-      Width = 201
-      Height = 25
-      Caption = 'Shut Down Second Plugin Instance'
-      TabOrder = 6
-      OnClick = bShutDownSIClick
-    end
-  end
   object odAVI: TOpenDialog
     Left = 392
-    Top = 48
-  end
-  object tPlay: TTimer
-    Enabled = False
-    Interval = 40
-    OnTimer = tPlayTimer
-    Left = 104
-    Top = 64
+    Top = 40
   end
 end

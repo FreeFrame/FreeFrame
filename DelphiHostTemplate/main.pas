@@ -87,15 +87,8 @@ type
     tPlay: TTimer;
     FreeFrame1: TFreeFrame;
     FreeFrame2: TFreeFrame;
-    cbEffect1Active: TCheckBox;
-    cbEffect2Active: TCheckBox;
-    lbPlugins: TListBox;
-    pPlugin1: TPanel;
-    Panel1: TPanel;
-    lbEffect1: TLabel;
-    lbEffect2: TLabel;
-    Shape1: TShape;
-    rgMouse0: TRadioGroup;
+    cbEffect1: TComboBox;
+    cbEffect2: TComboBox;
     procedure bInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
     procedure ebAVIFilenameChange(Sender: TObject);
@@ -108,15 +101,8 @@ type
     procedure bPlayAndProcessClick(Sender: TObject);
     procedure tPlayTimer(Sender: TObject);
     procedure bStopClick(Sender: TObject);
-    procedure SetEffect(freeframeindex,pluginindex : integer);
+    procedure SetEffect(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure pPluginDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
-    procedure pPluginDragDrop(Sender, Source: TObject; X, Y: Integer);
-    procedure pPlugin1Click(Sender: TObject);
-    procedure Panel1Click(Sender: TObject);
-    procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
@@ -139,8 +125,6 @@ var
   lpBitmapInfoHeader: pBitmapInfoHeader;
   NumParams: integer;
   Currenteffect : integer = 1;
-  //
-  gX,gY : integer;
 
 implementation
 
@@ -222,6 +206,7 @@ var
 begin
   if Currenteffect =1 then TempFreeFrame := FreeFrame1
   else  TempFreeFrame := FreeFrame2;
+  
   tempInt:=tbParam0.position;
   tempSingle:=tempInt/100;
   TempFreeFrame.SetParameter(0,tempSingle);
@@ -308,8 +293,8 @@ begin
   pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
 
   // Process frame through plugin
-  if ( (cbEffect1Active.Checked) and (FreeFrame1.currentPlug <> 0) ) then FreeFrame1.ProcessFrame(pBits); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
-  if ( (cbEffect2Active.Checked) and (FreeFrame2.currentPlug <> 0) ) then FreeFrame2.ProcessFrame(pBits);
+  if FreeFrame1.currentPlug <> 0 then FreeFrame1.ProcessFrame(pBits); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
+  if FreeFrame2.currentPlug <> 0 then FreeFrame2.ProcessFrame(pBits);
   // Display the frame
   DisplayFrame(lpbitmapinfoheader);
 end;
@@ -320,16 +305,16 @@ begin
 end;
 
 
-procedure TfmMain.SetEffect(freeframeindex,pluginindex : integer);
+procedure TfmMain.SetEffect(Sender: TObject);
 var
  TempFreeFrame : TFreeFrame;
 begin
-  Currenteffect := freeframeindex;
+  Currenteffect := (sender as TComboBox).Tag;
   
-  if freeframeindex = 1 then TempFreeFrame := FreeFrame1
+  if (sender as TComboBox).Tag = 1 then TempFreeFrame := FreeFrame1
   else TempFreeFrame := FreeFrame2;
 
-  TempFreeFrame.PluginIndex   := pluginindex;
+  TempFreeFrame.PluginIndex :=(sender as TComboBox).ItemIndex;
 
   lPluginMajorVersion.caption := inttostr(TempFreeFrame.PluginMajorVersion);
   lPluginMinorVersion.caption := inttostr(TempFreeFrame.PluginMinorVersion);
@@ -343,20 +328,15 @@ begin
   if TempFreeFrame.Support32bit then l32bit.Caption:='32bit: yes' else l32bit.Caption:='32bit: no';
   //
   NumParams:=TempFreeFrame.GetNumParameters;
-  tbParam0.Visible:=false;
-  tbParam1.Visible:=false;
-  tbParam2.Visible:=false;
-  tbParam3.Visible:=false;
-  if NumParams>0 then tbParam0.Visible:=true;
-  if NumParams>1 then tbParam1.Visible:=true;
-  if NumParams>2 then tbParam2.Visible:=true;
-  if NumParams>3 then tbParam3.Visible:=true;
+  tbParam0.SliderVisible:=false;
+  tbParam1.SliderVisible:=false;
+  tbParam2.SliderVisible:=false;
+  tbParam3.SliderVisible:=false;
+  if NumParams>0 then tbParam0.SliderVisible:=true;
+  if NumParams>1 then tbParam1.SliderVisible:=true;
+  if NumParams>2 then tbParam2.SliderVisible:=true;
+  if NumParams>3 then tbParam3.SliderVisible:=true;
   //
-  lParam0Name.caption:='';
-  lParam1Name.caption:='';
-  lParam2Name.caption:='';
-  lParam3Name.caption:='';
-
   if NumParams>0 then lParam0Name.caption:=TempFreeFrame.GetParameterName(0);
   if NumParams>1 then lParam1Name.caption:=TempFreeFrame.GetParameterName(1);
   if NumParams>2 then lParam2Name.caption:=TempFreeFrame.GetParameterName(2);
@@ -367,90 +347,35 @@ begin
   if NumParams>2 then tbParam2.Position:=round(TempFreeFrame.GetParameterDefault(2)*100);
   if NumParams>3 then tbParam3.Position:=round(TempFreeFrame.GetParameterDefault(3)*100);
   //
-  lParam0Value.caption:='';
-  lParam1Value.caption:='';
-  lParam2Value.caption:='';
-  lParam3Value.caption:='';
-
   if NumParams>0 then lParam0Value.caption:=TempFreeFrame.GetParameterDisplay(0);
   if NumParams>1 then lParam1Value.caption:=TempFreeFrame.GetParameterDisplay(1);
   if NumParams>2 then lParam2Value.caption:=TempFreeFrame.GetParameterDisplay(2);
   if NumParams>3 then lParam3Value.caption:=TempFreeFrame.GetParameterDisplay(3);
-
-  lParam0dword.caption:='';
-  lParam1dword.caption:='';
-  lParam2dword.caption:='';
-  lParam3dword.caption:='';
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
 var
  i : integer;
-
 begin
 
  FreeFrame1.Directory := extractfilepath(application.exename) + 'plugins\';
  FreeFrame1.Autoloadplugin := true;
  FreeFrame1.Getplugins;
- if not FreeFrame1.Pluginsfound then showmessage('no plugins found for freeframe 1');
+ if not FreeFrame1.Pluginsfound then showmessage('no plugins found');
 
  for i := 0 to FreeFrame1.Plugins.Count-1 do begin
-  lbPlugins.Items.AddObject(FreeFrame1.Plugins.Strings[i],FreeFrame1.Plugins.Objects[i]);
+  cbEffect1.Items.Add(FreeFrame1.Plugins.Strings[i]);
  end;
 
  FreeFrame2.Directory := extractfilepath(application.exename) + 'plugins\';
  FreeFrame2.Autoloadplugin := true;
  FreeFrame2.Getplugins;
- if not FreeFrame2.Pluginsfound then showmessage('no plugins found for freeframe 2');
- 
-end;
+ if not FreeFrame2.Pluginsfound then showmessage('no plugins found');
 
-procedure TfmMain.pPluginDragOver(Sender, Source: TObject; X, Y: Integer;
-  State: TDragState; var Accept: Boolean);
-begin
-  accept := false;
-  if (source as TObject) is TListBox then begin
-   accept := true;
-  end;
-end;
-
-procedure TfmMain.pPluginDragDrop(Sender, Source: TObject; X, Y: Integer);
-var
- pli : TPluginListInfo;
-begin
-  if (source as TObject) is TListBox then begin
-   if (Source as TListBox).ItemIndex = -1 then exit;
-   pli := TPluginListInfo((Source as TListBox).Items.Objects[(Source as TListBox).ItemIndex]);
-   (Sender as TPanel).Caption := pli.PluginName;
-
-   SetEffect((Sender as TPanel).Tag,(Source as TListBox).ItemIndex);
-  end;
-end;
-procedure TfmMain.pPlugin1Click(Sender: TObject);
-begin
- SetEffect((Sender as TPanel).Tag,FreeFrame1.PluginIndex);
-end;
-
-procedure TfmMain.Panel1Click(Sender: TObject);
-begin
-SetEffect((Sender as TPanel).Tag,FreeFrame2.PluginIndex);
-end;
-
-procedure TfmMain.PaintBox1MouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
-begin
- gX := x;
- gY := y;
-
- case rgMouse0.ItemIndex of
- 1 : tbParam0.Position := Round( (100 / PaintBox1.Width) * gX);
- 2 : tbParam1.Position := Round( (100 / PaintBox1.Height) * gY);
- 3 : begin
-      tbParam0.Position := Round( (100 / PaintBox1.Width) * gX);
-      tbParam1.Position := Round( (100 / PaintBox1.Height) * gY);
-     end;
+ for i := 0 to FreeFrame2.Plugins.Count-1 do begin
+  cbEffect2.Items.Add(FreeFrame2.Plugins.Strings[i]);
  end;
-
+ 
 end;
 
 end.

@@ -1,3 +1,0 @@
-LIBRARY			FreeFrame
-DESCRIPTION		'FreeFrame Test Plugin'
-EXPORTS			plugMain

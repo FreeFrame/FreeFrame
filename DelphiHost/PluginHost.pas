@@ -1,8 +1,6 @@
 // FreeFrame Open Video Plugin Host Test Container Prototype
 // Delphi Version
-// FreeFrame v0.70
 
-// www.freeframe.org
 // boblists@brightonart.org
 
 {
@@ -18,14 +16,28 @@ Redistribution and use in source and binary forms, with or without modification,
      notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the
      distribution.
-   * Neither the name of FreeFrame nor the names of its
+   * Neither the name of the <ORGANIZATION> nor the names of its
      contributors may be used to endorse or promote products derived
      from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-See specification.txt in the docs module on FreeFrame CVS at SourcdForge for uptodate function code table and function specifications
-
+  ==========================
+  Function Code Table
+  ==========================
+  Code           Function
+  =============  ============
+  0              GetInfo
+  1              Initialize
+  2              DeInitialize
+  3              ProcessFrame
+  4              GetNumParameters
+  5              GetParameterName
+  6              GetParameterDefault
+  7              GetParameterDisplay
+  8              SetParameter
+  9              GetParameter
+  =============  ============
 }
 
 unit PluginHost;
@@ -35,62 +47,57 @@ interface
 uses windows, sysutils;
 
 type
-  tPlugMainFunction = function(functionCode: dword; pParam: pointer; InstanceID: dword): pointer; stdcall;
-  TPluginInfoStruct = record
+    tPlugMainFunction = function(functionCode: dword; pParam: pointer): pointer; stdcall; 
+    TPluginInfoStruct = record
     APIMajorVersion: dword;
     APIMinorVersion: dword;
     PluginUniqueID: array [0..3] of char;   // 4 characters = 1 dword
     PluginName: array [0..15] of char;       // 16 characters = 4 Dwords
     PluginType: dword; //(effect, source); // woz effect / synth - but could be other than synth eg. live video input
   end;
-  TPluginExtendedInfoStruct = record
-    PluginMajorVersion: dword;
-    PluginMinorVersion: dword;
-    pDescription: pointer;
-    pAbout: pointer;
-    FreeFrameExtendedDataSize: dword;
-    FreeFrameExtendedDataBlock: pointer;
-  end;
   TVideoInfoStruct = record
     FrameWidth: dword;
     FrameHeight: dword;
-    BitDepth: dword;   // 0=16bit 1=24bit 2=32bit
-    orientation: dword;
   end;
-  //TParameterNameStruct = array [0..2] of array [0..15] of char;
+  //TParamaterNameStruct = array [0..2] of array [0..15] of char;
   pdw = ^dword;
 
-  function GetInfo: dword;
-  function InitialisePlugin: dword;
-  function DeInitialisePlugin: dword;
-  function ProcessFrame(pFrame: pointer; InstanceID: dword): dword;
-  function GetNumParameters: dword;
-  function GetParameterName(Param: dword): string;
-  function GetParameterDefault(Param: dword): single;
-  function GetParameterDisplay(Param: dword; InstanceID: dword): string;
-  function SetParameter(Param: dword; Value: single; InstanceID: dword): dword;
-  function GetParameter(Param: dword; InstanceID: dword): single;
-  function GetPluginCaps(Param: dword): boolean;
-  function InstantiatePlugin(VideoInfoStruct: TVideoInfoStruct): dword;
-  function DeInstantiatePlugin(InstanceID: dword): dword;
-  function GetExtendedInfo: dword;
+function GetPluginInfoStruct: dword;
+function InitPlugin: dword;
+function DeInitPlugin: dword;
+function ProcessFrame(pFrame: pointer): dword;
+function GetNumParamaters: dword;
+function GetParamaterName(Param: dword): string;
+function GetParamaterDefault(Param: dword): single;
+function GetParamaterDisplay(Param: dword): string;
+function SetParameter(Param: dword; Value: single): dword;
+function GetParameter(Param: dword): single;
+
+//function plugMain(functionCode: dword; pParam: pointer): pointer; cdecl; external 'ROPATestDll1.dll';
+//function plugMain(functionCode: dword; pParam: pointer): pointer; cdecl; external 'OpenVFXtest.dll';
+
 
 var
   PluginInfoStruct: TPluginInfoStruct;
-  PluginExtendedInfoStruct: TPluginExtendedInfoStruct;
-  VideoInfoStruct: array [0..1] of TVideoInfoStruct;   //now we have 2 possible instances
+  VideoInfoStruct: TVideoInfoStruct;
   plugMain:tPlugMainFunction;
 
 implementation
 
-function GetInfo: dword;
+function GetPluginInfoStruct: dword;
 var
+  dllReturnValue: pointer;
+  functionCode: dword;
   pPluginInfoStruct: pointer;
   pParam: PDword;
   tempPChar: PChar;
-  i: integer;
+  i,j: integer;
+  tempDword: dword;
+  tempString: string;
+  tempFCC: array [0..3] of char;
+  tempName: array [0..15] of char;
 begin
-  pPluginInfoStruct:=plugMain(0,nil,0);
+  pPluginInfoStruct:=plugMain(0,nil);
   with PluginInfoStruct do begin
     pParam:=pPluginInfoStruct;
     APIMajorVersion:=dword(pParam^);
@@ -112,58 +119,37 @@ begin
   result:=dword(pPluginInfoStruct);
 end;
 
-function GetExtendedInfo: dword;
+function InitPlugin: dword;
 var
-  pPluginExtendedInfoStruct: pointer;
-  pParam: pDword;
+  pVideoInfoStruct: pointer;
 begin
-  pPluginExtendedInfoStruct:=plugMain(13,nil,0);
-  if dword(pPluginExtendedInfoStruct)=$FFFFFFFF then begin
-    result:=$FFFFFFFF;
-    exit;
-  end;
-  with PluginExtendedInfoStruct do begin
-    pParam:=pPluginExtendedInfoStruct;
-    PluginMajorVersion:=dword(pParam^);
-    inc(pParam);
-    PluginMinorVersion:=dword(pParam^);
-    // text fields not implemented yet here
-  end;
-  result:=dword(pPluginExtendedInfoStruct);
+  pVideoInfoStruct:=pointer(@VideoInfoStruct);
+  result:=dword(plugMain(1,pVideoInfoStruct));
 end;
 
-function InitialisePlugin: dword;
+function DeInitPlugin: dword;
 begin
-  result:=dword(plugMain(1,nil,0));
+  result:=dword(plugMain(2,nil));
 end;
 
-function DeInitialisePlugin: dword;
+function ProcessFrame(pFrame: pointer): dword;
 begin
-  try
-    result:=dword(plugMain(2,nil,0));
-  except
-    result:=23;
-  end;
+  result:=dword(plugMain(3,pFrame));
 end;
 
-function ProcessFrame(pFrame: pointer; InstanceID: dword): dword;
+function GetNumParamaters: dword;
 begin
-  result:=dword(plugMain(3,pFrame,InstanceID));
+  result:=dword(plugMain(4,nil));
 end;
 
-function GetNumParameters: dword;
-begin
-  result:=dword(plugMain(4,nil,0));
-end;
-
-function GetParameterName(Param: dword): string;
+function GetParamaterName(Param: dword): string;
 var
   tempParamName: array [0..15] of char;
   tempSourcePointer: pdw;
   tempDestPointer: pdw;
   i: integer;
 begin
-  tempSourcePointer:=pdw(plugMain(5,pointer(Param),0));
+  tempSourcePointer:=pdw(plugMain(5,pointer(Param)));
   tempDestPointer:=pdw(@tempParamName);
   for i:=0 to 3 do begin
     tempDestPointer^:=tempSourcePointer^;
@@ -173,24 +159,24 @@ begin
   result:=string(tempParamName);
 end;
 
-function GetParameterDefault(Param: dword): single;
+function GetParamaterDefault(Param: dword): single;
 var
   tempSingle: single;
   tempDword: dword;
 begin
-  tempDword:=dword(plugMain(6,pointer(Param),0));
+  tempDword:=dword(plugMain(6,pointer(Param)));
   copymemory(@tempSingle,@tempDword,4);
   result:=tempSingle;
 end;
 
-function GetParameterDisplay(Param: dword; InstanceID: dword): string;
+function GetParamaterDisplay(Param: dword): string;
 var
   tempParamDisplay: array [0..15] of char;
   tempSourcePointer: pdw;
   tempDestPointer: pdw;
   i: integer;
 begin
-  tempSourcePointer:=pdw(plugMain(7,pointer(Param),InstanceID));
+  tempSourcePointer:=pdw(plugMain(7,pointer(Param)));
   tempDestPointer:=pdw(@tempParamDisplay);
   for i:=0 to 3 do begin
     tempDestPointer^:=tempSourcePointer^;
@@ -200,7 +186,7 @@ begin
   result:=string(tempParamDisplay);
 end;
 
-function SetParameter(Param: dword; Value: single; InstanceID: dword): dword;
+function SetParameter(Param: dword; Value: single): dword;
 type
   TSetParamStruct = array [0..1] of dword;
 var
@@ -210,43 +196,21 @@ begin
   SetParamStruct[0]:=Param;
   tempPdword:=@value;
   SetParamStruct[1]:=tempPdword^;
-  result:=dword(plugMain(8,@SetParamStruct, InstanceID));
+  result:=dword(plugMain(8,@SetParamStruct));
 end;
 
-function GetParameter(Param: dword; InstanceID: dword): single;
+function GetParameter(Param: dword): single;
 var
   tempDword: dword;
   tempPdword: pdw;
   tempSingle: single;
   tempPsingle: pointer;
 begin
-  tempdword:=dword(plugMain(9,pointer(Param),InstanceID));
+  tempdword:=dword(plugMain(9,pointer(Param)));
   tempPdword:=@tempDword;
   tempPsingle:=@tempSingle;
   copymemory(tempPsingle,tempPdword,4);
   result:=tempSingle;
-end;
-
-function GetPluginCaps(Param: dword): boolean;
-begin
-  result := false;
-  case dword(plugMain(10,pointer(Param),0)) of
-    0: result:=false;
-    1: result:=true;
-  end;
-end;
-
-function InstantiatePlugin(VideoInfoStruct: TVideoInfoStruct): dword;
-var
-  pVideoInfoStruct: pointer;
-begin
-  pVideoInfoStruct:=pointer(@VideoInfoStruct);
-  result:=dword(plugMain(11,pVideoInfoStruct,0));
-end;
-
-function DeInstantiatePlugin(InstanceID: dword): dword;
-begin
-  result:=dword(plugMain(12,nil,InstanceID));
 end;
 
 end.

@@ -1,6 +1,0 @@
-2002/11/13	Buddy Smith	<nullset@freeframe.org>
-	* LinuxPlugin/ - Created build environment for linux plugins.
-	  (compile with g++ -shared FILENAME.{c,cpp} -o Filename.so)
-2002/11/13	Buddy Smith	<nullset@freeframe.org>
-	* ChangeLog.txt: Created ChangeLog!
-

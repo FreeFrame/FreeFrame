@@ -1,6 +1,6 @@
 // FreeFrame Open Video Plugin Prototype
 // Delphi Version
-// www.freeframe.org
+
 // boblists@brightonart.org
 
 {
@@ -16,15 +16,32 @@ Redistribution and use in source and binary forms, with or without modification,
      notice, this list of conditions and the following disclaimer in
      the documentation and/or other materials provided with the
      distribution.
-   * Neither the name of FreeFrame nor the names of its
+   * Neither the name of the <ORGANIZATION> nor the names of its
      contributors may be used to endorse or promote products derived
      from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+  ==========================
+  Function Code Table
+  ==========================
+  Code           Function
+  =============  ============
+  0              GetInfo
+  1              Initialize
+  2              DeInitialize
+  3              ProcessFrame
+  4              GetNumParameters
+  5              GetParameterName
+  6              GetParameterDefault
+  7              GetParameterDisplay
+  8              SetParameter
+  9              GetParameter
+  =============  ============
 }
 
-library Tv;
+
+library FreeFramePlugin;
 
 { Important note about DLL memory management: ShareMem must be the
   first unit in your library's USES clause AND your project's (select
@@ -37,71 +54,57 @@ library Tv;
   using PChar or ShortString parameters. }
 
 uses
-  SysUtils,
+  SysUtils,                            
   Classes,
-
-  {$IFDEF LINUX}
-  Types,
-  {$ENDIF}
-
-  {$IFDEF WIN32}
   windows,
-  {$ENDIF}
-
   pluginMain in 'pluginMain.pas';
 
-{$R *.res}
+{$R *.RES}
 
 procedure InitLibrary;
 begin
   InitLib;
 end;
 
-//  todo: do all the casting here so these funcions take and return the right types
-
-function plugMain(functionCode: dword; pParam: pointer; reserved: dword): Pointer; stdcall;
+function plugMain(functionCode: dword; pParam: pointer): Pointer; stdcall;
 begin
   case functionCode of
     0: begin
       result:=GetInfo(pParam);
     end;
     1: begin
-      result:=Initialise(pParam);
+      result:=InitPlugin(pParam);
     end;
     2: begin
-      result:=DeInitialise(pParam);
+      result:=DeInitPlugin(pParam);
     end;
     3: begin
       result:=ProcessFrame(pParam);
     end;
     4: begin
-      result:=GetNumParameters(pParam);
+      result:=GetNumParamaters(pParam);
     end;
     5: begin
-      result:=GetParameterName(pParam);
+      result:=GetParamaterName(pParam);
     end;
     6: begin
-      result:=GetParameterDefault(pParam);
+      result:=GetParamaterDefault(pParam);
     end;
     7: begin
-      result:=GetParameterDisplay(pParam);
+      result:=GetParamaterDisplay(pParam);
     end;
     8: begin
-      result:=SetParameter(pParam);
+      result:=SetParamater(pParam);
     end;
     9: begin
       result:=GetParameter(pParam);
     end;
-    10: begin
-      result:=GetPluginCaps(pParam);
-    end;
-    else result:=pointer($FFFFFFFF);
+    else result:=pointer(8765);
   end;
 end;
 
 exports
   plugMain;
-
 begin
   InitLibrary;
 end.

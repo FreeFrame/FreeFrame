@@ -1,3 +1,0 @@
-LIBRARY			FF_Star
-DESCRIPTION		'Star Filter'
-EXPORTS			plugMain
