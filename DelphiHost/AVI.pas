@@ -40,10 +40,11 @@ unit AVI;
 
 interface
 
-uses VFW, pluginHost, winprocs; 
+uses VFW, pluginHost, winprocs;
 
 var
   AVIfilename: string;
+  AVIopen: array [0..1] of boolean;
 
 procedure Init;
 procedure DeInit;
@@ -53,13 +54,13 @@ function GetFrame(FrameNumber: integer; channel: integer): pointer;
 
 implementation
 
-uses main;
+uses main, utils;
 
 var
-  pAnAviFile: array [0..1] of PAviFile;          //The Avi File
-  pVideoStream: array [0..1] of pAviStream;      //Pointer to Video Stream
-  AGetframe: array [0..1] of pGetFrame;          //Pointer to GetFrame struct
-  HDrawDibDC: array [0..1] of HDrawDib;          //HDrawdib
+  pAnAviFile: array [0..1] of PAviFile;          // The Avi File
+  pVideoStream: array [0..1] of pAviStream;      // Pointer to Video Stream
+  AGetframe: array [0..1] of pGetFrame;          // Pointer to GetFrame struct
+  HDrawDibDC: array [0..1] of HDrawDib;          // HDrawdib
 
 procedure Init;
 begin
@@ -98,6 +99,7 @@ begin
       tempVideoInfoStruct.orientation:=2;
       result:=tempVideoInfoStruct;
       numframes[channel] := AVIStreamEnd(pVideoStream[channel]);
+      AVIopen[channel]:=true;
       exit;
     end;
   end;
@@ -105,15 +107,24 @@ end;
 
 procedure CloseAVI(channel: integer);
 begin
+  utils.setdelay(100);
   if AGetframe[channel] <> nil then AVIStreamGetFrameClose(AGetFrame[channel]);
+  utils.setdelay(100);
   if HDrawDibDC[channel] <> 0 then DrawDibClose(hDrawDibDC[channel]);
+  utils.setdelay(100);
   if pVideoStream[channel] <> nil then AVIStreamRelease(pVideoStream[channel]);
+  utils.setdelay(100);
   if pAnAviFile[channel] <> nil then AviFileRelease(pAnAviFile[channel]);
+  AVIopen[channel]:=false;
 end;
 
 function GetFrame(FrameNumber: integer; channel: integer): pointer;
 begin
   result := AVIStreamGetFrame(AGetframe[channel], FrameNumber);
 end;
+
+initialization
+  AVIopen[0]:=false;
+  AVIopen[1]:=false;
 
 end.

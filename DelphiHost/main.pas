@@ -205,7 +205,7 @@ type
   end;
 
 const
-  AppVersion: string='0.753';
+  AppVersion: string='0.754';
   APIversion: string='0.750';
 
 var
@@ -216,7 +216,6 @@ var
   bits: pointer;
   lpBitmapInfoHeader: pBitmapInfoHeader;
   NumParams: integer;
-  AVIloaded: array [0..1] of boolean;
   PluginLoaded: boolean;
   PluginInstance: array [0..1] of dword; // Plugin Instance Identifier
   InstanceReady: array [0..1] of boolean;
@@ -256,7 +255,6 @@ begin
     1: lOrientation.caption:='Right Way Up';
     2: lOrientation.caption:='Upside Down';
   end;
-  AVIloaded[0]:=true;
 end;
 
 procedure TfmMain.ebAVIFilenameChange(Sender: TObject);
@@ -316,7 +314,7 @@ var
   inifile: TInifile;
   tempFilename: string;
 begin
-  fmMain.Caption:='Delphi FreeFrame Test Container v'+AppVersion;
+  fmMain.Caption:='FreeFrame Test Container v'+AppVersion;
   lAPIversion.Caption:='for FreeFrame API v'+APIversion;
   // Get current AVI filename from freeframe.ini
   inifile:=Tinifile.Create('FreeFrame.ini');
@@ -345,11 +343,10 @@ begin
       inc(currentFrame[0]);
       lpbitmapinfoheader:=AVI.GetFrame(currentFrame[0],0);
       bGetInfo.SetFocus;
-      AVIloaded[0]:=true;
     end;
   end;
   getPlugins;
-  if (cbAutoLoadPlugin.Checked) and AVIloaded[0] and (cbPlugins.Items.Count>0) then begin
+  if (cbAutoLoadPlugin.Checked) and avi.AVIopen[0] and (cbPlugins.Items.Count>0) then begin
     LoadPlugin;
     bPlayAndProcess.SetFocus;
   end;
@@ -388,6 +385,7 @@ end;
 
 procedure TfmMain.bDeInitPluginClick(Sender: TObject);
 begin
+  if tPlay.Enabled then tPlay.Enabled:=false;
   DeInstantiatePlugin(PluginInstance[0]);
   lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialisePlugin);
 end;
@@ -465,7 +463,7 @@ begin
   end;
 end;
 
-procedure TfmMain.cbPluginsChange(Sender: TObject);
+procedure TfmMain.cbPluginsChange(Sender: TObject);     // to do: sort out this vs loadnew plugin
 var
   inifile: TInifile;
 begin
@@ -617,7 +615,7 @@ end;
 
 procedure TfmMain.bPlayAndProcessClick(Sender: TObject);
 begin
-  if not AVIloaded[0] then exit;
+  if not AVI.AVIopen[0] then exit;
   if not PluginLoaded then exit;
   currentFrame[0]:=0;
   tPlay.Enabled:=true;
@@ -687,17 +685,22 @@ var
   inifile: TInifile;
   i: integer;
 begin
+  // stop playing ... 
+  if tPlay.Enabled then tPlay.Enabled:=false;
   // Free the 32 bit framebuffer if we're in 32 bit mode ...
   if VideoInfoStruct[0].bitdepth=2 then utils.free32bitBuffer(p32bitFrame, VideoInfoStruct[0]);
+  // free plugin
   if pluginloaded then begin
     for i:=0 to 1 do if instanceReady[i] then DeInstantiatePlugin(PluginInstance[i]);
-    DeInitialisePlugin; 
+    DeInitialisePlugin;
   end;
   // Save Settings ...
   inifile:=Tinifile.Create('FreeFrame.ini');
   inifile.WriteBool('HostTestContainerSettings','AutoLoadAVI',cbAutoLoadAVI.checked);
   inifile.WriteBool('HostTestContainerSettings','AutoLoadPlugin',cbAutoLoadPlugin.Checked);
   inifile.Free;
+  // freeAVI(s)
+  for i:=0 to 1 do if avi.AVIopen[i] then avi.CloseAVI(i);
   // CloseDown ...
   CanClose:=true;
 end;
@@ -705,8 +708,6 @@ end;
 procedure TfmMain.FormCreate(Sender: TObject);
 begin
   StartingApp:=true;
-  AVIloaded[0]:=false;
-  AVIloaded[1]:=false;
   PluginLoaded:=false;
 end;
 
@@ -767,15 +768,12 @@ begin
     // OpenAVI ....
     PluginHost.VideoInfoStruct[1]:=AVI.OpenAVI(ebSIfilename.text,1);
 
-    AVIloaded[1]:=true;
-
 end;
 
 procedure TfmMain.bSIshutDownAVIClick(Sender: TObject);
 begin
 
   instanceReady[1]:=false;
-  AVIloaded[1]:=false;
 
   // close AVI
   if tPlay.Enabled then tPlay.Enabled:=false;

@@ -40,12 +40,16 @@ unit utils;
 
 interface
 
-uses windows, pluginHost;
+uses windows, pluginHost, sysutils, forms;
+
+const
+  msd=1000*60*60*24;  //miliseconds in a day - useful for timer intervals and tdatetimes
 
 function Make32bitBuffer(VideoInfoStruct: TVideoInfoStruct): pointer;
 function Convert24to32(pSourceFrame, pDestFrame: pointer; VideoInfoStruct: TVideoInfoStruct): dword;
 function Convert32to24(pSourceFrame, pDestFrame: pointer; VideoInfoStruct: TVideoInfoStruct): dword;
 function Free32bitBuffer(pFrame: pointer; VideoInfoStruct: TVideoInfoStruct): dword;
+procedure SetDelay(delayTime:integer);
 
 implementation
 
@@ -113,6 +117,18 @@ function Free32bitBuffer(pFrame: pointer; VideoInfoStruct: TVideoInfoStruct): dw
 begin
   FreeMem(pFrame,VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*4);
   Result:=0;
+end;
+
+procedure SetDelay(delayTime:integer);
+var
+  starttime,interval:tdatetime;
+begin
+  starttime:=now;
+  interval:=delaytime/msd;
+  while starttime+interval>now do begin
+    application.processmessages; // note: only for running on the main thread
+    sleep(1);
+  end;
 end;
 
 end.

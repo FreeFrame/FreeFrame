@@ -1,6 +1,6 @@
 object fmMain: TfmMain
-  Left = 34
-  Top = 165
+  Left = 300
+  Top = 350
   Width = 917
   Height = 726
   Caption = 'FreeFrame Delphi Host Test Container'
@@ -696,6 +696,7 @@ object fmMain: TfmMain
     end
   end
   object tbParam4: TTrackBar
+    Tag = 4
     Left = 576
     Top = 501
     Width = 150
@@ -713,7 +714,7 @@ object fmMain: TfmMain
     OnChange = tbParamChange
   end
   object tbParam5: TTrackBar
-    Tag = 1
+    Tag = 5
     Left = 576
     Top = 552
     Width = 150
@@ -731,7 +732,7 @@ object fmMain: TfmMain
     OnChange = tbParamChange
   end
   object tbParam6: TTrackBar
-    Tag = 2
+    Tag = 6
     Left = 576
     Top = 602
     Width = 150
@@ -749,7 +750,7 @@ object fmMain: TfmMain
     OnChange = tbParamChange
   end
   object tbParam7: TTrackBar
-    Tag = 3
+    Tag = 7
     Left = 576
     Top = 650
     Width = 150
