@@ -43,10 +43,10 @@ type
     FrameWidth: dword;
     FrameHeight: dword;
   end;
-  TParamaterNameStruct = record
-    Paramater0Name: array [0..15] of char;
-    Paramater1Name: array [0..15] of char;
-    Paramater2Name: array [0..15] of char;
+  TParameterNameStruct = record
+    Parameter0Name: array [0..15] of char;
+    Parameter1Name: array [0..15] of char;
+    Parameter2Name: array [0..15] of char;
   end;
 
   pdw = ^Dword;
@@ -57,27 +57,27 @@ function GetInfo(pParam: pointer): pointer;
 function InitPlugin(pParam: pointer): pointer;
 function DeInitPlugin(pParam: pointer): pointer;
 function ProcessFrame(pParam: pointer): pointer;
-function GetNumParamaters(pParam: pointer): pointer;
-function GetParamaterName(pParam: pointer): pointer;
-function GetParamaterDefault(pParam: pointer): pointer;
-function GetParamaterDisplay(pParam: pointer): pointer;
-function SetParamater(pParam: pointer): pointer;
+function GetNumParameters(pParam: pointer): pointer;
+function GetParameterName(pParam: pointer): pointer;
+function GetParameterDefault(pParam: pointer): pointer;
+function GetParameterDisplay(pParam: pointer): pointer;
+function SetParameter(pParam: pointer): pointer;
 function GetParameter(pParam: pointer): pointer;
 
 procedure InitLib;
 
 const
-  NumParamaters: dword = 3;
+  NumParameters: dword = 3;
 
 var
   PluginInfoStruct: TPluginInfoStruct;
   pPluginInfoBlock: pdw;
   VideoInfoStruct: TVideoInfoStruct;
   pVideoInfoStruct: pDw;
-  ParamaterNameStruct: TParamaterNameStruct;
-  pParamaterNameStruct: pointer;
-  ParamaterArray: array [0..3] of single;
-  ParamaterDisplayValue: array [0..15] of char; // this is the current transfer value for when a paramater display value is requested
+  ParameterNameStruct: TParameterNameStruct;
+  pParameterNameStruct: pointer;
+  ParameterArray: array [0..3] of single;
+  ParameterDisplayValue: array [0..15] of char; // this is the current transfer value for when a parameter display value is requested
 
 implementation
 
@@ -90,10 +90,10 @@ begin
     PluginName:='PascalTestPlugin';
     PluginType:=0;
   end;
-  ParamaterNameStruct.Paramater0Name:='Brightness      ';
-  ParamaterNameStruct.Paramater1Name:='unused param1   ';
-  ParamaterNameStruct.Paramater2Name:='unused param2   ';
-  //ParamaterNameStruct[3]:='sdkYYYYYYYYefwke';
+  ParameterNameStruct.Parameter0Name:='Brightness      ';
+  ParameterNameStruct.Parameter1Name:='unused param1   ';
+  ParameterNameStruct.Parameter2Name:='unused param2   ';
+  //ParameterNameStruct[3]:='sdkYYYYYYYYefwke';
 end;
 
 function GetInfo(pParam: pointer): pointer;
@@ -127,30 +127,30 @@ var
 begin
   tempPbyte:= pb(pParam);
   for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
-    tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParamaterArray[0]));
+    tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
     inc(tempPbyte);
   end;
   result:=pointer(VideoInfoStruct.FrameWidth);
 end;
 
-function GetNumParamaters(pParam: pointer): pointer;
+function GetNumParameters(pParam: pointer): pointer;
 begin
-  result:=pointer(NumParamaters);
+  result:=pointer(NumParameters);
 end;
 
-function GetParamaterName(pParam: pointer): pointer;
+function GetParameterName(pParam: pointer): pointer;
 begin
-  pParamaterNameStruct:=@ParamaterNameStruct;
+  pParameterNameStruct:=@ParameterNameStruct;
   case integer(pParam) of
-    0: result:=pParamaterNameStruct;
-    1: result:=pointer(integer(pParamaterNameStruct)+16);
-    2: result:=pointer(integer(pParamaterNameStruct)+32);
-    3: result:=pointer(integer(pParamaterNameStruct)+48);
+    0: result:=pParameterNameStruct;
+    1: result:=pointer(integer(pParameterNameStruct)+16);
+    2: result:=pointer(integer(pParameterNameStruct)+32);
+    3: result:=pointer(integer(pParameterNameStruct)+48);
     else result:=pointer(999);
   end;
 end;
 
-function GetParamaterDefault(pParam: pointer): pointer;
+function GetParameterDefault(pParam: pointer): pointer;
 var
   tempSingle: single;
 begin
@@ -172,33 +172,33 @@ begin
   end;
 end;
 
-function GetParamaterDisplay(pParam: pointer): pointer;
+function GetParameterDisplay(pParam: pointer): pointer;
 begin
   case integer(pParam) of
     0: begin
-      ParamaterDisplayValue:='Brightness Value';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='Brightness Value';
+      result:=@ParameterDisplayValue;
     end;
     1: begin
-      ParamaterDisplayValue:='dummy value1    ';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='dummy value1    ';
+      result:=@ParameterDisplayValue;
     end;
     2: begin
-      ParamaterDisplayValue:='dummy value2    ';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='dummy value2    ';
+      result:=@ParameterDisplayValue;
     end;
     3: begin
-      ParamaterDisplayValue:='dummy value3    ';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='dummy value3    ';
+      result:=@ParameterDisplayValue;
     end;
     else begin
-      ParamaterDisplayValue:='9999999999999999';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='9999999999999999';
+      result:=@ParameterDisplayValue;
     end;
   end;
 end;
 
-function SetParamater(pParam: pointer): pointer;
+function SetParameter(pParam: pointer): pointer;
 var
   tempPDWparam, tempPDWvalue: pdw;
 begin
@@ -207,20 +207,20 @@ begin
   inc(tempPDWvalue);
   case integer(tempPDWparam^) of
     0: begin
-      copymemory(@ParamaterArray[0],tempPDWvalue,4);
-      //ParamaterArray[0]:=tempPDWvalue^;
+      copymemory(@ParameterArray[0],tempPDWvalue,4);
+      //ParameterArray[0]:=tempPDWvalue^;
       result:=pointer(439);
     end;
     1: begin
-      ParamaterArray[1]:=tempPDWvalue^;
+      ParameterArray[1]:=tempPDWvalue^;
       result:=pointer(751);
     end;
     2: begin
-      ParamaterArray[2]:=tempPDWvalue^;
+      ParameterArray[2]:=tempPDWvalue^;
       result:=pointer(752);
     end;
     3: begin
-      ParamaterArray[3]:=tempPDWvalue^;
+      ParameterArray[3]:=tempPDWvalue^;
       result:=pointer(753);
     end;
     else result:=pointer(4368);
@@ -232,7 +232,7 @@ var
   tempSingle: single;
   tempDWvalue: dword;
 begin
-  tempSingle:=ParamaterArray[integer(pParam)];
+  tempSingle:=ParameterArray[integer(pParam)];
   copymemory(@tempDWvalue,@tempSingle,4);
   result:=pointer(tempDWvalue);
 end;

@@ -59,17 +59,17 @@ type
     FrameWidth: dword;
     FrameHeight: dword;
   end;
-  //TParamaterNameStruct = array [0..2] of array [0..15] of char;
+  //TParameterNameStruct = array [0..2] of array [0..15] of char;
   pdw = ^dword;
 
 function GetPluginInfoStruct: dword;
 function InitPlugin: dword;
 function DeInitPlugin: dword;
 function ProcessFrame(pFrame: pointer): dword;
-function GetNumParamaters: dword;
-function GetParamaterName(Param: dword): string;
-function GetParamaterDefault(Param: dword): single;
-function GetParamaterDisplay(Param: dword): string;
+function GetNumParameters: dword;
+function GetParameterName(Param: dword): string;
+function GetParameterDefault(Param: dword): single;
+function GetParameterDisplay(Param: dword): string;
 function SetParameter(Param: dword; Value: single): dword;
 function GetParameter(Param: dword): single;
 
@@ -137,12 +137,12 @@ begin
   result:=dword(plugMain(3,pFrame));
 end;
 
-function GetNumParamaters: dword;
+function GetNumParameters: dword;
 begin
   result:=dword(plugMain(4,nil));
 end;
 
-function GetParamaterName(Param: dword): string;
+function GetParameterName(Param: dword): string;
 var
   tempParamName: array [0..15] of char;
   tempSourcePointer: pdw;
@@ -159,7 +159,7 @@ begin
   result:=string(tempParamName);
 end;
 
-function GetParamaterDefault(Param: dword): single;
+function GetParameterDefault(Param: dword): single;
 var
   tempSingle: single;
   tempDword: dword;
@@ -169,7 +169,7 @@ begin
   result:=tempSingle;
 end;
 
-function GetParamaterDisplay(Param: dword): string;
+function GetParameterDisplay(Param: dword): string;
 var
   tempParamDisplay: array [0..15] of char;
   tempSourcePointer: pdw;

@@ -82,19 +82,19 @@ begin
       result:=ProcessFrame(pParam);
     end;
     4: begin
-      result:=GetNumParamaters(pParam);
+      result:=GetNumParameters(pParam);
     end;
     5: begin
-      result:=GetParamaterName(pParam);
+      result:=GetParameterName(pParam);
     end;
     6: begin
-      result:=GetParamaterDefault(pParam);
+      result:=GetParameterDefault(pParam);
     end;
     7: begin
-      result:=GetParamaterDisplay(pParam);
+      result:=GetParameterDisplay(pParam);
     end;
     8: begin
-      result:=SetParamater(pParam);
+      result:=SetParameter(pParam);
     end;
     9: begin
       result:=GetParameter(pParam);

@@ -62,7 +62,7 @@ object fmMain: TfmMain
     Height = 13
     Caption = 'Select Plugin'
   end
-  object lNumParamaters: TLabel
+  object lNumParameters: TLabel
     Left = 612
     Top = 142
     Width = 60
@@ -332,7 +332,7 @@ object fmMain: TfmMain
     Top = 8
     Width = 105
     Height = 25
-    Caption = 'GetNumParamaters'
+    Caption = 'GetNumParameters'
     TabOrder = 6
     OnClick = bGetNumParametersClick
   end
@@ -401,14 +401,14 @@ object fmMain: TfmMain
     TickMarks = tmBottomRight
     TickStyle = tsAuto
   end
-  object bGetParamaterNames: TButton
+  object bGetParameterNames: TButton
     Left = 761
     Top = 40
     Width = 104
     Height = 25
     Caption = 'Get Param Names'
     TabOrder = 7
-    OnClick = bGetParamaterNamesClick
+    OnClick = bGetParameterNamesClick
   end
   object bGetParamDefaults: TButton
     Left = 761

@@ -64,12 +64,12 @@ type
     cbPlugins: TComboBox;
     Label1: TLabel;
     bGetNumParameters: TButton;
-    lNumParamaters: TLabel;
+    lNumParameters: TLabel;
     tbParam0: TTrackBar;
     tbParam1: TTrackBar;
     tbParam2: TTrackBar;
     tbParam3: TTrackBar;
-    bGetParamaterNames: TButton;
+    bGetParameterNames: TButton;
     lParam0Name: TLabel;
     lParam1Name: TLabel;
     lParam2Name: TLabel;
@@ -102,7 +102,7 @@ type
     procedure bProcessFrameClick(Sender: TObject);
     procedure cbPluginsChange(Sender: TObject);
     procedure bGetNumParametersClick(Sender: TObject);
-    procedure bGetParamaterNamesClick(Sender: TObject);
+    procedure bGetParameterNamesClick(Sender: TObject);
     procedure bGetParamDefaultsClick(Sender: TObject);
     procedure bGetParamDisplayValuesClick(Sender: TObject);
     procedure tbParam0Change(Sender: TObject);
@@ -285,8 +285,8 @@ end;
 
 procedure TfmMain.bGetNumParametersClick(Sender: TObject);
 begin
-  NumParams:=PluginHost.GetNumParamaters;
-  lNumParamaters.caption:='Num Params: '+inttostr(NumParams);
+  NumParams:=PluginHost.GetNumParameters;
+  lNumParameters.caption:='Num Params: '+inttostr(NumParams);
   tbParam0.SliderVisible:=false;
   tbParam1.SliderVisible:=false;
   tbParam2.SliderVisible:=false;
@@ -297,28 +297,28 @@ begin
   if NumParams>3 then tbParam3.SliderVisible:=true;
 end;
 
-procedure TfmMain.bGetParamaterNamesClick(Sender: TObject);
+procedure TfmMain.bGetParameterNamesClick(Sender: TObject);
 begin
-  if NumParams>0 then lParam0Name.caption:=GetParamaterName(0);
-  if NumParams>1 then lParam1Name.caption:=GetParamaterName(1);
-  if NumParams>2 then lParam2Name.caption:=GetParamaterName(2);
-  if NumParams>3 then lParam3Name.caption:=GetParamaterName(3);
+  if NumParams>0 then lParam0Name.caption:=GetParameterName(0);
+  if NumParams>1 then lParam1Name.caption:=GetParameterName(1);
+  if NumParams>2 then lParam2Name.caption:=GetParameterName(2);
+  if NumParams>3 then lParam3Name.caption:=GetParameterName(3);
 end;
 
 procedure TfmMain.bGetParamDefaultsClick(Sender: TObject);
 begin
-  if NumParams>0 then tbParam0.Position:=round(PluginHost.GetParamaterDefault(0)*100);
-  if NumParams>1 then tbParam1.Position:=round(PluginHost.GetParamaterDefault(1)*100);
-  if NumParams>2 then tbParam2.Position:=round(PluginHost.GetParamaterDefault(2)*100);
-  if NumParams>3 then tbParam3.Position:=round(PluginHost.GetParamaterDefault(3)*100);
+  if NumParams>0 then tbParam0.Position:=round(PluginHost.GetParameterDefault(0)*100);
+  if NumParams>1 then tbParam1.Position:=round(PluginHost.GetParameterDefault(1)*100);
+  if NumParams>2 then tbParam2.Position:=round(PluginHost.GetParameterDefault(2)*100);
+  if NumParams>3 then tbParam3.Position:=round(PluginHost.GetParameterDefault(3)*100);
 end;
 
 procedure TfmMain.bGetParamDisplayValuesClick(Sender: TObject);
 begin
-  if NumParams>0 then lParam0Value.caption:=GetParamaterDisplay(0);
-  if NumParams>1 then lParam1Value.caption:=GetParamaterDisplay(1);
-  if NumParams>2 then lParam2Value.caption:=GetParamaterDisplay(2);
-  if NumParams>3 then lParam3Value.caption:=GetParamaterDisplay(3);
+  if NumParams>0 then lParam0Value.caption:=GetParameterDisplay(0);
+  if NumParams>1 then lParam1Value.caption:=GetParameterDisplay(1);
+  if NumParams>2 then lParam2Value.caption:=GetParameterDisplay(2);
+  if NumParams>3 then lParam3Value.caption:=GetParameterDisplay(3);
 end;
 
 procedure TfmMain.tbParam0Change(Sender: TObject);
