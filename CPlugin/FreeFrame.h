@@ -17,6 +17,9 @@ extern "C" {
 Copyright (c) 2002, Marcus Clements www.freeframe.org
 All rights reserved.
 
+FreeFrame 1.0 upgrade by Pete Warden
+www.petewarden.com
+
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
    * Redistributions of source code must retain the above copyright
