@@ -98,57 +98,57 @@ object fmMain: TfmMain
     Caption = 'Param3Name'
   end
   object lParam0Value: TLabel
-    Left = 728
-    Top = 238
+    Left = 732
+    Top = 233
     Width = 63
     Height = 13
     Caption = 'Param0Value'
   end
   object lParam1Value: TLabel
-    Left = 728
-    Top = 289
+    Left = 732
+    Top = 284
     Width = 63
     Height = 13
     Caption = 'Param1Value'
   end
   object lParam2Value: TLabel
-    Left = 728
-    Top = 339
+    Left = 732
+    Top = 334
     Width = 63
     Height = 13
     Caption = 'Param2Value'
   end
   object lParam3Value: TLabel
-    Left = 728
-    Top = 387
+    Left = 732
+    Top = 382
     Width = 63
     Height = 13
     Caption = 'Param3Value'
   end
   object lParam0dword: TLabel
-    Left = 800
-    Top = 238
+    Left = 733
+    Top = 249
     Width = 67
     Height = 13
     Caption = 'Param0Dword'
   end
   object lParam1dword: TLabel
-    Left = 800
-    Top = 289
+    Left = 733
+    Top = 300
     Width = 67
     Height = 13
     Caption = 'Param1Dword'
   end
   object lParam2dword: TLabel
-    Left = 800
-    Top = 339
+    Left = 733
+    Top = 350
     Width = 67
     Height = 13
     Caption = 'Param2Dword'
   end
   object lParam3dword: TLabel
-    Left = 800
-    Top = 387
+    Left = 733
+    Top = 398
     Width = 67
     Height = 13
     Caption = 'Param3Dword'
@@ -161,6 +161,13 @@ object fmMain: TfmMain
     Caption = 
       'Plugins must be in a plugins subdirectory of the  directory wher' +
       'e this .exe is'
+  end
+  object lProfile: TLabel
+    Left = 496
+    Top = 352
+    Width = 29
+    Height = 13
+    Caption = 'Profile'
   end
   object bInit: TButton
     Left = 48
@@ -375,6 +382,7 @@ object fmMain: TfmMain
     TabOrder = 20
     TickMarks = tmBottomRight
     TickStyle = tsAuto
+    OnChange = tbParam1Change
   end
   object tbParam2: TTrackBar
     Left = 576
@@ -391,6 +399,7 @@ object fmMain: TfmMain
     TabOrder = 21
     TickMarks = tmBottomRight
     TickStyle = tsAuto
+    OnChange = tbParam2Change
   end
   object tbParam3: TTrackBar
     Left = 576
@@ -407,6 +416,7 @@ object fmMain: TfmMain
     TabOrder = 22
     TickMarks = tmBottomRight
     TickStyle = tsAuto
+    OnChange = tbParam3Change
   end
   object bGetParameterNames: TButton
     Left = 762

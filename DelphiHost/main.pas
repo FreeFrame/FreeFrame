@@ -95,6 +95,7 @@ type
     l16bit: TLabel;
     l24bit: TLabel;
     l32bit: TLabel;
+    lProfile: TLabel;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -115,18 +116,22 @@ type
     procedure bGetParamActualValuesClick(Sender: TObject);
     procedure bGetAndProcessClick(Sender: TObject);
     procedure bBrowseClick(Sender: TObject);
+    procedure tbParam1Change(Sender: TObject);
+    procedure tbParam2Change(Sender: TObject);
+    procedure tbParam3Change(Sender: TObject);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
     procedure GetPlugins;
     procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
+    procedure ProfileAndProcessFrame;
   public
     { Public declarations }
     AHDC: HDC;                   // Handle
   end;
 
 const
-  version: string='0.1024';
+  version: string='0.1025';
 
 var
   fmMain: TfmMain;
@@ -194,7 +199,7 @@ begin
     0: lPluginType.caption:='effect';
     1: lPluginType.caption:='source';
   end;
-  // Call GetPluginCaps to see which bitdepths it can manage
+  // Call GetPluginCaps to see which bitdepths it can manage      todo: make use of this data to decide what to do on process frame etc.
   if PluginHost.GetPluginCaps(0) then l16bit.Caption:='16bit: yes' else l16bit.Caption:='16bit: no';
   if PluginHost.GetPluginCaps(1) then l24bit.Caption:='24bit: yes' else l24bit.Caption:='24bit: no';
   if PluginHost.GetPluginCaps(2) then l32bit.Caption:='32bit: yes' else l32bit.Caption:='32bit: no';
@@ -225,8 +230,7 @@ end;
 
 procedure TfmMain.bProcessFrameClick(Sender: TObject);
 begin
-  bits := Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
-  lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(bits)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
+  ProfileAndProcessFrame;
   DisplayFrame(lpbitmapinfoheader);
 end;
 
@@ -240,6 +244,7 @@ var
 begin
   AHDC := getdc(fmMain.handle);
   try
+    // bits is the pointer to the frame of video - the image data starts immediately after the BitmapInfoHeader in a bitmap
     bits := Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
     hBmp := CreateDIBitmap(ahdc,                  // handle of device context
                lpBitmapInfoHeader^,               // address of bitmap size and format data
@@ -292,7 +297,6 @@ begin
     cbPluginsChange(nil);
   end;
 end;
-
 
 procedure TfmMain.cbPluginsChange(Sender: TObject);
 begin
@@ -356,18 +360,70 @@ begin
   tempInt:=tbParam0.position;
   tempSingle:=tempInt/100;
   PluginHost.SetParameter(0,tempSingle);
+  lParam0Value.caption:=GetParameterDisplay(0);
+  tempSingle:=pluginHost.GetParameter(0);
+  lParam0dword.caption:=floattostr(tempSingle);
+end;
+
+procedure TfmMain.tbParam1Change(Sender: TObject);
+var
+  tempInt: integer;
+  tempSingle: single;
+begin
+  tempInt:=tbParam1.position;
+  tempSingle:=tempInt/100;
+  PluginHost.SetParameter(1,tempSingle);
+  lParam1Value.caption:=GetParameterDisplay(1);
+  tempSingle:=pluginHost.GetParameter(1);
+  lParam1dword.caption:=floattostr(tempSingle);
+end;
+
+procedure TfmMain.tbParam2Change(Sender: TObject);
+var
+  tempInt: integer;
+  tempSingle: single;
+begin
+  tempInt:=tbParam2.position;
+  tempSingle:=tempInt/100;
+  PluginHost.SetParameter(2,tempSingle);
+  lParam2Value.caption:=GetParameterDisplay(2);
+  tempSingle:=pluginHost.GetParameter(2);
+  lParam2dword.caption:=floattostr(tempSingle);
+end;
+
+procedure TfmMain.tbParam3Change(Sender: TObject);
+var
+  tempInt: integer;
+  tempSingle: single;
+begin
+  tempInt:=tbParam3.position;
+  tempSingle:=tempInt/100;
+  PluginHost.SetParameter(3,tempSingle);
+  lParam3Value.caption:=GetParameterDisplay(3);
+  tempSingle:=pluginHost.GetParameter(3);
+  lParam3dword.caption:=floattostr(tempSingle);
 end;
 
 procedure TfmMain.bGetParamActualValuesClick(Sender: TObject);
 var
   tempSingle: single;
 begin
-  tempSingle:=pluginHost.GetParameter(0);
-  if NumParams>0 then lParam0dword.caption:=floattostr(tempSingle);
-  //if NumParams>0 then lParam0dword.caption:=inttostr(round(pluginHost.GetParameter(0)));
-  //if NumParams>1 then lParam1dword.caption:=floattostr(single(pluginHost.GetParameter(1)));
-  //if NumParams>2 then lParam2dword.caption:=floattostr(single(pluginHost.GetParameter(2)));
-  //if NumParams>3 then lParam3dword.caption:=floattostr(single(pluginHost.GetParameter(3)));
+  if NumParams>0 then begin
+    tempSingle:=pluginHost.GetParameter(0);
+    lParam0dword.caption:=floattostr(tempSingle);
+  end;
+  if NumParams>1 then begin
+    tempSingle:=pluginHost.GetParameter(1);
+    lParam1dword.caption:=floattostr(tempSingle);
+  end;
+  if NumParams>2 then begin
+    tempSingle:=pluginHost.GetParameter(2);
+    lParam2dword.caption:=floattostr(tempSingle);
+  end;
+  if NumParams>3 then begin
+    tempSingle:=pluginHost.GetParameter(3);
+    lParam3dword.caption:=floattostr(tempSingle);
+  end;
 end;
 
 procedure TfmMain.bGetAndProcessClick(Sender: TObject);
@@ -378,8 +434,7 @@ begin
   // Display it unprocessed ...
   // displayframe(lpbitmapinfoheader);
   // process frame and display it again ...
-  bits := Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
-  lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(bits)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
+  ProfileAndProcessFrame;
   DisplayFrame(lpbitmapinfoheader);
 end;
 
@@ -394,5 +449,17 @@ begin
     inifile.Free;
   end;
 end;
+
+procedure TfmMain.ProfileAndProcessFrame;
+var
+  before: integer;
+begin
+  bits := Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+  before:=gettickcount;
+  lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(bits)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
+  lProfile.Caption:=inttostr(gettickcount-before)+' msec/frame';
+end;
+
+
 
 end.
