@@ -126,6 +126,22 @@ type
     lOrientation: TLabel;
     Label4: TLabel;
     Label5: TLabel;
+    lParam4Name: TLabel;
+    lParam5Name: TLabel;
+    lParam6Name: TLabel;
+    lParam7Name: TLabel;
+    lParam4Value: TLabel;
+    lParam5Value: TLabel;
+    lParam6value: TLabel;
+    lParam7Value: TLabel;
+    lParam4Dword: TLabel;
+    lParam5Dword: TLabel;
+    lParam6Dword: TLabel;
+    lParam7Dword: TLabel;
+    tbParam4: TTrackBar;
+    tbParam5: TTrackBar;
+    tbParam6: TTrackBar;
+    tbParam7: TTrackBar;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -142,23 +158,25 @@ type
     procedure bGetParameterNamesClick(Sender: TObject);
     procedure bGetParamDefaultsClick(Sender: TObject);
     procedure bGetParamDisplayValuesClick(Sender: TObject);
-    procedure tbParam0Change(Sender: TObject);
+    procedure tbParamChange(Sender: TObject);                 // going general
     procedure bGetParamActualValuesClick(Sender: TObject);
     procedure bGetAndProcessClick(Sender: TObject);
     procedure bBrowseClick(Sender: TObject);
-    procedure tbParam1Change(Sender: TObject);
-    procedure tbParam2Change(Sender: TObject);
-    procedure tbParam3Change(Sender: TObject);
     procedure bPlayAndProcessClick(Sender: TObject);
     procedure tPlayTimer(Sender: TObject);
     procedure bStopClick(Sender: TObject);
     procedure bRunIn32bitClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormCreate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
     StartingApp: boolean;
+    Sliders: array [0..7] of TTrackbar;
+    ParamNames: array [0..7] of TLabel;
+    ParamValues: array [0..7] of TLabel;
+    ParamDwords: array [0..7] of TLabel;
     procedure GetPlugins;
     procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
     procedure ProfileAndProcessFrame(pFrame: pointer; PluginInstance: dword);     // This is the main frame processing procedure
@@ -169,7 +187,7 @@ type
   end;
 
 const
-  AppVersion: string='0.751';
+  AppVersion: string='0.752';
   APIversion: string='0.750';
 
 var
@@ -456,122 +474,72 @@ begin
 end;
 
 procedure TfmMain.bGetNumParametersClick(Sender: TObject);
+var
+  i: integer;
 begin
   NumParams:=PluginHost.GetNumParameters;
   lNumParameters.caption:='Num Params: '+inttostr(NumParams);
   // Clear Sliders ...
-  tbParam0.SliderVisible:=false;
-  tbParam1.SliderVisible:=false;
-  tbParam2.SliderVisible:=false;
-  tbParam3.SliderVisible:=false;
+  for i:=0 to 7 do Sliders[i].SliderVisible:=false;
   // Enable Sliders implemented by this plugin ...
-  if NumParams>0 then tbParam0.SliderVisible:=true;
-  if NumParams>1 then tbParam1.SliderVisible:=true;
-  if NumParams>2 then tbParam2.SliderVisible:=true;
-  if NumParams>3 then tbParam3.SliderVisible:=true;
+  for i:=0 to 7 do if NumParams>i then Sliders[i].SliderVisible:=true;
 end;
 
 procedure TfmMain.bGetParameterNamesClick(Sender: TObject);
+var
+  i: integer;
 begin
   // Clear Param Names ...
-  lParam0Name.caption:='';
-  lParam1Name.caption:='';
-  lParam2Name.caption:='';
-  lParam3Name.caption:='';
+  for i:=0 to 7 do ParamNames[i].caption:='';
   // Load new Param Names ...
-  if NumParams>0 then lParam0Name.caption:=GetParameterName(0);
-  if NumParams>1 then lParam1Name.caption:=GetParameterName(1);
-  if NumParams>2 then lParam2Name.caption:=GetParameterName(2);
-  if NumParams>3 then lParam3Name.caption:=GetParameterName(3);
+  for i:=0 to 7 do if NumParams>i then ParamNames[i].caption:=GetParameterName(i);
 end;
 
 procedure TfmMain.bGetParamDefaultsClick(Sender: TObject);
+var
+  i: integer;
 begin
-  if NumParams>0 then tbParam0.Position:=round(PluginHost.GetParameterDefault(0)*100);
-  if NumParams>1 then tbParam1.Position:=round(PluginHost.GetParameterDefault(1)*100);
-  if NumParams>2 then tbParam2.Position:=round(PluginHost.GetParameterDefault(2)*100);
-  if NumParams>3 then tbParam3.Position:=round(PluginHost.GetParameterDefault(3)*100);
+  // Get Parameter Default Values ...
+  for i:=0 to 7 do if NumParams>i then Sliders[i].Position:=round(PluginHost.GetParameterDefault(i)*100);
 end;
 
 procedure TfmMain.bGetParamDisplayValuesClick(Sender: TObject);
+var
+  i: integer;
 begin
-  if NumParams>0 then lParam0Value.caption:=GetParameterDisplay(0,PluginInstance);
-  if NumParams>1 then lParam1Value.caption:=GetParameterDisplay(1,PluginInstance);
-  if NumParams>2 then lParam2Value.caption:=GetParameterDisplay(2,PluginInstance);
-  if NumParams>3 then lParam3Value.caption:=GetParameterDisplay(3,PluginInstance);
+  // Get Parameter Display Values ...
+  for i:=0 to 7 do if NumParams>i then ParamValues[i].Caption:=GetParameterDisplay(i,PluginInstance);
 end;
 
-procedure TfmMain.tbParam0Change(Sender: TObject);
+procedure TfmMain.tbParamChange(Sender: TObject);    // the OnChange procedure for all the param sliders
 var
   tempInt: integer;
   tempSingle: single;
+  tempTrackbar: Ttrackbar;
+  tempParam: integer;
 begin
-  tempInt:=tbParam0.position;
+  if not (sender is Ttrackbar) then exit;
+  tempTrackbar:=(sender as TTrackbar);
+  tempParam:=tempTrackbar.Tag;
+  tempInt:=tempTrackbar.position;
   tempSingle:=tempInt/100;
-  PluginHost.SetParameter(0,tempSingle,PluginInstance);
-  lParam0Value.caption:=GetParameterDisplay(0,PluginInstance);
-  tempSingle:=pluginHost.GetParameter(0,PluginInstance);
-  lParam0dword.caption:=floattostr(tempSingle);
-end;
-
-procedure TfmMain.tbParam1Change(Sender: TObject);
-var
-  tempInt: integer;
-  tempSingle: single;
-begin
-  tempInt:=tbParam1.position;
-  tempSingle:=tempInt/100;
-  PluginHost.SetParameter(1,tempSingle,PluginInstance);
-  lParam1Value.caption:=GetParameterDisplay(1,PluginInstance);
-  tempSingle:=pluginHost.GetParameter(1,PluginInstance);
-  lParam1dword.caption:=floattostr(tempSingle);
-end;
-
-procedure TfmMain.tbParam2Change(Sender: TObject);
-var
-  tempInt: integer;
-  tempSingle: single;
-begin
-  tempInt:=tbParam2.position;
-  tempSingle:=tempInt/100;
-  PluginHost.SetParameter(2,tempSingle,PluginInstance);
-  lParam2Value.caption:=GetParameterDisplay(2,PluginInstance);
-  tempSingle:=pluginHost.GetParameter(2,PluginInstance);
-  lParam2dword.caption:=floattostr(tempSingle);
-end;
-
-procedure TfmMain.tbParam3Change(Sender: TObject);
-var
-  tempInt: integer;
-  tempSingle: single;
-begin
-  tempInt:=tbParam3.position;
-  tempSingle:=tempInt/100;
-  PluginHost.SetParameter(3,tempSingle,PluginInstance);
-  lParam3Value.caption:=GetParameterDisplay(3,PluginInstance);
-  tempSingle:=pluginHost.GetParameter(3,PluginInstance);
-  lParam3dword.caption:=floattostr(tempSingle);
+  PluginHost.SetParameter(tempParam,tempSingle,PluginInstance);
+  ParamValues[tempParam].caption:=GetParameterDisplay(tempParam,PluginInstance);
+  tempSingle:=pluginHost.GetParameter(tempParam,PluginInstance);
+  ParamDwords[tempParam].caption:=floattostr(tempSingle);
 end;
 
 procedure TfmMain.bGetParamActualValuesClick(Sender: TObject);
 var
   tempSingle: single;
+  i: integer;
 begin
-  if NumParams>0 then begin
-    tempSingle:=pluginHost.GetParameter(0,PluginInstance);
-    lParam0dword.caption:=floattostr(tempSingle);
-  end;
-  if NumParams>1 then begin
-    tempSingle:=pluginHost.GetParameter(1,PluginInstance);
-    lParam1dword.caption:=floattostr(tempSingle);
-  end;
-  if NumParams>2 then begin
-    tempSingle:=pluginHost.GetParameter(2,PluginInstance);
-    lParam2dword.caption:=floattostr(tempSingle);
-  end;
-  if NumParams>3 then begin
-    tempSingle:=pluginHost.GetParameter(3,PluginInstance);
-    lParam3dword.caption:=floattostr(tempSingle);
+  for i:=0 to 7 do begin
+    if NumParams>i then begin
+      // Get Parameter actual Values ...
+      tempSingle:=pluginHost.GetParameter(i,PluginInstance);
+      ParamDwords[i].caption:=floattostr(tempSingle);
+    end;
   end;
 end;
 
@@ -613,7 +581,7 @@ begin
     pFrameToProcess:=p32bitFrame;
   end;
 
-  // Profile Process the Frame ... 
+  // Profile Process the Frame ...
   before:=gettickcount;
   lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(pFrameToProcess, PluginInstance)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
   lProfile.Caption:=inttostr(gettickcount-before)+' msec/frame';
@@ -688,6 +656,45 @@ begin
   StartingApp:=true;
   AVIloaded:=false;
   PluginLoaded:=false;
+end;
+
+procedure TfmMain.FormActivate(Sender: TObject);
+var
+  i: integer;
+begin
+  // fill parameter component arrays ...
+  Sliders[0]:=tbParam0;
+  Sliders[1]:=tbParam1;
+  Sliders[2]:=tbParam2;
+  Sliders[3]:=tbParam3;
+  Sliders[4]:=tbParam4;
+  Sliders[5]:=tbParam5;
+  Sliders[6]:=tbParam6;
+  Sliders[7]:=tbParam7;
+  ParamNames[0]:=lParam0Name;
+  ParamNames[1]:=lParam1Name;
+  ParamNames[2]:=lParam2Name;
+  ParamNames[3]:=lParam3Name;
+  ParamNames[4]:=lParam4Name;
+  ParamNames[5]:=lParam5Name;
+  ParamNames[6]:=lParam6Name;
+  ParamNames[7]:=lParam7Name;
+  ParamValues[0]:=lParam0value;
+  ParamValues[1]:=lParam1value;
+  ParamValues[2]:=lParam2value;
+  ParamValues[3]:=lParam3value;
+  ParamValues[4]:=lParam4value;
+  ParamValues[5]:=lParam5value;
+  ParamValues[6]:=lParam6value;
+  ParamValues[7]:=lParam7value;
+  ParamDwords[0]:=lParam0Dword;
+  ParamDwords[1]:=lParam1Dword;
+  ParamDwords[2]:=lParam2Dword;
+  ParamDwords[3]:=lParam3Dword;
+  ParamDwords[4]:=lParam4Dword;
+  ParamDwords[5]:=lParam5Dword;
+  ParamDwords[6]:=lParam6Dword;
+  ParamDwords[7]:=lParam7Dword;
 end;
 
 end.

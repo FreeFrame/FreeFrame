@@ -2,7 +2,7 @@ object fmMain: TfmMain
   Left = 34
   Top = 165
   Width = 917
-  Height = 531
+  Height = 726
   Caption = 'FreeFrame Delphi Host Test Container'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,6 +11,7 @@ object fmMain: TfmMain
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnActivate = FormActivate
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
@@ -177,6 +178,90 @@ object fmMain: TfmMain
     Width = 51
     Height = 13
     Caption = 'APIversion'
+  end
+  object lParam4Name: TLabel
+    Left = 584
+    Top = 487
+    Width = 64
+    Height = 13
+    Caption = 'Param4Name'
+  end
+  object lParam5Name: TLabel
+    Left = 584
+    Top = 538
+    Width = 64
+    Height = 13
+    Caption = 'Param5Name'
+  end
+  object lParam6Name: TLabel
+    Left = 584
+    Top = 588
+    Width = 64
+    Height = 13
+    Caption = 'Param6Name'
+  end
+  object lParam7Name: TLabel
+    Left = 584
+    Top = 636
+    Width = 64
+    Height = 13
+    Caption = 'Param7Name'
+  end
+  object lParam4Value: TLabel
+    Left = 732
+    Top = 500
+    Width = 63
+    Height = 13
+    Caption = 'Param4Value'
+  end
+  object lParam5Value: TLabel
+    Left = 732
+    Top = 551
+    Width = 63
+    Height = 13
+    Caption = 'Param5Value'
+  end
+  object lParam6value: TLabel
+    Left = 732
+    Top = 601
+    Width = 63
+    Height = 13
+    Caption = 'Param6Value'
+  end
+  object lParam7Value: TLabel
+    Left = 732
+    Top = 649
+    Width = 63
+    Height = 13
+    Caption = 'Param7Value'
+  end
+  object lParam4Dword: TLabel
+    Left = 733
+    Top = 516
+    Width = 67
+    Height = 13
+    Caption = 'Param4Dword'
+  end
+  object lParam5Dword: TLabel
+    Left = 733
+    Top = 567
+    Width = 67
+    Height = 13
+    Caption = 'Param5Dword'
+  end
+  object lParam6Dword: TLabel
+    Left = 733
+    Top = 617
+    Width = 67
+    Height = 13
+    Caption = 'Param6Dword'
+  end
+  object lParam7Dword: TLabel
+    Left = 733
+    Top = 665
+    Width = 67
+    Height = 13
+    Caption = 'Param7Dword'
   end
   object bInit: TButton
     Left = 48
@@ -394,9 +479,10 @@ object fmMain: TfmMain
     TabOrder = 21
     TickMarks = tmBottomRight
     TickStyle = tsAuto
-    OnChange = tbParam0Change
+    OnChange = tbParamChange
   end
   object tbParam1: TTrackBar
+    Tag = 1
     Left = 576
     Top = 354
     Width = 150
@@ -411,9 +497,10 @@ object fmMain: TfmMain
     TabOrder = 22
     TickMarks = tmBottomRight
     TickStyle = tsAuto
-    OnChange = tbParam1Change
+    OnChange = tbParamChange
   end
   object tbParam2: TTrackBar
+    Tag = 2
     Left = 576
     Top = 404
     Width = 150
@@ -428,9 +515,10 @@ object fmMain: TfmMain
     TabOrder = 23
     TickMarks = tmBottomRight
     TickStyle = tsAuto
-    OnChange = tbParam2Change
+    OnChange = tbParamChange
   end
   object tbParam3: TTrackBar
+    Tag = 3
     Left = 576
     Top = 452
     Width = 150
@@ -445,7 +533,7 @@ object fmMain: TfmMain
     TabOrder = 24
     TickMarks = tmBottomRight
     TickStyle = tsAuto
-    OnChange = tbParam3Change
+    OnChange = tbParamChange
   end
   object bGetParameterNames: TButton
     Left = 762
@@ -606,6 +694,77 @@ object fmMain: TfmMain
       Height = 13
       Caption = 'Minor version'
     end
+  end
+  object tbParam4: TTrackBar
+    Left = 576
+    Top = 501
+    Width = 150
+    Height = 33
+    Max = 100
+    Orientation = trHorizontal
+    Frequency = 10
+    Position = 0
+    SliderVisible = False
+    SelEnd = 0
+    SelStart = 0
+    TabOrder = 32
+    TickMarks = tmBottomRight
+    TickStyle = tsAuto
+    OnChange = tbParamChange
+  end
+  object tbParam5: TTrackBar
+    Tag = 1
+    Left = 576
+    Top = 552
+    Width = 150
+    Height = 33
+    Max = 100
+    Orientation = trHorizontal
+    Frequency = 10
+    Position = 0
+    SliderVisible = False
+    SelEnd = 0
+    SelStart = 0
+    TabOrder = 33
+    TickMarks = tmBottomRight
+    TickStyle = tsAuto
+    OnChange = tbParamChange
+  end
+  object tbParam6: TTrackBar
+    Tag = 2
+    Left = 576
+    Top = 602
+    Width = 150
+    Height = 33
+    Max = 100
+    Orientation = trHorizontal
+    Frequency = 10
+    Position = 0
+    SliderVisible = False
+    SelEnd = 0
+    SelStart = 0
+    TabOrder = 34
+    TickMarks = tmBottomRight
+    TickStyle = tsAuto
+    OnChange = tbParamChange
+  end
+  object tbParam7: TTrackBar
+    Tag = 3
+    Left = 576
+    Top = 650
+    Width = 150
+    Height = 33
+    Max = 100
+    Orientation = trHorizontal
+    Frequency = 10
+    Position = 0
+    SliderVisible = False
+    SelEnd = 0
+    SelStart = 0
+    TabOrder = 35
+    TickMarks = tmBottomRight
+    TickStyle = tsAuto
+    OnChange = tbParamChange
   end
   object odAVI: TOpenDialog
     Left = 392
