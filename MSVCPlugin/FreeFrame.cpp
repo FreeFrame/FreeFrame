@@ -1,50 +1,18 @@
-///////////////////////////////////////////////////////////////////////////////////
-// FreeFrame.cpp
-//
-// FreeFrame Open Video Plugin Prototype
-// C Version
-//
-// Implementation of a plugin interface for the FreeFrame API
-//
-// www.freeframe.org
-// marcus@freeframe.org
-
-/*
-
-Copyright (c) 2002, Marcus Clements www.freeframe.org
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-
-   * Redistributions of source code must retain the above copyright
-     notice, this list of conditions and the following disclaimer.
-   * Redistributions in binary form must reproduce the above copyright
-     notice, this list of conditions and the following disclaimer in
-     the documentation and/or other materials provided with the
-     distribution.
-   * Neither the name of FreeFrame nor the names of its
-     contributors may be used to endorse or promote products derived
-     from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-*/
-
-///////////////////////////////////////////////////////////////////////////////////////////
-//
-// includes 
+// FreeFrame.cpp : Defines the entry point for the DLL application.
 //
 
+
+#include "stdafx.h"
 #include "FreeFrame.h"
-#include "FreeFrameSample.h"  // replace this with your plugins header
+#include <stdio.h>
 
+#define NUM_PARAMS 3
 
-///////////////////////////////////////////////////////////////////////////////////////////
-// Windows DLL Entry point
+//////////////////////////////////////////////////////////////
+// DLL Entry point
 //
 // notes: we may want to capture hModule as the instance of the host...
 
-#ifdef WIN32
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
                        LPVOID lpReserved
@@ -52,39 +20,26 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 {
     return TRUE;
 }
-#endif
 
-///////////////////////////////////////////////////////////////////////////////////////
-// plugMain - The one and only exposed function
+///////////////////////////////////////////////////////////////
+// main - The one and only exposed function
 // parameters: 
 //	functionCode - tells the plugin which function is being called
-//  pParam - 32-bit parameter or 32-bit pointer to parameter structure
-//
-// PLUGIN DEVELOPERS:  you shouldn't need to change this function
-//
-// All parameters are cast as 32-bit untyped pointers and cast to appropriate
-// types here
-// 
-// All return values are cast to 32-bit untyped pointers here before return to 
-// the host
-//
+//  pParam - 32-bit pointer to parameter
 
-#ifdef WIN32
- __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved ) 
-#elif LINUX
-   LPVOID plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved )
-#endif	
-{
+__declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam)
+ {
+	
 	switch(functionCode) {
 
 	case FF_GETINFO:
 		return (LPVOID) getInfo();
 	
 	case FF_INITIALISE:
-		return (LPVOID) initialise( (VideoInfoStruct*) pParam);
+		return (LPVOID) initialise();
 	
 	case FF_DEINITIALISE:
-		return (LPVOID) deInitialise();
+		return (LPVOID) deinitialise();
 	
 	case FF_GETNUMPARAMETERS:
 		return (LPVOID) getNumParameters();
@@ -98,10 +53,8 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	case FF_GETPARAMETERDISPLAY:
 		return  (LPVOID) getParameterDisplay( (DWORD) pParam );
 	
-	// parameters are passed in here as a packed struct of two DWORDS:
-	// index and value
 	case FF_SETPARAMETER:
-		return (LPVOID) setParameter( (SetParameterStruct*) pParam );
+		return (LPVOID) setParameter( (DWORD) pParam, *((float*)(pParam)+1) );
 	
 	case FF_PROCESSFRAME:
 		return (LPVOID) processFrame(pParam);
@@ -117,3 +70,98 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 	}
 }
 
+/////////////////////////////////////////////////////
+//
+// Plugin Globals
+//
+
+PlugInfoStruct info;
+ParameterStruct parameters[NUM_PARAMS];
+
+PlugInfoStruct* getInfo() 
+{
+	info.APIMajorVersion = 0;
+	info.APIMinorVersion = 1;
+	char ID[5] = "MPB1";
+	char name[17] = "MSVC_Plugin_Base";
+	
+	memcpy(info.uniqueID, ID, 4);
+	memcpy(info.pluginName, name, 16);
+	info.pluginType = FF_EFFECT;
+
+	return &info;
+}
+
+// set up the parameters
+DWORD initialise()
+{
+	parameters[0].defaultValue = 0.0f;
+	parameters[1].defaultValue = 0.5f;
+	parameters[2].defaultValue = 1.0f;
+	parameters[0].value = 0.0f;
+	parameters[1].value = 0.5f;
+	parameters[2].value = 1.0f;
+	char tempName1[17] = "MSVC_plug_param1";
+	char tempName2[17] = "MSVC_plug_param2";
+	char tempName3[17] = "MSVC_plug_param3";
+	memcpy(parameters[0].name, tempName1, 16);
+	memcpy(parameters[1].name, tempName2, 16);
+	memcpy(parameters[2].name, tempName3, 16);
+	return 23;
+}
+
+// deallocate memory, tidy up
+DWORD deinitialise()
+{
+	return 23;
+}
+
+
+// returns number of parameters
+DWORD getNumParameters()
+{
+	return NUM_PARAMS;  // 1 param for now
+}
+
+// returns string with the name 0f parameter n
+char* getParameterName(DWORD index)
+{
+	return parameters[index].name;
+}
+
+// returns value  of parameter n
+float getParameterDefault(DWORD index)
+{
+	return parameters[index].defaultValue;
+}
+
+// returns string containing value of parameter to display
+char* getParameterDisplay(DWORD index)
+{
+
+	sprintf(parameters[index].displayValue, "%f",parameters[index].value);
+	return parameters[index].displayValue;
+}
+
+// returns success/fail - sets the value of parameter n in response to user
+DWORD setParameter(DWORD index, float value)
+{
+	parameters[index].value = value;
+	return 0;
+}
+
+float getParameter(DWORD index)
+{
+	return parameters[index].value;
+}
+
+// process frame of video, returns success/fail
+DWORD processFrame(LPVOID pFrame)
+{
+	return 999;
+}
+
+DWORD getPluginCaps(DWORD cap)
+{
+	return 0;
+}
