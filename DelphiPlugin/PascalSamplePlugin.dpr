@@ -84,8 +84,8 @@ begin
   case functionCode of
     0: begin
       with PluginInfoStruct do begin
-        APIMajorVersion:=0;
-        APIMinorVersion:=750;
+        APIMajorVersion:=1;
+        APIMinorVersion:=000;
         PluginUniqueID:='PTST';
         PluginName:='PascalTestPlugin';
         PluginType:=0;   // effect plugin
@@ -150,8 +150,8 @@ begin
          // IN:  Nothing
          // OUT: Pointer to PluginExtendedInfoStruct
       with PluginExtendedInfoStruct do begin
-        PluginMajorVersion:=0;
-        PluginMinorVersion:=754;
+        PluginMajorVersion:=1;
+        PluginMinorVersion:=001;
         pDescription:= nil;
         pAbout:= nil;
         FreeFrameExtendedDataSize:= 0;
