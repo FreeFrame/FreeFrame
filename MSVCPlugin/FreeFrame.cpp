@@ -2,7 +2,6 @@
 //
 
 
-#include "StdAfx.h"
 #include "FreeFrame.h"
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +9,7 @@
 #define NUM_PARAMS 3
 
 //////////////////////////////////////////////////////////////
-// DLL Entry point
+// Windows DLL Entry point
 //
 // notes: we may want to capture hModule as the instance of the host...
 
@@ -28,7 +27,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 // main - The one and only exposed function
 // parameters: 
 //	functionCode - tells the plugin which function is being called
-//  pParam - 32-bit pointer to parameter
+//  pParam - 32-bit parameter or 32-bit pointer to parameter structure
 
 #ifdef WIN32
  __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam) 
@@ -88,7 +87,7 @@ ParameterStruct parameters[NUM_PARAMS];
 PlugInfoStruct* getInfo() 
 {
 	info.APIMajorVersion = 0;
-	info.APIMinorVersion = 1;
+	info.APIMinorVersion = 1024; // lets keep this in sync with the delphi host for now
 	char ID[5] = "MPB1";
 	char name[17] = "MSVC_Plugin_Base";
 	
@@ -127,7 +126,7 @@ DWORD deinitialise()
 // returns number of parameters
 DWORD getNumParameters()
 {
-	return NUM_PARAMS;  // 1 param for now
+	return NUM_PARAMS;  
 }
 
 // returns string with the name 0f parameter n
@@ -168,6 +167,7 @@ DWORD processFrame(LPVOID pFrame)
 	return 999;
 }
 
+// returns true or false to indicate capabilities
 DWORD getPluginCaps(DWORD cap)
 {
 	return 0;

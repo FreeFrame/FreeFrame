@@ -4,6 +4,29 @@
 #ifndef __FREEFRAME_H__
 #define __FREEFRAME_H__
 
+//////////////////////////////////////////////////////////////
+//
+// includes
+//
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+#ifdef WIN32
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+#include <windows.h>
+
+#elif defined LINUX
+
+//typedefs for linux - in windows these are defined in files included by windows.h
+typedef unsigned int DWORD;
+typedef void * LPVOID;
+typedef char BYTE;
+
+#endif
+
+
 
 //////////////////////////////////////////////////////////////
 // #defines
@@ -44,13 +67,17 @@ struct ParameterStruct {
 // Function prototypes
 
 #ifdef WIN32
+
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
                        LPVOID lpReserved );
 
 __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam);
+
 #elif LINUX
+
   LPVOID plugMain(DWORD functionCode,LPVOID pParam);
+
 #endif
 
 PlugInfoStruct*	getInfo();							// get information about plugin
@@ -63,6 +90,6 @@ char*	getParameterDisplay(DWORD index);			// returns string containing value of 
 DWORD	setParameter(DWORD index, float value);		// returns success/fail - sets the value of parameter n in response to user
 float	getParameter(DWORD index);					// returns value of parameter n
 DWORD	processFrame(LPVOID pFrame);				// process frame of video, returns success/fail
-DWORD	getPluginCaps(DWORD cap);
+DWORD	getPluginCaps(DWORD cap);					// plugin capabilities returns true/false
 
 #endif
