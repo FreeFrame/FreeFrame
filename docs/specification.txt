@@ -1,37 +1,87 @@
-FreeFrame Open Video Plugin System Specification
+**********************************************************************************************
+* FreeFrame Open Video Plugin System Specification
+**********************************************************************************************
+* Version 0.5 beta1
+**********************************************************************************************
+Copyright (c) 2002,2003 www.freeframe.org
+All rights reserved.
 
-www.freeframe.org
+This document is a functional specification for the FreeFrame application programmers interface
+(API).  It is intended to be subject to the same licence as the code supplied as examples of 
+use of the FreeFrame API.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the
+     distribution.
+   * Neither the name of FreeFrame nor the names of its
+     contributors may be used to endorse or promote products derived
+     from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS 
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT 
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+**************************************************************************************************
+
+FreeFrame plugins are distributed and used as compiled shared objects (.so) in linux and 
+Mac OSX, as Dynamically Linked Libraries (.dll) in Windows.
 
 FreeFrame Plugins export a single function: plugMain
-This is passed 2 values: a 32-bit Function Code and an Input Value cast as an untyped 32-bit pointer.
-It returns an Output Value cast as an untyped 32-bit pointer.
-
-
+This is passed 2 values: a 32-bit Function Code and a 32-bit Input Value.
+It returns a 32-bit Output Value.
+The input values and output values have different types according to the function code.
+This may be implemented differently on different platforms in different languages, but the
+format of the values must be consistent.
+The following types are used:
+  
+  =============================================================================================
+  Type                          Range of type      Notes
+  ============================  =================  ============================================ 
+  32-bit unsigned integer       0 to 4294967295    
+  32-bit pointer                0 to 4294967295    needs to be a valid memory location
+  32-bit IEEE float             -lots to +lots     1 sign bit, 8 bit exponent, 24 bit mantissa 
+  =============================================================================================
+  
   =============================================================================================
   Function Code Table
   =============================================================================================
-  Code   Function		Input Value			Output Value
+  Code   Function               Input Value                     Output Value
   =====  =====================  ==============================  ===============================
-  0      GetInfo		Unused				Pointer to PluginInfoStruct
-  1      Initialise		Pointer to VideoInfoStruct	Success/Error code
-  2      DeInitialise		Unused				Success/Error code
-  3      ProcessFrame		Pointer to a frame of video	Success/Error code
-  4      GetNumParameters	Unused				NumParameters
-  5      GetParameterName	ParameterNumber			Pointer to ParameterName
-  6      GetParameterDefault	ParameterNumber			ParameterDefaultValue
-  7      GetParameterDisplay	ParameterNumber			Pointer to ParameterDisplayValue
-  8      SetParameter		Pointer to SetParameterStruct	Success/Error code
-  9      GetParameter		Parameter number		ParameterValue	
-  10     GetPluginCaps		PluginCapsIndex			Supported/Unsupported
+  0      GetInfo                Unused                          Pointer to PluginInfoStruct
+  1      Initialise             Pointer to VideoInfoStruct      Success/Error code
+  2      DeInitialise           Unused                          Success/Error code
+  3      ProcessFrame           Pointer to a frame of video     Success/Error code
+  4      GetNumParameters       Unused                          NumParameters
+  5      GetParameterName       ParameterNumber                 Pointer to ParameterName
+  6      GetParameterDefault    ParameterNumber                 ParameterDefaultValue
+  7      GetParameterDisplay    ParameterNumber                 Pointer to ParameterDisplayValue
+  8      SetParameter           Pointer to SetParameterStruct   Success/Error code
+  9      GetParameter           Parameter number                ParameterValue  
+  10     GetPluginCaps          PluginCapsIndex                 Supported/Unsupported
   =====  =====================  ==============================  ================================
   
   =============================================================================================
   RETURN CODES
   =============================================================================================
-  FF_FAIL		(hex) FFFFFFFF
-  FF_SUCCESS		0 
-  FF_TRUE		1
-  FF_FALSE		0
+  FF_FAIL       (hex) FFFFFFFF
+  FF_SUCCESS    0 
+
+  note: In functions that return error codes any other value other than 0 is assumed to be an 
+        error code these are be defined in each function below.
+
+  FF_TRUE       1
+  FF_FALSE      0
   =============================================================================================
   
   =============================================================================================
@@ -43,9 +93,10 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   ================================================================================
   APIMajorVersion: 32-bit unsigned integer
   APIMinorVersion: 32-bit unsigned integer
-  PluginUniqueID: array of 4 char (= 1 32-bit unsigned integer, not null terminated)
-  PluginName: array of 16 char (= 4 32-bit unsigned integers, not null terminated)
-  PluginType: 32-bit unsigned integer (0=effect 1=source)
+  PluginUniqueID: 4 1-byte ascii characters (32 bits) *not null terminated*
+  PluginName: 16 1-byte ascii characters (32 bits)    *not null terminated*
+  PluginType: 32-bit unsigned integer 
+              Current meaningful values: 0=effect 1=source
   ================================================================================
   Plugins of PluginType effect are passed frames of video, which they then modify
   Source Plugins are simply passed a pointer where they paint frames of video
@@ -61,7 +112,7 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   FrameHeight: 32-bit unsigned integer
   BitDepth: 32-bit unsigned integer (0=16bit 1=24bit 2=32bit)
   ================================================================================
-  BitDepth: 
+  BitDepth current meaningful values:
   16bit is 5-6-5 packed
   24bit is packed
   32bit is also suitable for 32-bit unsigned integer aligned 24bit
@@ -69,42 +120,41 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   
   
   ================================================================================
-  NumParameters: 32-bit unsigned integer cast as untyped pointer
+  NumParameters: 32-bit unsigned integer
   ================================================================================
   The number of parameters that the plugin implements
   ================================================================================
   
   
   ================================================================================
-  ParameterNumber: 32-bit unsigned integer cast as untyped pointer
+  ParameterNumber: 32-bit unsigned integer
   ================================================================================
   Parameter Numbers start at 0
   ================================================================================
   
   
   ================================================================================
-  ParameterName: array of 16 char (= 4 32-bit unsigned integers, not null terminated)
+  ParameterName:  16 1-byte ASCII characters *not null terminated*
   ================================================================================
   The name of the Parameter as it will be displayed by the host on the UI
   ================================================================================
   
   
   ================================================================================
-  ParameterDefaultValue: 32bit float cast as untyped 32-bit pointer
+  ParameterDefaultValue: 32-bit float
   ================================================================================
   The initial default value for this parameter.
   Plugins should always specify default values.
   Sometimes a host may not implement all parameters on a plugin,
   so the plugin must use default values untill told to do otherwise by the host.
-  FreeFrame parameter values are always 32bit floats,
+  FreeFrame parameter values are always 32-bit floats,
   and the range of values permitted is STRICTLY 0-1.
   This allows faster processing and a good range of values.
   ================================================================================
   
   
   ================================================================================
-  ParameterDisplayValue: array of 16 char (= 4 32-bit unsigned integers, 
-  not null terminated)
+  ParameterDisplayValue: 16 1-byte ASCII characters
   ================================================================================
   The current display value of this parameter. The plugin can display whatever it
   likes here  eg. just the float, a rounded 0-100 '%' representation for the user
@@ -117,12 +167,12 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   SetParameterStruct
   ================================================================================
   ParameterNumber: 32-bit unsigned integer
-  NewParameterValue: 32bit float cast as untyped 32-bit pointer
+  NewParameterValue: 32-bit float
   ================================================================================
   
   
   ================================================================================
-  Parameter Value: 32bit float cast as untyped 32-bit pointer
+  Parameter Value: 32-bit float
   ================================================================================
   FreeFrame parameter values are always 32bit floats,
   and the range of values permitted is STRICTLY 0-1 ( 0<= param <= 1 )
@@ -141,7 +191,7 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   ================================================================================
   0 = 16bit 5-6-5
   1 = 24bit packed
-  2 = 32bit ================================================================================ 24bit 32-bit aligned
+  2 = 32bit (24bit 32-bit aligned)
   ================================================================================
   The PluginCapsIndex specifies certain capabilities of a plugin that the host may
   want to enquire about. For now there is only the bitdepth format of the video.
@@ -156,30 +206,26 @@ It returns an Output Value cast as an untyped 32-bit pointer.
    plugMain - The one and only exposed function
   ================================================================================
    parameters: 
-  	functionCode - tells the plugin which function is being called
+    functionCode - tells the plugin which function is being called
     pParam - 32-bit parameter or 32-bit pointer to parameter structure
   
    PLUGIN DEVELOPERS:  you shouldn't need to change this function
-  
-   All parameters are cast as 32-bit untyped pointers and cast to appropriate
-   types here
-   
-   All return values are cast to 32-bit untyped pointers here before return to 
-   the host
-  
-  
+    
  
   ================================================================================
    getInfo
   ================================================================================
-  
+   
+   Parameters: 
+   none
+   
+   Return Values:   
+   32-bit pointer to PlugInfoStruct
+   FF_FAIL
+
    gets information about the plugin - version, unique id, short name and type 
    This function should be identical in all future versions of the FreeFrame API
-    
-   return values (32-bit pointer to PlugInfoStruct)
-   FF_FAIL on error
-   32-bit pointer to PlugInfoStruct
-  
+      
    HOST: call this function first to get version information
          the version defines the other fucntion codes that are supported
          supported function codes are listed in the documentation www.freeframe.org
@@ -188,31 +234,40 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   ================================================================================
    initialise
   ================================================================================
-  
+   
+   Parameters:
+   32-bit pointer to a VideoInfoStruct
+   
+   Return Values: (32-bit unsigned integer)
+   FF_SUCCESS - success
+   FF_FAIL 
+   (meaningful error values to be defined)
+
    Prepare the Plug-in for processing.  
    Set default values, allocate memory
    When the plug-in returns from this function it must be ready to proces a frame
-  
-   return values (32-bit unsigned integer)
-   FF_SUCCESS - success
-   non-zero - fail (error values to be defined)
-  
-   HOST:	This function *must* return before a call to processFrame.  Pointer to 
-  			videoInfoStruct *must* be valid until function returns
+    
+   HOST:    This function *must* return before a call to processFrame.  Pointer to 
+            videoInfoStruct *must* be valid until function returns
    PLUGIN:  make a copy of the videoInfoStruct locally as pointer may not be valid after
-  			function returns
+            function returns
   
   
   ================================================================================
    deInitialise
   ================================================================================
+   
+   Parameters:
+   none
+   
+   Return Values: (32-bit unsigned integer)
+   FF_SUCCESS - success
+   FF_FAIL on error
+   (meaningful error values to be defined)
   
    Tidy up   
    Deallocate memory
   
-   return values (32-bit unsigned integer)
-   FF_SUCCESS - success
-   non-zero - fail (error values to be defined)
   
    HOST: This *must* be the last function called on the plugin
   
@@ -221,10 +276,11 @@ It returns an Output Value cast as an untyped 32-bit pointer.
    getNumParameters 
   ================================================================================
   
-   returns number of parameters in plugin
+   Parameters:
+   none
    
-   return values (32-bit unsigned integer)
-   number of parameters
+   Return Values: (32-bit unsigned integer)
+   number of parameters in plugin
    FF_FAIL on error
   
   
@@ -234,10 +290,10 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   
    returns pointer to 16 byte char array containing the name of parameter specified by index
   
-   parameters:
-   32-bit unsigned integer index - index of parameter 
+   parameters: (32-bit unsigned integer)
+   index - index of parameter 
   
-   return values (32-bit pointer to char):
+   return values: (32-bit pointer to char):
    32-bit pointer to array of char
    FF_FAIL on error
   
@@ -249,8 +305,8 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   
    returns default value of parameter specified by index as 32-bit float 0<=value<=1
   
-   parameters:
-   32-bit unsigned integer index - index of parameter 
+   parameters: (32-bit unsigned integer)
+   index - index of parameter 
   
    return values (32-bit float):
    32-bit float value
@@ -265,8 +321,8 @@ It returns an Output Value cast as an untyped 32-bit pointer.
    returns pointer to array of 16 char containing a string to display as the value of
    parameter index
   
-   parameters:
-   32-bit unsigned integer index - index of parameter 
+   parameters: (32-bit unsigned integer)
+   index - index of parameter 
   
    return values (32-bit pointer to char):
    32-bit pointer to array of char
@@ -279,11 +335,11 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   ================================================================================
   
    Sets the value of parameter specified by index
-   value is a 32-bit float 0<=value<=1
+   value is a 32-bit IEEE float 0<=value<=1
   
    parameters:
    32-bit unsigned integer index - index of parameter 
-   32-bit float value
+   32-bit float IEEE value
   
    return values (32-bit unsigned integer):
    FF_FAIL on error
@@ -299,8 +355,8 @@ It returns an Output Value cast as an untyped 32-bit pointer.
    parameters:
    32-bit unsigned integer index - index of parameter 
   
-   return values (32-bit float):
-   32-bit float value
+   return values (32-bit IEEE float):
+   value of indexed parameter 
    FF_FAIL on error
   
   
@@ -327,7 +383,7 @@ It returns an Output Value cast as an untyped 32-bit pointer.
    getpluginCaps
   ================================================================================
   
-   returns true pof false to indicate whether cappable of feature specified by index
+   returns true or false to indicate whether capable of feature specified by index
   
    parameters:
    32-bit unsigned integer index - index of parameter 
