@@ -131,7 +131,7 @@ typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID);
 
 #elif LINUX
 
-LPVOID plugMain(DWORD functionCode,LPVOID pParam);
+LPVOID plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved);
 
 #endif
 

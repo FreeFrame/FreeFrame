@@ -107,6 +107,10 @@ SOURCE=.\FreeFrame.def
 
 SOURCE=.\FreeFrame.h
 # End Source File
+# Begin Source File
+
+SOURCE=.\FreeFrameSample.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 

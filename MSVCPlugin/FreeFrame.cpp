@@ -90,9 +90,9 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 //
 
 #ifdef WIN32
- __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam) 
+ __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved ) 
 #elif LINUX
-   LPVOID plugMain(DWORD functionCode,LPVOID pParam)
+   LPVOID plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved )
 #endif	
 {
 	switch(functionCode) {
@@ -173,7 +173,7 @@ ParameterStruct parameters[NUM_PARAMS];
 PlugInfoStruct* getInfo() 
 {
 	plugInfo.APIMajorVersion = 0;
-	plugInfo.APIMinorVersion = 1026; // lets keep this in sync with the delphi host for now
+	plugInfo.APIMinorVersion = 1050; // lets keep this in sync with the delphi host for now
 	char ID[5] = "MPB1";		 // this *must* be unique to your plugin 
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "MSVC_Plugin_Base";
