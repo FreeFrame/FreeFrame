@@ -85,6 +85,11 @@ typedef char BYTE;
 //
 // FreeFrame types
 
+#if TARGET_OS_MAC
+typedef unsigned int DWORD;
+typedef unsigned char BYTE;
+#endif // TARGET_OS_MAC 
+
 typedef struct PlugInfoStructTag {
 	DWORD	APIMajorVersion;
 	DWORD	APIMinorVersion;
@@ -145,6 +150,11 @@ typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID,DW
 #elif LINUX
 plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD 
 reserved);
+
+#elif TARGET_OS_MAC
+
+typedef void* (*FF_Main_FuncPtr)(DWORD,void*,DWORD);
+
 #endif
 
 
