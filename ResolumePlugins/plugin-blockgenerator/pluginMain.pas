@@ -109,14 +109,14 @@ begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
     APIMinorVersion:=1050;
-    PluginUniqueID:='ELLG';
-    PluginName:='ellipse gen.';
+    PluginUniqueID:='BLOG';
+    PluginName:='block gen.';
     PluginType:=1; // 0 = effect 1 = source
   end;
   ParameterNameStruct.Parameter0Name:='R       ';
   ParameterNameStruct.Parameter1Name:='G       ';
   ParameterNameStruct.Parameter2Name:='B       ';
-  ParameterNameStruct.Parameter3Name:='ellipses';
+  ParameterNameStruct.Parameter3Name:='blocks  ';
 end;
 
 function GetInfo(pParam: pointer): pointer;
@@ -179,14 +179,16 @@ begin
   cols  := (VideoInfoStruct.FrameWidth div size); //amount of columns
   rows  := (VideoInfoStruct.FrameHeight div size); //amount of rows
 
-  color := clRed;
+  color := clGreen;
   for i:=0 to cols do begin
    for j:=0 to rows do begin
     DestRect := Rect(i*size,j*size,(i+1)*size,(j+1)*size);
     Bitmap.canvas.Brush.Color := clBlack;
     Bitmap.canvas.FillRect(DestRect);
+
     Bitmap.canvas.Brush.Color := color;
-    Bitmap.canvas.Ellipse(DestRect);
+    InflateRect(DestRect,-2,-2);
+    Bitmap.canvas.FillRect(DestRect);
    end;
   end;
   ellipsesize := size;
@@ -219,14 +221,16 @@ begin
       b := round((255/100)*(ParameterArray[2]*100));
 
       for i := 0 to round(ParameterArray[3]*100) do begin
-       //color := rgb(random(r),random(g),random(b));
        mul := random(50);
        color := rgb(r,g,b) - rgb(round(r*(mul/100)),round(g*(mul/100)),round(b*(mul/100)));
        colsr := random(cols);
        rowsr := random(rows);
        DestRect := Rect(colsr*ellipsesize,rowsr*ellipsesize,(colsr+1)*ellipsesize,(rowsr+1)*ellipsesize);
+       InflateRect(DestRect,-2,-2);
        Bitmap.canvas.Brush.Color := color;
-       Bitmap.canvas.Ellipse(DestRect);
+       Bitmap.canvas.FillRect(DestRect);
+
+       //Bitmap.canvas.Ellipse(DestRect);
       end;
 
       copyemback(Bitmap,pParam); //copy bitmap to framebuffer
@@ -285,7 +289,6 @@ begin
   end;
 
   result:= true;
-
 end;
 
 
@@ -312,15 +315,15 @@ var
 begin
   case integer(pParam) of
     0: begin
-      tempSingle:=1.0;
+      tempSingle:=0.0;
       result:=pointer(tempSingle);
     end;
     1: begin
-      tempSingle:=0.5;
+      tempSingle:=1.0;
       result:=pointer(tempSingle);
     end;
     2: begin
-      tempSingle:=0.25;
+      tempSingle:=0.0;
       result:=pointer(tempSingle);
     end;
     3: begin
