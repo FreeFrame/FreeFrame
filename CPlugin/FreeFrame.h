@@ -1,8 +1,3 @@
-#ifdef LINUX
-extern "C" {
-#include <string.h>
-#include <stdlib.h>
-#endif
 ///////////////////////////////////////////////////////////////////////////////////
 // FreeFrame.h
 //
@@ -35,6 +30,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #ifndef __FREEFRAME_H__
 #define __FREEFRAME_H__
+
+#ifdef LINUX
+extern "C" {
+#include <string.h>
+#include <stdlib.h>
+#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -147,8 +148,7 @@ plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD
 reserved);
 #endif
 
-
-#endif
 #ifdef LINUX
 }
+#endif
 #endif

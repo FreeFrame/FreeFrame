@@ -6,3 +6,8 @@
 		Added a few bugfixes and optimalisations.
 	* FreeFrameSample.h:
 		Changed VideoPixel32bitTag struct so that alpha comes last, this resolved some problems i had when testing the plugin, i hope is not a cludge.
+	* MemCopy.h MemCopy.cpp:
+		Provides the function memcopy, which is the same as memcpy, except it checks what type of processor is available and uses a better suited assembly routine, currently either mmx, 3dnowext or the old memcpy
+		On linux or when NO_INTEL is used, the standard memcpy will be used through a macro removing anyoverhead.
+		The assembly should be usable under linux, but it will first be needed to converted to at&t syntax.
+		Support should be added to take the best advantage of sse/sse2/simd/3dnow, 
