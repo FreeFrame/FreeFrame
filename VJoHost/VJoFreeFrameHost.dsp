@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /G6 /MD /W3 /GX /Zi /O2 /I "%VJO_INCLUDE%" /I "..\MSVCPlugin" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Include" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Effects\common" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FR /FD /QIfist /c
+# ADD CPP /nologo /G6 /MD /W3 /GX /Zi /O2 /I "%VJO_INCLUDE%" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Include" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Effects\common" /I "..\MSVCPlugin" /I "..\PetesPlugins\core" /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FR /FD /QIfist /c
 # SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
@@ -70,7 +70,7 @@ LINK32=xilink6.exe
 # PROP Ignore_Export_Lib 1
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_WINDLL" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..MSVCPlugin" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Include" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Effects\common" /I "..\MSVCPlugin" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FD /GZ /c
+# ADD CPP /nologo /MDd /W3 /Gm /GX /Zi /Od /I "..\..\..MSVCPlugin" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Include" /I "C:\Program Files\visualJockey R3\vJo Plugin SDK v3.2\vJo32\Effects\common" /I "..\MSVCPlugin" /I "..\PetesPlugins\core" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_WINDLL" /D "_AFXDLL" /FD /GZ /c
 # SUBTRACT CPP /Fr /YX /Yc /Yu
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
