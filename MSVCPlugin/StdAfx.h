@@ -3,9 +3,6 @@
 //      are changed infrequently
 //
 
-typedef unsigned int DWORD;
-typedef void * LPVOID;
-typedef char BYTE;
 #if !defined(AFX_STDAFX_H__63BF0A43_F696_11D6_8400_0010A4B3FD79__INCLUDED_)
 #define AFX_STDAFX_H__63BF0A43_F696_11D6_8400_0010A4B3FD79__INCLUDED_
 
@@ -18,6 +15,13 @@ typedef char BYTE;
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+#else
+
+//typedefs for linux - in windows these are defined in files included by windows.h
+typedef unsigned int DWORD;
+typedef void * LPVOID;
+typedef char BYTE;
+
 #endif
 
 // TODO: reference additional headers your program requires here
