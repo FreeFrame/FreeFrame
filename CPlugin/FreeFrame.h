@@ -1,3 +1,8 @@
+#ifdef LINUX
+extern "C" {
+#include <string.h>
+#include <stdlib.h>
+#endif
 ///////////////////////////////////////////////////////////////////////////////////
 // FreeFrame.h
 //
@@ -30,12 +35,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 #ifndef __FREEFRAME_H__
 #define __FREEFRAME_H__
-
-#ifdef LINUX
-extern "C" {
-#include <string.h>
-#include <stdlib.h>
-#endif
 
 //////////////////////////////////////////////////////////////////////////////////
 //
@@ -85,6 +84,11 @@ typedef char BYTE;
 /////////////////////////////////////////////////////////////////////////////////////////
 //
 // FreeFrame types
+
+#if TARGET_OS_MAC
+typedef unsigned int DWORD;
+typedef unsigned char BYTE;
+#endif // TARGET_OS_MAC 
 
 typedef struct PlugInfoStructTag {
 	DWORD	APIMajorVersion;
@@ -146,9 +150,15 @@ typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID,DW
 #elif LINUX
 plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD 
 reserved);
+
+#elif TARGET_OS_MAC
+
+typedef void* (*FF_Main_FuncPtr)(DWORD,void*,DWORD);
+
 #endif
 
+
+#endif
 #ifdef LINUX
 }
-#endif
 #endif
