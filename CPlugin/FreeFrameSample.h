@@ -70,11 +70,10 @@ typedef struct VideoPixel16bitTag {
 } VideoPixel16bit;
 
 typedef struct VideoPixel32bitTag {
-	BYTE alpha;
-	BYTE red;
-	BYTE green;
 	BYTE blue;
-
+	BYTE green;
+	BYTE red;
+	BYTE alpha;
 } VideoPixel32bit;
 
 // Russell - PluginInstance Object - these calls relate to instances of plugObj
@@ -153,6 +152,26 @@ public:
 	// the frame 'in place'.
 
 	DWORD	processFrame(LPVOID pFrame);
+	DWORD	processFrame24Bit(LPVOID pFrame);
+	DWORD	processFrame32Bit(LPVOID pFrame);
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	// processFrameCopy
+	//
+	// processes a frame of video from one buffer to another 
+	//
+	// parameters:
+	// 32-bit pointer to a structure containing a pointer to an array of input
+	// buffers, the number of input buffers, and a pointer to an output frame
+	// buffer
+	//
+	// return values (DWORD):
+	// FF_SUCCESS
+	// FF_FAIL on error
+	//
+	DWORD	processFrameCopy(ProcessFrameCopyStruct* pFrameData);
+	DWORD	processFrameCopy24Bit(ProcessFrameCopyStruct* pFrameData);
+	DWORD	processFrameCopy32Bit(ProcessFrameCopyStruct* pFrameData);
 	
 	///////////////////////////////////////////////////////////////////////////////////////
 	// parameters dynamic data 
