@@ -45,12 +45,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //
 
 
-typedef struct ParameterStructTag {
-	float value;
+typedef struct ParamConstsStructTag {
 	float defaultValue;
-	char displayValue[16];
 	char name[16];
-} ParameterStruct;
+} ParamConstantsStruct;
+
+typedef struct ParamDynamicDataStructTag {
+	float value;
+	char displayValue[16];
+} ParamDynamicDataStruct;
 
 typedef struct VideoPixel24bitTag {
 	BYTE red;
@@ -64,15 +67,112 @@ typedef struct VideoPixel16bitTag {
 } VideoPixel16bit;
 
 typedef struct VideoPixel32bitTag {
+	BYTE alpha;
 	BYTE red;
 	BYTE green;
 	BYTE blue;
-	BYTE alpha;
+
 } VideoPixel32bit;
+
+// Russell - PluginInstance Object - these calls relate to instances of plugObj
+// created by FF_INSTANTIATE
+
+class plugClass {
+
+public:
+
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	//
+	// Function prototypes - Instance Specific Plugin Functions inside the instance object
+
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	// getParameterDisplay
+	//
+	// returns pointer to array of 16 char containing a string to display as the value of
+	// parameter index
+	//
+	// parameters:
+	// DWORD index - index of parameter 
+	//
+	// return values (32-bit pointer to char):
+	// 32-bit pointer to array of char
+	// FF_FAIL on error
+	//
+
+	char*	getParameterDisplay(DWORD index);			
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	// setParameter
+	//
+	// Sets the value of parameter specified by index
+	// value is a 32-bit float 0<=value<=1
+	//
+	// parameters:
+	// DWORD index - index of parameter 
+	// 32-bit float value
+	//
+	// return values (DWORD):
+	// FF_FAIL on error
+	//
+
+	DWORD	setParameter(SetParameterStruct* pParam);		
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	// getParameter
+	//
+	// returns value of parameter specified by index as 32-bit float 0<=value<=1
+	//
+	// parameters:
+	// DWORD index - index of parameter 
+	//
+	// return values (32-bit float):
+	// 32-bit float value
+	// FF_FAIL on error
+	//
+
+	float	getParameter(DWORD index);					
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	// processFrame
+	//
+	// process a frame of video 'in place' 
+	//
+	// parameters:
+	// 32-bit pointer to byte array containing frame of video
+	//
+	// return values (DWORD):
+	// FF_SUCCESS
+	// FF_FAIL on error
+	//
+	// HOST: pFrame needs to be a valid pointer throughout this call as the plugin processes
+	// the frame 'in place'.
+
+	DWORD	processFrame(LPVOID pFrame);
+	
+	///////////////////////////////////////////////////////////////////////////////////////
+	// parameters dynamic data 
+
+	ParamDynamicDataStruct paramDynamicData[3];   // should be NUM_PARAMS - scope prob. presumably
+	VideoInfoStruct videoInfo;
+	int vidmode;
+
+private:
+
+	//////////////////////////////////////////////////////////////////////////////////
+	// plugin instance data storage
+	//
+	// all variables for stream processing should be declared here
+	// so that they automatically run instances of themselves withing the plugin object
+
+
+
+};
 
 ///////////////////////////////////////////////////////////////////////////////////////
 //
-// Function prototypes
+// Function prototypes - Global Plugin Functions that lie outside the instance object
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getInfo
@@ -101,12 +201,11 @@ PlugInfoStruct*	getInfo();
 // FF_SUCCESS - success
 // non-zero - fail (error values to be defined)
 //
-// HOST:	This function *must* return before a call to processFrame.  Pointer to 
-//			videoInfoStruct *must* be valid until function returns
+// HOST:	This function *must* return before a call to instantiate.
 // PLUGIN:  make a copy of the videoInfoStruct locally as pointer may not be valid after
 //			function returns
 
-DWORD	initialise(VideoInfoStruct* videoInfo);								
+DWORD	initialise();								
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // deinitialise
@@ -164,70 +263,6 @@ char*	getParameterName(DWORD index);
 
 float	getParameterDefault(DWORD index);			
 
-///////////////////////////////////////////////////////////////////////////////////////
-// getParameterDisplay
-//
-// returns pointer to array of 16 char containing a string to display as the value of
-// parameter index
-//
-// parameters:
-// DWORD index - index of parameter 
-//
-// return values (32-bit pointer to char):
-// 32-bit pointer to array of char
-// FF_FAIL on error
-//
-
-char*	getParameterDisplay(DWORD index);			
-
-///////////////////////////////////////////////////////////////////////////////////////
-// setParameter
-//
-// Sets the value of parameter specified by index
-// value is a 32-bit float 0<=value<=1
-//
-// parameters:
-// DWORD index - index of parameter 
-// 32-bit float value
-//
-// return values (DWORD):
-// FF_FAIL on error
-//
-
-DWORD	setParameter(SetParameterStruct* pParam);		
-
-///////////////////////////////////////////////////////////////////////////////////////
-// getParameter
-//
-// returns value of parameter specified by index as 32-bit float 0<=value<=1
-//
-// parameters:
-// DWORD index - index of parameter 
-//
-// return values (32-bit float):
-// 32-bit float value
-// FF_FAIL on error
-//
-
-float	getParameter(DWORD index);					
-
-///////////////////////////////////////////////////////////////////////////////////////
-// processFrame
-//
-// process a frame of video 'in place' 
-//
-// parameters:
-// 32-bit pointer to byte array containing frame of video
-//
-// return values (DWORD):
-// FF_SUCCESS
-// FF_FAIL on error
-//
-// HOST: pFrame needs to be a valid pointer throughout this call as the plugin processes
-// the frame 'in place'.
-
-DWORD	processFrame(LPVOID pFrame);				
-
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // getpluginCaps
@@ -246,6 +281,39 @@ DWORD	processFrame(LPVOID pFrame);
 // FF_FALSE
 //
 
-DWORD	getPluginCaps(DWORD index);					
+DWORD	getPluginCaps(DWORD index);	
+
+// Russell - new calls for FF 1.0 ......
+
+///////////////////////////////////////////////////////////////////////////////////////
+// instantiate
+//
+// Run up plugin instance - plugObj
+// Prepare the Plug-in instance for processing.  
+// Set default values, allocate memory
+// When the plug-in returns from this function it must be ready to proces a frame
+// Pointer to videoInfoStruct *must* be valid until function returns
+//
+// return values (pointer to a plugObj - FF Dword Instance ID)
+// FF_FAIL
+//
+// HOST: This function *must* return before a call to processFrame
+
+LPVOID instantiate(VideoInfoStruct* pVideoInfo);
+
+///////////////////////////////////////////////////////////////////////////////////////
+// deInstantiate
+//
+// Run down plugin instance
+//
+// Deallocate memory used by this instance
+
+DWORD deInstantiate(LPVOID instanceID);	
+
+///////////////////////////////////////////////////////////////////////////////////////
+// getExtendedInfo
+//
+
+LPVOID getExtendedInfo();		
 
 #endif

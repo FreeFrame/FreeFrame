@@ -50,8 +50,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 //
 
 PlugInfoStruct plugInfo;
-VideoInfoStruct videoInfo;
-ParameterStruct parameters[NUM_PARAMS];
+PlugExtendedInfoStruct plugExtInfo;
+ParamConstantsStruct paramConstants[3];
+
 
 /////////////////////////////////////////////////////
 //
@@ -74,8 +75,8 @@ ParameterStruct parameters[NUM_PARAMS];
 
 PlugInfoStruct* getInfo() 
 {
-	plugInfo.APIMajorVersion = 0;		// number before decimal point in version nums
-	plugInfo.APIMinorVersion = 500;		// this is the number after the decimal point
+	plugInfo.APIMajorVersion = 1;		// number before decimal point in version nums
+	plugInfo.APIMinorVersion = 000;		// this is the number after the decimal point
 										// so version 0.511 has major num 0, minor num 501
 	char ID[5] = "FFP1";		 // this *must* be unique to your plugin 
 								 // see www.freeframe.org for a list of ID's already taken
@@ -88,43 +89,25 @@ PlugInfoStruct* getInfo()
 	return &plugInfo;
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////////////
 // initialise
 //
-// Prepare the Plug-in for processing.  
-// Set default values, allocate memory
-// When the plug-in returns from this function it must be ready to proces a frame
-//
-// return values (DWORD)
-// FF_SUCCESS - success
-// non-zero - fail (error values to be defined)
-//
-// HOST: This function *must* return before a call to processFrame
+// do nothing for now - plugin instantiate is where the init happens now
 
-DWORD initialise(VideoInfoStruct* pVideoInfo)
+DWORD initialise()
 {
-	// make a copy of the VideoInfoStruct
-	videoInfo.frameWidth = pVideoInfo->frameWidth;
-	videoInfo.frameHeight = pVideoInfo->frameHeight;
-	videoInfo.bitDepth = pVideoInfo->bitDepth;
+    // populate the parameters constants structs
+	paramConstants[0].defaultValue = 0.5f;
+	paramConstants[1].defaultValue = 0.5f;
+	paramConstants[2].defaultValue = 0.5f;
 
-	if (getPluginCaps(videoInfo.bitDepth)!=FF_TRUE) {
-		return FF_FAIL;
-	}
-
-	// populate the parameters structs
-	parameters[0].defaultValue = 0.5f;
-	parameters[1].defaultValue = 0.5f;
-	parameters[2].defaultValue = 0.5f;
-	parameters[0].value = 0.5f;
-	parameters[1].value = 0.5f;
-	parameters[2].value = 0.5f;
 	char tempName1[17] = "red";
 	char tempName2[17] = "green";
 	char tempName3[17] = "blue";
-	memcpy(parameters[0].name, tempName1, 16);
-	memcpy(parameters[1].name, tempName2, 16);
-	memcpy(parameters[2].name, tempName3, 16);
+	memcpy(paramConstants[0].name, tempName1, 16);
+	memcpy(paramConstants[1].name, tempName2, 16);
+	memcpy(paramConstants[2].name, tempName3, 16);
 
 	return FF_SUCCESS;
 }
@@ -176,7 +159,7 @@ DWORD getNumParameters()
 
 char* getParameterName(DWORD index)
 {
-	return parameters[index].name;
+	return paramConstants[index].name;
 }
 
 
@@ -195,7 +178,7 @@ char* getParameterName(DWORD index)
 
 float getParameterDefault(DWORD index)
 {
-	return parameters[index].defaultValue;
+	return paramConstants[index].defaultValue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -212,14 +195,14 @@ float getParameterDefault(DWORD index)
 // FF_FAIL on error
 //
 
-char* getParameterDisplay(DWORD index)
+char* plugClass::getParameterDisplay(DWORD index)
 {
 	// fill the array with spaces first
 	for (int n=0; n<16; n++) {
-		parameters[index].displayValue[n] = ' ';
+		paramDynamicData[index].displayValue[n] = ' ';
 	}
-	sprintf(parameters[index].displayValue, "%f",parameters[index].value);
-	return parameters[index].displayValue;
+	sprintf(paramDynamicData[index].displayValue, "%f",paramDynamicData[index].value);
+	return paramDynamicData[index].displayValue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -236,9 +219,9 @@ char* getParameterDisplay(DWORD index)
 // FF_FAIL on error
 //
 
-DWORD setParameter(SetParameterStruct* pParam)
+DWORD plugClass::setParameter(SetParameterStruct* pParam)
 {
-	parameters[pParam->index].value = pParam->value;
+	paramDynamicData[pParam->index].value = pParam->value;
 	return FF_SUCCESS;
 }
 
@@ -255,49 +238,9 @@ DWORD setParameter(SetParameterStruct* pParam)
 // FF_FAIL on error
 //
 
-float getParameter(DWORD index)
+float plugClass::getParameter(DWORD index)
 {
-	return parameters[index].value;
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////
-// processFrameTemplate
-//
-// process a frame of video
-//
-// parameters:
-// 32-bit pointer to byte array containing frame of video
-//
-// return values (DWORD):
-// FF_SUCCESS
-// FF_FAIL on error
-//
-// special:
-// the type VideoPixel is a template, which is filled in by the calls made in
-// processFrame, this way the implementation is valid for both 24 and 32 bit modes
-// 
-
-template <class VideoPixel>
-DWORD processFrameTemplate(LPVOID pFrame) {
-	VideoPixel* pPixel = (VideoPixel*) pFrame;
-	DWORD x, y, width, height;
-	width=videoInfo.frameWidth;
-	height=videoInfo.frameHeight;
-	float parameter0, parameter1, parameter2;
-	parameter0=parameters[0].value;
-	parameter1=parameters[1].value;
-	parameter2=parameters[2].value;
-
-	for (y = 0; y < height; y++) {
-		for (x = 0; x < width; x++) {
-			pPixel->blue = (BYTE) (pPixel->blue * parameter0);
-			pPixel->green = (BYTE) (pPixel->green * parameter1);
-			pPixel->red = (BYTE) (pPixel->red * parameter2);
-			pPixel++;
-		}
-	}
-	return FF_SUCCESS;
+	return paramDynamicData[index].value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -312,19 +255,21 @@ DWORD processFrameTemplate(LPVOID pFrame) {
 // FF_SUCCESS
 // FF_FAIL on error
 //
-DWORD processFrame(LPVOID pFrame)
+
+DWORD plugClass::processFrame(LPVOID pFrame)
 {
-	switch (videoInfo.bitDepth) {
-	case 0:
-		return FF_FAIL;
-	case 1:
-		return processFrameTemplate<VideoPixel24bit>(pFrame);
-	case 2:
-		return processFrameTemplate<VideoPixel32bit>(pFrame);
-	default:
-		return FF_FAIL;
+	VideoPixel24bit* pPixel = (VideoPixel24bit*) pFrame;
+	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
+	  for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
+	    // this is very slow! Should be a lookup table
+	    pPixel->blue = (BYTE) (pPixel->blue * paramDynamicData[0].value);
+	    pPixel->green = (BYTE) (pPixel->green * paramDynamicData[1].value);
+	    pPixel->red = (BYTE) (pPixel->red * paramDynamicData[2].value);
+	    pPixel++;
+	  }
 	}
 
+	return FF_SUCCESS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -352,8 +297,97 @@ DWORD getPluginCaps(DWORD index)
 	case 1:
 		return FF_TRUE;
 	case 2:
-		return FF_TRUE;
+		return FF_FALSE;
 	default:
 		return FF_FALSE;
 	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// instantiate
+//
+// Run up plugin instance - plugObj
+// Prepare the Plug-in instance for processing.  
+// Set default values, allocate memory
+// When the plug-in returns from this function it must be ready to proces a frame
+//
+// return values (pointer to a plugObj - FF Dword Instance ID)
+// FF_FAIL
+//
+// HOST: This function *must* return before a call to processFrame
+
+LPVOID instantiate(VideoInfoStruct* pVideoInfo)
+{
+
+	// Create local pointer to plugObject
+	plugClass *pPlugObj;
+	// create new instance of plugClass
+	pPlugObj = new plugClass;
+
+	// make a copy of the VideoInfoStruct
+	pPlugObj->videoInfo.frameWidth = pVideoInfo->frameWidth;
+	pPlugObj->videoInfo.frameHeight = pVideoInfo->frameHeight;
+	pPlugObj->videoInfo.bitDepth = pVideoInfo->bitDepth;
+
+	// this shouldn't happen if the host is checking the capabilities properly
+	pPlugObj->vidmode = pPlugObj->videoInfo.bitDepth;
+	if (pPlugObj->vidmode >2 || pPlugObj->vidmode < 0) {
+	  return (LPVOID) FF_FAIL;
+	}
+
+	pPlugObj->paramDynamicData[0].value = 0.5f;
+	pPlugObj->paramDynamicData[1].value = 0.5f;
+	pPlugObj->paramDynamicData[2].value = 0.5f;
+
+	// Russell - return pointer to the plugin instance object we have created
+
+	// return pointer to object cast as LPVOID 
+	return (LPVOID) pPlugObj;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// deInstantiate
+//
+// Run down plugin instance
+//
+// Deallocate memory used by this instance
+
+DWORD deInstantiate(LPVOID instanceID)
+{
+
+	// declare pPlugObj - pointer to this instance
+	plugClass *pPlugObj;
+
+	// typecast LPVOID into pointer to a plugClass
+	pPlugObj = (plugClass*) instanceID;
+
+	delete pPlugObj; // todo: ? success / fail?
+	
+	return FF_SUCCESS;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////
+// getExtendedInfo
+//
+
+LPVOID getExtendedInfo()
+{
+
+	plugExtInfo.PluginMajorVersion = 1;
+	plugExtInfo.PluginMinorVersion = 10;
+
+	// I'm just passing null for description etc for now
+	// todo: send through description and about
+	plugExtInfo.Description = NULL;
+	plugExtInfo.About = NULL;
+
+	// FF extended data block is not in use by the API yet
+	// we will define this later if we want to
+	plugExtInfo.FreeFrameExtendedDataSize = 0;
+	plugExtInfo.FreeFrameExtendedDataBlock = NULL;
+
+	return (LPVOID) &plugExtInfo;
+
+	////////////////////////////////////////////////////
+
 }

@@ -11,3 +11,12 @@
 		On linux or when NO_INTEL is used, the standard memcpy will be used through a macro removing anyoverhead.
 		The assembly should be usable under linux, but it will first be needed to converted to at&t syntax.
 		Support should be added to take the best advantage of sse/sse2/simd/3dnow, 
+
+
+***********************************************************************
+
+28th July 2003 Russell Blakeborough (vjamm) boblists@brightonart.org
+
+* rolled back bluelive commits of sat mar 29th 2003 - they don't work in MSVC
+
+* freeframe 1.0 upgrade

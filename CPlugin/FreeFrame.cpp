@@ -70,13 +70,19 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 //
 
 #ifdef WIN32
- __declspec(dllexport) plugMainUnion __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved ) 
+ __declspec(dllexport) plugMainUnion __stdcall plugMain(DWORD functionCode, LPVOID pParam, LPVOID instanceID ) 
 #elif LINUX
 extern "C" {
-   plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD reserved )
+   plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, LPVOID instanceID )
 #endif	
 {
 	plugMainUnion retval;
+
+	// declare pPlugObj - pointer to this instance
+	plugClass *pPlugObj;
+
+	// typecast LPVOID into pointer to a plugClass
+	pPlugObj = (plugClass*) instanceID;
 
 	switch(functionCode) {
 
@@ -84,10 +90,10 @@ extern "C" {
 		retval.PISvalue = getInfo();
 		break;
 	case FF_INITIALISE:
-		retval.ivalue = initialise( (VideoInfoStruct*) pParam);
+		retval.ivalue = initialise();
 		break;
 	case FF_DEINITIALISE:
-		retval.ivalue = deInitialise();
+		retval.ivalue = deInitialise();			// todo: pass on instance IDs etc
 		break;
 	case FF_GETNUMPARAMETERS:
 		retval.ivalue = getNumParameters();
@@ -99,23 +105,45 @@ extern "C" {
 		retval.fvalue =  getParameterDefault( (DWORD) pParam );
 		break;
 	case FF_GETPARAMETERDISPLAY:
-		retval.svalue =  getParameterDisplay( (DWORD) pParam );
+		retval.svalue =  pPlugObj->getParameterDisplay( (DWORD) pParam );
 		break;	
 	// parameters are passed in here as a packed struct of two DWORDS:
 	// index and value
 	case FF_SETPARAMETER:
-		retval.ivalue=  setParameter( (SetParameterStruct*) pParam );
+		retval.ivalue=  pPlugObj->setParameter( (SetParameterStruct*) pParam );
 		break;
-	
 	case FF_PROCESSFRAME:
-		retval.ivalue = processFrame(pParam);
+		retval.ivalue = pPlugObj->processFrame(pParam);
 		break;
 	case FF_GETPARAMETER:
-		retval.fvalue =  getParameter((DWORD) pParam);
+		retval.fvalue =  pPlugObj->getParameter((DWORD) pParam);
 		break;
 	case FF_GETPLUGINCAPS:
 		retval.ivalue = getPluginCaps( (DWORD) pParam);
 		break;
+
+// Russell - FF 1.0 upgrade in progress ...
+
+	case FF_INSTANTIATE:
+		retval.ivalue = (DWORD) instantiate( (VideoInfoStruct*) pParam);
+		break;
+	case FF_DEINSTANTIATE:
+		retval.ivalue = deInstantiate(pPlugObj);
+		break;
+	case FF_GETEXTENDEDINFO: 
+		retval.ivalue = (DWORD) getExtendedInfo();
+		break;
+	case FF_PROCESSFRAMECOPY:
+		// not implemented yet
+		retval.ivalue = FF_FAIL;
+		break;
+	case FF_GETPARAMETERTYPE:		
+		// not implemented yet
+		retval.ivalue = FF_FAIL;
+		break;
+
+// ....................................
+
 	default:
 		retval.ivalue = FF_FAIL;
 		break;
