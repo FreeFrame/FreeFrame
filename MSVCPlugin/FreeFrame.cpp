@@ -171,7 +171,7 @@ ParameterStruct parameters[NUM_PARAMS];
 PlugInfoStruct* getInfo() 
 {
 	plugInfo.APIMajorVersion = 0;
-	plugInfo.APIMinorVersion = 1024; // lets keep this in sync with the delphi host for now
+	plugInfo.APIMinorVersion = 1026; // lets keep this in sync with the delphi host for now
 	char ID[5] = "MPB1";		 // this *must* be unique to your plugin 
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "MSVC_Plugin_Base";
@@ -375,9 +375,14 @@ DWORD processFrame(LPVOID pFrame)
 	VideoPixel24bit* pPixel = (VideoPixel24bit*) pFrame;
 	for (DWORD x = 0; x < videoInfo.frameWidth; x++) {
 		for (DWORD y = 0; y < videoInfo.frameHeight; y++) {
+// this is very slow!
 			pPixel->blue = (BYTE) (pPixel->blue * parameters[0].value);
 			pPixel->green = (BYTE) (pPixel->green * parameters[0].value);
 			pPixel->red = (BYTE) (pPixel->red * parameters[0].value);
+//this is faster but rubbish!
+//			pPixel->blue  = pPixel->blue >> 1;
+//			pPixel->green = pPixel->green >> 1;
+//			pPixel->red	= pPixel->red >> 1;
 			pPixel++;
 		}
 	}
