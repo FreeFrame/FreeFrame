@@ -91,8 +91,11 @@ The following types are used:
   ================================================================================
   PluginInfoStruct
   ================================================================================
-  APIMajorVersion: 32-bit unsigned integer
-  APIMinorVersion: 32-bit unsigned integer
+  APIMajorVersion: 32-bit unsigned integer - represents number before decimal point
+                   in version numbers
+  APIMinorVersion: 32-bit unsigned integer - represents number after decimal point
+                   in version numbers
+                   Example: 0.511 APIMajorVersion=0, APIMinorVersion=511
   PluginUniqueID: 4 1-byte ascii characters (32 bits) *not null terminated*
   PluginName: 16 1-byte ascii characters (32 bits)    *not null terminated*
   PluginType: 32-bit unsigned integer 
