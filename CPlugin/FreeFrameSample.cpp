@@ -193,7 +193,7 @@ float getParameterDefault(DWORD index)
 	if(index >= 0 && index < NUM_PARAMS)
 		return paramConstants[index].defaultValue;
 	else
-		return FF_FAIL;
+		return (float)FF_FAIL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -273,7 +273,7 @@ float plugClass::getParameter(DWORD index)
 	if(index >= 0 && index < NUM_PARAMS)
 		return paramDynamicData[index].value;
 	else
-		return FF_FAIL;
+		return (float)FF_FAIL;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

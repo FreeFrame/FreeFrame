@@ -141,8 +141,8 @@ typedef struct PlugExtendedInfoStructTag {
 typedef struct VideoInfoStructTag {
 	DWORD frameWidth;				// width of frame in pixels
 	DWORD frameHeight;				// height of frame in pixels
-	DWORD bitDepth;					// enumerated indicator of bit depth of video 
-									// 0 = 16 bit 5-6-5   1 = 24bit packed   2 = 32bit
+	DWORD bitDepth;					// enumerated indicator of bit depth of video  0 = 16 bit 5-6-5   1 = 24bit packed   2 = 32bit
+	DWORD orientation;				// video frame orientation meaningful values: 1 = origin at top left 2 = origin at bottom left
 } VideoInfoStruct;
 
 typedef struct ProcessFrameCopyStructTag {
