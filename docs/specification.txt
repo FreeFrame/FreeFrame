@@ -3,8 +3,8 @@ FreeFrame Open Video Plugin System Specification
 www.freeframe.org
 
 FreeFrame Plugins export a single function: plugMain
-This is passed 2 values: a dword Function Code and an Input Value cast as an untyped dword pointer.
-It returns an Output Value cast as an untyped dword pointer.
+This is passed 2 values: a 32-bit Function Code and an Input Value cast as an untyped 32-bit pointer.
+It returns an Output Value cast as an untyped 32-bit pointer.
 
 
   =============================================================================================
@@ -13,28 +13,39 @@ It returns an Output Value cast as an untyped dword pointer.
   Code   Function		Input Value			Output Value
   =====  =====================  ==============================  ===============================
   0      GetInfo		Unused				Pointer to PluginInfoStruct
-  1      Initialize		Pointer to VideoInfoStruct	Success/Fail
-  2      DeInitialize		Unused				Success/Fail
-  3      ProcessFrame		Pointer to a frame of video	Success/Fail
+  1      Initialise		Pointer to VideoInfoStruct	Success/Error code
+  2      DeInitialise		Unused				Success/Error code
+  3      ProcessFrame		Pointer to a frame of video	Success/Error code
   4      GetNumParameters	Unused				NumParameters
   5      GetParameterName	ParamaterNumber			Pointer to ParameterName
   6      GetParameterDefault	ParamaterNumber			ParameterDefaultValue
   7      GetParameterDisplay	ParamaterNumber			Pointer to ParameterDisplayValue
-  8      SetParameter		Pointer to SetParameterStruct	Success/Fail
+  8      SetParameter		Pointer to SetParameterStruct	Success/Error code
   9      GetParameter		Paramater number		ParameterValue	
   10     GetPluginCaps		PluginCapsIndex			Supported/Unsupported
   =====  =====================  ==============================  ================================
   
+  =============================================================================================
+  RETURN CODES
+  =============================================================================================
+  FF_FAIL		(hex) FFFFFFFF
+  FF_SUCCESS		0 
+  FF_TRUE		1
+  FF_FALSE		0
+  =============================================================================================
   
+  =============================================================================================
+  STRUCTURES
+  =============================================================================================
   
   ================================================================================
   PluginInfoStruct
   ================================================================================
-  APIMajorVersion: dword
-  APIMinorVersion: dword
-  PluginUniqueID: array of 4 char (= 1 dword, not null terminated)
-  PluginName: array of 16 char (= 4 dwords, not null terminated)
-  PluginType: dword (0=effect 1=source)
+  APIMajorVersion: 32-bit unsigned integer
+  APIMinorVersion: 32-bit unsigned integer
+  PluginUniqueID: array of 4 char (= 1 32-bit unsigned integer, not null terminated)
+  PluginName: array of 16 char (= 4 32-bit unsigned integers, not null terminated)
+  PluginType: 32-bit unsigned integer (0=effect 1=source)
   ================================================================================
   Plugins of PluginType effect are passed frames of video, which they then modify
   Source Plugins are simply passed a pointer where they paint frames of video
@@ -46,40 +57,40 @@ It returns an Output Value cast as an untyped dword pointer.
   ================================================================================
   VideoInfoStruct
   ================================================================================
-  FrameWidth: dword
-  FrameHeight: dword
-  BitDepth: dword (0=16bit 1=24bit 2=32bit)
+  FrameWidth: 32-bit unsigned integer
+  FrameHeight: 32-bit unsigned integer
+  BitDepth: 32-bit unsigned integer (0=16bit 1=24bit 2=32bit)
   ================================================================================
   BitDepth: 
   16bit is 5-6-5 packed
   24bit is packed
-  32bit is also suitable for dword aligned 24bit
+  32bit is also suitable for 32-bit unsigned integer aligned 24bit
   ================================================================================
   
   
   ================================================================================
-  NumParamaters: dword cast as untyped pointer
+  NumParamaters: 32-bit unsigned integer cast as untyped pointer
   ================================================================================
   The number of paramaters that the plugin implements
   ================================================================================
   
   
   ================================================================================
-  ParamaterNumber: dword cast as untyped pointer
+  ParamaterNumber: 32-bit unsigned integer cast as untyped pointer
   ================================================================================
   Paramater Numbers start at 0
   ================================================================================
   
   
   ================================================================================
-  ParamaterName: array of 16 char (= 4 dwords, not null terminated)
+  ParamaterName: array of 16 char (= 4 32-bit unsigned integers, not null terminated)
   ================================================================================
   The name of the Paramater as it will be displayed by the host on the UI
   ================================================================================
   
   
   ================================================================================
-  ParamaterDefaultValue: 32bit float cast as untyped dword pointer
+  ParamaterDefaultValue: 32bit float cast as untyped 32-bit pointer
   ================================================================================
   The initial default value for this paramater.
   Plugins should always specify default values.
@@ -92,7 +103,8 @@ It returns an Output Value cast as an untyped dword pointer.
   
   
   ================================================================================
-  ParamaterDisplayValue: array of 16 char (= 4 dwords, not null terminated)
+  ParamaterDisplayValue: array of 16 char (= 4 32-bit unsigned integers, 
+  not null terminated)
   ================================================================================
   The current display value of this parameter. The plugin can display whatever it
   likes here  eg. just the float, a rounded 0-100 '%' representation for the user
@@ -104,16 +116,16 @@ It returns an Output Value cast as an untyped dword pointer.
   ================================================================================
   SetParamaterStruct
   ================================================================================
-  ParamaterNumber: dword
-  NewParamaterValue: 32bit float cast as untyped dword pointer
+  ParamaterNumber: 32-bit unsigned integer
+  NewParamaterValue: 32bit float cast as untyped 32-bit pointer
   ================================================================================
   
   
   ================================================================================
-  Parameter Value: 32bit float cast as untyped dword pointer
+  Parameter Value: 32bit float cast as untyped 32-bit pointer
   ================================================================================
   FreeFrame parameter values are always 32bit floats,
-  and the range of values permitted is STRICTLY 0-1.
+  and the range of values permitted is STRICTLY 0-1 ( 0<= param <= 1 )
   This allows faster processing and a good range of values over a standard 
   range, so the host can run up sliders or whatever for the plugin.
   Use of any values outside this range will result in hideous incompatabilities.
@@ -125,11 +137,11 @@ It returns an Output Value cast as an untyped dword pointer.
   
   
   ================================================================================
-  PluginCapsIndex: dword cast as untyped pointer
+  PluginCapsIndex: 32-bit unsigned integer cast as 32-bit untyped pointer
   ================================================================================
   0 = 16bit 5-6-5
   1 = 24bit packed
-  2 = 32bit / 24bit dword aligned
+  2 = 32bit ================================================================================ 24bit 32-bit aligned
   ================================================================================
   The PluginCapsIndex specifies certain capabilities of a plugin that the host may
   want to enquire about. For now there is only the bitdepth format of the video.
@@ -139,3 +151,193 @@ It returns an Output Value cast as an untyped dword pointer.
   ================================================================================
   Supported/Unsupported: 0=unsupported 1=supported
   ================================================================================
+  
+  ================================================================================
+   plugMain - The one and only exposed function
+  ================================================================================
+   parameters: 
+  	functionCode - tells the plugin which function is being called
+    pParam - 32-bit parameter or 32-bit pointer to parameter structure
+  
+   PLUGIN DEVELOPERS:  you shouldn't need to change this function
+  
+   All parameters are cast as 32-bit untyped pointers and cast to appropriate
+   types here
+   
+   All return values are cast to 32-bit untyped pointers here before return to 
+   the host
+  
+  
+ 
+  ================================================================================
+   getInfo
+  ================================================================================
+  
+   gets information about the plugin - version, unique id, short name and type 
+   This function should be identical in all future versions of the FreeFrame API
+    
+   return values (32-bit pointer to PlugInfoStruct)
+   FF_FAIL on error
+   32-bit pointer to PlugInfoStruct
+  
+   HOST: call this function first to get version information
+         the version defines the other fucntion codes that are supported
+         supported function codes are listed in the documentation www.freeframe.org
+  
+  
+  ================================================================================
+   initialise
+  ================================================================================
+  
+   Prepare the Plug-in for processing.  
+   Set default values, allocate memory
+   When the plug-in returns from this function it must be ready to proces a frame
+  
+   return values (32-bit unsigned integer)
+   FF_SUCCESS - success
+   non-zero - fail (error values to be defined)
+  
+   HOST:	This function *must* return before a call to processFrame.  Pointer to 
+  			videoInfoStruct *must* be valid until function returns
+   PLUGIN:  make a copy of the videoInfoStruct locally as pointer may not be valid after
+  			function returns
+  
+  
+  ================================================================================
+   deInitialise
+  ================================================================================
+  
+   Tidy up   
+   Deallocate memory
+  
+   return values (32-bit unsigned integer)
+   FF_SUCCESS - success
+   non-zero - fail (error values to be defined)
+  
+   HOST: This *must* be the last function called on the plugin
+  
+  
+  ================================================================================
+   getNumParameters 
+  ================================================================================
+  
+   returns number of parameters in plugin
+   
+   return values (32-bit unsigned integer)
+   number of parameters
+   FF_FAIL on error
+  
+  
+  ================================================================================
+   getParameterName
+  ================================================================================
+  
+   returns pointer to 16 byte char array containing the name of parameter specified by index
+  
+   parameters:
+   32-bit unsigned integer index - index of parameter 
+  
+   return values (32-bit pointer to char):
+   32-bit pointer to array of char
+   FF_FAIL on error
+  
+  
+  
+  ================================================================================
+   getParameterDefault
+  ================================================================================
+  
+   returns default value of parameter specified by index as 32-bit float 0<=value<=1
+  
+   parameters:
+   32-bit unsigned integer index - index of parameter 
+  
+   return values (32-bit float):
+   32-bit float value
+   FF_FAIL on error
+  
+  
+  
+  ================================================================================
+   getParameterDisplay
+  ================================================================================
+  
+   returns pointer to array of 16 char containing a string to display as the value of
+   parameter index
+  
+   parameters:
+   32-bit unsigned integer index - index of parameter 
+  
+   return values (32-bit pointer to char):
+   32-bit pointer to array of char
+   FF_FAIL on error
+  
+  
+  
+  ================================================================================
+   setParameter
+  ================================================================================
+  
+   Sets the value of parameter specified by index
+   value is a 32-bit float 0<=value<=1
+  
+   parameters:
+   32-bit unsigned integer index - index of parameter 
+   32-bit float value
+  
+   return values (32-bit unsigned integer):
+   FF_FAIL on error
+  
+  
+  
+  ================================================================================
+   getParameter
+  ================================================================================
+  
+   returns value of parameter specified by index as 32-bit float 0<=value<=1
+  
+   parameters:
+   32-bit unsigned integer index - index of parameter 
+  
+   return values (32-bit float):
+   32-bit float value
+   FF_FAIL on error
+  
+  
+  
+  ================================================================================
+   processFrame
+  ================================================================================
+  
+   process a frame of video 'in place' 
+  
+   parameters:
+   32-bit pointer to byte array containing frame of video
+  
+   return values (32-bit unsigned integer):
+   FF_SUCCESS
+   FF_FAIL on error
+  
+   HOST: pFrame needs to be a valid pointer throughout this call as the plugin processes
+   the frame 'in place'.
+  
+  
+  
+  ================================================================================
+   getpluginCaps
+  ================================================================================
+  
+   returns true pof false to indicate whether cappable of feature specified by index
+  
+   parameters:
+   32-bit unsigned integer index - index of parameter 
+   allowed values:
+   0 - 16 bit video
+   1 - 24 bit video
+   2 - 32 bit video
+  
+   return values (32-bit unsigned integer):
+   FF_TRUE
+   FF_FALSE
+  
+  
