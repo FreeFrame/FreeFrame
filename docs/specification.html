@@ -37,7 +37,7 @@ All rights reserved.</b>
 
 <p>
 This document is a functional specification for the FreeFrame application programmers interface
-(API).  It is intended to be subject to the same license as the code supplied as examples of 
+(API).  It is intended to be subject to the same license as the code supplied as examples of
 use of the FreeFrame API.
 </p>
 
@@ -64,13 +64,13 @@ are permitted provided that the following conditions are met:
 </ul>
 
 <font face=courier>
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS 
-OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY 
-AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR 
-CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, 
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER 
-IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT 
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot; AND ANY EXPRESS
+OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER
+IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
 OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </font>
 
@@ -81,7 +81,7 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </a>
 <p>
 FreeFrame plugins are distributed and used as compiled shared objects (.so) in Linux
-and 
+and
 Mac OS X, as Dynamically Linked Libraries (.dll) in Windows.
 </p>
 
@@ -290,10 +290,10 @@ otherwise.
 <hr>
 
 <!-- /****************** ParameterNumber******************/  -->
-<a name="ParameterNumber">
+<a name="ParameterNumber"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>ParameterNumber</h3></td>
-		<td valign=top>&nbsp;(</a><a name="NumParameters">32-bit unsigned integer</a>)</td>
+		<td valign=top>&nbsp;(<a name="NumParameters">32-bit unsigned integer</a>)</td>
 	</tr></table>
 
 <h4>Definition:</h4>
@@ -348,10 +348,10 @@ otherwise.
 <p>
 Apart from text parameters, FreeFrame parameter values are always 32-bit floats,
 and the range of values permitted is STRICTLY 0-1  (0 &lt;= ParameterValue &lt;= 1).
-This allows faster processing and a good range of values over a standard 
+This allows faster processing and a good range of values over a standard
 range, so the host can run up sliders or similar for the plugin.
 <b>The Use of any values outside this range will result in hideous incompatibilities.</b>
-The <a href="#ParameterDisplayValue"> ParameterDisplayValue</a> can be used to display whatever actual values 
+The <a href="#ParameterDisplayValue"> ParameterDisplayValue</a> can be used to display whatever actual values
 the plugin likes e.g. 0-255, 0-767, 1-256 or whatever.
 The plugin should translate the standard 0-1 float range into the values it
 needs for its processing.
@@ -412,18 +412,18 @@ string.
 		The plugin can display whatever it
 		likes here e.g. just the float, a rounded 0-100 '%' representation for the user,
 		words representing states like 'on' / 'off',
-		different effects that the one plugin can do etc... 
+		different effects that the one plugin can do etc...
 	</td>
 </tr>
 </table>
 
 <hr>
-  
+
 <!-- /****************** PluginCapsIndex******************/  -->
-<a name="PluginCapsIndex">
+<a name="PluginCapsIndex"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>PluginCapsIndex</h3></td>
-		<td valign=top>&nbsp;(</a><a name="NumParameters">32-bit unsigned integer</a>)</td>
+		<td valign=top>&nbsp;(<a name="NumParameters">32-bit unsigned integer</a>)</td>
 	</tr></table>
 
 <h4>Definition:</h4>
@@ -434,17 +434,17 @@ string.
 	<td>
 		32-bit unsigned integer. Specifies certain capabilities of a plugin that the host may
 		want to enquire about.:<br>
-		0 = 16bit 5-6-5 support<br>
-		1 = 24bit packed support<br>
-		2 = 32bit (or 24bit 32-bit aligned) support<br>
+		0 = 16-bit 5-6-5 pixelformat support<br>
+		1 = 24-bit pixelformat support<br>
+		2 = 32-bit (or 24-bit 32-bit aligned) pixelformat support<br>
 		&nbsp;<br>
-		3 = Plugin supports <a href="#ProcessFrameCopy"> processFrameCopy</a> function<br>
+		3 = Plugin supports <a href="#processFrameCopy">processFrameCopy</a> function<br>
 		&nbsp;<br>
 		Calls to these caps indexes are only meaningful if the plugin has reported
-		that it supports <a href="#ProcessFrameCopy">processFrameCopy</a>:<br>
+		that it supports <a href="#processFrameCopy">processFrameCopy</a>:<br>
 		10 = Minimum input frames<br>
 		11 = Maximum input frames<br>
-		15 = Plugin optimized for copy or in-place processing		
+		15 = Plugin optimized for copy or in-place processing
 	</td>
 </tr>
 </table>
@@ -454,14 +454,18 @@ string.
 See <a href="#getPluginCaps">getPluginCaps</a> for more information about the usage
 of this structure.
 </p>
+<p>
+See <a href="#VideoInfoStruct">VideoInfoStruct</a> for more information about the
+pixelformats.
+</p>
 
-<hr>    
+<hr>
 
 <!-- /****************** ParameterType ******************/  -->
-<a name="ParameterType">
+<a name="ParameterType"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>ParameterType</h3></td>
-		<td valign=top>&nbsp;(</a><a name="NumParameters">32-bit unsigned integer</a>)</td>
+		<td valign=top>&nbsp;(<a name="NumParameters">32-bit unsigned integer</a>)</td>
 	</tr></table>
 
 <h4>Definition:</h4>
@@ -511,7 +515,7 @@ of this structure.
 			<td>xpos</td>
 			<td rowspan=2>
 				For x, y video interaction e.g. cursor - these should denote
-				position within the video frames as specified in the 
+				position within the video frames as specified in the
 				<a href="#VideoInfoStruct">VideoInfoStruct</a>.
 			</td>
 		</tr>
@@ -528,7 +532,7 @@ of this structure.
 			<td>100</td>
 			<td>text</td>
 			<td>
-				A null terminated text input type - Note: only this type has a 
+				A null terminated text input type - Note: only this type has a
 				different data type for the moment
 			</td>
 		</tr>
@@ -553,13 +557,13 @@ of this structure.
 <tr>
 	<td valign=top><i>InputChannel:</i></td>
 	<td>
-		Input channel as relates to the use of multiple inputs in <a href="#ProcessFrameCopy">processFrameCopy</a>
+		Input channel as relates to the use of multiple inputs in <a href="#processFrameCopy">processFrameCopy</a>
 		The first channel is 0.
 	</td>
 </tr>
 </table>
 
-<hr>    
+<hr>
 
 <!-- /****************** InputStatus******************/  -->
 <a name="InputStatus">
@@ -575,9 +579,9 @@ of this structure.
 <tr>
 	<td valign=top><i>InputStatus:</i></td>
 	<td>
-		Status of input channels as relates to the use of multiple inputs in <a href="#ProcessFrameCopy">processFrameCopy</a>.<br>
+		Status of input channels as relates to the use of multiple inputs in <a href="#processFrameCopy">processFrameCopy</a>.<br>
 		0 = Not in use<br>
-		1 = In Use 
+		1 = In Use
 	</td>
 </tr>
 </table>
@@ -642,11 +646,11 @@ PluginInfoStruct {
 <p>
 Plugins of PluginType effect are passed frames of video, which they then modify.
 Source plugins are simply passed a pointer where they paint frames of video.
-One example of a source plugin would by a visual synthesizer which uses the 
+One example of a source plugin would by a visual synthesizer which uses the
 parameters to synthesize video.
 </p>
 <p>
-FreeFrame APIMinorVersion numbers should always have 3 digits - so divide the 
+FreeFrame APIMinorVersion numbers should always have 3 digits - so divide the
 minor version number by 1000 and add the major version number to get the full
 version number.
 <br>
@@ -684,10 +688,9 @@ VideoInfoStruct {
 <tr>
 	<td valign=top><i>BitDepth:</i></td>
 	<td>Current meaningful values:<br>
-		0 = 16bit, 5-6-5 packed<br>
-		1 = 24bit, packed (byte order: BGR)<br>
-		2 = 32bit, also suitable for 32-bit unsigned integer aligned 24bit (byte
-      order: BGRA)<br>
+		0 = 16-bit, 5-6-5 packed<br>
+		1 = 24-bit, packed (see remarks)<br>
+		2 = 32-bit, also suitable for 32-bit unsigned integer aligned 24-bit (see remarks).<br>
 		(see remarks)
 	</td>
 </tr>
@@ -703,15 +706,26 @@ VideoInfoStruct {
 
 <h4>Remarks:</h4>
 <p>
-Plugins using 32bit as byte aligned 24 bit video should be careful not to 
-overwrite the alpha (4th) byte of each pixel (e.g. by using it as a processing 
-space) as this may be used soon by hosts with 32bit video processing becoming 
+Plugins using 32-bit as byte aligned 24-bit video should be careful not to
+overwrite the alpha (4th) byte of each pixel (e.g. by using it as a processing
+space) as this may be used soon by hosts with 32-bit video processing becoming
 more accessible.
 </p>
 <p>
 If Orientation == 1 the first pixel at the pointer to the frame is the top left
 pixel. If Orientation == 2, it is the bottom left pixel. This is particularly important for text and
 live input (to avoid mirroring of the image).
+</p>
+<p>
+The byte order of color values depends on the target platform (i.e. big-endian versus little-endian). For little-endian platforms
+(e.g. Intel PC), the byte order is BGRA for 32-bit and BGR for 24-bit colors.
+For big-endian machines (e.g. MAC), the byte order for 32-bit is ARGB and RGB for 24-bit.<br>
+For all target platforms, the unsigned integer representation of a 32-bit color is the same, namely (in C syntax):
+<pre>
+unsigned int color = (A << 24) + (R << 16) + (G << 8) + (B << 0);
+</pre>
+where A, R, G, B are the 8-bit color components. Plugin developers who aim for platform-independence should be aware of these
+differences and program their plugins accordingly.
 </p>
 
 <hr>
@@ -808,7 +822,7 @@ PluginExtendedInfoStruct{
 	<td>
 		32-bit pointer to a FreeFrame ExtendedDataBlock
 		- this interface is not yet in use, but provided
-		to allow the FreeFrame project to establish an 
+		to allow the FreeFrame project to establish an
 		extended data block format in the future.
 		Please do not use until a data format has been agreed.
 	</td>
@@ -816,7 +830,7 @@ PluginExtendedInfoStruct{
 </table>
 
 <h4>Remarks:</h4>
-FreeFrame PluginMinorVersion numbers should always have 3 digits - so divide the 
+FreeFrame PluginMinorVersion numbers should always have 3 digits - so divide the
 minor version number by 1000 and add the major version number to get the full
 version number.  Example: 0.751 APIMajorVersion=0, APIMinorVersion=751
 
@@ -864,7 +878,7 @@ ProcessFrameCopyStruct{
 <a name="CHAPFunctions">
 	<h2>5. Functions</h2>
 </a>
-Some functions are specific to an instance of a plugin, and thus require a 
+Some functions are specific to an instance of a plugin, and thus require a
 valid InstanceID in the InstanceID field, others concern global parameters
 that are the same for all instances, and so do not require a valid InstanceID.
 
@@ -873,7 +887,7 @@ that are the same for all instances, and so do not require a valid InstanceID.
 </a>
 
 <h4>Global functions:</h4>
-  
+
 <table border=1>
 	<tr>
 		<td><b>Code</b></td>
@@ -909,35 +923,35 @@ that are the same for all instances, and so do not require a valid InstanceID.
 		<td>none</td>
 		<td><a href="#NumParameters">NumParameters</a></td>
 	</tr>
-	
+
 	<tr>
 		<td>5</td>
 		<td><a href="#getParameterName">getParameterName</a></td>
 		<td><a href="#ParameterNumber">ParameterNumber</a></td>
 		<td>Pointer to <a href="#ParameterName">ParameterName</a></td>
 	</tr>
-	
+
 	<tr>
 		<td>6</td>
 		<td><a href="#getParameterDefault">getParameterDefault</a></td>
 		<td><a href="#ParameterNumber">ParameterNumber</a></td>
 		<td><a href="#ParameterDefaultValue">ParameterDefaultValue</a></td>
 	</tr>
-	
+
 	<tr>
 		<td>10</td>
 		<td><a href="#getPluginCaps">getPluginCaps</a></td>
 		<td><a href="#PluginCapsIndex">PluginCapsIndex</a></td>
 		<td>Supported/unsupported/value</td>
 	</tr>
-	
+
 	<tr>
 		<td>13</td>
 		<td><a href="#getExtendedInfo">getExtendedInfo</a></td>
 		<td>none</td>
 		<td>Pointer to <a href="#PluginExtendedInfoStruct">PluginExtendedInfoStruct</a></td>
 	</tr>
-	
+
 	<tr>
 		<td>15</td>
 		<td><a href="#getParameterType">getParameterType</a></td>
@@ -1027,7 +1041,7 @@ that are the same for all instances, and so do not require a valid InstanceID.
 		<td valign=top>&nbsp;(function code = 0)</td>
 	</tr></table>
 </a>
-   
+
 <h4>Input value:</h4>
 <i>none</i>
 
@@ -1056,17 +1070,14 @@ This function should be identical in all future versions of the FreeFrame API.
 <hr>
 
 <!-- /****************** initialise ******************/  -->
-<a name="initialise">
+<a name="initialise"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>initialise</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 1)</td>
+		<td valign=top>&nbsp;(function code = 1)</td>
 	</tr></table>
-   
+
 <h4>Input value:</h4>
-<i>none</i>  
+<i>none</i>
 
 <h4>Return value:</h4>
 <a href="#FF_SUCCESS">FF_SUCCESS</a> if successful, <a href="#FF_FAIL">FF_FAIL</a> or
@@ -1077,8 +1088,8 @@ other error-codes if failed. (32-bit unsigned integer)
 <table border=0>
 <tr>
 	<td valign=top>PLUGIN:</td>
-	<td>	
-		Prepare the plug-in for processing.  
+	<td>
+		Prepare the plug-in for processing.
 		Set default values, allocate memory.
 		When the plug-in returns from this function it must be ready to accept calls to
         <a href="#instantiate">
@@ -1096,17 +1107,14 @@ other error-codes if failed. (32-bit unsigned integer)
 <hr>
 
 <!-- /****************** deInitialise ******************/  -->
-<a name="deInitialise">
+<a name="deInitialise"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>deInitialise</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 2)</td>
+		<td valign=top>&nbsp;(function code = 2)</td>
 	</tr></table>
-   
+
 <h4>Input value:</h4>
-<i>none</i>  
+<i>none</i>
 
 <h4>Return value:</h4>
 <a href="#FF_SUCCESS">FF_SUCCESS</a> if successful, <a href="#FF_FAIL">FF_FAIL</a> or
@@ -1123,21 +1131,18 @@ other error-codes if failed. (32-bit unsigned integer)
 	<td>This *must* be the last function called on the plugin</td>
 </tr>
 </table>
-  
+
 <hr>
 
 <!-- /****************** getNumParameters ******************/  -->
-<a name="getNumParameters">
+<a name="getNumParameters"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getNumParameters</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 4)</td>
+		<td valign=top>&nbsp;(function code = 4)</td>
 	</tr></table>
-  
+
 <h4>Input value:</h4>
-<i>none</i>  
+<i>none</i>
 
 <h4>Return value:</h4>
  <a href="#NumParameters">NumParameters</a> indicating the number of parameters in plugin
@@ -1150,7 +1155,7 @@ or <a href="#FF_FAIL">FF_FAIL</a> on error.
 	<td>
 		Plugin developers should normally expect hosts to expose up to 8 parameters
 		Some hosts may only expose 1 or 4 parameters, some may expose larger numbers.
-		All parameters should have sensible defaults incase the user is unable to 
+		All parameters should have sensible defaults incase the user is unable to
 		control them from the host.
 	</td>
 </tr>
@@ -1166,13 +1171,10 @@ or <a href="#FF_FAIL">FF_FAIL</a> on error.
 <hr>
 
 <!-- /****************** getParameterName ******************/  -->
-<a name="getParameterName">
+<a name="getParameterName"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getParameterName</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 5)</td>
+		<td valign=top>&nbsp;(function code = 5)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1188,18 +1190,15 @@ or <a href="#FF_FAIL">FF_FAIL</a> on error.
 <h4>Return value:</h4>
 32-bit pointer to <a href="#ParameterName">ParameterName</a> (16 byte char array) containing the name of parameter specified by
 index.
-Returns <a href="#FF_FAIL">FF_FAIL</a> on error.  
+Returns <a href="#FF_FAIL">FF_FAIL</a> on error.
 
-<hr>  
+<hr>
 
 <!-- /****************** getParameterDefault******************/  -->
-<a name="getParameterDefault">
+<a name="getParameterDefault"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getParameterDefault</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 6)</td>
+		<td valign=top>&nbsp;(function code = 6)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1219,16 +1218,13 @@ for text parameters is a 32-bit pointer to a null terminated string.
 <br>
 Returns <a href="#FF_FAIL">FF_FAIL</a> on error.
 
-<hr>  
+<hr>
 
 <!-- /****************** getPluginCaps ******************/  -->
-<a name="getPluginCaps">
+<a name="getPluginCaps"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getPluginCaps</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 10)</td>
+		<td valign=top>&nbsp;(function code = 10)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1278,10 +1274,10 @@ represented as a 32-bit unsigned integer.
 	</tr>
 	<tr>
 		<td valign=top>3</td>
-		<td valign=top><a href="#ProcessFrameCopy">processFrameCopy</a> support</td>
+		<td valign=top><a href="#processFrameCopy">processFrameCopy</a> support</td>
 		<td valign=top>
-			<a href="#FF_SUPPORTED">FF_SUPPORTED</a>: plugin supports <a href="#ProcessFrameCopy">processFrameCopy</a><br>
-			<a href="#FF_UNSUPPORTED">FF_UNSUPPORTED</a>: plugin doesn't support <a href="#ProcessFrameCopy">processFrameCopy</a>
+			<a href="#FF_SUPPORTED">FF_SUPPORTED</a>: plugin supports <a href="#processFrameCopy">processFrameCopy</a><br>
+			<a href="#FF_UNSUPPORTED">FF_UNSUPPORTED</a>: plugin doesn't support <a href="#processFrameCopy">processFrameCopy</a>
 		</td>
 	</tr>
 	<tr>
@@ -1310,22 +1306,19 @@ represented as a 32-bit unsigned integer.
 <h4>Remarks:</h4>
 <p>
 Bitdepth format of the video:<br>
-The host asks the plugin if it is capable of its favorite bit depth, 
-and uses that if it is available. If not the host may decide not to use the 
-plugin and deinitialise it, or it may enquire again to see if a second choice 
+The host asks the plugin if it is capable of its favorite bit depth,
+and uses that if it is available. If not the host may decide not to use the
+plugin and deinitialise it, or it may enquire again to see if a second choice
 format is supported.
 </p>
 
 <hr>
-  
+
 <!-- /****************** getExtendedInfo******************/  -->
-<a name="getExtendedInfo">
+<a name="getExtendedInfo"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getExtendedInfo</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 13)</td>
+		<td valign=top>&nbsp;(function code = 13)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1335,16 +1328,13 @@ format is supported.
 32-bit pointer to <a href="#PluginExtendedInfoStruct">PluginExtendedInfoStruct</a> or
 <a href="#FF_FAIL">FF_FAIL</a> on error.
 
-<hr>  
-  
+<hr>
+
 <!-- /****************** getParameterType ******************/  -->
-<a name="getParameterType">
+<a name="getParameterType"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getParameterType</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 15)</td>
+		<td valign=top>&nbsp;(function code = 15)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1364,8 +1354,8 @@ Returns <a href="#FF_FAIL">FF_FAIL</a> on error.
 
 <h4>Remarks:</h4>
 Hosts may decide to present an appropriate visual interface
-depending on the parameter type. All FreeFrame data for the moment is 
-passed as 32bit floats from 0-1, except text data.
+depending on the parameter type. All FreeFrame data for the moment is
+passed as 32-bit floats from 0-1, except text data.
 
 
 
@@ -1377,13 +1367,10 @@ passed as 32bit floats from 0-1, except text data.
 </a>
 
 <!-- /****************** processFrame ******************/  -->
-<a name="processFrame">
+<a name="processFrame"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>processFrame</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 3, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 3, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1400,7 +1387,7 @@ passed as 32bit floats from 0-1, except text data.
 <a href="#FF_SUCCESS">FF_SUCCESS</a> if successful, <a href="#FF_FAIL">FF_FAIL</a> if
 failed. (32-bit unsigned integer)
 
-<h4>Remarks:</h4>  
+<h4>Remarks:</h4>
 
 <table border=0>
 <tr>
@@ -1410,7 +1397,7 @@ failed. (32-bit unsigned integer)
 <tr>
 	<td valign=top>HOST:</td>
 	<td>
-		pFrame needs to be a valid pointer throughout this call as the plugin processes 
+		pFrame needs to be a valid pointer throughout this call as the plugin processes
 		the frame 'in place'.
 	</td>
 </tr>
@@ -1419,13 +1406,10 @@ failed. (32-bit unsigned integer)
 <hr>
 
 <!-- /****************** getParameterDisplay ******************/  -->
-<a name="getParameterDisplay">
+<a name="getParameterDisplay"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getParameterDisplay</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 7, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 7, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1447,13 +1431,10 @@ Returns <a href="#FF_FAIL">FF_FAIL</a> if failed.
 <hr>
 
 <!-- /****************** setParameter ******************/  -->
-<a name="setParameter">
+<a name="setParameter"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>setParameter</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 8, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 8, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1475,13 +1456,10 @@ Sets the value of a parameter.
 <hr>
 
 <!-- /****************** getParameter ******************/  -->
-<a name="getParameter">
+<a name="getParameter"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getParameter</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 9, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 9, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1504,13 +1482,10 @@ depending on the type of the parameter (see <a href="#ParameterValue">ParameterV
 <hr>
 
 <!-- /****************** instantiate ******************/  -->
-<a name="instantiate">
+<a name="instantiate"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>instantiate</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 11, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 11, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1529,12 +1504,12 @@ effect. Will be used as instanceID for future function calls.<br>
 Returns <a href="#FF_FAIL">FF_FAIL</a> on error.
 
 <h4>Remarks:</h4>
-   
+
 <table border=0>
 <tr>
 	<td valign=top>PLUGIN:</td>
 	<td>
-		Prepare an instance of the Plug-in for processing.  
+		Prepare an instance of the Plug-in for processing.
 		Set default values, allocate memory
 		When the plug-in returns from this function it must be ready to process a frame.
 		<br>
@@ -1546,8 +1521,8 @@ Returns <a href="#FF_FAIL">FF_FAIL</a> on error.
 <tr>
 	<td valign=top>HOST:</td>
 	<td>
-		This function *must* return before a call to processFrame.  Pointer to 
-		<a href="#VideoInfoStruct">VideoInfoStruct</a> *must* be valid until function returns. The 
+		This function *must* return before a call to processFrame.  Pointer to
+		<a href="#VideoInfoStruct">VideoInfoStruct</a> *must* be valid until function returns. The
 		<a href="#InstanceIdentifier">InstanceIdentifier</a> provided by the plugin is your handle to this
 		instance of the plugin. The host must keep this instance identifier,
 		and provide it in all calls to the plugin regarding that instance.
@@ -1558,13 +1533,10 @@ Returns <a href="#FF_FAIL">FF_FAIL</a> on error.
 <hr>
 
 <!-- /****************** deInstantiate ******************/  -->
-<a name="deInstantiate">
+<a name="deInstantiate"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>deInstantiate</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 12, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 12, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1595,13 +1567,10 @@ Returns <a href="#FF_SUCCESS">FF_SUCCESS</a> if successful or <a href="#FF_FAIL"
 <hr>
 
 <!-- /****************** processFrameCopy ******************/  -->
-<a name="processFrameCopy">
+<a name="processFrameCopy"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>processFrameCopy</h3></td>
-		<td valign=top>&nbsp;(</a><a name="getInfo">function
-</a>
-   
-          code = 14, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 14, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1630,12 +1599,12 @@ be used to see how many input frames the plugin would like.
 <tr>
 	<td valign=top>PLUGIN:</td>
 	<td>
-		Effect Plugins must support the <a href="#processFrame">processFrame</a> (in-place) method of 
+		Effect Plugins must support the <a href="#processFrame">processFrame</a> (in-place) method of
 		processing. This method is optional. Plugins should specify if they
 		are capable of this kind of processing - and if they have optimized a particular
 		method - in the Plugin Caps system.
 	   <br>
-	   Source Plugins should not use this function as they do not require 
+	   Source Plugins should not use this function as they do not require
 	   input frames. Source plugins should just use <a href="#processFrame">processFrame</a>
 	</td>
 </tr>
@@ -1644,13 +1613,10 @@ be used to see how many input frames the plugin would like.
 <hr>
 
 <!-- /****************** getInputStatus ******************/  -->
-<a name="getInputStatus">
+<a name="getInputStatus"></a>
 	<table border=0 bgcolor="#E8E8E8"><tr>
 		<td valign=top><h3>getInputStatus</h3></td>
-		<td valign=top>&nbsp;(<a name="getInfo">function
-</a>
-   
-          code = 16, needs valid instanceID!)</td>
+		<td valign=top>&nbsp;(function code = 16, needs valid instanceID!)</td>
 	</tr></table>
 
 <h4>Input value:</h4>
@@ -1669,8 +1635,8 @@ channel.
 
 <h4>Remarks:</h4>
 <p>
-This function is provided to allow hosts to optimize the rendering of input 
-frames. Due to user input a plugin may only plan to render certain input 
+This function is provided to allow hosts to optimize the rendering of input
+frames. Due to user input a plugin may only plan to render certain input
 channels - this function allows hosts to ask the plugin which input channels
 it plans to render.
 </p>
