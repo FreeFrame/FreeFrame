@@ -1,17 +1,45 @@
-// Open Video Plugin Host Prototype
+// FreeFrame Open Video Plugin Prototype
 // Delphi Version
 
-// Russell Blakeborough
-// russell@brightonart.org
+// www.freeframe.org
+// boblists@brightonart.org
 
-// This code released under the LGPL
+{
+
+Copyright (c) 2002, Russell Blakeborough
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+   * Redistributions of source code must retain the above copyright
+     notice, this list of conditions and the following disclaimer.
+   * Redistributions in binary form must reproduce the above copyright
+     notice, this list of conditions and the following disclaimer in
+     the documentation and/or other materials provided with the
+     distribution.
+   * Neither the name of FreeFrame nor the names of its
+     contributors may be used to endorse or promote products derived
+     from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+}
 
 unit pluginMain;
 
 interface
 
+{$IFDEF LINUX}
 uses
-  windows, sysutils;
+  sysutils,
+  Types;
+{$ENDIF}
+
+{$IFDEF WIN32}
+uses
+  sysutils,
+  windows;
+{$ENDIF}
 
 type
   TPluginInfoStruct = record
@@ -24,11 +52,12 @@ type
   TVideoInfoStruct = record
     FrameWidth: dword;
     FrameHeight: dword;
+    BitDepth: dword;     // 0 = 16 bit 5-6-5   1 = 24bit packed   2 = 32bit
   end;
-  TParamaterNameStruct = record
-    Paramater0Name: array [0..15] of char;
-    Paramater1Name: array [0..15] of char;
-    Paramater2Name: array [0..15] of char;
+  TParameterNameStruct = record
+    Parameter0Name: array [0..15] of char;
+    Parameter1Name: array [0..15] of char;
+    Parameter2Name: array [0..15] of char;
   end;
 
   pdw = ^Dword;
@@ -36,33 +65,35 @@ type
   pb = ^byte;
 
 function GetInfo(pParam: pointer): pointer;
-function InitPlugin(pParam: pointer): pointer;
-function DeInitPlugin(pParam: pointer): pointer;
+function Initialise(pParam: pointer): pointer;
+function DeInitialise(pParam: pointer): pointer;
 function ProcessFrame(pParam: pointer): pointer;
-function GetNumParamaters(pParam: pointer): pointer;
-function GetParamaterName(pParam: pointer): pointer;
-function GetParamaterDefault(pParam: pointer): pointer;
-function GetParamaterDisplay(pParam: pointer): pointer;
-function SetParamater(pParam: pointer): pointer;
+function GetNumParameters(pParam: pointer): pointer;
+function GetParameterName(pParam: pointer): pointer;
+function GetParameterDefault(pParam: pointer): pointer;
+function GetParameterDisplay(pParam: pointer): pointer;
+function SetParameter(pParam: pointer): pointer;
 function GetParameter(pParam: pointer): pointer;
+function GetPluginCaps(pParam: pointer): pointer;
+function CopyMemory(dst: pointer; src: pointer; size: integer): pointer;
 
 procedure InitLib;
 
 const
-  NumParamaters: dword = 0;
+  NumParameters: dword = 0;
 
 var
   PluginInfoStruct: TPluginInfoStruct;
   pPluginInfoBlock: pdw;
   VideoInfoStruct: TVideoInfoStruct;
   pVideoInfoStruct: pDw;
-  ParamaterNameStruct: TParamaterNameStruct;
-  pParamaterNameStruct: pointer;
-  ParamaterArray: array [0..3] of single;
-  ParamaterDisplayValue: array [0..15] of char; // this is the current transfer value for when a paramater display value is requested
+  ParameterNameStruct: TParameterNameStruct;
+  pParameterNameStruct: pointer;
+  ParameterArray: array [0..3] of single;
+  ParameterDisplayValue: array [0..15] of char; // this is the current transfer value for when a parameter display value is requested
   //
   YTblR, YTblG, YTblB: array[0..255] of Byte;
-
+  //
 implementation
 
 procedure InitLib;
@@ -71,21 +102,21 @@ var
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1018;
+    APIMinorVersion:=1028;
     PluginUniqueID:='PTST';
     PluginName:='Greyscale';
     PluginType:=0;
   end;
-  ParamaterNameStruct.Paramater0Name:='unused param0   ';
-  ParamaterNameStruct.Paramater1Name:='unused param1   ';
-  ParamaterNameStruct.Paramater2Name:='unused param2   ';
+  ParameterNameStruct.Parameter0Name:='unused param0   ';
+  ParameterNameStruct.Parameter1Name:='unused param1   ';
+  ParameterNameStruct.Parameter2Name:='unused param2   ';
+  //ParameterNameStruct[3]:='sdkYYYYYYYYefwke';
   //
   for i:=0 to 255 do begin
     YTblR[i] := Trunc(0.3588*i);
     YTblG[i] := Trunc(0.4020*i);
     YTblB[i] := Trunc(0.2392*i);
   end;
-
 end;
 
 function GetInfo(pParam: pointer): pointer;
@@ -94,22 +125,41 @@ begin
   result:=pointer(pPluginInfoBlock);
 end;
 
-function InitPlugin(pParam: pointer):pointer;
+function CopyMemory(dst: pointer;src: pointer; size: integer): pointer;
+var
+  temps: pb;
+  tempd: pb;
+  x: integer;
+begin
+  temps:=pb(src);
+  tempd:=pb(dst);
+  for x:=0 to (size-1) do begin
+    tempd^:=temps^;
+    inc(tempd);
+    inc(temps);
+  end;
+  result:=pointer(0);
+end;
+
+function Initialise(pParam: pointer):pointer;
 var
   tempPointer: pDw;
 begin
   tempPointer:=pDw(pParam);
   pVideoInfoStruct:=@VideoInfoStruct;
-  pVideoInfoStruct^:=tempPointer^;
+  pVideoInfoStruct^:=tempPointer^;   // Frame Width
   inc(tempPointer);
   inc(pVideoInfoStruct);
-  pVideoInfoStruct^:=tempPointer^;
-  result:=pointer(95);
+  pVideoInfoStruct^:=tempPointer^;   // Frame Height
+  inc(tempPointer);
+  inc(pVideoInfoStruct);
+  pVideoInfoStruct^:=tempPointer^;   // Bit Depth
+  result:=pointer(0);
 end;
 
-function DeInitPlugin(pParam: pointer): pointer;
+function DeInitialise(pParam: pointer): pointer;
 begin
-  result:=pointer(894);
+  result:=pointer(0);
 end;
 
 function ProcessFrame(pParam: pointer): pointer;
@@ -137,71 +187,75 @@ begin
   result:=pointer(VideoInfoStruct.FrameWidth);
 end;
 
-function GetNumParamaters(pParam: pointer): pointer;
+function GetNumParameters(pParam: pointer): pointer;
 begin
-  result:=pointer(NumParamaters);
+  result:=pointer(NumParameters);
 end;
 
-function GetParamaterName(pParam: pointer): pointer;
+function GetParameterName(pParam: pointer): pointer;
 begin
-  pParamaterNameStruct:=@ParamaterNameStruct;
+  pParameterNameStruct:=@ParameterNameStruct;
   case integer(pParam) of
-    0: result:=pParamaterNameStruct;
-    1: result:=pointer(integer(pParamaterNameStruct)+16);
-    2: result:=pointer(integer(pParamaterNameStruct)+32);
-    3: result:=pointer(integer(pParamaterNameStruct)+48);
-    else result:=pointer(999);
+    0: result:=pParameterNameStruct;
+    1: result:=pointer(integer(pParameterNameStruct)+16);
+    2: result:=pointer(integer(pParameterNameStruct)+32);
+    3: result:=pointer(integer(pParameterNameStruct)+48);
+    else result:=pointer($FFFFFFFF);
   end;
 end;
 
-function GetParamaterDefault(pParam: pointer): pointer;
+function GetParameterDefault(pParam: pointer): pointer;
 var
   tempSingle: single;
 begin
   case integer(pParam) of
     0: begin
-      result:=pointer(70);
+      tempSingle:=0.0;
+      result:=pointer(tempSingle);
     end;
     1: begin
+      // Not yet implemented
       result:=pointer(80);
     end;
     2: begin
+      // Not yet implemented
       result:=pointer(10);
     end;
     3: begin
+      // Not yet implemented
       result:=pointer(90);
     end;
-    else result:=pointer(9999);
+    else result:=pointer($FFFFFFFF);
   end;
 end;
 
-function GetParamaterDisplay(pParam: pointer): pointer;
+function GetParameterDisplay(pParam: pointer): pointer;
 begin
   case integer(pParam) of
     0: begin
-      ParamaterDisplayValue:='dummy value0    ';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='dummy value0';
+      result:=@ParameterDisplayValue;
     end;
     1: begin
-      ParamaterDisplayValue:='dummy value1    ';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='dummy value1    ';
+      result:=@ParameterDisplayValue;
     end;
     2: begin
-      ParamaterDisplayValue:='dummy value2    ';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='dummy value2    ';
+      result:=@ParameterDisplayValue;
     end;
     3: begin
-      ParamaterDisplayValue:='dummy value3    ';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='dummy value3    ';
+      result:=@ParameterDisplayValue;
     end;
     else begin
-      ParamaterDisplayValue:='9999999999999999';
-      result:=@ParamaterDisplayValue;
+      ParameterDisplayValue:='9999999999999999';
+      result:=@ParameterDisplayValue;
     end;
   end;
 end;
 
-function SetParamater(pParam: pointer): pointer;
+function SetParameter(pParam: pointer): pointer;
 var
   tempPDWparam, tempPDWvalue: pdw;
 begin
@@ -210,23 +264,22 @@ begin
   inc(tempPDWvalue);
   case integer(tempPDWparam^) of
     0: begin
-      copymemory(@ParamaterArray[0],tempPDWvalue,4);
-      //ParamaterArray[0]:=tempPDWvalue^;
-      result:=pointer(439);
+      ParameterArray[0]:=tempPDWvalue^;
+      result:=pointer(0);
     end;
     1: begin
-      ParamaterArray[1]:=tempPDWvalue^;
-      result:=pointer(751);
+      ParameterArray[1]:=tempPDWvalue^;
+      result:=pointer(0);
     end;
     2: begin
-      ParamaterArray[2]:=tempPDWvalue^;
-      result:=pointer(752);
+      ParameterArray[2]:=tempPDWvalue^;
+      result:=pointer(0);
     end;
     3: begin
-      ParamaterArray[3]:=tempPDWvalue^;
-      result:=pointer(753);
+      ParameterArray[3]:=tempPDWvalue^;
+      result:=pointer(0);
     end;
-    else result:=pointer(4368);
+    else result:=pointer($FFFFFFFF);
   end;
 end;
 
@@ -235,9 +288,19 @@ var
   tempSingle: single;
   tempDWvalue: dword;
 begin
-  tempSingle:=ParamaterArray[integer(pParam)];
+  tempSingle:=ParameterArray[integer(pParam)];
   copymemory(@tempDWvalue,@tempSingle,4);
   result:=pointer(tempDWvalue);
+end;
+
+function GetPluginCaps(pParam: pointer): pointer;
+begin
+  case integer(pParam) of
+    0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
+    1: result:=pointer(1);   // 1=24bit - supported
+    2: result:=pointer(0);   // 2=32bit
+    else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
+  end;
 end;
 
 end.
