@@ -143,7 +143,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
                        DWORD  ul_reason_for_call, 
                        LPVOID lpReserved );
 
-__declspec(dllexport) plugMainUnion __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved);
+__declspec(dllexport) void* __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved);
 
 typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID,DWORD);
 
