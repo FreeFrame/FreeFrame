@@ -59,17 +59,17 @@ The following types are used:
   Function Code Table
   ======================================================================================================
   Code   Function               Input Value                     	Output Value
-  =====  =====================  ==============================  	================================
+  =====  =====================  ======================================	================================
   0      GetInfo                Unused                          	Pointer to a PluginInfoStruct
   1      Initialise             Unused                          	Success/Error code
   2      DeInitialise           Unused                          	Success/Error code
   3      ProcessFrame           Pointer to a frame of video     	Success/Error code
   4      GetNumParameters       Unused                          	NumParameters
   5      GetParameterName       ParameterNumber                 	Pointer to ParameterName
-  6      GetParameterDefault    ParameterNumber                 	pointer to ParameterDefaultValue
+  6      GetParameterDefault    ParameterNumber                 	ParameterDefaultValue
   7      GetParameterDisplay    ParameterNumber                 	Pointer to ParameterDisplayValue
   8      SetParameter           Pointer to SetParameterStruct   	Success/Error code
-  9      GetParameter           Parameter number                	Pointer to ParameterValue  
+  9      GetParameter           Parameter number                	ParameterValue  
   10     GetPluginCaps          PluginCapsIndex                 	Supported/Unsupported/Value
   11     Instantiate		VideoInfoStruct				InstanceIdentifier
   12	 DeInstantiate		Unused					Success/Error code
@@ -87,9 +87,9 @@ The following types are used:
   FF_SUCCESS    0 
 
   notes: 1 - In functions that return error codes any other value other than 0 is assumed to be an 
-            error code these are be defined in each function below.
+             error code these are be defined in each function below.
         
-         2 - In fuctions that return a pointer, FFFFFFFF also represents a faliure condition
+         2 - In fuctions that return a pointer, FFFFFFFF also represents a failure condition
         
 
   FF_TRUE       1
@@ -177,15 +177,18 @@ The following types are used:
   
   
   ================================================================================
-  ParameterDefaultValue: 32-bit pointer to Paramater Value
+  ParameterDefaultValue: 32-bit float value or 32-bit pointer
   ================================================================================
   The initial default value for this parameter.
   Plugins should always specify default values.
   Sometimes a host may not implement all parameters on a plugin,
-  so the plugin must use default values untill told to do otherwise by the host.
+  so the plugin must use default values until told to do otherwise by the host.
   Apart from text parameters, FreeFrame parameter values are always 32-bit floats,
   and the range of values permitted is STRICTLY 0-1.
   This allows faster processing and a good range of values.
+  
+  For text parameters, this 32-bit value represents a pointer to a null terminated
+  string.
   ================================================================================
   
   
@@ -208,7 +211,7 @@ The following types are used:
   
   
   ================================================================================
-  Parameter Value: 32-bit float from 0-1 / null terminated string
+  Parameter Value: 32-bit float from 0-1 / pointer to null terminated string
   ================================================================================
   Apart from Text Paramaters, FreeFrame parameter values are always 32bit floats,
   and the range of values permitted is STRICTLY 0-1 ( 0<= param <= 1 )
@@ -220,7 +223,7 @@ The following types are used:
   The plugin should translate the standard 0-1 float range into the values it
   needs for its processing.
 
-  Text Paramaters are null terminated strings.
+  Text paramaters are null terminated strings.
   ================================================================================
   
   
@@ -556,8 +559,12 @@ The following types are used:
    parameters: (32-bit unsigned integer)
    index - index of parameter 
   
-   return values (32-bit float):
+   return values for float parameters (32-bit IEEE float):
    32-bit float value
+   FF_FAIL on error
+   
+   return values for text parameters (32-bit pointer):
+   32-bit pointer to null terminated string
    FF_FAIL on error
   
   
@@ -583,11 +590,10 @@ The following types are used:
   ================================================================================
   
    Sets the value of parameter specified by index
-   value is a 32-bit IEEE float 0<=value<=1
-  
+   value is a 32-bit pointer to a SetParameterStruct
+   
    parameters:
-   32-bit unsigned integer index - index of parameter 
-   32-bit float IEEE value
+   32-bit pointer to SetParameterStruct
   
    return values (32-bit unsigned integer):
    FF_FAIL on error
@@ -598,13 +604,18 @@ The following types are used:
    getParameter
   ================================================================================
   
-   returns value of parameter specified by index as 32-bit float 0<=value<=1
+   returns value of parameter specified by index as 32-bit float 0<=value<=1. For
+   text parameters, return value is a 32-bit pointer to a null terminated string.
   
    parameters:
    32-bit unsigned integer index - index of parameter 
   
-   return values (32-bit IEEE float):
+   return values for float parameters (32-bit IEEE float):
    value of indexed parameter 
+   FF_FAIL on error
+  
+   return values for text parameters (32-bit pointer):
+   32-bit pointer to null terminated string
    FF_FAIL on error
   
   
@@ -626,6 +637,8 @@ The following types are used:
    the frame 'in place'.
   
    This is also the basic frameport for source plugins.
+  
+  
   
   ================================================================================
    getpluginCaps
@@ -665,6 +678,8 @@ The following types are used:
        1=InPlace processing is faster
        2=Copy processing is faster
        3=Both are optimised
+
+
   
   ================================================================================
    instantiate
@@ -691,6 +706,7 @@ The following types are used:
             function returns. The instance identifier you provide to the host must
             be the unique identifier of this instance until a call to deinitialise.
   
+
   
   ================================================================================
    deInstantiate
@@ -715,6 +731,7 @@ The following types are used:
            here.
 
 
+
   ================================================================================
    getExtendedInfo
   ================================================================================
@@ -725,6 +742,7 @@ The following types are used:
    Return values: (32-bit unsigned integer)
    32-bit pointer to PluginExtendedInfoStruct
    FF_FAIL on error
+
 
 
   ================================================================================
@@ -754,6 +772,7 @@ The following types are used:
 	   Input frames. Source Plugins should just use ProcessFrame
 
 
+
   ================================================================================
    getParameterType
   ================================================================================
@@ -764,6 +783,7 @@ The following types are used:
    return values (32-bit unsigned integer):
    ParamaterType
    FF_FAIL on error
+
 
 
   ================================================================================
