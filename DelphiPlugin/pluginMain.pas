@@ -88,7 +88,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1024;
+    APIMinorVersion:=1025;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -133,10 +133,13 @@ var
 begin
   tempPbyte:= pb(pParam);
   // 24 bit brghtness control (more darkness really) ...........................
+
   for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
-    tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
+    tempPbyte^:=tempPbyte^ SHR 1;
+    //tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
     inc(tempPbyte);
   end;
+
   // ...........................................................................
   result:=pointer(VideoInfoStruct.FrameWidth);
 end;
@@ -184,7 +187,9 @@ function GetParameterDisplay(pParam: pointer): pointer;
 begin
   case integer(pParam) of
     0: begin
-      ParameterDisplayValue:='Brightness Value';
+      //tempstring:=copy(inttostr(round(parameterarray[0]*10)),0,2);
+      //for
+      ParameterDisplayValue:='Brightness Value';       //copy(inttostr(round(parameterarray[0]*10)),0,2);   //'Brightness Value';
       result:=@ParameterDisplayValue;
     end;
     1: begin
