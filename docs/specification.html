@@ -80,15 +80,15 @@ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	<h2>1. OS integration</h2>
 </a>
 <p>
-FreeFrame plugins are distributed and used as compiled shared objects (.so) in Linux
-and
-Mac OS X, as Dynamically Linked Libraries (.dll) in Windows.
+FreeFrame plugins are distributed and used as compiled shared objects (.so)
+in Linux, as Frameworks in Mac OS X and as Dynamic Link Libraries (.dll) in
+Windows.
 </p>
 
 <p>
 FreeFrame Plugins export a single function: <a href="#plugMain">plugMain</a>. This is passed 3 values:
 a 32-bit function code, a 32-bit input value and a 32-bit instance identifier.
-It returns a 32-bit output value
+It returns a 32-bit output value.
 <br>
 The input values and output values have different types according to the function code.
 This may be implemented differently on different platforms in different languages, but the
