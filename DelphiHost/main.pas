@@ -163,7 +163,7 @@ type
   end;
 
 const
-  AppVersion: string='0.54';
+  AppVersion: string='0.55';
   APIversion: string='0.5';
 
 var
