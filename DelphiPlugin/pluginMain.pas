@@ -29,8 +29,17 @@ unit pluginMain;
 
 interface
 
+{$IFDEF LINUX}
 uses
-  sysutils,types;
+  sysutils,
+  Types;
+{$ENDIF}
+
+{$IFDEF WIN32}
+uses
+  sysutils,
+  windows;
+{$ENDIF}
 
 type
   TPluginInfoStruct = record
@@ -89,7 +98,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1027;
+    APIMinorVersion:=1028;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -108,20 +117,20 @@ end;
 
 function CopyMemory(dst: pointer;src: pointer; size: integer): pointer;
 var
-temps: pb;
-tempd: pb;
-x: integer;
+  temps: pb;
+  tempd: pb;
+  x: integer;
 begin
-        temps:=pb(src);
-        tempd:=pb(dst);
-        for x:=0 to (size-1) do begin
-
-                tempd^:=temps^;
-                inc(tempd);
-                inc(temps);
-        end;
-        result:=pointer(0);
+  temps:=pb(src);
+  tempd:=pb(dst);
+  for x:=0 to (size-1) do begin
+    tempd^:=temps^;
+    inc(tempd);
+    inc(temps);
+  end;
+  result:=pointer(0);
 end;
+
 function Initialise(pParam: pointer):pointer;
 var
   tempPointer: pDw;

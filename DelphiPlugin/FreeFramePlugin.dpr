@@ -40,7 +40,15 @@ library FreeFramePlugin;
 uses
   SysUtils,
   Classes,
+
+  {$IFDEF LINUX}
   Types,
+  {$ENDIF}
+
+  {$IFDEF WIN32}
+  windows,
+  {$ENDIF}
+
   pluginMain in 'pluginMain.pas';
 
 {$R *.res}
