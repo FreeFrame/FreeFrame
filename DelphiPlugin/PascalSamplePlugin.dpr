@@ -39,50 +39,71 @@ library PascalSamplePlugin;
   using PChar or ShortString parameters. }
 
 uses
+  madExcept,
   SysUtils,
   Classes,
-
-  {$IFDEF LINUX}
-    Types,
-  {$ENDIF}
-
-  {$IFDEF WIN32}
-    windows,
-  {$ENDIF}
-
-  pluginMain in 'pluginMain.pas';
+{$IFDEF LINUX}
+  Types,
+{$ENDIF}
+{$IFDEF WIN32}
+  windows,
+{$ENDIF}
+  plugin in 'plugin.pas';
 
 {$R *.res}
 
+var
+  PluginInfoStruct: TPluginInfoStruct;
+  pPluginInfoStruct: pdw;
+  FreeFramePlugin: TFreeFramePlugin;
+
 procedure InitLibrary;
 begin
-  InitLib;
+  // DLL / SO open call ...
+  // Do nothing - create object on freeframe initialise plugin
 end;
 
 //  todo: do all the casting here so these funcions take and return the right types
 //  todo: get paramater display value processing sorted in this sample plugin
 
 {$IFDEF WIN32}
-  function plugMain(functionCode: dword;pParam: pointer; reserved: dword): Pointer; stdcall
+  function plugMain(functionCode: dword;pParam: pointer; instanceID: dword): Pointer; stdcall
 {$ENDIF}
 
 {$IFDEF LINUX}
-  procedure plugMain(var Result: Pointer;functionCode: dword; pParam: pointer; reserved: dword); cdecl;
+  procedure plugMain(var Result: Pointer;functionCode: dword; pParam: pointer; instanceID: dword); cdecl;
 {$ENDIF}
 
+var
+  PluginInstance, NewPluginInstance: TFreeFramePlugin;
+  i: integer;
+
 begin
+  PluginInstance:= pointer(instanceID);
   case functionCode of
     0: begin
-      result:=GetInfo(pParam);
+      with PluginInfoStruct do begin
+        APIMajorVersion:=0;
+        APIMinorVersion:=550;
+        PluginUniqueID:='PTST';
+        PluginName:='PascalTestPlugin';
+        PluginType:=0;   // effect plugin
+      end;
+      pPluginInfoStruct:=@pluginInfoStruct;
+      result:=pointer(pPluginInfoStruct);
     end;
-    1: begin
-      result:=Initialise(pParam);
+    1: begin    // Plugin Initislise
+      // can't think of anything to put here
     end;
-    2: begin
-      result:=DeInitialise(pParam);
+    2: begin    // Plugin DeInitislise
+      // check to see if pluginInstances have been destroyed
+      if assigned(PluginArray) then for i:=0 to high(PluginArray)
+       do if assigned(PluginArray[i]) then PluginArray[i].destroy;
+      result:=nil;
     end;
     3: begin
-      result:=ProcessFrame(pParam);
+      if assigned(PluginInstance) then result:=PluginInstance.ProcessFrame(pParam)
+       else result:=pointer($FFFFFFFF);
     end;
     4: begin
       result:=GetNumParameters(pParam);
@@ -94,18 +115,41 @@ begin
       result:=GetParameterDefault(pParam);
     end;
     7: begin
-      result:=GetParameterDisplay(pParam);
+      if assigned(PluginInstance) then result:=PluginInstance.GetParameterDisplay(pParam)
+       else result:=pointer($FFFFFFFF);
     end;
     8: begin
-      result:=SetParameter(pParam);
+      if assigned(PluginInstance) then result:=PluginInstance.SetParameter(pParam)
+       else result:=pointer($FFFFFFFF);
     end;
     9: begin
-      result:=GetParameter(pParam);
+      if assigned(PluginInstance) then result:=PluginInstance.GetParameter(pParam)
+       else result:=pointer($FFFFFFFF);
     end;
     10: begin
       result:=GetPluginCaps(pParam);
     end;
-    else result:=pointer($FFFFFFFF);
+    11: begin    // Instantiate Plugin
+      result:=pointer($FFFFFFFF);
+      try
+        if assigned(PluginArray) then SetLength(PluginArray, length(PluginArray)) else SetLength(PluginArray, 1);
+        NewPluginInstance:=TFreeFramePlugin.create;
+        NewPluginInstance.InitialiseInstance(pParam);
+        PluginArray[high(PluginArray)]:=NewPluginInstance;
+        result:=pointer(NewPluginInstance);
+      except
+        result:=pointer($FFFFFFFF);
+      end;
+    end;
+    12: begin     // Destroy Plugin Instance
+      result:=pointer($FFFFFFFF);
+      try
+        if assigned(PluginInstance) then PluginInstance.destroy;
+        result:=pointer(0);
+      except
+        result:=pointer($FFFFFFFF);
+      end;
+    end;
   end;
 end;
 

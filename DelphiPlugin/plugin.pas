@@ -26,7 +26,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 }
 
-unit pluginMain;
+unit plugin;
 
 interface
 
@@ -43,9 +43,9 @@ type
   TPluginInfoStruct = record
     APIMajorVersion: dword;
     APIMinorVersion: dword;
-    PluginUniqueID: array [0..3] of char;   // 4 characters = 1 dword
+    PluginUniqueID: array [0..3] of char;    // 4 characters = 1 dword
     PluginName: array [0..15] of char;       // 16 characters = 4 Dwords
-    PluginType: dword; // (effect, source); // woz effect / synth - but could be other than synth eg. live video input
+    PluginType: dword; // (effect, source);  // woz effect / synth - but could be other than synth eg. live video input
   end;
   TVideoInfoStruct = record
     FrameWidth: dword;
@@ -62,55 +62,67 @@ type
   pw = ^word;
   pb = ^byte;
 
-function GetInfo(pParam: pointer): pointer;
-function Initialise(pParam: pointer): pointer;
-function DeInitialise(pParam: pointer): pointer;
-function ProcessFrame(pParam: pointer): pointer;
+type
+  TFreeFramePlugin = class(TObject)
+  private
+    VideoInfoStruct: TVideoInfoStruct;
+    pVideoInfoStruct: pDw;
+    ParameterArray: array [0..3] of single;
+    ParameterDisplayValue: array [0..15] of char; // this is the current transfer value for when a parameter display value is requested
+    {Private declarations}
+  protected
+    {Protected declarations}
+  public
+    // object function that are instance specific
+    function InitialiseInstance(pParam: pointer): pointer;
+    function ProcessFrame(pParam: pointer): pointer;
+    function GetParameterDisplay(pParam: pointer): pointer;
+    function SetParameter(pParam: pointer): pointer;
+    function GetParameter(pParam: pointer): pointer;
+    //
+    constructor Create;
+  end;
+
+// Buddy put this in for Kylix - not sure why we need this ...
+function CopyMemory(dst: pointer; src: pointer; size: integer): pointer;
+
+// Global functions that are not instance specific ...
 function GetNumParameters(pParam: pointer): pointer;
 function GetParameterName(pParam: pointer): pointer;
 function GetParameterDefault(pParam: pointer): pointer;
-function GetParameterDisplay(pParam: pointer): pointer;
-function SetParameter(pParam: pointer): pointer;
-function GetParameter(pParam: pointer): pointer;
 function GetPluginCaps(pParam: pointer): pointer;
-function CopyMemory(dst: pointer; src: pointer; size: integer): pointer;
-
-procedure InitLib;
 
 const
   NumParameters: dword = 3;
 
 var
-  PluginInfoStruct: TPluginInfoStruct;
-  pPluginInfoBlock: pdw;
-  VideoInfoStruct: TVideoInfoStruct;
-  pVideoInfoStruct: pDw;
+  PluginArray: array of TFreeFramePlugin;
   ParameterNameStruct: TParameterNameStruct;
   pParameterNameStruct: pointer;
-  ParameterArray: array [0..3] of single;
-  ParameterDisplayValue: array [0..15] of char; // this is the current transfer value for when a parameter display value is requested
 
 implementation
 
-procedure InitLib;
+
+constructor TFreeFramePlugin.Create;
 begin
-  with PluginInfoStruct do begin
-    APIMajorVersion:=0;
-    APIMinorVersion:=500;
-    PluginUniqueID:='PTST';
-    PluginName:='PascalTestPlugin';
-    PluginType:=0;
-  end;
-  ParameterNameStruct.Parameter0Name:='Brightness      ';
-  ParameterNameStruct.Parameter1Name:='unused param1   ';
-  ParameterNameStruct.Parameter2Name:='unused param2   ';
-  //ParameterNameStruct[3]:='sdkYYYYYYYYefwke';
+
 end;
 
-function GetInfo(pParam: pointer): pointer;
+function TFreeFramePlugin.InitialiseInstance(pParam: pointer):pointer;
+var
+  tempPointer: pDw;
 begin
-  pPluginInfoBlock:=@pluginInfoStruct;
-  result:=pointer(pPluginInfoBlock);
+  tempPointer:=pDw(pParam);
+  pVideoInfoStruct:=@VideoInfoStruct;
+  pVideoInfoStruct^:=tempPointer^;   // Frame Width
+  inc(tempPointer);
+  inc(pVideoInfoStruct);
+  pVideoInfoStruct^:=tempPointer^;   // Frame Height
+  inc(tempPointer);
+  inc(pVideoInfoStruct);
+  pVideoInfoStruct^:=tempPointer^;   // Bit Depth
+  ParameterArray[0]:=0.4;
+  result:=pointer(0);
 end;
 
 function CopyMemory(dst: pointer;src: pointer; size: integer): pointer;
@@ -129,42 +141,26 @@ begin
   result:=pointer(0);
 end;
 
-function Initialise(pParam: pointer):pointer;
-var
-  tempPointer: pDw;
-begin
-  tempPointer:=pDw(pParam);
-  pVideoInfoStruct:=@VideoInfoStruct;
-  pVideoInfoStruct^:=tempPointer^;   // Frame Width
-  inc(tempPointer);
-  inc(pVideoInfoStruct);
-  pVideoInfoStruct^:=tempPointer^;   // Frame Height
-  inc(tempPointer);
-  inc(pVideoInfoStruct);
-  pVideoInfoStruct^:=tempPointer^;   // Bit Depth
-  result:=pointer(0);
-end;
-
 function DeInitialise(pParam: pointer): pointer;
 begin
   result:=pointer(0);
 end;
 
-function ProcessFrame(pParam: pointer): pointer;
+function TFreeFramePlugin.ProcessFrame(pParam: pointer): pointer;
 var
   tempPbyte: pb;
-  x: integer;
+  i: integer;
 begin
   tempPbyte:= pb(pParam);
   case VideoInfoStruct.BitDepth of
     1: begin // 24 bit brghtness control (more darkness really) ................
-      for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
+      for i:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
         tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
         inc(tempPbyte);
       end;
     end;
     2: begin // 32 bit operation ..........
-      for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight-2) do begin
+      for i:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight-2) do begin
         tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
         inc(tempPbyte);
         tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
@@ -175,7 +171,7 @@ begin
       end;
     end;
   end;
-  result:=pointer(0);
+  result:=nil;
 end;
 
 function GetNumParameters(pParam: pointer): pointer;
@@ -220,7 +216,7 @@ begin
   end;
 end;
 
-function GetParameterDisplay(pParam: pointer): pointer;
+function TFreeFramePlugin.GetParameterDisplay(pParam: pointer): pointer;
 begin
   case integer(pParam) of
     0: begin
@@ -248,7 +244,7 @@ begin
   end;
 end;
 
-function SetParameter(pParam: pointer): pointer;
+function TFreeFramePlugin.SetParameter(pParam: pointer): pointer;
 var
   tempPDWparam, tempPDWvalue: pdw;
 begin
@@ -276,7 +272,7 @@ begin
   end;
 end;
 
-function GetParameter(pParam: pointer): pointer;
+function TFreeFramePlugin.GetParameter(pParam: pointer): pointer;
 var
   tempSingle: single;
   tempDWvalue: dword;
@@ -295,5 +291,11 @@ begin
     else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;
+
+initialization
+
+  ParameterNameStruct.Parameter0Name:='Brightness      ';
+  ParameterNameStruct.Parameter1Name:='unused param1   ';
+  ParameterNameStruct.Parameter2Name:='unused param2   ';
 
 end.
