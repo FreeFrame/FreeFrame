@@ -40,7 +40,6 @@ library AlphaTrail;
 uses
   SysUtils,
   Classes,
-  Types,
   windows,
   pluginMain in 'pluginMain.pas',
   utils;
