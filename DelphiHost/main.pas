@@ -37,8 +37,9 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 }
 
 //  v1.003
-//  source plugin shutdown VFW for testing PeteLiveFeed
-//    - and trying to get petelivefeed composite source live effects plugins working
+//  fixed bug which meant plugins were not getting deinstantiated and deinited in auto load plugin mode
+//  fixed bug which meant plugin slot 0 was not getting set to unavailable on manual deinit button press
+//     - this caused a crash on shutdown
 
 // I think this is the v1.002 additions ...
 // trap AVI disappeared
