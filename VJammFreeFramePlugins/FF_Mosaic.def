@@ -1,0 +1,3 @@
+LIBRARY			FF_Mosaic
+DESCRIPTION		'FreeFrame Plugin Mosaic 1'
+EXPORTS			plugMain
