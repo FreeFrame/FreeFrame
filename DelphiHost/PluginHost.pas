@@ -38,7 +38,7 @@ type
   TPluginInfoStruct = record
     APIMajorVersion: dword;
     APIMinorVersion: dword;
-     PluginUniqueID: array [0..3] of char;   // 4 characters = 1 dword
+    PluginUniqueID: array [0..3] of char;   // 4 characters = 1 dword
     PluginName: array [0..15] of char;       // 16 characters = 4 Dwords
     PluginType: dword; //(effect, source); // woz effect / synth - but could be other than synth eg. live video input
   end;
@@ -61,10 +61,6 @@ function GetParameterDisplay(Param: dword): string;
 function SetParameter(Param: dword; Value: single): dword;
 function GetParameter(Param: dword): single;
 function GetPluginCaps(Param: dword): boolean;
-
-//function plugMain(functionCode: dword; pParam: pointer): pointer; cdecl; external 'ROPATestDll1.dll';
-//function plugMain(functionCode: dword; pParam: pointer): pointer; cdecl; external 'OpenVFXtest.dll';
-
 
 var
   PluginInfoStruct: TPluginInfoStruct;

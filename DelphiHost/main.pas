@@ -100,6 +100,7 @@ type
     bStop: TButton;
     tPlay: TTimer;
     Label3: TLabel;
+    bRunIn32bit: TButton;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -126,19 +127,21 @@ type
     procedure bPlayAndProcessClick(Sender: TObject);
     procedure tPlayTimer(Sender: TObject);
     procedure bStopClick(Sender: TObject);
+    procedure bRunIn32bitClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
     lpBitmapInfoHeader: pBitmapInfoHeader;
     procedure GetPlugins;
     procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
-    procedure ProfileAndProcessFrame;
+    procedure ProfileAndProcessFrame(pFrame: pointer);     // This is the main frame processing procedure
   public
     { Public declarations }
     AHDC: HDC;                   // Handle
   end;
 
 const
-  version: string='0.1027';
+  version: string='0.1032';
 
 var
   fmMain: TfmMain;
@@ -151,7 +154,10 @@ var
 
 implementation
 
-uses pluginHost, avi;
+uses pluginHost, avi, utils;
+
+var
+  p32bitFrame: pointer;
 
 {$R *.DFM}
 
@@ -197,6 +203,9 @@ begin
 end;
 
 procedure TfmMain.bgetInfoClick(Sender: TObject);
+var
+  tempPluginCaps: array [0..2] of boolean;
+  i: integer;
 begin
   // Get PluginInfoStruct and display its data
   lGetPluginInfo.caption:=inttostr(PluginHost.GetInfo);
@@ -209,9 +218,15 @@ begin
     1: lPluginType.caption:='source';
   end;
   // Call GetPluginCaps to see which bitdepths it can manage      todo: make use of this data to decide what to do on process frame etc.
-  if PluginHost.GetPluginCaps(0) then l16bit.Caption:='16bit: yes' else l16bit.Caption:='16bit: no';
-  if PluginHost.GetPluginCaps(1) then l24bit.Caption:='24bit: yes' else l24bit.Caption:='24bit: no';
-  if PluginHost.GetPluginCaps(2) then l32bit.Caption:='32bit: yes' else l32bit.Caption:='32bit: no';
+  for i:=0 to 2 do tempPluginCaps[i]:=PluginHost.GetPluginCaps(i);
+  if tempPluginCaps[0] then l16bit.Caption:='16bit: yes' else l16bit.Caption:='16bit: no';
+  if tempPluginCaps[1] then l24bit.Caption:='24bit: yes' else l24bit.Caption:='24bit: no';
+  if tempPluginCaps[2] then l32bit.Caption:='32bit: yes' else l32bit.Caption:='32bit: no';
+  if not tempPluginCaps[1] and tempPluginCaps[2] then begin
+    VideoInfoStruct.BitDepth:=2;
+    lBitDepth.Caption:='32 bit';
+    p32bitFrame:=Utils.Make32bitBuffer(VideoInfoStruct);
+  end;
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);
@@ -239,7 +254,7 @@ end;
 
 procedure TfmMain.bProcessFrameClick(Sender: TObject);
 begin
-  ProfileAndProcessFrame;
+  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)));
   DisplayFrame(lpbitmapinfoheader);
 end;
 
@@ -443,7 +458,7 @@ begin
   // Display it unprocessed ...
   // displayframe(lpbitmapinfoheader);
   // process frame and display it again ...
-  ProfileAndProcessFrame;
+  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)));
   DisplayFrame(lpbitmapinfoheader);
 end;
 
@@ -459,14 +474,28 @@ begin
   end;
 end;
 
-procedure TfmMain.ProfileAndProcessFrame;
+procedure TfmMain.ProfileAndProcessFrame(pFrame: pointer);     // This is the main frame processing procedure
 var
   before: integer;
+  pFrameToProcess: pointer;
 begin
-  bits := Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+
+  pFrameToProcess:=pFrame;
+
+  // Convert to 32bit if plugin only does 32bit
+  if VideoInfoStruct.BitDepth=2 then begin
+    Utils.Convert24to32(pFrameToProcess, p32bitFrame, VideoInfoStruct);
+    pFrameToProcess:=p32bitFrame;
+  end;
+
+  // Profile Process the Frame ... 
   before:=gettickcount;
-  lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(bits)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
+  lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(pFrameToProcess)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
   lProfile.Caption:=inttostr(gettickcount-before)+' msec/frame';
+
+  // Convert it back again if we're running in 32bit plugin
+  if VideoInfoStruct.BitDepth=2 then Utils.Convert32to24(p32bitFrame, pFrame, VideoInfoStruct);
+
 end;
 
 procedure TfmMain.bPlayAndProcessClick(Sender: TObject);
@@ -476,21 +505,38 @@ begin
 end;
 
 procedure TfmMain.tPlayTimer(Sender: TObject);
+var
+  pFrameToProcess, pBits: pointer;
 begin
   // Get frame
   inc(currentFrame);
   if currentFrame>(numFrames-1) then currentFrame:=1;
   lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
-  // Display it unprocessed ...
-  // displayframe(lpbitmapinfoheader);
-  // process frame and display it again ...
-  ProfileAndProcessFrame;
+  pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+  pFrameToProcess:=pBits;
+
+  // process frame through plugin
+  ProfileAndProcessFrame(pFrameToProcess);
+
   DisplayFrame(lpbitmapinfoheader);
 end;
 
 procedure TfmMain.bStopClick(Sender: TObject);
 begin
   tPlay.Enabled:=false;
+end;
+
+procedure TfmMain.bRunIn32bitClick(Sender: TObject);
+begin
+  VideoInfoStruct.BitDepth:=2;
+  lBitDepth.Caption:='32 bit';
+  p32bitFrame:=Utils.Make32bitBuffer(VideoInfoStruct);
+end;
+
+procedure TfmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  if VideoInfoStruct.bitdepth=2 then utils.free32bitBuffer(p32bitFrame, VideoInfoStruct);
+  CanClose:=true;
 end;
 
 end.

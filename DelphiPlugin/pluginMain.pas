@@ -98,7 +98,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1028;
+    APIMinorVersion:=1032;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;
@@ -158,14 +158,26 @@ var
   x: integer;
 begin
   tempPbyte:= pb(pParam);
-  // 24 bit brghtness control (more darkness really) ...........................
-  for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
-    //tempPbyte^:=tempPbyte^ SHR 1;
-    tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
-    inc(tempPbyte);
+  case VideoInfoStruct.BitDepth of
+    1: begin // 24 bit brghtness control (more darkness really) ................
+      for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3-1) do begin
+        tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
+        inc(tempPbyte);
+      end;
+    end;
+    2: begin // 32 bit operation ..........
+      for x:=0 to (VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight-2) do begin
+        tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
+        inc(tempPbyte);
+        tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
+        inc(tempPbyte);
+        tempPbyte^:=byte(round(cardinal(tempPbyte^)*ParameterArray[0]));
+        inc(tempPbyte);
+        inc(tempPbyte);
+      end;
+    end;
   end;
-  // ...........................................................................
-  result:=pointer(VideoInfoStruct.FrameWidth);
+  result:=pointer(0);
 end;
 
 function GetNumParameters(pParam: pointer): pointer;
@@ -281,7 +293,7 @@ begin
   case integer(pParam) of
     0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
     1: result:=pointer(1);   // 1=24bit - supported
-    2: result:=pointer(0);   // 2=32bit
+    2: result:=pointer(1);   // 2=32bit
     else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;

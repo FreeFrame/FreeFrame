@@ -43,7 +43,8 @@ uses
   Forms,
   main in 'main.pas' {fmMain},
   PluginHost in 'PluginHost.pas',
-  AVI in 'AVI.pas';
+  AVI in 'AVI.pas',
+  utils in 'utils.pas';
 
 {$R *.RES}
 

@@ -11,6 +11,7 @@ object fmMain: TfmMain
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -181,16 +182,16 @@ object fmMain: TfmMain
     Top = 32
     Width = 75
     Height = 25
-    Caption = 'Init AVI'
+    Caption = '1 - Init AVI'
     TabOrder = 1
     OnClick = bInitClick
   end
   object bDeInit: TButton
-    Left = 48
+    Left = 40
     Top = 280
-    Width = 75
+    Width = 83
     Height = 25
-    Caption = 'DeInit AVI'
+    Caption = '16 - DeInit AVI'
     TabOrder = 16
     OnClick = bDeInitClick
   end
@@ -199,7 +200,7 @@ object fmMain: TfmMain
     Top = 94
     Width = 75
     Height = 25
-    Caption = 'Open AVI'
+    Caption = '2 - Open AVI'
     TabOrder = 2
     OnClick = bOpenAVIClick
   end
@@ -217,7 +218,7 @@ object fmMain: TfmMain
     Top = 218
     Width = 75
     Height = 25
-    Caption = 'Close AVI'
+    Caption = '15 - Close AVI'
     TabOrder = 15
     OnClick = bCloseAVIClick
   end
@@ -226,7 +227,7 @@ object fmMain: TfmMain
     Top = 156
     Width = 75
     Height = 25
-    Caption = 'Get Frame'
+    Caption = '3 - Get Frame'
     TabOrder = 3
     OnClick = bGetFrameClick
   end
@@ -235,7 +236,7 @@ object fmMain: TfmMain
     Top = 60
     Width = 91
     Height = 25
-    Caption = 'Plugin getInfo'
+    Caption = '4 - Plugin getInfo'
     TabOrder = 4
     OnClick = bgetInfoClick
   end
@@ -316,25 +317,25 @@ object fmMain: TfmMain
     Top = 108
     Width = 75
     Height = 25
-    Caption = 'Init Plugin'
+    Caption = '5 - Init Plugin'
     TabOrder = 5
     OnClick = bInitPluginClick
   end
   object bProcessFrame: TButton
-    Left = 464
+    Left = 456
     Top = 158
-    Width = 89
+    Width = 105
     Height = 25
-    Caption = 'Process Frame'
+    Caption = '11 - Process Frame'
     TabOrder = 11
     OnClick = bProcessFrameClick
   end
   object bDeInitPlugin: TButton
-    Left = 471
+    Left = 463
     Top = 320
-    Width = 75
+    Width = 90
     Height = 25
-    Caption = 'DeInit Plugin'
+    Caption = '17 - DeInit Plugin'
     TabOrder = 17
     OnClick = bDeInitPluginClick
   end
@@ -351,9 +352,9 @@ object fmMain: TfmMain
   object bGetNumParameters: TButton
     Left = 762
     Top = 21
-    Width = 105
+    Width = 119
     Height = 25
-    Caption = 'GetNumParameters'
+    Caption = '6 - GetNumParameters'
     TabOrder = 6
     OnClick = bGetNumParametersClick
   end
@@ -428,45 +429,45 @@ object fmMain: TfmMain
   object bGetParameterNames: TButton
     Left = 762
     Top = 62
-    Width = 104
+    Width = 119
     Height = 25
-    Caption = 'Get Param Names'
+    Caption = '7 - Get Param Names'
     TabOrder = 7
     OnClick = bGetParameterNamesClick
   end
   object bGetParamDefaults: TButton
     Left = 762
     Top = 102
-    Width = 104
+    Width = 119
     Height = 25
-    Caption = 'Get Param Defaults'
+    Caption = '8 - Get Param Defaults'
     TabOrder = 8
     OnClick = bGetParamDefaultsClick
   end
   object bGetParamDisplayValues: TButton
     Left = 746
     Top = 143
-    Width = 137
+    Width = 151
     Height = 25
-    Caption = 'Get Param Display Values'
+    Caption = '9 - Get Param Display Values'
     TabOrder = 9
     OnClick = bGetParamDisplayValuesClick
   end
   object bGetParamActualValues: TButton
     Left = 746
     Top = 183
-    Width = 137
+    Width = 151
     Height = 25
-    Caption = 'Get Param Actual Values'
+    Caption = '10 - Get Param Actual Values'
     TabOrder = 10
     OnClick = bGetParamActualValuesClick
   end
   object bGetAndProcess: TButton
-    Left = 456
+    Left = 452
     Top = 208
-    Width = 105
+    Width = 113
     Height = 25
-    Caption = 'Get and Process'
+    Caption = '12 - Get and Process'
     TabOrder = 12
     OnClick = bGetAndProcessClick
   end
@@ -475,7 +476,7 @@ object fmMain: TfmMain
     Top = 64
     Width = 75
     Height = 25
-    Caption = 'Browse'
+    Caption = '0 - Browse'
     TabOrder = 0
     OnClick = bBrowseClick
   end
@@ -509,22 +510,31 @@ object fmMain: TfmMain
     end
   end
   object bPlayAndProcess: TButton
-    Left = 456
+    Left = 448
     Top = 245
-    Width = 105
+    Width = 121
     Height = 25
-    Caption = 'Play and Process'
+    Caption = '13 - Play and Process'
     TabOrder = 13
     OnClick = bPlayAndProcessClick
   end
   object bStop: TButton
-    Left = 472
+    Left = 471
     Top = 281
     Width = 75
     Height = 25
-    Caption = 'Stop'
+    Caption = '14 - Stop'
     TabOrder = 14
     OnClick = bStopClick
+  end
+  object bRunIn32bit: TButton
+    Left = 128
+    Top = 24
+    Width = 113
+    Height = 25
+    Caption = 'Test Plugin in 32 bit'
+    TabOrder = 27
+    OnClick = bRunIn32bitClick
   end
   object odAVI: TOpenDialog
     Left = 392
@@ -534,7 +544,7 @@ object fmMain: TfmMain
     Enabled = False
     Interval = 40
     OnTimer = tPlayTimer
-    Left = 176
-    Top = 24
+    Left = 104
+    Top = 64
   end
 end

@@ -53,7 +53,8 @@ begin
       AGetFrame := AVIStreamGetFrameOpen(pVideoStream,nil);
       tempVideoInfoStruct.Framewidth:=streaminfo.rcFrame.Right;
       tempVideoInfoStruct.FrameHeight:=streaminfo.rcFrame.Bottom;
-      tempVideoInfoStruct.BitDepth:=1; // 1=24bit packed MCI standard
+      //tempVideoInfoStruct.BitDepth:=1; // 1=24bit packed MCI standard // video info struct is now what we're gonna run the plugin in  - we know the MCI is 24bit
+      if not VideoInfoStruct.BitDepth=2 then tempVideoInfoStruct.BitDepth:=2 else tempVideoInfoStruct.BitDepth:=1;
       result:=tempVideoInfoStruct;
       numframes := AVIStreamEnd(pVideoStream);
       exit;
