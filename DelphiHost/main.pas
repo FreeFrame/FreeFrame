@@ -1,5 +1,5 @@
-// FreeFrame Open Video Plugin Host Test Container Prototype
-// Delphi Version
+// FreeFrame Open Video Plugin Test Container
+//  and Delphi Host Inclusion Template
 
 // www.freeframe.org
 // boblists@brightonart.org
@@ -9,7 +9,8 @@
 Copyright (c) 2002, Russell Blakeborough
 All rights reserved.
 
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
 
    * Redistributions of source code must retain the above copyright
      notice, this list of conditions and the following disclaimer.
@@ -21,11 +22,19 @@ Redistribution and use in source and binary forms, with or without modification,
      contributors may be used to endorse or promote products derived
      from this software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
+OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 }
-
-// C:\gig av\03Lavalamp A\gloup1bottomviewx.avi
 
 unit main;
 
@@ -45,7 +54,6 @@ type
     bGetFrame: TButton;
     PaintBox1: TPaintBox;
     bgetInfo: TButton;
-    lTestContainerVersion: TLabel;
     GroupBox1: TGroupBox;
     lPluginMajorVersion: TLabel;
     lPluginMinorVersion: TLabel;
@@ -101,6 +109,8 @@ type
     tPlay: TTimer;
     Label3: TLabel;
     bRunIn32bit: TButton;
+    cbAutoLoadAVI: TCheckBox;
+    lAPIversion: TLabel;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -141,7 +151,8 @@ type
   end;
 
 const
-  version: string='0.1050';
+  AppVersion: string='0.5';
+  APIversion: string='0.1050';
 
 var
   fmMain: TfmMain;
@@ -233,11 +244,33 @@ procedure TfmMain.FormShow(Sender: TObject);
 var
   inifile: TInifile;
 begin
-  lTestContainerVersion.Caption:='v'+version;
+  fmMain.Caption:='Delphi FreeFrame Test Container v'+AppVersion;
+  lAPIversion.Caption:='for FreeFrame API v'+APIversion;
   // Get current AVI filename from freeframe.ini
   inifile:=Tinifile.Create('FreeFrame.ini');
-  ebAVIfilename.Text:=inifile.ReadString('Filenames','CurrentAVI','');
+  with inifile do begin
+    ebAVIfilename.Text:=ReadString('Filenames','CurrentAVI','');
+    cbAutoLoadAVI.Checked:=ReadBool('HostTestContainerSettings','AutoLoadAVI',true);
+  end;
   inifile.Free;
+  if cbAutoLoadAVI.Checked then begin
+    // InitAVI ....
+    AVI.Init;
+    CurrentFrame:=0;
+    // OpenAVI ....
+    PluginHost.VideoInfoStruct:=AVI.OpenAVI(ebAVIfilename.text);
+    lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct.FrameWidth);
+    lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct.FrameHeight);
+    case PluginHost.VideoInfoStruct.BitDepth of
+      0: lBitDepth.Caption:='16 bit';
+      1: lBitDepth.Caption:='24 bit';
+      2: lBitDepth.Caption:='32 bit';
+    end;
+    // GetFrame ....
+    inc(currentFrame);
+    lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
+    bGetInfo.SetFocus;
+  end;
   // ...........................................
   getPlugins;
 end;
@@ -507,17 +540,25 @@ end;
 procedure TfmMain.tPlayTimer(Sender: TObject);
 var
   pFrameToProcess, pBits: pointer;
+  FrameSize: integer; // in bytes
 begin
-  // Get frame
+  // Get frame from AVI if effect - if source just pass on pointer to framebuffer ...
   inc(currentFrame);
   if currentFrame>(numFrames-1) then currentFrame:=1;
-  lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
-  pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
-  pFrameToProcess:=pBits;
-
-  // process frame through plugin
+  case plugininfostruct.PluginType of
+    0: begin // effect
+      lpbitmapinfoheader:=AVI.GetFrame(currentFrame);
+      pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+      pFrameToProcess:=pBits;
+    end;
+    1: begin // source
+      pBits:=Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER));
+      pFrameToProcess:=pBits;
+    end;
+  end;
+  // Process frame through plugin
   ProfileAndProcessFrame(pFrameToProcess);
-
+  // Display the frame
   DisplayFrame(lpbitmapinfoheader);
 end;
 
@@ -534,8 +575,16 @@ begin
 end;
 
 procedure TfmMain.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+var
+  inifile: TInifile;
 begin
+  // Free the 32 bit framebuffer if we're in 32 bit mode ...
   if VideoInfoStruct.bitdepth=2 then utils.free32bitBuffer(p32bitFrame, VideoInfoStruct);
+  // Save Settings ...
+  inifile:=Tinifile.Create('FreeFrame.ini');
+  inifile.WriteBool('HostTestContainerSettings','AutoLoadAVI',cbAutoLoadAVI.checked);
+  inifile.Free;
+  // CloseDown ...
   CanClose:=true;
 end;
 

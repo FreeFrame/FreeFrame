@@ -203,6 +203,7 @@ begin
   case dword(plugMain(10,pointer(Param),0)) of
     0: result:=false;
     1: result:=true;
+  else result:=false;  
   end;
 end;
 

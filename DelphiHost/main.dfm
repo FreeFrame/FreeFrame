@@ -1,6 +1,6 @@
 object fmMain: TfmMain
-  Left = 40
-  Top = 55
+  Left = 220
+  Top = 181
   Width = 917
   Height = 456
   Caption = 'FreeFrame Delphi Host Test Container'
@@ -20,13 +20,6 @@ object fmMain: TfmMain
     Top = 128
     Width = 280
     Height = 210
-  end
-  object lTestContainerVersion: TLabel
-    Left = 15
-    Top = 397
-    Width = 34
-    Height = 13
-    Caption = 'version'
   end
   object lInitPlugin: TLabel
     Left = 496
@@ -176,6 +169,13 @@ object fmMain: TfmMain
     Width = 108
     Height = 13
     Caption = 'Plugin processing time:'
+  end
+  object lAPIversion: TLabel
+    Left = 23
+    Top = 397
+    Width = 51
+    Height = 13
+    Caption = 'APIversion'
   end
   object bInit: TButton
     Left = 48
@@ -535,6 +535,16 @@ object fmMain: TfmMain
     Caption = 'Test Plugin in 32 bit'
     TabOrder = 27
     OnClick = bRunIn32bitClick
+  end
+  object cbAutoLoadAVI: TCheckBox
+    Left = 24
+    Top = 8
+    Width = 97
+    Height = 17
+    Caption = 'Auto Load AVI'
+    Checked = True
+    State = cbChecked
+    TabOrder = 28
   end
   object odAVI: TOpenDialog
     Left = 392

@@ -1,5 +1,5 @@
-// FreeFrame Open Video Plugin Host Test Container Prototype
-// Delphi Version
+// FreeFrame Open Video Plugin Test Container
+//  and Delphi Host Inclusion Template
 
 // www.freeframe.org
 // boblists@brightonart.org
@@ -35,7 +35,6 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 }
-
 
 program FreeFrameDelphiHost;
 
