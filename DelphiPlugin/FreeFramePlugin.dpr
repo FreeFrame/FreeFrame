@@ -33,11 +33,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
   2      DeInitialize		Unused				Success/Fail
   3      ProcessFrame		Pointer to a frame of video	Success/Fail
   4      GetNumParameters	Unused				NumParameters
-  5      GetParameterName	ParamaterNumber			Pointer to ParameterName
-  6      GetParameterDefault	ParamaterNumber			ParameterDefaultValue
-  7      GetParameterDisplay	ParamaterNumber			Pointer to ParameterDisplayValue
+  5      GetParameterName	ParameterNumber			Pointer to ParameterName
+  6      GetParameterDefault	ParameterNumber			ParameterDefaultValue
+  7      GetParameterDisplay	ParameterNumber			Pointer to ParameterDisplayValue
   8      SetParameter		Pointer to SetParameterStruct	Success/Fail
-  9      GetParameter		Paramater number		ParameterValue	
+  9      GetParameter		Parameter number		ParameterValue	
   10     GetPluginCaps		PluginCapsIndex			Supported/Unsupported
   =====  =====================  ==============================  ================================       
 }

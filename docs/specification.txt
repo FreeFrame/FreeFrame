@@ -17,11 +17,11 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   2      DeInitialise		Unused				Success/Error code
   3      ProcessFrame		Pointer to a frame of video	Success/Error code
   4      GetNumParameters	Unused				NumParameters
-  5      GetParameterName	ParamaterNumber			Pointer to ParameterName
-  6      GetParameterDefault	ParamaterNumber			ParameterDefaultValue
-  7      GetParameterDisplay	ParamaterNumber			Pointer to ParameterDisplayValue
+  5      GetParameterName	ParameterNumber			Pointer to ParameterName
+  6      GetParameterDefault	ParameterNumber			ParameterDefaultValue
+  7      GetParameterDisplay	ParameterNumber			Pointer to ParameterDisplayValue
   8      SetParameter		Pointer to SetParameterStruct	Success/Error code
-  9      GetParameter		Paramater number		ParameterValue	
+  9      GetParameter		Parameter number		ParameterValue	
   10     GetPluginCaps		PluginCapsIndex			Supported/Unsupported
   =====  =====================  ==============================  ================================
   
@@ -50,7 +50,7 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   Plugins of PluginType effect are passed frames of video, which they then modify
   Source Plugins are simply passed a pointer where they paint frames of video
   One example of a source plugin would by a visual synthesiser which uses the 
-  paramaters to synthesize video.
+  parameters to synthesize video.
   ================================================================================
 
 
@@ -69,32 +69,32 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   
   
   ================================================================================
-  NumParamaters: 32-bit unsigned integer cast as untyped pointer
+  NumParameters: 32-bit unsigned integer cast as untyped pointer
   ================================================================================
-  The number of paramaters that the plugin implements
-  ================================================================================
-  
-  
-  ================================================================================
-  ParamaterNumber: 32-bit unsigned integer cast as untyped pointer
-  ================================================================================
-  Paramater Numbers start at 0
+  The number of parameters that the plugin implements
   ================================================================================
   
   
   ================================================================================
-  ParamaterName: array of 16 char (= 4 32-bit unsigned integers, not null terminated)
+  ParameterNumber: 32-bit unsigned integer cast as untyped pointer
   ================================================================================
-  The name of the Paramater as it will be displayed by the host on the UI
+  Parameter Numbers start at 0
   ================================================================================
   
   
   ================================================================================
-  ParamaterDefaultValue: 32bit float cast as untyped 32-bit pointer
+  ParameterName: array of 16 char (= 4 32-bit unsigned integers, not null terminated)
   ================================================================================
-  The initial default value for this paramater.
+  The name of the Parameter as it will be displayed by the host on the UI
+  ================================================================================
+  
+  
+  ================================================================================
+  ParameterDefaultValue: 32bit float cast as untyped 32-bit pointer
+  ================================================================================
+  The initial default value for this parameter.
   Plugins should always specify default values.
-  Sometimes a host may not implement all paramaters on a plugin,
+  Sometimes a host may not implement all parameters on a plugin,
   so the plugin must use default values untill told to do otherwise by the host.
   FreeFrame parameter values are always 32bit floats,
   and the range of values permitted is STRICTLY 0-1.
@@ -103,7 +103,7 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   
   
   ================================================================================
-  ParamaterDisplayValue: array of 16 char (= 4 32-bit unsigned integers, 
+  ParameterDisplayValue: array of 16 char (= 4 32-bit unsigned integers, 
   not null terminated)
   ================================================================================
   The current display value of this parameter. The plugin can display whatever it
@@ -114,10 +114,10 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   
   
   ================================================================================
-  SetParamaterStruct
+  SetParameterStruct
   ================================================================================
-  ParamaterNumber: 32-bit unsigned integer
-  NewParamaterValue: 32bit float cast as untyped 32-bit pointer
+  ParameterNumber: 32-bit unsigned integer
+  NewParameterValue: 32bit float cast as untyped 32-bit pointer
   ================================================================================
   
   
@@ -129,7 +129,7 @@ It returns an Output Value cast as an untyped 32-bit pointer.
   This allows faster processing and a good range of values over a standard 
   range, so the host can run up sliders or whatever for the plugin.
   Use of any values outside this range will result in hideous incompatabilities.
-  The ParamaterDisplayValue can be used to display whatever actual values 
+  The ParameterDisplayValue can be used to display whatever actual values 
   the plugin likes eg. 0-255 0-767 1-256 or whatever.
   The plugin should translate the standard 0-1 float range into the values it
   needs for its processing.
