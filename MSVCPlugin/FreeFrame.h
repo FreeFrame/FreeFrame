@@ -43,17 +43,15 @@ struct ParameterStruct {
 //////////////////////////////////////////////////////////////
 // Function prototypes
 
-#define windoze  // we'll sort this later!
-
-#ifdef windoze
+#ifdef WIN32
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
                        LPVOID lpReserved );
 
 __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam);
+#elif LINUX
+  LPVOID plugMain(DWORD functionCode,LPVOID pParam);
 #endif
-// linux goes here!
-
 
 PlugInfoStruct*	getInfo();							// get information about plugin
 DWORD	initialise();								// allocate memory, set defaults

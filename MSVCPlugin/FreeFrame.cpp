@@ -2,9 +2,10 @@
 //
 
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "FreeFrame.h"
 #include <stdio.h>
+#include <string.h>
 
 #define NUM_PARAMS 3
 
@@ -13,6 +14,7 @@
 //
 // notes: we may want to capture hModule as the instance of the host...
 
+#ifdef WIN32
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
                        LPVOID lpReserved
@@ -20,6 +22,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 {
     return TRUE;
 }
+#endif
 
 ///////////////////////////////////////////////////////////////
 // main - The one and only exposed function
@@ -27,9 +30,12 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 //	functionCode - tells the plugin which function is being called
 //  pParam - 32-bit pointer to parameter
 
-__declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam)
- {
-	
+#ifdef WIN32
+ __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam) 
+#elif LINUX
+   LPVOID plugMain(DWORD functionCode,LPVOID pParam)
+#endif	
+{
 	switch(functionCode) {
 
 	case FF_GETINFO:
@@ -68,7 +74,8 @@ __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pPara
 	default:
 		return (LPVOID) FF_FAIL;
 	}
-}
+ }
+
 
 /////////////////////////////////////////////////////
 //
