@@ -11,6 +11,7 @@ object fmMain: TfmMain
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDefaultPosOnly
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
@@ -450,6 +451,7 @@ object fmMain: TfmMain
     Width = 193
     Height = 21
     Style = csDropDownList
+    DropDownCount = 50
     ItemHeight = 13
     TabOrder = 25
     OnChange = cbPluginsChange

@@ -204,7 +204,7 @@ type
   end;
 
 const
-  AppVersion: string='1.001';
+  AppVersion: string='1.002';
   APIversion: string='1.000';
 
 var
