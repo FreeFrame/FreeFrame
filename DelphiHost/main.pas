@@ -204,8 +204,8 @@ type
   end;
 
 const
-  AppVersion: string='0.755';
-  APIversion: string='0.750';
+  AppVersion: string='1.001';
+  APIversion: string='1.000';
 
 var
   fmMain: TfmMain;
@@ -313,7 +313,7 @@ var
   inifile: TInifile;
   tempFilename: string;
 begin
-  fmMain.Caption:='FreeFrame Test Container v'+AppVersion;
+  fmMain.Caption:='FreeFrame Plugin Tester v'+AppVersion;
   lAPIversion.Caption:='for FreeFrame API v'+APIversion;
   // Get current AVI filename from freeframe.ini
   inifile:=Tinifile.Create('FreeFrame.ini');

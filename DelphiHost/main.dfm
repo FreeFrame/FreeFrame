@@ -1,6 +1,6 @@
 object fmMain: TfmMain
-  Left = 300
-  Top = 350
+  Left = 227
+  Top = 227
   Width = 917
   Height = 726
   Caption = 'FreeFrame Delphi Host Test Container'
