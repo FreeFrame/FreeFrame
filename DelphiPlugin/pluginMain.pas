@@ -1,5 +1,6 @@
 // FreeFrame Open Video Plugin Prototype
-// Delphi Version
+// Delphi/Kylix Version
+// For win32 and linux
 
 // www.freeframe.org
 // boblists@brightonart.org
@@ -29,15 +30,12 @@ unit pluginMain;
 
 interface
 
-{$IFDEF LINUX}
 uses
   sysutils,
+{$IFDEF LINUX}
   Types;
 {$ENDIF}
-
 {$IFDEF WIN32}
-uses
-  sysutils,
   windows;
 {$ENDIF}
 
@@ -98,7 +96,7 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1050;
+    APIMinorVersion:=5;
     PluginUniqueID:='PTST';
     PluginName:='PascalTestPlugin';
     PluginType:=0;

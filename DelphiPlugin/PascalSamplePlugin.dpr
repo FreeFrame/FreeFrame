@@ -1,5 +1,6 @@
 // FreeFrame Open Video Plugin Prototype
-// Delphi Version
+// Delphi/Kylix Version
+// For win32 and linux
 
 // www.freeframe.org
 // boblists@brightonart.org
@@ -25,7 +26,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 }
 
-library FreeFramePlugin;
+library PascalSamplePlugin;
 
 { Important note about DLL memory management: ShareMem must be the
   first unit in your library's USES clause AND your project's (select
@@ -42,11 +43,11 @@ uses
   Classes,
 
   {$IFDEF LINUX}
-  Types,
+    Types,
   {$ENDIF}
 
   {$IFDEF WIN32}
-  windows,
+    windows,
   {$ENDIF}
 
   pluginMain in 'pluginMain.pas';
@@ -59,12 +60,16 @@ begin
 end;
 
 //  todo: do all the casting here so these funcions take and return the right types
+//  todo: get paramater display value processing sorted in this sample plugin
+
 {$IFDEF WIN32}
-function plugMain(functionCode: dword;pParam: pointer; reserved: dword): Pointer; stdcall
+  function plugMain(functionCode: dword;pParam: pointer; reserved: dword): Pointer; stdcall
 {$ENDIF}
+
 {$IFDEF LINUX}
-procedure plugMain(var Result: Pointer;functionCode: dword; pParam: pointer; reserved: dword); cdecl;
+  procedure plugMain(var Result: Pointer;functionCode: dword; pParam: pointer; reserved: dword); cdecl;
 {$ENDIF}
+
 begin
   case functionCode of
     0: begin
