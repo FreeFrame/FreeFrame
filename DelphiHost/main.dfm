@@ -1,8 +1,8 @@
 object fmMain: TfmMain
   Left = 208
   Top = 348
-  Width = 952
-  Height = 409
+  Width = 917
+  Height = 456
   Caption = 'FreeFrame Delphi Host Test Container'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -63,92 +63,92 @@ object fmMain: TfmMain
     Caption = 'Select Plugin'
   end
   object lNumParameters: TLabel
-    Left = 612
-    Top = 142
+    Left = 604
+    Top = 202
     Width = 60
     Height = 13
     Caption = 'Num Params'
   end
   object lParam0Name: TLabel
-    Left = 592
-    Top = 166
+    Left = 584
+    Top = 222
     Width = 64
     Height = 13
     Caption = 'Param0Name'
   end
   object lParam1Name: TLabel
-    Left = 592
-    Top = 217
+    Left = 584
+    Top = 273
     Width = 64
     Height = 13
     Caption = 'Param1Name'
   end
   object lParam2Name: TLabel
-    Left = 592
-    Top = 267
+    Left = 584
+    Top = 323
     Width = 64
     Height = 13
     Caption = 'Param2Name'
   end
   object lParam3Name: TLabel
-    Left = 592
-    Top = 315
+    Left = 584
+    Top = 371
     Width = 64
     Height = 13
     Caption = 'Param3Name'
   end
   object lParam0Value: TLabel
-    Left = 736
-    Top = 182
+    Left = 728
+    Top = 238
     Width = 63
     Height = 13
     Caption = 'Param0Value'
   end
   object lParam1Value: TLabel
-    Left = 736
-    Top = 233
+    Left = 728
+    Top = 289
     Width = 63
     Height = 13
     Caption = 'Param1Value'
   end
   object lParam2Value: TLabel
-    Left = 736
-    Top = 283
+    Left = 728
+    Top = 339
     Width = 63
     Height = 13
     Caption = 'Param2Value'
   end
   object lParam3Value: TLabel
-    Left = 736
-    Top = 331
+    Left = 728
+    Top = 387
     Width = 63
     Height = 13
     Caption = 'Param3Value'
   end
   object lParam0dword: TLabel
-    Left = 824
-    Top = 182
+    Left = 800
+    Top = 238
     Width = 67
     Height = 13
     Caption = 'Param0Dword'
   end
   object lParam1dword: TLabel
-    Left = 824
-    Top = 233
+    Left = 800
+    Top = 289
     Width = 67
     Height = 13
     Caption = 'Param1Dword'
   end
   object lParam2dword: TLabel
-    Left = 824
-    Top = 283
+    Left = 800
+    Top = 339
     Width = 67
     Height = 13
     Caption = 'Param2Dword'
   end
   object lParam3dword: TLabel
-    Left = 824
-    Top = 331
+    Left = 800
+    Top = 387
     Width = 67
     Height = 13
     Caption = 'Param3Dword'
@@ -190,8 +190,8 @@ object fmMain: TfmMain
     OnClick = bOpenAVIClick
   end
   object ebAVIFilename: TEdit
-    Left = 152
-    Top = 81
+    Left = 144
+    Top = 97
     Width = 289
     Height = 21
     TabOrder = 14
@@ -217,17 +217,17 @@ object fmMain: TfmMain
     OnClick = bGetFrameClick
   end
   object bgetInfo: TButton
-    Left = 472
+    Left = 464
     Top = 52
-    Width = 75
+    Width = 91
     Height = 25
-    Caption = 'DLL getInfo'
+    Caption = 'Plugin getInfo'
     TabOrder = 4
     OnClick = bgetInfoClick
   end
   object GroupBox1: TGroupBox
     Left = 600
-    Top = 16
+    Top = 8
     Width = 113
     Height = 105
     Caption = ' PluginInfoStruct '
@@ -272,7 +272,7 @@ object fmMain: TfmMain
     Left = 256
     Top = 16
     Width = 113
-    Height = 57
+    Height = 73
     Caption = ' VideoInfoStruct '
     TabOrder = 18
     object lVideoWidth: TLabel
@@ -288,6 +288,13 @@ object fmMain: TfmMain
       Width = 31
       Height = 13
       Caption = 'Height'
+    end
+    object lBitDepth: TLabel
+      Left = 13
+      Top = 48
+      Width = 44
+      Height = 13
+      Caption = 'Bit Depth'
     end
   end
   object bInitPlugin: TButton
@@ -328,8 +335,8 @@ object fmMain: TfmMain
     OnChange = cbPluginsChange
   end
   object bGetNumParameters: TButton
-    Left = 760
-    Top = 8
+    Left = 762
+    Top = 21
     Width = 105
     Height = 25
     Caption = 'GetNumParameters'
@@ -337,8 +344,8 @@ object fmMain: TfmMain
     OnClick = bGetNumParametersClick
   end
   object tbParam0: TTrackBar
-    Left = 584
-    Top = 178
+    Left = 576
+    Top = 234
     Width = 150
     Height = 33
     Max = 100
@@ -354,8 +361,8 @@ object fmMain: TfmMain
     OnChange = tbParam0Change
   end
   object tbParam1: TTrackBar
-    Left = 584
-    Top = 229
+    Left = 576
+    Top = 285
     Width = 150
     Height = 33
     Max = 100
@@ -370,8 +377,8 @@ object fmMain: TfmMain
     TickStyle = tsAuto
   end
   object tbParam2: TTrackBar
-    Left = 584
-    Top = 279
+    Left = 576
+    Top = 335
     Width = 150
     Height = 33
     Max = 100
@@ -386,8 +393,8 @@ object fmMain: TfmMain
     TickStyle = tsAuto
   end
   object tbParam3: TTrackBar
-    Left = 584
-    Top = 327
+    Left = 576
+    Top = 383
     Width = 150
     Height = 33
     Max = 100
@@ -402,8 +409,8 @@ object fmMain: TfmMain
     TickStyle = tsAuto
   end
   object bGetParameterNames: TButton
-    Left = 761
-    Top = 40
+    Left = 762
+    Top = 62
     Width = 104
     Height = 25
     Caption = 'Get Param Names'
@@ -411,8 +418,8 @@ object fmMain: TfmMain
     OnClick = bGetParameterNamesClick
   end
   object bGetParamDefaults: TButton
-    Left = 761
-    Top = 72
+    Left = 762
+    Top = 102
     Width = 104
     Height = 25
     Caption = 'Get Param Defaults'
@@ -420,8 +427,8 @@ object fmMain: TfmMain
     OnClick = bGetParamDefaultsClick
   end
   object bGetParamDisplayValues: TButton
-    Left = 744
-    Top = 104
+    Left = 746
+    Top = 143
     Width = 137
     Height = 25
     Caption = 'Get Param Display Values'
@@ -429,8 +436,8 @@ object fmMain: TfmMain
     OnClick = bGetParamDisplayValuesClick
   end
   object bGetParamActualValues: TButton
-    Left = 744
-    Top = 138
+    Left = 746
+    Top = 183
     Width = 137
     Height = 25
     Caption = 'Get Param Actual Values'
@@ -447,13 +454,42 @@ object fmMain: TfmMain
     OnClick = bGetAndProcessClick
   end
   object bBrowse: TButton
-    Left = 160
-    Top = 48
+    Left = 152
+    Top = 64
     Width = 75
     Height = 25
     Caption = 'Browse'
     TabOrder = 0
     OnClick = bBrowseClick
+  end
+  object gbPluginCaps: TGroupBox
+    Left = 600
+    Top = 121
+    Width = 113
+    Height = 73
+    Caption = ' Plugin Capabilities '
+    TabOrder = 24
+    object l16bit: TLabel
+      Left = 9
+      Top = 19
+      Width = 26
+      Height = 13
+      Caption = '16 bit'
+    end
+    object l24bit: TLabel
+      Left = 9
+      Top = 35
+      Width = 26
+      Height = 13
+      Caption = '24 bit'
+    end
+    object l32bit: TLabel
+      Left = 9
+      Top = 50
+      Width = 26
+      Height = 13
+      Caption = '32 bit'
+    end
   end
   object odAVI: TOpenDialog
     Left = 392

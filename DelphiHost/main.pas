@@ -89,6 +89,11 @@ type
     bBrowse: TButton;
     odAVI: TOpenDialog;
     Label2: TLabel;
+    lBitDepth: TLabel;
+    gbPluginCaps: TGroupBox;
+    l16bit: TLabel;
+    l24bit: TLabel;
+    l32bit: TLabel;
     procedure bInitClick(Sender: TObject);
     procedure bDeInitClick(Sender: TObject);
     procedure bOpenAVIClick(Sender: TObject);
@@ -120,7 +125,7 @@ type
   end;
 
 const
-  version: string='0.1022';
+  version: string='0.1023';
 
 var
   fmMain: TfmMain;
@@ -152,6 +157,11 @@ begin
   PluginHost.VideoInfoStruct:=AVI.OpenAVI(ebAVIfilename.text);
   lVideoWidth.caption:=inttostr(PluginHost.VideoInfoStruct.FrameWidth);
   lVideoHeight.caption:=inttostr(PluginHost.VideoInfoStruct.FrameHeight);
+  case PluginHost.VideoInfoStruct.BitDepth of
+    0: lBitDepth.Caption:='16 bit';
+    1: lBitDepth.Caption:='24 bit';
+    2: lBitDepth.Caption:='32 bit';
+  end;
 end;
 
 procedure TfmMain.ebAVIFilenameChange(Sender: TObject);
@@ -173,6 +183,7 @@ end;
 
 procedure TfmMain.bgetInfoClick(Sender: TObject);
 begin
+  // Get PluginInfoStruct and display its data
   lGetPluginInfo.caption:=inttostr(PluginHost.GetPluginInfoStruct);
   lPluginMajorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMajorVersion);
   lPluginMinorVersion.caption:=inttostr(PluginHost.PluginInfoStruct.APIMinorVersion);
@@ -182,6 +193,10 @@ begin
     0: lPluginType.caption:='effect';
     1: lPluginType.caption:='source';
   end;
+  // Call GetPluginCaps to see which bitdepths it can manage
+  if PluginHost.GetPluginCaps(0) then l16bit.Caption:='16bit: yes' else l16bit.Caption:='16bit: no';
+  if PluginHost.GetPluginCaps(1) then l24bit.Caption:='24bit: yes' else l24bit.Caption:='24bit: no';
+  if PluginHost.GetPluginCaps(2) then l32bit.Caption:='32bit: yes' else l32bit.Caption:='32bit: no';
 end;
 
 procedure TfmMain.FormShow(Sender: TObject);

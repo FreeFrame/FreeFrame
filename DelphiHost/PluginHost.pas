@@ -37,6 +37,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
   7              GetParameterDisplay
   8              SetParameter
   9              GetParameter
+  10             GetPluginCaps
   =============  ============
 }
 
@@ -47,7 +48,7 @@ interface
 uses windows, sysutils;
 
 type
-    tPlugMainFunction = function(functionCode: dword; pParam: pointer): pointer; stdcall; 
+    tPlugMainFunction = function(functionCode: dword; pParam: pointer): pointer; stdcall;
     TPluginInfoStruct = record
     APIMajorVersion: dword;
     APIMinorVersion: dword;
@@ -73,6 +74,7 @@ function GetParameterDefault(Param: dword): single;
 function GetParameterDisplay(Param: dword): string;
 function SetParameter(Param: dword; Value: single): dword;
 function GetParameter(Param: dword): single;
+function GetPluginCaps(Param: dword): boolean;
 
 //function plugMain(functionCode: dword; pParam: pointer): pointer; cdecl; external 'ROPATestDll1.dll';
 //function plugMain(functionCode: dword; pParam: pointer): pointer; cdecl; external 'OpenVFXtest.dll';
@@ -212,6 +214,14 @@ begin
   tempPsingle:=@tempSingle;
   copymemory(tempPsingle,tempPdword,4);
   result:=tempSingle;
+end;
+
+function GetPluginCaps(Param: dword): boolean;
+begin
+  case dword(plugMain(10,pointer(Param))) of
+    0: result:=false;
+    1: result:=true;
+  end;
 end;
 
 end.
