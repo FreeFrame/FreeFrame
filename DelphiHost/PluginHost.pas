@@ -1,5 +1,6 @@
 // FreeFrame Open Video Plugin Host Test Container Prototype
 // Delphi Version
+// FreeFrame v0.70
 
 // www.freeframe.org
 // boblists@brightonart.org
@@ -34,7 +35,7 @@ interface
 uses windows, sysutils;
 
 type
-  tPlugMainFunction = function(functionCode: dword; pParam: pointer; reserved: dword): pointer; stdcall;
+  tPlugMainFunction = function(functionCode: dword; pParam: pointer; InstanceID: dword): pointer; stdcall;
   TPluginInfoStruct = record
     APIMajorVersion: dword;
     APIMinorVersion: dword;
@@ -50,17 +51,19 @@ type
   //TParameterNameStruct = array [0..2] of array [0..15] of char;
   pdw = ^dword;
 
-function GetInfo: dword;
-function Initialise: dword;
-function DeInitialise: dword;
-function ProcessFrame(pFrame: pointer): dword;
-function GetNumParameters: dword;
-function GetParameterName(Param: dword): string;
-function GetParameterDefault(Param: dword): single;
-function GetParameterDisplay(Param: dword): string;
-function SetParameter(Param: dword; Value: single): dword;
-function GetParameter(Param: dword): single;
-function GetPluginCaps(Param: dword): boolean;
+  function GetInfo: dword;
+  function InitialisePlugin: dword;
+  function DeInitialisePlugin: dword;
+  function ProcessFrame(pFrame: pointer; InstanceID: dword): dword;
+  function GetNumParameters: dword;
+  function GetParameterName(Param: dword): string;
+  function GetParameterDefault(Param: dword): single;
+  function GetParameterDisplay(Param: dword; InstanceID: dword): string;
+  function SetParameter(Param: dword; Value: single; InstanceID: dword): dword;
+  function GetParameter(Param: dword; InstanceID: dword): single;
+  function GetPluginCaps(Param: dword): boolean;
+  function InstantiatePlugin(VideoInfoStruct: TVideoInfoStruct): dword;
+  function DeInstantiatePlugin(InstanceID: dword): dword;
 
 var
   PluginInfoStruct: TPluginInfoStruct;
@@ -71,16 +74,10 @@ implementation
 
 function GetInfo: dword;
 var
-  dllReturnValue: pointer;
-  functionCode: dword;
   pPluginInfoStruct: pointer;
   pParam: PDword;
   tempPChar: PChar;
-  i,j: integer;
-  tempDword: dword;
-  tempString: string;
-  tempFCC: array [0..3] of char;
-  tempName: array [0..15] of char;
+  i: integer;
 begin
   pPluginInfoStruct:=plugMain(0,nil,0);
   with PluginInfoStruct do begin
@@ -104,22 +101,23 @@ begin
   result:=dword(pPluginInfoStruct);
 end;
 
-function Initialise: dword;
-var
-  pVideoInfoStruct: pointer;
+function InitialisePlugin: dword;
 begin
-  pVideoInfoStruct:=pointer(@VideoInfoStruct);
-  result:=dword(plugMain(1,pVideoInfoStruct,0));
+  result:=dword(plugMain(1,nil,0));
 end;
 
-function DeInitialise: dword;
+function DeInitialisePlugin: dword;
 begin
-  result:=dword(plugMain(2,nil,0));
+  try
+    result:=dword(plugMain(2,nil,0));
+  except
+    result:=23;
+  end;
 end;
 
-function ProcessFrame(pFrame: pointer): dword;
+function ProcessFrame(pFrame: pointer; InstanceID: dword): dword;
 begin
-  result:=dword(plugMain(3,pFrame,0));
+  result:=dword(plugMain(3,pFrame,InstanceID));
 end;
 
 function GetNumParameters: dword;
@@ -154,14 +152,14 @@ begin
   result:=tempSingle;
 end;
 
-function GetParameterDisplay(Param: dword): string;
+function GetParameterDisplay(Param: dword; InstanceID: dword): string;
 var
   tempParamDisplay: array [0..15] of char;
   tempSourcePointer: pdw;
   tempDestPointer: pdw;
   i: integer;
 begin
-  tempSourcePointer:=pdw(plugMain(7,pointer(Param),0));
+  tempSourcePointer:=pdw(plugMain(7,pointer(Param),InstanceID));
   tempDestPointer:=pdw(@tempParamDisplay);
   for i:=0 to 3 do begin
     tempDestPointer^:=tempSourcePointer^;
@@ -171,7 +169,7 @@ begin
   result:=string(tempParamDisplay);
 end;
 
-function SetParameter(Param: dword; Value: single): dword;
+function SetParameter(Param: dword; Value: single; InstanceID: dword): dword;
 type
   TSetParamStruct = array [0..1] of dword;
 var
@@ -181,17 +179,17 @@ begin
   SetParamStruct[0]:=Param;
   tempPdword:=@value;
   SetParamStruct[1]:=tempPdword^;
-  result:=dword(plugMain(8,@SetParamStruct,0));
+  result:=dword(plugMain(8,@SetParamStruct, InstanceID));
 end;
 
-function GetParameter(Param: dword): single;
+function GetParameter(Param: dword; InstanceID: dword): single;
 var
   tempDword: dword;
   tempPdword: pdw;
   tempSingle: single;
   tempPsingle: pointer;
 begin
-  tempdword:=dword(plugMain(9,pointer(Param),0));
+  tempdword:=dword(plugMain(9,pointer(Param),InstanceID));
   tempPdword:=@tempDword;
   tempPsingle:=@tempSingle;
   copymemory(tempPsingle,tempPdword,4);
@@ -200,11 +198,24 @@ end;
 
 function GetPluginCaps(Param: dword): boolean;
 begin
+  result := false;
   case dword(plugMain(10,pointer(Param),0)) of
     0: result:=false;
     1: result:=true;
-  else result:=false;  
   end;
+end;
+
+function InstantiatePlugin(VideoInfoStruct: TVideoInfoStruct): dword;
+var
+  pVideoInfoStruct: pointer;
+begin
+  pVideoInfoStruct:=pointer(@VideoInfoStruct);
+  result:=dword(plugMain(11,pVideoInfoStruct,0));
+end;
+
+function DeInstantiatePlugin(InstanceID: dword): dword;
+begin
+  result:=dword(plugMain(12,nil,InstanceID));
 end;
 
 end.

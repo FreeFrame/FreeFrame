@@ -1,8 +1,8 @@
 object fmMain: TfmMain
-  Left = 220
-  Top = 181
+  Left = 34
+  Top = 165
   Width = 917
-  Height = 456
+  Height = 450
   Caption = 'FreeFrame Delphi Host Test Container'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,7 +31,7 @@ object fmMain: TfmMain
   end
   object lDeInitPlugin: TLabel
     Left = 496
-    Top = 354
+    Top = 346
     Width = 25
     Height = 13
     Caption = 'result'
@@ -45,7 +45,7 @@ object fmMain: TfmMain
   end
   object lProcessFrame: TLabel
     Left = 496
-    Top = 189
+    Top = 181
     Width = 25
     Height = 13
     Caption = 'result'
@@ -159,14 +159,14 @@ object fmMain: TfmMain
   end
   object lProfile: TLabel
     Left = 472
-    Top = 392
+    Top = 384
     Width = 29
     Height = 13
     Caption = 'Profile'
   end
   object Label3: TLabel
     Left = 454
-    Top = 376
+    Top = 368
     Width = 108
     Height = 13
     Caption = 'Plugin processing time:'
@@ -211,7 +211,6 @@ object fmMain: TfmMain
     Width = 289
     Height = 21
     TabOrder = 18
-    Text = 'C:\gig av\03Lavalamp A\gloup1bottomviewx.avi'
     OnChange = ebAVIFilenameChange
   end
   object bCloseAVI: TButton
@@ -314,17 +313,17 @@ object fmMain: TfmMain
     end
   end
   object bInitPlugin: TButton
-    Left = 471
+    Left = 448
     Top = 112
-    Width = 75
+    Width = 137
     Height = 25
-    Caption = '5 - Init Plugin'
+    Caption = '5 - Init && Instantiate Plugin'
     TabOrder = 5
     OnClick = bInitPluginClick
   end
   object bProcessFrame: TButton
     Left = 456
-    Top = 162
+    Top = 154
     Width = 105
     Height = 25
     Caption = '11 - Process Frame'
@@ -332,11 +331,11 @@ object fmMain: TfmMain
     OnClick = bProcessFrameClick
   end
   object bDeInitPlugin: TButton
-    Left = 463
-    Top = 324
-    Width = 90
+    Left = 440
+    Top = 316
+    Width = 129
     Height = 25
-    Caption = '17 - DeInit Plugin'
+    Caption = '17 - DeInit && DeInstance'
     TabOrder = 17
     OnClick = bDeInitPluginClick
   end
@@ -465,7 +464,7 @@ object fmMain: TfmMain
   end
   object bGetAndProcess: TButton
     Left = 452
-    Top = 207
+    Top = 199
     Width = 113
     Height = 25
     Caption = '12 - Get and Process'
@@ -512,7 +511,7 @@ object fmMain: TfmMain
   end
   object bPlayAndProcess: TButton
     Left = 452
-    Top = 240
+    Top = 232
     Width = 113
     Height = 25
     Caption = '13 - Play '
@@ -521,7 +520,7 @@ object fmMain: TfmMain
   end
   object bStop: TButton
     Left = 471
-    Top = 289
+    Top = 281
     Width = 75
     Height = 25
     Caption = '14 - Stop'
@@ -557,7 +556,7 @@ object fmMain: TfmMain
   end
   object cbPluginProcessFrames: TCheckBox
     Left = 444
-    Top = 269
+    Top = 261
     Width = 129
     Height = 17
     Caption = 'Plugin Process Frames'

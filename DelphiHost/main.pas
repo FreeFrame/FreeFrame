@@ -155,7 +155,7 @@ type
     StartingApp: boolean;
     procedure GetPlugins;
     procedure DisplayFrame(lpbitmapinfoheader: pbitmapinfoheader);
-    procedure ProfileAndProcessFrame(pFrame: pointer);     // This is the main frame processing procedure
+    procedure ProfileAndProcessFrame(pFrame: pointer; PluginInstance: dword);     // This is the main frame processing procedure
     procedure LoadPlugin;
   public
     { Public declarations }
@@ -163,8 +163,8 @@ type
   end;
 
 const
-  AppVersion: string='0.55';
-  APIversion: string='0.5';
+  AppVersion: string='0.701';
+  APIversion: string='0.7';
 
 var
   fmMain: TfmMain;
@@ -176,6 +176,7 @@ var
   NumParams: integer;
   AVIloaded: boolean;
   PluginLoaded: boolean;
+  PluginInstance: dword;
 
 implementation
 
@@ -305,7 +306,8 @@ begin
   // Get Info ...
   bgetInfoClick(nil);
   // Init Plugin ...
-  lInitPlugin.caption:=inttostr(PluginHost.Initialise);
+  lInitPlugin.caption:=inttostr(PluginHost.InitialisePlugin);
+  PluginInstance:=PluginHost.InstantiatePlugin(VideoInfoStruct);
   PluginLoaded:=true; // todo: when plugins are returning correct init responses we could only set pluginLoaded to true when we get a success response from the plugin
   // Get Num Params ...
   bGetNumParametersClick(nil);
@@ -322,18 +324,20 @@ end;
 
 procedure TfmMain.bInitPluginClick(Sender: TObject);
 begin
-  lInitPlugin.caption:=inttostr(PluginHost.Initialise);
+  lInitPlugin.caption:=inttostr(PluginHost.InitialisePlugin);
+  PluginInstance:=PluginHost.InstantiatePlugin(VideoInfoStruct);
   PluginLoaded:=true; // todo: when plugins are returning correct init responses we could only set pluginLoaded to true when we get a success response from the plugin
 end;
 
 procedure TfmMain.bDeInitPluginClick(Sender: TObject);
 begin
-  lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialise);
+  DeInstantiatePlugin(PluginInstance);
+  lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialisePlugin);
 end;
 
 procedure TfmMain.bProcessFrameClick(Sender: TObject);
 begin
-  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)));
+  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)),PluginInstance);
   DisplayFrame(lpbitmapinfoheader);
 end;
 
@@ -408,8 +412,10 @@ begin
   if cbAutoLoadPlugin.Checked and not startingApp then begin
     // Stop Playing AVI
     tPlay.Enabled:=false;
+    // Run down our one instance of this plugin
+    PluginHost.DeInstantiatePlugin(PluginInstance);
     // DeInit Plugin
-    lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialise);
+    lDeInitPlugin.caption:=inttostr(PluginHost.DeInitialisePlugin);
     StartingApp:=false;
   end;
   if cbPlugins.itemindex<0 then exit;
@@ -471,10 +477,10 @@ end;
 
 procedure TfmMain.bGetParamDisplayValuesClick(Sender: TObject);
 begin
-  if NumParams>0 then lParam0Value.caption:=GetParameterDisplay(0);
-  if NumParams>1 then lParam1Value.caption:=GetParameterDisplay(1);
-  if NumParams>2 then lParam2Value.caption:=GetParameterDisplay(2);
-  if NumParams>3 then lParam3Value.caption:=GetParameterDisplay(3);
+  if NumParams>0 then lParam0Value.caption:=GetParameterDisplay(0,PluginInstance);
+  if NumParams>1 then lParam1Value.caption:=GetParameterDisplay(1,PluginInstance);
+  if NumParams>2 then lParam2Value.caption:=GetParameterDisplay(2,PluginInstance);
+  if NumParams>3 then lParam3Value.caption:=GetParameterDisplay(3,PluginInstance);
 end;
 
 procedure TfmMain.tbParam0Change(Sender: TObject);
@@ -484,9 +490,9 @@ var
 begin
   tempInt:=tbParam0.position;
   tempSingle:=tempInt/100;
-  PluginHost.SetParameter(0,tempSingle);
-  lParam0Value.caption:=GetParameterDisplay(0);
-  tempSingle:=pluginHost.GetParameter(0);
+  PluginHost.SetParameter(0,tempSingle,PluginInstance);
+  lParam0Value.caption:=GetParameterDisplay(0,PluginInstance);
+  tempSingle:=pluginHost.GetParameter(0,PluginInstance);
   lParam0dword.caption:=floattostr(tempSingle);
 end;
 
@@ -497,9 +503,9 @@ var
 begin
   tempInt:=tbParam1.position;
   tempSingle:=tempInt/100;
-  PluginHost.SetParameter(1,tempSingle);
-  lParam1Value.caption:=GetParameterDisplay(1);
-  tempSingle:=pluginHost.GetParameter(1);
+  PluginHost.SetParameter(1,tempSingle,PluginInstance);
+  lParam1Value.caption:=GetParameterDisplay(1,PluginInstance);
+  tempSingle:=pluginHost.GetParameter(1,PluginInstance);
   lParam1dword.caption:=floattostr(tempSingle);
 end;
 
@@ -510,9 +516,9 @@ var
 begin
   tempInt:=tbParam2.position;
   tempSingle:=tempInt/100;
-  PluginHost.SetParameter(2,tempSingle);
-  lParam2Value.caption:=GetParameterDisplay(2);
-  tempSingle:=pluginHost.GetParameter(2);
+  PluginHost.SetParameter(2,tempSingle,PluginInstance);
+  lParam2Value.caption:=GetParameterDisplay(2,PluginInstance);
+  tempSingle:=pluginHost.GetParameter(2,PluginInstance);
   lParam2dword.caption:=floattostr(tempSingle);
 end;
 
@@ -523,9 +529,9 @@ var
 begin
   tempInt:=tbParam3.position;
   tempSingle:=tempInt/100;
-  PluginHost.SetParameter(3,tempSingle);
-  lParam3Value.caption:=GetParameterDisplay(3);
-  tempSingle:=pluginHost.GetParameter(3);
+  PluginHost.SetParameter(3,tempSingle,PluginInstance);
+  lParam3Value.caption:=GetParameterDisplay(3,PluginInstance);
+  tempSingle:=pluginHost.GetParameter(3,PluginInstance);
   lParam3dword.caption:=floattostr(tempSingle);
 end;
 
@@ -534,19 +540,19 @@ var
   tempSingle: single;
 begin
   if NumParams>0 then begin
-    tempSingle:=pluginHost.GetParameter(0);
+    tempSingle:=pluginHost.GetParameter(0,PluginInstance);
     lParam0dword.caption:=floattostr(tempSingle);
   end;
   if NumParams>1 then begin
-    tempSingle:=pluginHost.GetParameter(1);
+    tempSingle:=pluginHost.GetParameter(1,PluginInstance);
     lParam1dword.caption:=floattostr(tempSingle);
   end;
   if NumParams>2 then begin
-    tempSingle:=pluginHost.GetParameter(2);
+    tempSingle:=pluginHost.GetParameter(2,PluginInstance);
     lParam2dword.caption:=floattostr(tempSingle);
   end;
   if NumParams>3 then begin
-    tempSingle:=pluginHost.GetParameter(3);
+    tempSingle:=pluginHost.GetParameter(3,PluginInstance);
     lParam3dword.caption:=floattostr(tempSingle);
   end;
 end;
@@ -559,7 +565,7 @@ begin
   // Display it unprocessed ...
   // displayframe(lpbitmapinfoheader);
   // process frame and display it again ...
-  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)));
+  ProfileAndProcessFrame(Pointer(Integer(lpBitmapInfoHeader) + sizeof(TBITMAPINFOHEADER)),PluginInstance);
   DisplayFrame(lpbitmapinfoheader);
 end;
 
@@ -575,7 +581,7 @@ begin
   end;
 end;
 
-procedure TfmMain.ProfileAndProcessFrame(pFrame: pointer);     // This is the main frame processing procedure
+procedure TfmMain.ProfileAndProcessFrame(pFrame: pointer; PluginInstance: dword);     // This is the main frame processing procedure
 var
   before: integer;
   pFrameToProcess: pointer;
@@ -591,7 +597,7 @@ begin
 
   // Profile Process the Frame ... 
   before:=gettickcount;
-  lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(pFrameToProcess)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
+  lProcessFrame.caption:=inttostr(PluginHost.ProcessFrame(pFrameToProcess, PluginInstance)); // lpbitmapinfoheader is the current decompressed frame from the mci in the host app
   lProfile.Caption:=inttostr(gettickcount-before)+' msec/frame';
 
   // Convert it back again if we're running in 32bit plugin
@@ -627,7 +633,7 @@ begin
     end;
   end;
   // Process frame through plugin
-  if cbPluginProcessFrames.Checked then ProfileAndProcessFrame(pFrameToProcess);
+  if cbPluginProcessFrames.Checked then ProfileAndProcessFrame(pFrameToProcess, PluginInstance);
   // Display the frame
   DisplayFrame(lpbitmapinfoheader);
 end;
