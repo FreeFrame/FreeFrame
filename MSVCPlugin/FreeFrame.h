@@ -140,7 +140,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 __declspec(dllexport) LPVOID __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved);
 
-typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID);
+typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID,DWORD);
 
 #elif LINUX
 plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD 
