@@ -170,20 +170,31 @@ var
   Pitch : integer;
   c: dword;
 begin
-  //pitch depends on the bitdepth
-  Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
-
-  Ptr := PByteArray(Integer(pParam));
-  for i:=0 to VideoInfoStruct.FrameHeight-1 do begin
-   for j:=0 to VideoInfoStruct.FrameWidth-1 do begin
-     c := YTblB[Ptr^[j*3]] + YTblG[Ptr^[j*3+1]] + YTblR[Ptr^[j*3+2]];
-     Ptr^[j*3]   := c;
-     Ptr^[j*3+1] := c;
-     Ptr^[j*3+2] := c;
-   end;
-   Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+  if VideoInfoStruct.BitDepth = 1 then begin
+    Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
+    Ptr := PByteArray(Integer(pParam));
+    for i:=0 to VideoInfoStruct.FrameHeight do begin
+     for j:=0 to VideoInfoStruct.FrameWidth-1 do begin
+       c := YTblB[Ptr^[j*3]] + YTblG[Ptr^[j*3+1]] + YTblR[Ptr^[j*3+2]];
+       Ptr^[j*3]   := c;
+       Ptr^[j*3+1] := c;
+       Ptr^[j*3+2] := c;
+     end;
+     Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+    end;
+  end else if VideoInfoStruct.BitDepth = 2 then begin
+    Pitch := VideoInfoStruct.FrameWidth * 4;
+    Ptr := PByteArray(Integer(pParam));
+    for i:=0 to VideoInfoStruct.FrameHeight do begin
+     for j:=0 to VideoInfoStruct.FrameWidth-1 do begin
+       c := YTblB[Ptr^[j shl 2 ]] + YTblG[Ptr^[j shl 2 +1]] + YTblR[Ptr^[j shl 2 +2]];
+       Ptr^[j shl 2 ]   := c;
+       Ptr^[j shl 2 +1] := c;
+       Ptr^[j shl 2 +2] := c;
+     end;
+     Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+    end;
   end;
-
   result:=pointer(0);
 end;
 
@@ -298,7 +309,7 @@ begin
   case integer(pParam) of
     0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
     1: result:=pointer(1);   // 1=24bit - supported
-    2: result:=pointer(0);   // 2=32bit
+    2: result:=pointer(1);   // 2=32bit
     else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;

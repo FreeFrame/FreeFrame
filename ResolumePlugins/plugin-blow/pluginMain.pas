@@ -154,31 +154,63 @@ end;
 
 function ProcessFrame(pParam: pointer): pointer;
 var
-  tempPdword : pdw;
   i,j,blow : integer;
   Ptr : PByteArray;
   Pitch : integer;
   c: dword;
-  r,g,b : byte;
+  v1,v2,r,g,b : byte;
 begin
+  blow := round(VideoInfoStruct.FrameWidth  * parameterarray[0]);
   //pitch depends on the bitdepth
-  Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
-  blow := Round(VideoInfoStruct.FrameWidth * ParameterArray[0]);
-
-  Ptr := PByteArray(Integer(pParam));
-  for i:=0 to VideoInfoStruct.FrameHeight-1 do begin
-   for j := blow to VideoInfoStruct.FrameWidth-1 do begin
-     if j = blow then begin
-      b := Ptr^[j*3];
-      g := Ptr^[j*3+1];
-      r := Ptr^[j*3+2];
-     end else begin
-      Ptr^[j*3]   := b;
-      Ptr^[j*3+1] := g;
-      Ptr^[j*3+2] := r;
+  if VideoInfoStruct.BitDepth = 0 then begin
+    Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
+    Ptr := PByteArray(Integer(pParam));
+    for i:=0 to VideoInfoStruct.FrameHeight do begin
+     for j:= blow to VideoInfoStruct.FrameWidth-1 do begin
+       if j = blow then begin
+        v1 := Ptr^[j shl 1];
+        v2 := Ptr^[j shl 1 +1];
+       end else begin
+        Ptr^[j shl 1]    := v1;
+        Ptr^[j shl 1 +1] := v2;
+       end;
      end;
-   end;
-   Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+     Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+    end;
+  end else if VideoInfoStruct.BitDepth = 1 then begin
+    Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
+    Ptr := PByteArray(Integer(pParam));
+    for i:=0 to VideoInfoStruct.FrameHeight do begin
+     for j:= blow to VideoInfoStruct.FrameWidth-1 do begin
+       if j = blow then begin
+        r := Ptr^[j*3];
+        g := Ptr^[j*3 +1];
+        b := Ptr^[j*3 +2];
+       end else begin
+        Ptr^[j*3]    := r;
+        Ptr^[j*3 +1] := g;
+        Ptr^[j*3 +2] := b;
+       end;
+     end;
+     Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+    end;
+  end else if VideoInfoStruct.BitDepth = 2 then begin
+    Pitch := VideoInfoStruct.FrameWidth * 4; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
+    Ptr := PByteArray(Integer(pParam));
+    for i:=0 to VideoInfoStruct.FrameHeight do begin
+     for j:= blow to VideoInfoStruct.FrameWidth-1 do begin
+       if j = blow then begin
+        r := Ptr^[j shl 2];
+        g := Ptr^[j shl 2 +1];
+        b := Ptr^[j shl 2 +2];
+       end else begin
+        Ptr^[j shl 2]    := r;
+        Ptr^[j shl 2 +1] := g;
+        Ptr^[j shl 2 +2] := b;
+       end;
+     end;
+     Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+    end;
   end;
 
   result:=pointer(0);
@@ -233,8 +265,8 @@ begin
     0: begin
       //tempstring:=copy(inttostr(round(parameterarray[0]*10)),0,2);
       //copy(inttostr(round(parameterarray[0]*10)),0,2);   //'Brightness Value';
-      ParameterDisplayValue:='Blow value';
-      result:=@ParameterDisplayValue;
+
+      result:=pointer(inttostr(round(VideoInfoStruct.FrameWidth  * parameterarray[0])));
     end;
     1: begin
       ParameterDisplayValue:='dummy value1    ';
@@ -296,9 +328,9 @@ end;
 function GetPluginCaps(pParam: pointer): pointer;
 begin
   case integer(pParam) of
-    0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
+    0: result:=pointer(1);   // 0=16bit - supported
     1: result:=pointer(1);   // 1=24bit - supported
-    2: result:=pointer(0);   // 2=32bit
+    2: result:=pointer(1);   // 2=32bit
     else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;

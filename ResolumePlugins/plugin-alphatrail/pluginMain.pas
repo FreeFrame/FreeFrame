@@ -32,13 +32,13 @@ interface
 {$IFDEF LINUX}
 uses
   sysutils,
-  Types,qgraphics;
+  Types;
 {$ENDIF}
 
 {$IFDEF WIN32}
 uses
   sysutils,
-  windows,graphics;
+  windows;
 {$ENDIF}
 
 type
@@ -76,14 +76,11 @@ function SetParameter(pParam: pointer): pointer;
 function GetParameter(pParam: pointer): pointer;
 function GetPluginCaps(pParam: pointer): pointer;
 function CopyMemory(dst: pointer; src: pointer; size: integer): pointer;
-function copyem(bitmap : tbitmap; pParam : pointer) : boolean;
-function copyemback(bitmap : tbitmap; pParam : pointer) : boolean;
 
 procedure InitLib;
 
 const
   NumParameters: dword = 1;
-  EllipseLookUp : array[0..5] of integer = (8,10,16,20,40,80);
 
 var
   PluginInfoStruct: TPluginInfoStruct;
@@ -94,24 +91,26 @@ var
   pParameterNameStruct: pointer;
   ParameterArray: array [0..3] of single;
   ParameterDisplayValue: array [0..15] of char; // this is the current transfer value for when a parameter display value is requested
-  Bitmap : TBitmap;
-  
+  // buffer
+  p32bitFrame: pointer;
+  p24bitFrame: pointer;
+
 implementation
 
-uses Classes;
+uses utils;
 
 procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1028;
-    PluginUniqueID:='ELIP';
-    PluginName:='Ellipses';
+    APIMinorVersion:=1032;
+    PluginUniqueID:='ATRA';
+    PluginName:='Alpha trail';
     PluginType:=0;
   end;
-  ParameterNameStruct.Parameter0Name:='ellipse size    ';
-  ParameterNameStruct.Parameter1Name:='unused param1   ';
-  ParameterNameStruct.Parameter2Name:='unused param2   ';
+  ParameterNameStruct.Parameter0Name:='alpha           ';
+  ParameterNameStruct.Parameter1Name:='                ';
+  ParameterNameStruct.Parameter2Name:='                ';
   //ParameterNameStruct[3]:='sdkYYYYYYYYefwke';
 end;
 
@@ -151,111 +150,75 @@ begin
   inc(pVideoInfoStruct);
   pVideoInfoStruct^:=tempPointer^;   // Bit Depth
   result:=pointer(0);
-  //
-  Bitmap := TBitmap.Create;
-  Bitmap := TBitmap.Create;
-  Bitmap.PixelFormat := pf24Bit;
-  Bitmap.Width  := VideoInfoStruct.FrameWidth;
-  Bitmap.Height := VideoInfoStruct.FrameHeight;
+
+  case VideoInfoStruct.BitDepth of
+   1 : begin
+        p24bitFrame := Make24bitBuffer(VideoInfoStruct);
+        Fill24bitBuffer(p24bitFrame,0,VideoInfoStruct);
+       end;
+   2 : begin
+        p32bitFrame := Make32bitBuffer(VideoInfoStruct);
+        Fill32bitBuffer(p32bitFrame,0,VideoInfoStruct);
+       end;
+  end;
 end;
 
 function DeInitialise(pParam: pointer): pointer;
 begin
+  case VideoInfoStruct.BitDepth of
+   1 : Free24bitBuffer(p24bitFrame,VideoInfoStruct);
+   2 : Free32bitBuffer(p32bitFrame,VideoInfoStruct);
+  end;
   result:=pointer(0);
 end;
 
 function ProcessFrame(pParam: pointer): pointer;
 var
- eSize : integer;
- DestRect : TRect;
- i,j,cols,rows : integer;
- color : dword;
+  tempPdword : pdw;
+  i,j : integer;
+  PtrSrc,PtrDest : PByteArray;
+  Pitch : integer;
+  c: dword;
+  d1,d2 : single;
+  Alpha : byte;
 begin
-    try
-      copyem(Bitmap,pParam); //copy framebuffer to bitmap
+   Alpha := 50 - round( (50/100)*(ParameterArray[0]*100) );
 
+   d1 := (Alpha/255);
+   d2 := (1-(Alpha/255));
 
-      eSize := EllipseLookUp[ round( 5 * ParameterArray[0] ) ]; //determine ellipse size
-      cols  := (VideoInfoStruct.FrameWidth div eSize); //amount of columns
-      rows  := (VideoInfoStruct.FrameHeight div eSize); //amount of rows
-
-      Bitmap.canvas.StretchDraw(rect(0,0,cols,rows),Bitmap);
-      Bitmap.canvas.CopyRect(rect(0,0,VideoInfoStruct.FrameWidth,VideoInfoStruct.FrameHeight),
-                             Bitmap.Canvas,
-                             rect(0,0,cols,rows));
-
-      Bitmap.canvas.Brush.Style := bsSolid;
-      Bitmap.canvas.pen.Style := psClear;
-
-      for i:=0 to cols do begin
-       for j:=0 to rows do begin
-        color := Bitmap.canvas.Pixels[(i*eSize),(j*eSize)];
-        DestRect := Rect(i*eSize,j*eSize,(i+1)*eSize,(j+1)*eSize);
-        Bitmap.canvas.Brush.Color := clBlack;
-        Bitmap.canvas.FillRect(DestRect);
-        Bitmap.canvas.Brush.Color := color;
-        Bitmap.canvas.Ellipse(DestRect);
-       end;
+   if VideoInfoStruct.BitDepth = 1 then begin
+     Pitch := VideoInfoStruct.FrameWidth * 3;
+     PtrDest := PByteArray(Integer(pParam));
+     PtrSrc  := PByteArray(Integer(p24bitFrame));
+     for i := 0 to VideoInfoStruct.FrameHeight do begin
+      for j := 0 to (VideoInfoStruct.FrameWidth-1) do begin
+       PtrDest^[j*3   ]   := round(PtrDest^[j*3   ] * d1  + PtrSrc^[j*3   ] * d2);
+       PtrDest^[(j*3) +1] := round(PtrDest^[j*3 +1] * d1  + PtrSrc^[j*3 +1] * d2);
+       PtrDest^[(j*3) +2] := round(PtrDest^[j*3 +2] * d1  + PtrSrc^[j*3 +2] * d2);
       end;
-      
-      copyemback(Bitmap,pParam); //copy bitmap to framebuffer
-    finally
-      result:=pointer(VideoInfoStruct.FrameWidth);
+      PtrDest := PByteArray(Integer(pParam) + (i*Pitch));
+      PtrSrc  := PByteArray(Integer(p24bitFrame)  + (i*Pitch));
+     end;
+     CopyMemory(p24bitFrame,pParam,VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*3);
+   end else if VideoInfoStruct.BitDepth = 2 then begin
+     Pitch := VideoInfoStruct.FrameWidth * 4;
+     PtrDest := PByteArray(Integer(pParam));
+     PtrSrc  := PByteArray(Integer(p32bitFrame));
+     for i := 0 to VideoInfoStruct.FrameHeight do begin
+      for j := 0 to VideoInfoStruct.FrameWidth-1 do begin
+       PtrDest^[j shl 2   ]   := round(PtrDest^[j shl 2   ] * d1  + PtrSrc^[j shl 2   ] * d2);
+       PtrDest^[(j shl 2) +1] := round(PtrDest^[j shl 2 +1] * d1  + PtrSrc^[j shl 2 +1] * d2);
+       PtrDest^[(j shl 2) +2] := round(PtrDest^[j shl 2 +2] * d1  + PtrSrc^[j shl 2 +2] * d2);
+      end;
+      PtrDest := PByteArray(Integer(pParam) + (i*Pitch));
+      PtrSrc  := PByteArray(Integer(p32bitFrame)  + (i*Pitch));
+     end;
+     CopyMemory(p32bitFrame,pParam,VideoInfoStruct.FrameWidth*VideoInfoStruct.FrameHeight*4);
     end;
+
+  result:=pointer(0);
 end;
-
-function copyem(bitmap : tbitmap; pParam : pointer) : boolean;
-var
-  tempPdword : pdw;
-  i,j : integer;
-  Ptr,PtrDest : PByteArray;
-  Pitch : integer;
-  c: dword;
-begin
-  //pitch depends on the bitdepth
-  Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
-
-  Ptr := PByteArray(Integer(pParam));
-  for i := 0 to VideoInfoStruct.FrameHeight-1 do begin
-   PtrDest := Bitmap.ScanLine[(VideoInfoStruct.FrameHeight-1)-i];
-   Ptr := PByteArray(Integer(pParam) + (i*Pitch));
-   for j:=0 to VideoInfoStruct.FrameWidth-1 do begin
-     //bitmap.canvas.Pixels[j,VideoInfoStruct.FrameHeight-i] := rgb(Ptr^[j*3+2],Ptr^[j*3+1],Ptr^[j*3]);
-     PtrDest[j*3]   := Ptr^[j*3];
-     PtrDest[j*3+1] := Ptr^[j*3+1];
-     PtrDest[j*3+2] := Ptr^[j*3+2];
-   end;
-  end;
-
-  result:= true;
-end;
-
-function copyemback(bitmap : tbitmap; pParam : pointer) : boolean;
-var
-  tempPdword : pdw;
-  i,j : integer;
-  Ptr,PtrDest : PByteArray;
-  Pitch : integer;
-  c: dword;
-begin
-  //pitch depends on the bitdepth
-  Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
-
-  Ptr := PByteArray(Integer(pParam));
-  for i := 0 to VideoInfoStruct.FrameHeight-1 do begin
-   PtrDest := Bitmap.ScanLine[(VideoInfoStruct.FrameHeight-1)-i];
-   Ptr := PByteArray(Integer(pParam) + (i*Pitch));
-   for j:=0 to VideoInfoStruct.FrameWidth-1 do begin
-     //bitmap.canvas.Pixels[j,VideoInfoStruct.FrameHeight-i] := rgb(Ptr^[j*3+2],Ptr^[j*3+1],Ptr^[j*3]);
-     Ptr[j*3]   := PtrDest^[j*3];
-     Ptr[j*3+1] := PtrDest^[j*3+1];
-     Ptr[j*3+2] := PtrDest^[j*3+2];
-   end;
-  end;
-
-  result:= true;
-end;
-
 
 function GetNumParameters(pParam: pointer): pointer;
 begin
@@ -280,16 +243,16 @@ var
 begin
   case integer(pParam) of
     0: begin
-      tempSingle:=0.5;
+      tempSingle:=0.1;
       result:=pointer(tempSingle);
     end;
     1: begin
-      // Not yet implemented
-      result:=pointer(80);
+      tempSingle:=0.0;
+      result:=pointer(tempSingle);
     end;
     2: begin
-      // Not yet implemented
-      result:=pointer(10);
+      tempSingle:=0.0;
+      result:=pointer(tempSingle);
     end;
     3: begin
       // Not yet implemented
@@ -303,15 +266,15 @@ function GetParameterDisplay(pParam: pointer): pointer;
 begin
   case integer(pParam) of
     0: begin
-      result:=pointer(inttostr(EllipseLookUp[ round( 5 * ParameterArray[0] ) ]));
+        result:=pointer(inttostr( round( (50/100)*(ParameterArray[0]*100) ) ) );
     end;
     1: begin
-      ParameterDisplayValue:='dummy value1    ';
-      result:=@ParameterDisplayValue;
+        ParameterDisplayValue:='dummy value1    ';
+        result:=@ParameterDisplayValue;;
     end;
     2: begin
-      ParameterDisplayValue:='dummy value2    ';
-      result:=@ParameterDisplayValue;
+        ParameterDisplayValue:='dummy value2    ';
+        result:=@ParameterDisplayValue;;
     end;
     3: begin
       ParameterDisplayValue:='dummy value3    ';
@@ -337,15 +300,15 @@ begin
       result:=pointer(0);
     end;
     1: begin
-      ParameterArray[1]:=tempPDWvalue^;
+      copymemory(@ParameterArray[1],tempPDWvalue,4);
       result:=pointer(0);
     end;
     2: begin
-      ParameterArray[2]:=tempPDWvalue^;
+      copymemory(@ParameterArray[2],tempPDWvalue,4);
       result:=pointer(0);
     end;
     3: begin
-      ParameterArray[3]:=tempPDWvalue^;
+      copymemory(@ParameterArray[2],tempPDWvalue,4);
       result:=pointer(0);
     end;
     else result:=pointer($FFFFFFFF);
@@ -367,7 +330,7 @@ begin
   case integer(pParam) of
     0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
     1: result:=pointer(1);   // 1=24bit - supported
-    2: result:=pointer(0);   // 2=32bit
+    2: result:=pointer(1);   // 2=32bit
     else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;

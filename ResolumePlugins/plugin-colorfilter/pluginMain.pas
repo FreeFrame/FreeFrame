@@ -166,19 +166,30 @@ var
     end;
 
 begin
-  //pitch depends on the bitdepth
-  Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
 
-  Ptr := PByteArray(Integer(pParam));
-  for i:=1 to VideoInfoStruct.FrameHeight do begin
-   for j:=1 to VideoInfoStruct.FrameWidth do begin
-     Ptr^[j*3]   := GetScreen(Ptr^[j*3],round((255/100)*(ParameterArray[2]*100)));
-     Ptr^[j*3+1] := GetScreen(Ptr^[j*3+1],round((255/100)*(ParameterArray[1]*100)));
-     Ptr^[j*3+2] := GetScreen(Ptr^[j*3+2],round((255/100)*(ParameterArray[0]*100)));
-   end;
-   Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+  if VideoInfoStruct.BitDepth = 1 then begin
+    Pitch := VideoInfoStruct.FrameWidth * 3; // because 3 bytes (24 / 8) are reserved for each pixel when bitdepth is 24 bit
+    Ptr := PByteArray(Integer(pParam));
+    for i:=0 to VideoInfoStruct.FrameHeight do begin
+     for j:=0 to VideoInfoStruct.FrameWidth-1 do begin
+       Ptr^[j*3]   := GetScreen(Ptr^[j*3],round((255/100)*(ParameterArray[2]*100)));
+       Ptr^[j*3+1] := GetScreen(Ptr^[j*3+1],round((255/100)*(ParameterArray[1]*100)));
+       Ptr^[j*3+2] := GetScreen(Ptr^[j*3+2],round((255/100)*(ParameterArray[0]*100)));
+     end;
+     Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+    end;
+  end else if VideoInfoStruct.BitDepth = 2 then begin
+    Pitch := VideoInfoStruct.FrameWidth * 4;
+    Ptr := PByteArray(Integer(pParam));
+    for i:=0 to VideoInfoStruct.FrameHeight do begin
+     for j:=0 to VideoInfoStruct.FrameWidth-1 do begin
+       Ptr^[j shl 2 ]   := GetScreen(Ptr^[j shl 2   ],round((255/100)*(ParameterArray[2]*100)));
+       Ptr^[j shl 2 +1] := GetScreen(Ptr^[j shl 2 +1],round((255/100)*(ParameterArray[1]*100)));
+       Ptr^[j shl 2 +2] := GetScreen(Ptr^[j shl 2 +2],round((255/100)*(ParameterArray[0]*100)));
+     end;
+     Ptr := PByteArray(Integer(pParam) + (i*Pitch));
+    end;
   end;
-
   result:=pointer(0);
 end;
 
@@ -290,7 +301,7 @@ begin
   case integer(pParam) of
     0: result:=pointer(0);   // 0=16bit - not yet supported in this sample plugin
     1: result:=pointer(1);   // 1=24bit - supported
-    2: result:=pointer(0);   // 2=32bit
+    2: result:=pointer(1);   // 2=32bit
     else result:=pointer($FFFFFFFF)   // unknown PluginCapsIndex
   end;
 end;
