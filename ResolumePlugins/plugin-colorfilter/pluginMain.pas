@@ -98,14 +98,14 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1028;
-    PluginUniqueID:='PTST';
-    PluginName:='Color filter';
+    APIMinorVersion:=1032;
+    PluginUniqueID:='COLO';
+    PluginName:='Colour filter';
     PluginType:=0;
   end;
-  ParameterNameStruct.Parameter0Name:='r               ';
-  ParameterNameStruct.Parameter1Name:='g               ';
-  ParameterNameStruct.Parameter2Name:='b               ';
+  ParameterNameStruct.Parameter0Name:='R               ';
+  ParameterNameStruct.Parameter1Name:='G               ';
+  ParameterNameStruct.Parameter2Name:='B               ';
   //ParameterNameStruct[3]:='sdkYYYYYYYYefwke';
 end;
 
@@ -179,7 +179,7 @@ begin
    Ptr := PByteArray(Integer(pParam) + (i*Pitch));
   end;
 
-  result:=pointer(VideoInfoStruct.FrameWidth);
+  result:=pointer(0);
 end;
 
 function GetNumParameters(pParam: pointer): pointer;

@@ -98,8 +98,8 @@ procedure InitLib;
 begin
   with PluginInfoStruct do begin
     APIMajorVersion:=0;
-    APIMinorVersion:=1028;
-    PluginUniqueID:='PTST';
+    APIMinorVersion:=1032;
+    PluginUniqueID:='BLOW';
     PluginName:='Blow';
     PluginType:=0;
   end;
@@ -181,7 +181,7 @@ begin
    Ptr := PByteArray(Integer(pParam) + (i*Pitch));
   end;
 
-  result:=pointer(VideoInfoStruct.FrameWidth);
+  result:=pointer(0);
 end;
 
 
