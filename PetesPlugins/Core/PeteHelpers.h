@@ -171,8 +171,8 @@ typedef struct SPete_Parameter {
 
 #define PETE_VJO_VERSION		(350<<16)
 
-#define PETE_FF_MAJORVERSION	(1*100)
-#define PETE_FF_MINORVERSION	(000)
+#define PETE_FF_MAJORVERSION	(1)
+#define PETE_FF_MINORVERSION	(21)
 
 static inline void Pete_ZeroMemory(void* pMemory,int nCount) {
 

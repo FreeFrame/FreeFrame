@@ -1,0 +1,290 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8D01CCCA0486CAD60068D4B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
+		8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */; };
+		F2122CAA09E7F0230096C178 /* Bloom.frf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8D01CCD20486CAD60068D4B7 /* Bloom.frf */; };
+		F2123ABA09E811760096C178 /* BloomVFX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2123AB909E811760096C178 /* BloomVFX.cpp */; };
+		F2123ABE09E811760096C178 /* Bloom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2123ABD09E811760096C178 /* Bloom.cpp */; };
+		F2123AC209E811770096C178 /* ChannelFunction.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2123AC109E811770096C178 /* ChannelFunction.cpp */; };
+		F2123AC609E811780096C178 /* Levels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2123AC509E811780096C178 /* Levels.cpp */; };
+		F2123ACA09E811790096C178 /* BoxFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2123AC909E811780096C178 /* BoxFilter.cpp */; };
+		F2123ACC09E811790096C178 /* ImageMath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = F2123ACB09E811790096C178 /* ImageMath.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		F2122CA709E7F0100096C178 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "/Library/Application Support/FreeFrame";
+			dstSubfolderSpec = 0;
+			files = (
+				F2122CAA09E7F0230096C178 /* Bloom.frf in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
+		32BAE0B30371A71500C91783 /* Bloom_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bloom_Prefix.pch; sourceTree = "<group>"; };
+		8D01CCD10486CAD60068D4B7 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8D01CCD20486CAD60068D4B7 /* Bloom.frf */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Bloom.frf; sourceTree = BUILT_PRODUCTS_DIR; };
+		F21222BF09E721190096C178 /* FreeFrame.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = FreeFrame.h; path = ../../FreeFrame/FreeFrame.h; sourceTree = SOURCE_ROOT; };
+		F2123AB909E811760096C178 /* BloomVFX.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BloomVFX.cpp; sourceTree = "<group>"; };
+		F2123ABB09E811760096C178 /* Bloom.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Bloom.h; path = ../../Core/Bloom.h; sourceTree = "<group>"; };
+		F2123ABD09E811760096C178 /* Bloom.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Bloom.cpp; path = ../../Core/Bloom.cpp; sourceTree = "<group>"; };
+		F2123ABF09E811770096C178 /* ChannelFunction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChannelFunction.h; path = ../../Core/ChannelFunction.h; sourceTree = "<group>"; };
+		F2123AC109E811770096C178 /* ChannelFunction.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ChannelFunction.cpp; path = ../../Core/ChannelFunction.cpp; sourceTree = "<group>"; };
+		F2123AC309E811770096C178 /* Levels.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Levels.h; path = ../../Core/Levels.h; sourceTree = "<group>"; };
+		F2123AC509E811780096C178 /* Levels.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = Levels.cpp; path = ../../Core/Levels.cpp; sourceTree = "<group>"; };
+		F2123AC709E811780096C178 /* BoxFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = BoxFilter.h; path = ../../Core/BoxFilter.h; sourceTree = "<group>"; };
+		F2123AC909E811780096C178 /* BoxFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = BoxFilter.cpp; path = ../../Core/BoxFilter.cpp; sourceTree = "<group>"; };
+		F2123ACB09E811790096C178 /* ImageMath.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = ImageMath.cpp; path = ../../Core/ImageMath.cpp; sourceTree = "<group>"; };
+		F2123ACD09E811790096C178 /* ImageMath.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ImageMath.h; path = ../../Core/ImageMath.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8D01CCCD0486CAD60068D4B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D01CCCE0486CAD60068D4B7 /* Carbon.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* Bloom */ = {
+			isa = PBXGroup;
+			children = (
+				08FB77ADFE841716C02AAC07 /* Source */,
+				089C167CFE841241C02AAC07 /* Resources */,
+				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
+				19C28FB4FE9D528D11CA2CBB /* Products */,
+			);
+			name = Bloom;
+			sourceTree = "<group>";
+		};
+		089C1671FE841209C02AAC07 /* External Frameworks and Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				08EA7FFBFE8413EDC02AAC07 /* Carbon.framework */,
+			);
+			name = "External Frameworks and Libraries";
+			sourceTree = "<group>";
+		};
+		089C167CFE841241C02AAC07 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8D01CCD10486CAD60068D4B7 /* Info.plist */,
+				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		08FB77ADFE841716C02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				32BAE0B30371A71500C91783 /* Bloom_Prefix.pch */,
+				F21222BF09E721190096C178 /* FreeFrame.h */,
+				F2123AB909E811760096C178 /* BloomVFX.cpp */,
+				F2123ABB09E811760096C178 /* Bloom.h */,
+				F2123ABD09E811760096C178 /* Bloom.cpp */,
+				F2123ABF09E811770096C178 /* ChannelFunction.h */,
+				F2123AC109E811770096C178 /* ChannelFunction.cpp */,
+				F2123AC309E811770096C178 /* Levels.h */,
+				F2123AC509E811780096C178 /* Levels.cpp */,
+				F2123AC709E811780096C178 /* BoxFilter.h */,
+				F2123AC909E811780096C178 /* BoxFilter.cpp */,
+				F2123ACB09E811790096C178 /* ImageMath.cpp */,
+				F2123ACD09E811790096C178 /* ImageMath.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		19C28FB4FE9D528D11CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8D01CCD20486CAD60068D4B7 /* Bloom.frf */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8D01CCC60486CAD60068D4B7 /* Bloom */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4FADC23308B4156C00ABE55E /* Build configuration list for PBXNativeTarget "Bloom" */;
+			buildPhases = (
+				8D01CCC90486CAD60068D4B7 /* Resources */,
+				8D01CCCB0486CAD60068D4B7 /* Sources */,
+				8D01CCCD0486CAD60068D4B7 /* Frameworks */,
+				F2122CA709E7F0100096C178 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Bloom;
+			productInstallPath = "$(HOME)/Library/Bundles";
+			productName = Bloom;
+			productReference = 8D01CCD20486CAD60068D4B7 /* Bloom.frf */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 4FADC23708B4156C00ABE55E /* Build configuration list for PBXProject "Bloom" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 089C166AFE841209C02AAC07 /* Bloom */;
+			projectDirPath = "";
+			targets = (
+				8D01CCC60486CAD60068D4B7 /* Bloom */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8D01CCC90486CAD60068D4B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8D01CCCA0486CAD60068D4B7 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8D01CCCB0486CAD60068D4B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F2123ABA09E811760096C178 /* BloomVFX.cpp in Sources */,
+				F2123ABE09E811760096C178 /* Bloom.cpp in Sources */,
+				F2123AC209E811770096C178 /* ChannelFunction.cpp in Sources */,
+				F2123AC609E811780096C178 /* Levels.cpp in Sources */,
+				F2123ACA09E811790096C178 /* BoxFilter.cpp in Sources */,
+				F2123ACC09E811790096C178 /* ImageMath.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				089C167EFE841241C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		4FADC23408B4156C00ABE55E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Bloom_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = PETE_MAC_OSX;
+				HEADER_SEARCH_PATHS = (
+					../../PetesVFX,
+					../../Core,
+					../../FreeFrame,
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				PRODUCT_NAME = Bloom;
+				WRAPPER_EXTENSION = frf;
+				ZERO_LINK = YES;
+			};
+			name = Debug;
+		};
+		4FADC23508B4156C00ABE55E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Bloom_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = PETE_MAC_OSX;
+				HEADER_SEARCH_PATHS = (
+					../../PetesVFX,
+					../../Core,
+					../../FreeFrame,
+				);
+				INFOPLIST_FILE = Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				PRODUCT_NAME = Bloom;
+				WRAPPER_EXTENSION = frf;
+			};
+			name = Release;
+		};
+		4FADC23808B4156C00ABE55E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		4FADC23908B4156C00ABE55E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4FADC23308B4156C00ABE55E /* Build configuration list for PBXNativeTarget "Bloom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FADC23408B4156C00ABE55E /* Debug */,
+				4FADC23508B4156C00ABE55E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4FADC23708B4156C00ABE55E /* Build configuration list for PBXProject "Bloom" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4FADC23808B4156C00ABE55E /* Debug */,
+				4FADC23908B4156C00ABE55E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

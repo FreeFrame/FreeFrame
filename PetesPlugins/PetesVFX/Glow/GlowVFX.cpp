@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /*-------------------------------------------------*/
 
 #ifndef PETE_NATIVE_AE
-static struct PlugInfoStruct g_PluginInfo={
+static PlugInfoStruct g_PluginInfo={
 	PETE_FF_MAJORVERSION,
 	PETE_FF_MINORVERSION,
 	{'G','L','O','W'},

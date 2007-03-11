@@ -18,8 +18,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+#ifndef PETE_MAC_OSX
 #define PETE_USE_MMX
-
+#endif // PETE_MAC_OSX
 
 #include "Mixer.h"
 #include "PeteHelpers.h"
@@ -128,17 +129,17 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 		int nOutputRed=
 			(nSourceARed*nLerpValue)+
 			(nSourceBRed*nOneMinusLerp);
-		nOutputRed>>=16;
+		nOutputRed>>=8;
 
 		int nOutputGreen=
 			(nSourceAGreen*nLerpValue)+
 			(nSourceBGreen*nOneMinusLerp);
-		nOutputGreen>>=16;
+		nOutputGreen>>=8;
 
 		int nOutputBlue=
 			(nSourceABlue*nLerpValue)+
 			(nSourceBBlue*nOneMinusLerp);
-		nOutputBlue>>=16;
+		nOutputBlue>>=8;
 
 		const U32 OutputColour=
 			(nOutputRed<<SHIFT_RED)|
@@ -169,7 +170,7 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 			packuswb	mm7,mm0
 
 			mov			esi,pCurrentOutput
-			movq		[esi],mm7
+			movd		[esi],mm7
 
 		}
 
@@ -182,6 +183,8 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 
 	}
 
+#ifdef PETE_USE_MMX
 	_m_empty();
+#endif // PETE_USE_MMX
 
 }
