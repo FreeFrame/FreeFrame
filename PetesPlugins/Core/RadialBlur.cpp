@@ -18,13 +18,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+// jan 13, 2007 ck: MMX version was trashing two bytes beyond output buffer,
+// due to movq when movd was intended
 
 #include "RadialBlur.h"
 
 #include <math.h>
 
+// ck: my cheesy substitutes for mmintrin.h
+#define __m64 __int64
+#define _mm_set_pi16(a, b, c, d) (__int64(a) << 48) + (__int64(b) << 32) + (__int64(c) << 16) + (__int64(d) << 0)
+#define _m_empty __asm emms;
+
 #ifndef PETE_MAC_OSX
-#include "mmintrin.h"
+//#include "mmintrin.h"
 #endif // PETE_MAC_OSX
 
 static SPete_Parameter g_Parameters[]={
@@ -143,7 +150,7 @@ void Pete_RadialBlur_Render4(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 
 	const U32* pSourceCentre=pSource+(nHalfHeight*nWidth)+(nHalfWidth);
 
-	const __m64 ZeroReg=_m_from_int(0);
+//	const __m64 ZeroReg=_m_from_int(0);	// ck: doesn't do anything
 	__asm {
 
 		pxor		mm0,mm0
@@ -180,7 +187,8 @@ void Pete_RadialBlur_Render4(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 
 					mov			esi, pCurrentSource
 
-					movq		mm2,[esi]
+//					movq		mm2,[esi]	// ck: only need 32 bits
+					movd		mm2,[esi]	// ck: 32-bit move
 					punpcklbw	mm2,mm0
 
 					paddw		mm1,mm2
@@ -197,7 +205,8 @@ void Pete_RadialBlur_Render4(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 				packuswb	mm1,mm0
 
 				mov			esi,pCurrentOutput
-				movq		[esi],mm1
+//				movq		[esi],mm1	// ck: TRASHES 2 bytes beyond output buffer
+				movd		[esi],mm1	// ck: 32-bit move
 
 			}
 
@@ -234,7 +243,7 @@ void Pete_RadialBlur_Render8(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 
 	const U32* pSourceCentre=pSource+(nHalfHeight*nWidth)+(nHalfWidth);
 
-	const __m64 ZeroReg=_m_from_int(0);
+//	const __m64 ZeroReg=_m_from_int(0);	// ck: doesn't do anything
 	__asm {
 
 		pxor		mm0,mm0
@@ -271,7 +280,8 @@ void Pete_RadialBlur_Render8(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 
 					mov			esi, pCurrentSource
 
-					movq		mm2,[esi]
+//					movq		mm2,[esi]	// ck: only need 32 bits
+					movd		mm2,[esi]	// ck: 32-bit move
 					punpcklbw	mm2,mm0
 
 					paddw		mm1,mm2
@@ -288,7 +298,8 @@ void Pete_RadialBlur_Render8(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 				packuswb	mm1,mm0
 
 				mov			esi,pCurrentOutput
-				movq		[esi],mm1
+//				movq		[esi],mm1	// ck: TRASHES 2 bytes beyond output buffer
+				movd		[esi],mm1	// ck: 32-bit move
 
 			}
 
@@ -325,7 +336,7 @@ void Pete_RadialBlur_Render16(SPete_RadialBlur_Settings* pSettings,U32* pSource,
 
 	const U32* pSourceCentre=pSource+(nHalfHeight*nWidth)+(nHalfWidth);
 
-	const __m64 ZeroReg=_m_from_int(0);
+//	const __m64 ZeroReg=_m_from_int(0);	// ck: doesn't do anything
 	__asm {
 
 		pxor		mm0,mm0
@@ -362,7 +373,8 @@ void Pete_RadialBlur_Render16(SPete_RadialBlur_Settings* pSettings,U32* pSource,
 
 					mov			esi, pCurrentSource
 
-					movq		mm2,[esi]
+//					movq		mm2,[esi]	// ck: only need 32 bits
+					movd		mm2,[esi]	// ck: 32-bit move
 					punpcklbw	mm2,mm0
 
 					paddw		mm1,mm2
@@ -379,7 +391,8 @@ void Pete_RadialBlur_Render16(SPete_RadialBlur_Settings* pSettings,U32* pSource,
 				packuswb	mm1,mm0
 
 				mov			esi,pCurrentOutput
-				movq		[esi],mm1
+//				movq		[esi],mm1	// ck: TRASHES 2 bytes beyond output buffer
+				movd		[esi],mm1	// ck: 32-bit move
 
 			}
 

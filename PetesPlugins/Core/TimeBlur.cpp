@@ -18,13 +18,22 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+// jan 13, 2007 ck: MMX version was trashing two bytes beyond output buffer,
+// due to movq when movd was intended
+
 #include "TimeBlur.h"
 #include "PeteHelpers.h"
+
+// ck: my cheesy substitutes for mmintrin.h
+#define __m64 __int64
+#define _mm_set_pi16(a, b, c, d) (__int64(a) << 48) + (__int64(b) << 32) + (__int64(c) << 16) + (__int64(d) << 0)
+#define _mm_set_pi32(a, b) (__int64(a) << 32) + (__int64(b) << 0)
+#define _m_empty __asm emms;
 
 #include "math.h"
 #include <string.h>
 #ifndef PETE_MAC_OSX
-#include "mmintrin.h"
+//#include "mmintrin.h"	// ck: I don't have these
 #endif // PETE_MAC_OSX
 
 
@@ -398,19 +407,20 @@ void Pete_TimeBlur_AddNewFrame(SPete_TimeBlur_Data* pInstanceData,U32* pSource) 
 
 		__asm {
 
-			mov			esi,pCurrentSource
+			mov			esi,pCurrentSource	// ck: 32-bit pointer
 
-			movq		mm1,[esi]
+//			movq		mm1,[esi]	// ck: only need 32 bits
+			movd		mm1,[esi]	// ck: 32-bit move
 
-			mov			edi,pCurrentAverage
+			mov			edi,pCurrentAverage	// ck: 64-bit pointer
 
 			punpcklbw	mm1,mm0
 
-			movq		mm2,[edi]
+			movq		mm2,[edi]	// ck: 64-bit move is *correct*
 
 			paddw		mm2,mm1
 
-			movq		[edi],mm2
+			movq		[edi],mm2	// ck: 64-bit move is *correct*
 
 		}
 
@@ -465,24 +475,25 @@ void Pete_TimeBlur_CalcDisplayFrame(SPete_TimeBlur_Data* pInstanceData) {
 
 	__asm {
 		pxor		mm0,mm0
-		movq		mm1,RecipReg
+		movq		mm1,RecipReg	// ck: 64-bit move is *correct*
 	}
 
 	while (pCurrentOutput<pOutputEnd) {
 
 		__asm {
 
-			mov			edi,pCurrentAverage
+			mov			edi,pCurrentAverage	// ck: 64-bit pointer
 
-			mov			esi,pCurrentOutput
+			mov			esi,pCurrentOutput	// ck: 32-bit pointer
 
-			movq		mm7,[edi]
+			movq		mm7,[edi]	// ck: 64-bit move is *correct*
 
 			pmulhw		mm7,mm1
 
 			packuswb	mm7,mm0
 
-			movq		[esi],mm7
+//			movq		[esi],mm7	// ck: TRASHES 2 bytes beyond output buffer
+			movd		[esi],mm7	// ck: 32-bit move
 
 		}
 
@@ -517,31 +528,33 @@ void Pete_TimeBlur_AddNewFrameAndSubtractOld(SPete_TimeBlur_Data* pInstanceData,
 
 		__asm {
 
-			mov			esi,pCurrentSource
+			mov			esi,pCurrentSource	// ck: 32-bit pointer
 
 			mov			eax,[esi]
 
-			movq		mm1,[esi]
+//			movq		mm1,[esi]	// ck: only need 32 bits
+			movd		mm1,[esi]	// ck: 32-bit move
 
-			mov			esi,pCurrentOldFrame
+			mov			esi,pCurrentOldFrame	// ck: 32-bit pointer
 
-			movq		mm3,[esi]
+//			movq		mm3,[esi]	// ck: only need 32 bits
+			movd		mm3,[esi]	// ck: 32-bit move
 
 			punpcklbw	mm3,mm0
 
-			mov			edi,pCurrentAverage
+			mov			edi,pCurrentAverage	// ck: 64-bit pointer
 
 			punpcklbw	mm1,mm0
 
-			movq		mm2,[edi]
+			movq		mm2,[edi]	// ck: 64-bit move is *correct*
 
 			paddw		mm2,mm1
 
 			psubw		mm2,mm3
 
-			movq		[edi],mm2
+			movq		[edi],mm2	// ck: 64-bit move is *correct*
 
-			mov			esi,pCurrentNewFrame
+			mov			esi,pCurrentNewFrame	// ck: 32-bit pointer
 
 			mov			[esi],eax
 
@@ -578,19 +591,20 @@ void Pete_TimeBlur_SubtractOld(SPete_TimeBlur_Data* pInstanceData,U32* pOldFrame
 
 		__asm {
 
-			mov			esi,pCurrentOldFrame
+			mov			esi,pCurrentOldFrame	// ck: 32-bit pointer
 
-			movq		mm3,[esi]
+//			movq		mm3,[esi]	// ck: only need 32 bits
+			movd		mm3,[esi]	// ck: 32-bit move
 
 			punpcklbw	mm3,mm0
 
-			mov			edi,pCurrentAverage
+			mov			edi,pCurrentAverage	// ck: 64-bit pointer
 
-			movq		mm2,[edi]
+			movq		mm2,[edi]	// ck: 64-bit move is *correct*
 
 			psubw		mm2,mm3
 
-			movq		[edi],mm2
+			movq		[edi],mm2	// ck: 64-bit move is *correct*
 
 		}
 
@@ -623,19 +637,20 @@ void Pete_TimeBlur_AddNew(SPete_TimeBlur_Data* pInstanceData,U32* pNewFrame) {
 
 		__asm {
 
-			mov			esi,pCurrentNewFrame
+			mov			esi,pCurrentNewFrame	// ck: 32-bit pointer
 
-			movq		mm3,[esi]
+//			movq		mm3,[esi]	// ck: only need 32 bits
+			movd		mm3,[esi]	// ck: 32-bit move
 
 			punpcklbw	mm3,mm0
 
-			mov			edi,pCurrentAverage
+			mov			edi,pCurrentAverage	// ck: 64-bit pointer
 
-			movq		mm2,[edi]
+			movq		mm2,[edi]	// ck: 64-bit move is *correct*
 
 			paddw		mm2,mm3
 
-			movq		[edi],mm2
+			movq		[edi],mm2	// ck: 64-bit move is *correct*
 
 		}
 

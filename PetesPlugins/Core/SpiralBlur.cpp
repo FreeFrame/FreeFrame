@@ -18,12 +18,21 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
+// jan 13, 2007 ck: MMX version was trashing two bytes beyond output buffer,
+// due to movq when movd was intended
+
 #include "SpiralBlur.h"
 #include "PeteHelpers.h"
 
+// ck: my cheesy substitutes for mmintrin.h
+#define __m64 __int64
+#define _mm_set_pi16(a, b, c, d) (__int64(a) << 48) + (__int64(b) << 32) + (__int64(c) << 16) + (__int64(d) << 0)
+#define _mm_set_pi32(a, b) (__int64(a) << 32) + (__int64(b) << 0)
+#define _m_empty __asm emms;
+
 #include "math.h"
 #ifndef PETE_MAC_OSX
-#include "mmintrin.h"
+//#include "mmintrin.h"	// ck: I don't have these
 #endif // PETE_MAC_OSX
 
 const int nMaxLayerCount=32;
@@ -268,7 +277,8 @@ void Pete_SpiralBlur_Render(SPete_SpiralBlur_Data* pInstanceData,SPete_SpiralBlu
 
 					mov			esi, pCurrentSource
 
-					movq		mm2,[esi]
+//					movq		mm2,[esi]	// ck: only need 32 bits
+					movd		mm2,[esi]	// ck: 32-bit move
 					punpcklbw	mm2,mm0
 
 					paddw		mm1,mm2
@@ -297,10 +307,12 @@ void Pete_SpiralBlur_Render(SPete_SpiralBlur_Data* pInstanceData,SPete_SpiralBlu
 
 				packuswb	mm7,mm0
 				mov			esi,pCurrentOutput
-				movq		mm6,[esi]
+//				movq		mm6,[esi]	// ck: only need 32 bits
+				movd		mm6,[esi]	// ck: 32-bit move
 				pand		mm6,WriteMask
 				por			mm7,mm6
-				movq		[esi],mm7
+//				movq		[esi],mm7	// ck: TRASHES 2 bytes beyond output buffer
+				movd		[esi],mm7	// ck: 32-bit move
 
 			}
 

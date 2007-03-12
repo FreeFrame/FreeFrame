@@ -18,16 +18,25 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 */
 
-#ifndef PETE_MAC_OSX
+// dec 25, 2006 ck: MMX version was trashing two bytes beyond output buffer,
+// due to movq when movd was intended; also non-MMX version always output
+// black, due to shift right 16 when 8 was intended
+
 #define PETE_USE_MMX
-#endif // PETE_MAC_OSX
+
 
 #include "Mixer.h"
 #include "PeteHelpers.h"
 
+
 #ifdef PETE_USE_MMX
-#include "mmintrin.h"
+//#include "mmintrin.h"	// ck: I don't have these
 #endif // PETE_USE_MMX
+
+// ck: my cheesy substitutes for mmintrin.h
+#define __m64 __int64
+#define _mm_set_pi16(a, b, c, d) (__int64(a) << 48) + (__int64(b) << 32) + (__int64(c) << 16) + (__int64(d) << 0)
+#define _m_empty __asm emms;
 
 static SPete_Parameter g_Parameters[]={
 	{
@@ -129,16 +138,19 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 		int nOutputRed=
 			(nSourceARed*nLerpValue)+
 			(nSourceBRed*nOneMinusLerp);
+//		nOutputRed>>=16;	// ck: shifting twice as much as needed
 		nOutputRed>>=8;
 
 		int nOutputGreen=
 			(nSourceAGreen*nLerpValue)+
 			(nSourceBGreen*nOneMinusLerp);
+//		nOutputGreen>>=16;	// ck: shifting twice as much as needed
 		nOutputGreen>>=8;
 
 		int nOutputBlue=
 			(nSourceABlue*nLerpValue)+
 			(nSourceBBlue*nOneMinusLerp);
+//		nOutputBlue>>=16;	// ck: shifting twice as much as needed
 		nOutputBlue>>=8;
 
 		const U32 OutputColour=
@@ -153,12 +165,14 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 		__asm {
 
 			mov			esi,pCurrentSourceA;
-			movq		mm7,[esi]
-			punpcklbw	mm7,mm0
+//			movq		mm7,[esi]	// ck: only need 32 bits
+			movd		mm7,[esi]	// ck: 32-bit move
+			punpcklbw	mm7,mm0		// ck: mm7 = 0, MSW SrcA, 0, LSW SrcA
 
 			mov			esi,pCurrentSourceB;
-			movq		mm6,[esi]
-			punpcklbw	mm6,mm0
+//			movq		mm6,[esi]	// ck: only need 32 bits
+			movd		mm6,[esi]	// ck: 32-bit move
+			punpcklbw	mm6,mm0		// ck: mm6 = 0, MSW SrcB, 0, LSW SrcB
 
 			pmullw		mm7,mm1
 			pmullw		mm6,mm2
@@ -170,7 +184,8 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 			packuswb	mm7,mm0
 
 			mov			esi,pCurrentOutput
-			movd		[esi],mm7
+//			movq		[esi],mm7	// ck: TRASHES 2 bytes beyond output buffer
+			movd		[esi],mm7	// ck: 32-bit move
 
 		}
 
@@ -183,8 +198,6 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 
 	}
 
-#ifdef PETE_USE_MMX
 	_m_empty();
-#endif // PETE_USE_MMX
 
 }
