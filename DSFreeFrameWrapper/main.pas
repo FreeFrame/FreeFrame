@@ -45,7 +45,9 @@ uses BaseClass, ActiveX, DirectShow9, Windows, DSUtil, PropPage;
 const
   CLSID_DSFreeFrameWrapper : TGUID = '{DA700236-F7FF-43CA-9B21-1819B4308EE6}';
   IID_FFParameters: TGUID = '{9EB75574-7A2F-4227-93FF-39BE75BC883C}';
+  IID_FFOutputs: TGUID = '{3F671C2A-91DF-4624-921E-7D70C84F3ACE}';
   IID_FFPlugIn: TGUID = '{88C2A7B8-8C17-4BB4-B91A-F03EE1480DAA}';
+  IID_FFPlugIn2: TGUID = '{0B3E63CA-3E99-443D-9C8E-5E18BCDB6ACD}';
   IID_FFPropertySaves: TGUID = '{D75D285D-3956-441D-99E5-768B940A105B}';
 
   FF_SUCCESS = 0;
@@ -54,6 +56,39 @@ const
   FF_FALSE = 0;
   FF_SUPPORTED = 1;
   FF_UNSUPPORTED = 0;
+
+  FF_GETINFO = 0;
+  FF_INITIALISE = 1;
+  FF_DEINITIALISE = 2;
+  FF_PROCESSFRAME = 3;
+  FF_GETNUMPARAMETERS = 4;
+  FF_GETPARAMETERNAME = 5;
+  FF_GETPARAMETERDEFAULT = 6;
+  FF_GETPARAMETERDISPLAY = 7;
+  FF_SETPARAMETER = 8;
+  FF_GETPARAMETER = 9;
+  FF_GETPLUGINCAPS = 10;
+  FF_INSTANTIATE = 11;
+  FF_DEINSTANTIATE = 12;
+  FF_GETEXTENDEDINFO = 13;
+  FF_PROCESSFRAMECOPY = 14;
+  FF_GETPARAMETERTYPE = 15;
+
+  //additions to FF specs
+  FF_SETTRHEADLOCK = 19;
+
+  //for outputs
+  FF_GETNUMOUTPUTS = 20;
+  FF_GETOUTPUTNAME = 21;
+  FF_GETOUTPUTTYPE = 22;
+  FF_GETOUTPUTSLICECOUNT = 23;
+  FF_GETOUTPUT = 24;
+
+  //for spreaded inputs
+  FF_SETINPUT = 30;
+
+  //for compatibility
+  FF_HANDLESINVALIDCODES = 999;
 
   FreeFramePinTypes : TRegPinTypes =
     (clsMajorType: @MEDIATYPE_Video;
@@ -74,6 +109,16 @@ type
     function GetValue(Index: Integer; out Value: Single): HResult; stdcall;
     function GetDisplayValue(Index: Integer; out DisplayValue: String): HResult; stdcall;
     function SetValue(Index: Integer; Value: Single): HResult; stdcall;
+    function SetInput(Index, SliceCount: Integer; Value: Pointer): HResult; stdcall;
+  end;
+
+  IFFOutputs = interface
+    ['{3F671C2A-91DF-4624-921E-7D70C84F3ACE}']
+    function GetOutputCount(out Count: DWord): HResult; stdcall;
+    function GetOutputName(Index: Integer; out Name: String): HResult; stdcall;
+    function GetOutputType(Index: Integer; out Typ: DWord): HResult; stdcall;
+    function GetOutputSliceCount(Index: Integer; out Slicecount: DWord): HResult; stdcall;
+    function GetOutput(Index: Integer; out Value: PSingle): HResult; stdcall;
   end;
 
   IFFPlugIn = interface
@@ -86,6 +131,13 @@ type
     function GetDescription(out Description: String): HResult; stdcall;
     function GetAbout(out About: String): HResult; stdcall;
     function GetCaps(CapsIndex: Integer; out CapsResult: DWord): HResult; stdcall;
+    function SetEnabled(Enabled: Boolean): HResult; stdcall;
+    function GetHandlesInvalidCodes: HResult; stdcall;
+  end;
+
+  IFFPlugIn2 = interface
+    ['{0B3E63CA-3E99-443D-9C8E-5E18BCDB6ACD}']
+    function SetThreadLock(Enabled: Boolean): HResult; stdcall;
   end;
 
   IFFPropertySaves = interface
@@ -113,6 +165,12 @@ type
     PluginType: DWord;
   end;
 
+  TInputStruct = record
+    Index: DWord;
+    SliceCount: DWord;
+    Spread: Pointer;
+  end;
+
   TSetParameterStruct = record
     ParameterNumber: DWord;
     NewParameterValue: DWord;
@@ -129,7 +187,7 @@ type
 
   PDWord = ^dword;
 
-  TFreeFrameWrapperFilter = class(TBCTransformFilter, IFFPlugIn, IFFParameters, 
+  TFreeFrameWrapperFilter = class(TBCTransformFilter, IFFPlugIn, IFFPlugIn2, IFFParameters, IFFOutputs,
       ISpecifyPropertyPages, IFFPropertySaves)
   private
     FCurrentPlug: THandle;
@@ -141,6 +199,7 @@ type
     FCurrentPlugin: string;
     FPluginPath: string;
     FInstantiated: Boolean;
+    FEnabled: Boolean;
     procedure InitializePlugin;
     procedure DeInitializePlugin;
     function CanTransform(mtIn: PAMMediaType): Boolean;
@@ -158,6 +217,7 @@ type
     function DecideBufferSize(Alloc: IMemAllocator; Properties: PAllocatorProperties): HRESULT; override;
     function CompleteConnect(direction: TPinDirection; ReceivePin: IPin): HRESULT; override;
     function GetPages(out pages: TCAGUID): HResult; stdcall;
+
     //IFFParameters
     function GetCount(out Count: DWord): HResult; stdcall;
     function GetName(Index: Integer; out Name: String): HResult; stdcall;
@@ -166,6 +226,14 @@ type
     function GetValue(Index: Integer; out Value: Single): HResult; stdcall;
     function GetDisplayValue(Index: Integer; out DisplayValue: String): HResult; stdcall;
     function SetValue(Index: Integer; Value: Single): HResult; stdcall;
+    function SetInput(Index, SliceCount: Integer; Value: Pointer): HResult; stdcall;
+
+    //IFFOutputs
+    function GetOutputCount(out Count: DWord): HResult; stdcall;
+    function GetOutputName(Index: Integer; out Name: String): HResult; stdcall;
+    function GetOutputType(Index: Integer; out Typ: DWord): HResult; stdcall;
+    function GetOutputSliceCount(Index: Integer; out SliceCount: DWord): HResult; stdcall;
+    function GetOutput(Index: Integer; out Value: PSingle): HResult; stdcall;
 
     // IFFPlugIn
     function SetPlugin(Filename: String): HResult; stdcall;
@@ -176,6 +244,11 @@ type
     function GetDescription(out Description: String): HResult; stdcall;
     function GetAbout(out About: String): HResult; stdcall;
     function GetCaps(CapsIndex: Integer; out CapsResult: DWord): HResult; stdcall;
+    function SetEnabled(Enabled: Boolean): HResult; stdcall;
+    function GetHandlesInvalidCodes: HResult; stdcall;
+
+    // IFFPlugIn2
+    function SetThreadLock(Enabled: Boolean): HResult; stdcall;
 
     // IFFPropertySaves
     function SetPluginPath(Path: String): HResult; stdcall;
@@ -197,7 +270,7 @@ uses Dialogs, SysUtils, Forms;
 procedure TFreeFrameWrapperFilter.InitializePlugin;
 begin
   if not FInitialized then
-    if DWord(FPlugMain(1, nil, 0)) = FF_SUCCESS then
+    if DWord(FPlugMain(FF_INITIALISE, nil, 0)) = FF_SUCCESS then
       FInitialized := true;
 end;
 
@@ -208,7 +281,7 @@ begin
   DeInstantiatePlugin;
 
   pVideoInfoStruct := Pointer(@FVideoInfoStruct);
-  FPlugInstance := DWord(FPlugMain(11, pVideoInfoStruct, 0));
+  FPlugInstance := DWord(FPlugMain(FF_INSTANTIATE, pVideoInfoStruct, 0));
   if FPlugInstance <> FF_FAIL then
     FInstantiated := true;
 end;
@@ -219,7 +292,7 @@ begin
 
   if FInitialized then
     try
-      FPlugMain(2, nil, 0);
+      FPlugMain(FF_DEINITIALISE, nil, 0);
     finally
       FInitialized := false;
       FPlugMain := nil;
@@ -230,7 +303,7 @@ end;
 procedure TFreeFrameWrapperFilter.DeInstantiatePlugin;
 begin
   if FInstantiated then
-    if DWord(FPlugMain(12, nil, FPlugInstance)) = FF_SUCCESS then  //deinstantiate
+    if DWord(FPlugMain(FF_DEINSTANTIATE, nil, FPlugInstance)) = FF_SUCCESS then  //deinstantiate
       FInstantiated := false;
 end;
 
@@ -268,10 +341,12 @@ begin
   FCritSec.Lock;
   try
     result := Copy(pIn, pOut);
-    pOut.GetPointer(pData);
-
-    if FInstantiated then
-      FPlugMain(3, Pointer(pData), FPlugInstance);
+    if FEnabled then
+    begin
+      pOut.GetPointer(pData);
+      if FInstantiated then
+        FPlugMain(FF_PROCESSFRAME, Pointer(pData), FPlugInstance);
+    end;
   finally
     FCritSec.UnLock;
   end;
@@ -303,7 +378,7 @@ begin
 
   // Copy the media type
   Source.GetMediaType(MediaType);
-  Dest.SetMediaType(MediaType^);
+  Dest.SetMediaType(MediaType);
   DeleteMediaType(MediaType);
 
   // Copy the actual data length
@@ -453,7 +528,7 @@ function TFreeFrameWrapperFilter.GetCount(out Count: DWord): HResult; stdcall;
 begin
   if FInitialized then
   begin
-    Count := DWord(FPlugMain(4, nil, 0));
+    Count := DWord(FPlugMain(FF_GETNUMPARAMETERS, nil, 0));
     Result := S_OK;
   end
   else
@@ -469,7 +544,7 @@ var
 begin
   if FInitialized then
   begin
-    tempSourcePointer := PDWord(FPlugMain(5, Pointer(Index), 0));
+    tempSourcePointer := PDWord(FPlugMain(FF_GETPARAMETERNAME, Pointer(Index), 0));
     tempDestPointer := PDWord(@tempParamDisplay);
 
     for i := 0 to 3 do
@@ -483,14 +558,14 @@ begin
     Result := S_OK;
   end
   else
-     Result := E_FAIL;
+    Result := E_FAIL;
 end;
 
 function TFreeFrameWrapperFilter.GetType(Index: Integer; out Typ: DWord): HResult; stdcall;
 begin
   if FInitialized then
   begin
-    Typ := DWord(FPlugMain(15, Pointer(Index), 0));
+    Typ := DWord(FPlugMain(FF_GETPARAMETERTYPE, Pointer(Index), 0));
     Result := S_OK;
   end
   else
@@ -503,8 +578,9 @@ var
 begin
  if FInitialized then
  begin
-   tempDWord := DWord(FPlugMain(6, Pointer(Index), 0));
+   tempDWord := DWord(FPlugMain(FF_GETPARAMETERDEFAULT, Pointer(Index), 0));
    CopyMemory(@Default, @tempDword, 4);
+
    Result := S_OK;
  end
  else
@@ -517,7 +593,7 @@ var
 begin
  if FInstantiated then
  begin
-    tempDword := DWord(FPlugMain(9, pointer(Index), FPlugInstance));
+    tempDword := DWord(FPlugMain(FF_GETPARAMETER, pointer(Index), FPlugInstance));
     CopyMemory(@Value, @tempDword, 4);
     Result := S_OK;
  end
@@ -534,7 +610,7 @@ var
 begin
   if FInstantiated then
   begin
-    tempSourcePointer := PDWord(FPlugMain(7, Pointer(Index), FPlugInstance));
+    tempSourcePointer := PDWord(FPlugMain(FF_GETPARAMETERDISPLAY, Pointer(Index), FPlugInstance));
     tempDestPointer := PDWord(@tempParamDisplay);
 
     for i := 0 to 3 do
@@ -562,7 +638,7 @@ begin
 
   if FInstantiated then
   begin
-    if DWord(FPlugMain(8, @paramStruct, FPlugInstance)) = FF_SUCCESS then
+    if DWord(FPlugMain(FF_SETPARAMETER, @paramStruct, FPlugInstance)) = FF_SUCCESS then
       Result := S_OK
     else
       Result := E_FAIL;
@@ -604,7 +680,7 @@ var
 begin
   if FInitialized then
   begin
-    pPluginInfoStruct := FPlugMain(0, nil, 0);
+    pPluginInfoStruct := FPlugMain(FF_GETINFO, nil, 0);
     if pPluginInfoStruct <> nil then
     begin
       Result := S_OK;
@@ -623,7 +699,7 @@ var
 begin
   if FInitialized then
   begin
-    pPluginInfoStruct := FPlugMain(0, nil, 0);
+    pPluginInfoStruct := FPlugMain(FF_GETINFO, nil, 0);
     if pPluginInfoStruct <> nil then
     begin
       Result := S_OK;
@@ -642,7 +718,7 @@ var
 begin
   if FInitialized then
   begin
-    pPluginInfoStruct := FPlugMain(0, nil, 0);
+    pPluginInfoStruct := FPlugMain(FF_GETINFO, nil, 0);
     if pPluginInfoStruct <> nil then
     begin
       Result := S_OK;
@@ -661,7 +737,7 @@ var
 begin
   if FInitialized then
   begin
-    pPluginInfoStruct := FPlugMain(0, nil, 0);
+    pPluginInfoStruct := FPlugMain(FF_GETINFO, nil, 0);
     if pPluginInfoStruct <> nil then
     begin
       Result := S_OK;
@@ -680,7 +756,7 @@ var
 begin
   if FInitialized then
   begin
-    pPluginExtendedInfoStruct := FPlugMain(13, nil, 0);
+    pPluginExtendedInfoStruct := FPlugMain(FF_GETEXTENDEDINFO, nil, 0);
     if pPluginExtendedInfoStruct <> nil then
     begin
       Result := S_OK;
@@ -699,7 +775,7 @@ var
 begin
   if FInitialized then
   begin
-    pPluginExtendedInfoStruct := FPlugMain(13, nil, 0);
+    pPluginExtendedInfoStruct := FPlugMain(FF_GETEXTENDEDINFO, nil, 0);
     if pPluginExtendedInfoStruct <> nil then
     begin
       Result := S_OK;
@@ -718,7 +794,7 @@ begin
   begin
     Result := S_OK;
     if CapsIndex <= 3 then
-      CapsResult := DWord(FPlugMain(10, Pointer(CapsIndex), 0));
+      CapsResult := DWord(FPlugMain(FF_GETPLUGINCAPS, Pointer(CapsIndex), 0));
   end
   else
     Result := E_FAIL;
@@ -766,6 +842,132 @@ begin
     Result := false;
 end;
 
+function TFreeFrameWrapperFilter.GetOutputCount(out Count: DWord): HResult;
+begin
+  if FInitialized then
+  begin
+    Count := DWord(FPlugMain(FF_GETNUMOUTPUTS, nil, 0));
+    if Count = FF_FAIL then
+      Result := E_FAIL
+    else
+      Result := S_OK;
+  end
+  else
+    Result := E_FAIL;
+end;
+
+function TFreeFrameWrapperFilter.GetOutputName(Index: Integer;
+  out Name: String): HResult;
+var
+  tempParamDisplay: array [0..15] of Char;
+  tempSourcePointer: PDWord;
+  tempDestPointer: PDWord;
+  i: Integer;
+begin
+  if FInitialized then
+  begin
+    tempSourcePointer := PDWord(FPlugMain(FF_GETOUTPUTNAME, Pointer(Index), 0));
+    tempDestPointer := PDWord(@tempParamDisplay);
+
+    for i := 0 to 3 do
+    begin
+      tempDestPointer^ := tempSourcePointer^;
+      inc(tempSourcePointer);
+      inc(tempDestPointer);
+    end;
+
+    Name := Trim(String(tempParamDisplay));
+    Result := S_OK;
+  end
+  else
+    Result := E_FAIL;
+end;
+
+function TFreeFrameWrapperFilter.GetOutputType(Index: Integer;
+  out Typ: DWord): HResult;
+begin
+  if FInitialized then
+  begin
+    Typ := DWord(FPlugMain(FF_GETOUTPUTTYPE, Pointer(Index), 0));
+    Result := S_OK;
+  end
+  else
+    Result := E_FAIL;
+end;
+
+function TFreeFrameWrapperFilter.GetOutputSliceCount(Index: Integer;
+  out SliceCount: DWord): HResult;
+begin
+ if FInstantiated then
+ begin
+    SliceCount := DWord(FPlugMain(FF_GETOUTPUTSLICECOUNT, pointer(Index), FPlugInstance));
+    Result := S_OK;
+ end
+ else
+   Result := E_FAIL;
+end;
+
+function TFreeFrameWrapperFilter.GetOutput(Index: Integer;
+  out Value: PSingle): HResult;
+begin
+ if FInstantiated then
+ begin
+    Value := PSingle(FPlugMain(FF_GETOUTPUT, pointer(Index), FPlugInstance));
+    Result := S_OK;
+ end
+ else
+   Result := E_FAIL;
+end;
+
+function TFreeFrameWrapperFilter.SetEnabled(Enabled: Boolean): HResult;
+begin
+  FEnabled := Enabled;
+  Result := S_OK;
+end;
+
+function TFreeFrameWrapperFilter.GetHandlesInvalidCodes: HResult;
+var
+  res: DWord;
+begin
+  res := DWord(FPlugMain(FF_HANDLESINVALIDCODES, nil, 0));
+  if res = FF_FAIL then
+    Result := S_OK
+  else
+    Result := E_FAIL;
+end;
+
+function TFreeFrameWrapperFilter.SetThreadLock(Enabled: Boolean): HResult;
+begin
+  if FInstantiated then
+  begin
+    if DWord(FPlugMain(FF_SETTRHEADLOCK, @Enabled, FPlugInstance)) = FF_SUCCESS then
+      Result := S_OK
+    else
+      Result := E_FAIL;
+  end
+  else
+    Result := E_FAIL;
+end;
+
+function TFreeFrameWrapperFilter.SetInput(Index, SliceCount: Integer; Value:
+    Pointer): HResult;
+var
+  inputStruct: TInputStruct;
+begin
+  inputStruct.Index := Index;
+  inputStruct.SliceCount := SliceCount;
+  inputStruct.Spread := Value;
+
+  if FInstantiated then
+  begin
+    if DWord(FPlugMain(FF_SETINPUT, pointer(@inputStruct), FPlugInstance)) = FF_SUCCESS then
+      Result := S_OK
+    else
+      Result := E_FAIL;
+  end
+  else
+    Result := E_FAIL;
+end;
 
 initialization
   TBCClassFactory.CreateFilter(TFreeFrameWrapperFilter, 'DSFreeFrameWrapper', CLSID_DSFreeFrameWrapper,

@@ -42,6 +42,8 @@ uses
   PropPage in 'PropPage.pas' {PropertyPage},
   psvFolderDialog in 'psvFolderDialog.pas';
 
+{$E ax}
+
 exports
   DllGetClassObject,
   DllCanUnloadNow,
