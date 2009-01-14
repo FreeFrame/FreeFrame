@@ -42,6 +42,7 @@ uses
   PropPage in 'PropPage.pas' {PropertyPage},
   psvFolderDialog in 'psvFolderDialog.pas';
 
+{WITH_PROPERTY_PAGE}
 {$E ax}
 
 exports

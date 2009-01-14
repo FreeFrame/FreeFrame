@@ -188,7 +188,7 @@ type
   PDWord = ^dword;
 
   TFreeFrameWrapperFilter = class(TBCTransformFilter, IFFPlugIn, IFFPlugIn2, IFFParameters, IFFOutputs,
-      ISpecifyPropertyPages, IFFPropertySaves)
+      ISpecifyPropertyPages, IFFPropertySaves, IPersist)
   private
     FCurrentPlug: THandle;
     FPlugMain: TPlugMainFunction;
