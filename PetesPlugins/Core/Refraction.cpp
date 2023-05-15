@@ -80,7 +80,7 @@ void Pete_Refraction_Render(SPete_Refraction_Data* pInstanceData,SPete_Refractio
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nWidth=pInstanceData->nWidth;
 	const int nHalfWidth=(nWidth/2);
 	const int nHeight=pInstanceData->nHeight;
@@ -106,7 +106,7 @@ void Pete_Refraction_Render(SPete_Refraction_Data* pInstanceData,SPete_Refractio
 
 
 	const int nHalfCellWidth=(nCellWidth/2);
-	const int nHalfCellHeight=(nCellHeight/2);	
+	const int nHalfCellHeight=(nCellHeight/2);
 
 	const int nYStartOffset=(nHalfCellHeight*(256))/nRefraction;
 	const int nXStartOffset=(nHalfCellWidth*(256))/nRefraction;

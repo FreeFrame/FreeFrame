@@ -33,7 +33,7 @@ class CLaplacianDfx: public CDFX
 public:
 	~CLaplacianDfx();
 	CLaplacianDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -65,7 +65,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLaplacianDfx)
 END_OUTPUTSCREENS_DESC(CLaplacianDfx)
 
 BEGIN_EFFECT_DESC(CLaplacianDfx, 10203216861479923, PETE_VJO_VERSION , "Petes\\Laplacian", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLaplacianDfx) 
+END_EFFECT_DESC(CLaplacianDfx)
 
 REGISTER_DFXFACTORY(CLaplacianDfx)
 
@@ -93,7 +93,7 @@ CLaplacianDfx::~CLaplacianDfx()
 	// do nothing
 }
 
-HBITMAP	CLaplacianDfx::GetLabelBitmap()			
+HBITMAP	CLaplacianDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -120,7 +120,7 @@ BOOL	CLaplacianDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CLaplacianDfx::UpdateConfig()
@@ -144,7 +144,7 @@ BOOL	CLaplacianDfx::Initialize()
 
 BOOL	CLaplacianDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 
@@ -158,7 +158,7 @@ void	CLaplacianDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nWidth=m_nXRes;
 	const int nHeight=m_nYRes;
 
@@ -170,7 +170,7 @@ void	CLaplacianDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 
 	int nY=0;
 	while (pCurrentSource!=pSourceEnd) {
-	
+
 		const DWORD* pSourceLineStart=pCurrentSource;
 		const DWORD* pSourceLineEnd=pCurrentSource+nWidth;
 
@@ -211,11 +211,11 @@ void	CLaplacianDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 			int nRedMinimum=255;
 			int nGreenMinimum=255;
 			int nBlueMinimum=255;
-			
+
 			int nRedMaximum=0;
 			int nGreenMaximum=0;
 			int nBlueMaximum=0;
-			
+
 			for (nOffsetY=0; nOffsetY<nKernelHeight; nOffsetY+=1) {
 
 				int nCurrentY=(nY+(nOffsetY-(nKernelHeight/2)));

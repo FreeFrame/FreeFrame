@@ -58,7 +58,7 @@ void Pete_ImageCopyAndScale(U32* pSource,U32* pOutput,
 		while (pCurrentOutput<pOutputLineEnd) {
 
 			U32* pCurrentSource=
-				pSourceLineStart+(nSourceX>>nFPShift);			
+				pSourceLineStart+(nSourceX>>nFPShift);
 
 			*pCurrentOutput=*pCurrentSource;
 

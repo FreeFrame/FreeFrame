@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // FreeFrameSample.cpp
 //
-// FreeFrame Open Video Plugin 
+// FreeFrame Open Video Plugin
 // C Version
 //
 // Implementation of the Free Frame sample plugin
@@ -38,7 +38,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
-// includes 
+// includes
 //
 
 #include "FreeFrameSample.h"
@@ -68,9 +68,9 @@ ParamConstantsStruct paramConstants[NUM_PARAMS];
 ///////////////////////////////////////////////////////////////////////////////////////
 // getInfo
 //
-// gets information about the plugin - version, unique id, short name and type 
+// gets information about the plugin - version, unique id, short name and type
 // This function should be identical in all future versions of the FreeFrame API
-//  
+//
 // return values (32-bit pointer to PlugInfoStruct)
 // FF_FAIL on error
 // 32-bit pointer to PlugInfoStruct
@@ -79,15 +79,15 @@ ParamConstantsStruct paramConstants[NUM_PARAMS];
 //       the version defines the other fucntion codes that are supported
 //       supported function codes are listed in the documentation www.freeframe.org
 
-PlugInfoStruct* getInfo() 
+PlugInfoStruct* getInfo()
 {
 	plugInfo.APIMajorVersion = 1;		// number before decimal point in version nums
 	plugInfo.APIMinorVersion = 000;		// this is the number after the decimal point
 										// so version 0.511 has major num 0, minor num 501
-	char ID[5] = "FFP1";		 // this *must* be unique to your plugin 
+	char ID[5] = "FFP1";		 // this *must* be unique to your plugin
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "CStd_Plugin_Base";
-	
+
 	memcpy(plugInfo.uniqueID, ID, 4);
 	memcpy(plugInfo.pluginName, name, 16);
 	plugInfo.pluginType = FF_EFFECT;
@@ -122,7 +122,7 @@ DWORD initialise()
 ///////////////////////////////////////////////////////////////////////////////////////
 // deinitialise
 //
-// Tidy up   
+// Tidy up
 // Deallocate memory
 //
 // return values (DWORD)
@@ -137,10 +137,10 @@ DWORD deInitialise()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-// getNumParameters 
+// getNumParameters
 //
 // returns number of parameters in plugin
-// 
+//
 // return values (DWORD)
 // number of parameters
 // FF_FAIL on error
@@ -148,7 +148,7 @@ DWORD deInitialise()
 
 DWORD getNumParameters()
 {
-	return NUM_PARAMS;  
+	return NUM_PARAMS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ DWORD getNumParameters()
 // returns pointer to 16 byte char array containing the name of parameter specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -180,7 +180,7 @@ char* getParameterName(DWORD index)
 // returns default value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -203,7 +203,7 @@ float getParameterDefault(DWORD index)
 // parameter index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -233,7 +233,7 @@ char* plugClass::getParameterDisplay(DWORD index)
 // value is a 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // 32-bit float value
 //
 // return values (DWORD):
@@ -260,7 +260,7 @@ DWORD plugClass::setParameter(SetParameterStruct* pParam)
 // returns value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -365,7 +365,7 @@ DWORD plugClass::processFrame32Bit(LPVOID pFrame)
 ///////////////////////////////////////////////////////////////////////////////////////
 // processFrameCopy
 //
-// processes a frame of video from one buffer to another 
+// processes a frame of video from one buffer to another
 //
 // parameters:
 // 32-bit pointer to a structure containing a pointer to an array of input
@@ -452,7 +452,7 @@ DWORD plugClass::processFrameCopy32Bit(ProcessFrameCopyStruct* pFrameData)
 		pOutputPixel++;
 	  }
 	}
-	
+
 	return FF_SUCCESS;
 }
 
@@ -462,7 +462,7 @@ DWORD plugClass::processFrameCopy32Bit(ProcessFrameCopyStruct* pFrameData)
 // returns true or false to indicate whether cappable of feature specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // allowed values:
 // 0 - 16 bit video
 // 1 - 24 bit video
@@ -507,7 +507,7 @@ DWORD getPluginCaps(DWORD index)
 // instantiate
 //
 // Run up plugin instance - plugObj
-// Prepare the Plug-in instance for processing.  
+// Prepare the Plug-in instance for processing.
 // Set default values, allocate memory
 // When the plug-in returns from this function it must be ready to proces a frame
 //
@@ -542,7 +542,7 @@ LPVOID instantiate(VideoInfoStruct* pVideoInfo)
 
 	// Russell - return pointer to the plugin instance object we have created
 
-	// return pointer to object cast as LPVOID 
+	// return pointer to object cast as LPVOID
 	return (LPVOID) pPlugObj;
 }
 
@@ -563,7 +563,7 @@ DWORD deInstantiate(LPVOID instanceID)
 	pPlugObj = (plugClass*) instanceID;
 
 	delete pPlugObj; // todo: ? success / fail?
-	
+
 	return FF_SUCCESS;
 }
 

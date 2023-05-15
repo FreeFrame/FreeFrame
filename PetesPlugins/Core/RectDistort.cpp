@@ -163,11 +163,11 @@ void Pete_RectDistort_Render(SPete_RectDistort_Data* pInstanceData,SPete_RectDis
 	}
 
 	SPete_RectDistort_Coord* pCurrentMap=pMapStart;
-	
+
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
-			
+
 		while (pCurrentOutput!=pOutputLineEnd) {
 
 			int nSourceX=static_cast<int>(pCurrentMap->x);
@@ -181,11 +181,11 @@ void Pete_RectDistort_Render(SPete_RectDistort_Data* pInstanceData,SPete_RectDis
 				(nSourceY*nWidth)+
 				nSourceX;
 
-			*pCurrentOutput=*pCurrentSource;				
+			*pCurrentOutput=*pCurrentSource;
 
 			pCurrentMap+=1;
 			pCurrentOutput+=1;
-		
+
 		}
 
 	}
@@ -208,7 +208,7 @@ void Pete_RectDistort_SetCoordMapIdentity(SPete_RectDistort_Data* pInstanceData)
 
 	float YPos=0.0f;
 	while (pCurrent!=pMapEnd) {
-		
+
 		const SPete_RectDistort_Coord* pLineEnd=pCurrent+nWidth;
 
 		float XPos=0.0f;
@@ -236,7 +236,7 @@ void Pete_RectDistort_SetOffsetRectangle(
 	int nBottomY,
 	const float XDelta,
 	const float YDelta) {
-	
+
 	SPete_RectDistort_Coord* pMapStart=(SPete_RectDistort_Coord*)Pete_LockHandle(pInstanceData->hCoordMap);
 	if (pMapStart==NULL) {
 		return;
@@ -323,7 +323,7 @@ void Pete_RectDistort_CoordMapDecay(SPete_RectDistort_Data* pInstanceData,float 
 
 	float YPos=0.0f;
 	while (pCurrent!=pMapEnd) {
-		
+
 		const SPete_RectDistort_Coord* pLineEnd=pCurrent+nWidth;
 
 		float XPos=0.0f;

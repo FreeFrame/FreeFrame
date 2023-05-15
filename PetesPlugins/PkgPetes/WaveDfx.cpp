@@ -36,7 +36,7 @@ class CWaveDfx: public CDFX
 public:
 	~CWaveDfx();
 	CWaveDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -52,7 +52,7 @@ protected:
 
 	void	UpdateWaveData(DWORD* pSource);
 
-	
+
 	void	SetupTables(void);
 	void	WriteOutputFrame(DWORD* pSource,DWORD* pOutput);
 
@@ -79,7 +79,7 @@ BEGIN_OUTPUTSCREENS_DESC(CWaveDfx)
 END_OUTPUTSCREENS_DESC(CWaveDfx)
 
 BEGIN_EFFECT_DESC(CWaveDfx, 10203216861479932, PETE_VJO_VERSION , "Petes\\Wave", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CWaveDfx) 
+END_EFFECT_DESC(CWaveDfx)
 
 REGISTER_DFXFACTORY(CWaveDfx)
 
@@ -101,7 +101,7 @@ CWaveDfx::~CWaveDfx()
 	Pete_Wave_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CWaveDfx::GetLabelBitmap()			
+HBITMAP	CWaveDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -110,7 +110,7 @@ BOOL	CWaveDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 }
@@ -128,7 +128,7 @@ BOOL	CWaveDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CWaveDfx::UpdateConfig()
@@ -156,7 +156,7 @@ BOOL	CWaveDfx::Initialize()
 
 BOOL	CWaveDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

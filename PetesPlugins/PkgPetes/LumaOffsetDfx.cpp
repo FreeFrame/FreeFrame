@@ -36,7 +36,7 @@ class CLumaOffsetDfx: public CDFX
 public:
 	~CLumaOffsetDfx();
 	CLumaOffsetDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -73,7 +73,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLumaOffsetDfx)
 END_OUTPUTSCREENS_DESC(CLumaOffsetDfx)
 
 BEGIN_EFFECT_DESC(CLumaOffsetDfx, 10203216861479907, PETE_VJO_VERSION , "Petes\\LumaOffset", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLumaOffsetDfx) 
+END_EFFECT_DESC(CLumaOffsetDfx)
 
 REGISTER_DFXFACTORY(CLumaOffsetDfx)
 
@@ -84,7 +84,7 @@ CLumaOffsetDfx::CLumaOffsetDfx(void)
 
 	m_OffsetScale=12.0f;
 	m_LineGap=1.0f;
-	
+
 	m_nMemUsage = sizeof(CLumaOffsetDfx);
 
 	ZeroMemory(&m_InstanceData,sizeof(m_InstanceData));
@@ -96,7 +96,7 @@ CLumaOffsetDfx::~CLumaOffsetDfx(void)
 	Pete_LumaOffset_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CLumaOffsetDfx::GetLabelBitmap()			
+HBITMAP	CLumaOffsetDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -105,7 +105,7 @@ BOOL	CLumaOffsetDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 }
@@ -124,7 +124,7 @@ BOOL	CLumaOffsetDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CLumaOffsetDfx::UpdateConfig()
@@ -155,7 +155,7 @@ BOOL	CLumaOffsetDfx::Initialize()
 
 BOOL	CLumaOffsetDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

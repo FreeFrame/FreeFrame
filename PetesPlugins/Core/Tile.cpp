@@ -113,7 +113,7 @@ void Pete_Tile_Render(SPete_Tile_Data* pInstanceData,SPete_Tile_Settings* pSetti
 
 		U32* pOutputLineStart=pCurrentOutput;
 		U32* pOutputLineEnd=(pOutputLineStart+nWidth);
-		
+
 		float CurrentX=-HalfWidth;
 
 		while (pCurrentOutput<pOutputLineEnd) {
@@ -145,7 +145,7 @@ void Pete_Tile_Render(SPete_Tile_Data* pInstanceData,SPete_Tile_Settings* pSetti
 
 			const float SourceX=PosDotU+HalfWidth;
 			const float SourceY=PosDotV+HalfHeight;
-	
+
 			int nSourceX=static_cast<int>(SourceX);
 			int nSourceY=static_cast<int>(SourceY);
 
@@ -158,14 +158,14 @@ void Pete_Tile_Render(SPete_Tile_Data* pInstanceData,SPete_Tile_Settings* pSetti
 				nSourceX;
 
 			*pCurrentOutput=*pTileSource;
-			
+
 			CurrentX+=1.0f;
 
 			pCurrentOutput+=1;
 			pCurrentSource+=1;
 
 		}
-		
+
 		CurrentY+=1.0f;
 
 	}

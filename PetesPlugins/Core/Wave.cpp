@@ -102,7 +102,7 @@ void Pete_Wave_Render(SPete_Wave_Data* pInstanceData,SPete_Wave_Settings* pSetti
 	SPete_Wave_Cell* pCurrentWaveData=pWaveDataStart;
 
 	while (pCurrentSource!=pSourceEnd) {
-		
+
 		const U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
 
@@ -232,7 +232,7 @@ void Pete_Wave_Render(SPete_Wave_Data* pInstanceData,SPete_Wave_Settings* pSetti
 
 		pCurrentOutput+=1;
 		pCurrentWaveData+=1;
-	
+
 	}
 
 }

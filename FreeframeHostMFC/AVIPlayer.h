@@ -34,7 +34,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 class CFreeframeMFCDlg;
 
-class AVIPlayer  
+class AVIPlayer
 {
 public:
 	bool isOpen;
@@ -52,8 +52,8 @@ public:
 	void openAVI(char* szFile);
 	void getFrame();
 	CString szFile;
-	LONG hr; 
-    PAVIFILE pfile; 
+	LONG hr;
+    PAVIFILE pfile;
 	PAVISTREAM pstream;
 
 	AVIFILEINFO fileInfo;

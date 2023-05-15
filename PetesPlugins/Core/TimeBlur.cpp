@@ -84,7 +84,7 @@ int Pete_TimeBlur_Init(SPete_TimeBlur_Data* pInstanceData,int nWidth, int nHeigh
 	}
 
 	Pete_ZeroMemory((char*)Pete_LockHandle(pInstanceData->hAverageFrame),nAverageFrameByteCount);
-	
+
 	const int nDisplayFrameByteCount=
 		(nPixelCount*sizeof(U32))+4; // Pete- +4 to let the quad writes spill over
 
@@ -95,7 +95,7 @@ int Pete_TimeBlur_Init(SPete_TimeBlur_Data* pInstanceData,int nWidth, int nHeigh
 		Pete_TimeBlur_DeInit(pInstanceData);
 		return 0;
 	}
-	
+
 	if (Pete_LockHandle(pInstanceData->hDisplayFrame)==NULL) {
 		return 0;
 	}
@@ -167,9 +167,9 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 
 	U32* pOldFrame=pFrameBuffer+
 		(nPixelCount*nOldFrameIndex);
-	
+
 	Pete_TimeBlur_AddNewFrameAndSubtractOld(pInstanceData,pSource,pNewFrame,pOldFrame);
-	
+
 	nOldFrameIndex+=1;
 
 	if (nOldFrameIndex<0) {
@@ -211,7 +211,7 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 		if (nOldFrameIndex>=nMaxFrameCount) {
 			nOldFrameIndex-=nMaxFrameCount;
 		}
-	
+
 		nCurrentFrameOffset-=1;
 
 	}
@@ -232,7 +232,7 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 			(nPixelCount*nOldFrameIndex);
 
 		Pete_TimeBlur_AddNew(pInstanceData,pNewFrame);
-	
+
 		nCurrentFrameOffset+=1;
 
 	}
@@ -256,7 +256,7 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 	pInstanceData->nOldFrameIndex=nOldFrameIndex;
 
 	const int nByteCount=(nPixelCount*sizeof(U32));
-	
+
 	U32* pDisplayFrame=(U32*)Pete_LockHandle(pInstanceData->hDisplayFrame);
 	if (pDisplayFrame==NULL) {
 		return;
@@ -289,9 +289,9 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 
 	U32* pOldFrame=pFrameBuffer+
 		(nPixelCount*nOldFrameIndex);
-	
+
 	Pete_TimeBlur_AddNewFrameAndSubtractOld(pInstanceData,pSource,pNewFrame,pOldFrame);
-	
+
 	nOldFrameIndex+=1;
 
 	if (nOldFrameIndex>=nMaxFrameCount) {
@@ -329,7 +329,7 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 		if (nOldFrameIndex>=nMaxFrameCount) {
 			nOldFrameIndex-=nMaxFrameCount;
 		}
-	
+
 		nCurrentFrameOffset-=1;
 
 	}
@@ -350,7 +350,7 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 			(nPixelCount*nOldFrameIndex);
 
 		Pete_TimeBlur_AddNew(pInstanceData,pNewFrame);
-	
+
 		nCurrentFrameOffset+=1;
 
 	}
@@ -374,7 +374,7 @@ void Pete_TimeBlur_Render(SPete_TimeBlur_Data* pInstanceData,SPete_TimeBlur_Sett
 	pInstanceData->nOldFrameIndex=nOldFrameIndex;
 
 	const int nByteCount=(nPixelCount*sizeof(U32));
-	
+
 	U32* pDisplayFrame=(U32*)Pete_LockHandle(pInstanceData->hDisplayFrame);
 	if (pDisplayFrame==NULL) {
 		return;
@@ -692,7 +692,7 @@ void Pete_TimeBlur_AddNewFrame(SPete_TimeBlur_Data* pInstanceData,U32* pSource) 
 		const int nSourceGreen=(SourceColour>>SHIFT_GREEN)&0xff;
 		const int nSourceBlue=(SourceColour>>SHIFT_BLUE)&0xff;
 		const int nSourceAlpha=(SourceColour>>SHIFT_ALPHA)&0xff;
-		
+
 		pCurrentAverage->Red+=nSourceRed;
 		pCurrentAverage->Green+=nSourceGreen;
 		pCurrentAverage->Blue+=nSourceBlue;
@@ -748,7 +748,7 @@ void Pete_TimeBlur_CalcDisplayFrame(SPete_TimeBlur_Data* pInstanceData) {
 
 		const int nOutputGreen=
 			(pCurrentAverage->Green*nReciprocalFrameCount)>>16;
-		
+
 		const int nOutputBlue=
 			(pCurrentAverage->Blue*nReciprocalFrameCount)>>16;
 
@@ -760,7 +760,7 @@ void Pete_TimeBlur_CalcDisplayFrame(SPete_TimeBlur_Data* pInstanceData) {
 			(nOutputGreen<<SHIFT_GREEN)|
 			(nOutputBlue<<SHIFT_BLUE)|
 			(nOutputAlpha<<SHIFT_ALPHA);
-			
+
 		*pCurrentOutput=OutputColour;
 
 		pCurrentOutput+=1;
@@ -775,7 +775,7 @@ void Pete_TimeBlur_AddNewFrameAndSubtractOld(SPete_TimeBlur_Data* pInstanceData,
 	Pete_TimeBlur_StoreNewFrame(pInstanceData,pSource,pNewFrame);
 	Pete_TimeBlur_AddNew(pInstanceData,pSource);
 	Pete_TimeBlur_SubtractOld(pInstanceData,pOldFrame);
-	
+
 }
 
 void Pete_TimeBlur_SubtractOld(SPete_TimeBlur_Data* pInstanceData,U32* pSource) {
@@ -798,7 +798,7 @@ void Pete_TimeBlur_SubtractOld(SPete_TimeBlur_Data* pInstanceData,U32* pSource) 
 		const int nSourceGreen=(SourceColour>>SHIFT_GREEN)&0xff;
 		const int nSourceBlue=(SourceColour>>SHIFT_BLUE)&0xff;
 		const int nSourceAlpha=(SourceColour>>SHIFT_ALPHA)&0xff;
-		
+
 		pCurrentAverage->Red-=nSourceRed;
 		pCurrentAverage->Green-=nSourceGreen;
 		pCurrentAverage->Blue-=nSourceBlue;
@@ -817,10 +817,10 @@ void Pete_TimeBlur_StoreNewFrame(SPete_TimeBlur_Data* pInstanceData,U32* pSource
 	const int nHeight=pInstanceData->nHeight;
 	const int nPixelCount=(nWidth*nHeight);
 	const int nByteCount=(nPixelCount*sizeof(U32));
-	
+
 	memcpy(pNewFrame,pSource,nByteCount);
-	
-}	
+
+}
 
 void Pete_TimeBlur_AddNew(SPete_TimeBlur_Data* pInstanceData,U32* pSource) {
 	Pete_TimeBlur_AddNewFrame(pInstanceData,pSource);

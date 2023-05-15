@@ -35,7 +35,7 @@ class CFishEyeDfx: public CDFX
 public:
 	~CFishEyeDfx();
 	CFishEyeDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CFishEyeDfx)
 END_OUTPUTSCREENS_DESC(CFishEyeDfx)
 
 BEGIN_EFFECT_DESC(CFishEyeDfx, 2323223232323929, PETE_VJO_VERSION , "Petes\\FishEye", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CFishEyeDfx) 
+END_EFFECT_DESC(CFishEyeDfx)
 
 REGISTER_DFXFACTORY(CFishEyeDfx)
 
@@ -102,7 +102,7 @@ CFishEyeDfx::~CFishEyeDfx()
 
 }
 
-HBITMAP	CFishEyeDfx::GetLabelBitmap()			
+HBITMAP	CFishEyeDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CFishEyeDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CFishEyeDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CFishEyeDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CFishEyeDfx::Initialize()
 
 BOOL	CFishEyeDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

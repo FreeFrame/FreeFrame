@@ -35,7 +35,7 @@ class CGaussianBlurDfx: public CDFX
 public:
 	~CGaussianBlurDfx();
 	CGaussianBlurDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -75,7 +75,7 @@ protected:
 
 	bool	m_bDoOddButCool;
 	int		m_nDoOddButCoolID;
-	
+
 	int		m_nMemUsage;
 
 	SPete_GaussianBlur_Data m_InstanceData;
@@ -91,7 +91,7 @@ BEGIN_OUTPUTSCREENS_DESC(CGaussianBlurDfx)
 END_OUTPUTSCREENS_DESC(CGaussianBlurDfx)
 
 BEGIN_EFFECT_DESC(CGaussianBlurDfx, 10203216861479919, PETE_VJO_VERSION , "Petes\\GaussianBlur", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CGaussianBlurDfx) 
+END_EFFECT_DESC(CGaussianBlurDfx)
 
 REGISTER_DFXFACTORY(CGaussianBlurDfx)
 
@@ -121,7 +121,7 @@ CGaussianBlurDfx::~CGaussianBlurDfx()
 
 }
 
-HBITMAP	CGaussianBlurDfx::GetLabelBitmap()			
+HBITMAP	CGaussianBlurDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -130,7 +130,7 @@ BOOL	CGaussianBlurDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -150,7 +150,7 @@ BOOL	CGaussianBlurDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CGaussianBlurDfx::UpdateConfig()
@@ -184,7 +184,7 @@ BOOL	CGaussianBlurDfx::Initialize()
 
 BOOL	CGaussianBlurDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

@@ -49,7 +49,7 @@ void CPShopFiltersDfxDlg::EnableControls()
 	UpdateData();
 }
 
-BOOL CPShopFiltersDfxDlg::OnInitDialog() 
+BOOL CPShopFiltersDfxDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -59,7 +59,7 @@ BOOL CPShopFiltersDfxDlg::OnInitDialog()
 		IDC_PSHOPFILTERS_FILTER_LIST,
 		CB_SETCURSEL,
 		m_eStyle,
-		0L);                             
+		0L);
 	EnableControls();
 
 	return TRUE;

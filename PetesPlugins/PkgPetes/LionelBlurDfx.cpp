@@ -35,7 +35,7 @@ class CLionelBlurDfx: public CDFX
 public:
 	~CLionelBlurDfx();
 	CLionelBlurDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -72,7 +72,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLionelBlurDfx)
 END_OUTPUTSCREENS_DESC(CLionelBlurDfx)
 
 BEGIN_EFFECT_DESC(CLionelBlurDfx, 10203216861479956, PETE_VJO_VERSION , "Petes\\LionelBlur", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLionelBlurDfx) 
+END_EFFECT_DESC(CLionelBlurDfx)
 
 REGISTER_DFXFACTORY(CLionelBlurDfx)
 
@@ -104,7 +104,7 @@ CLionelBlurDfx::~CLionelBlurDfx()
 
 }
 
-HBITMAP	CLionelBlurDfx::GetLabelBitmap()			
+HBITMAP	CLionelBlurDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -113,7 +113,7 @@ BOOL	CLionelBlurDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -133,7 +133,7 @@ BOOL	CLionelBlurDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CLionelBlurDfx::UpdateConfig()
@@ -182,7 +182,7 @@ BOOL	CLionelBlurDfx::Initialize()
 
 BOOL	CLionelBlurDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

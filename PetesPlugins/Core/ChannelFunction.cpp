@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "PeteHelpers.h"
 
 void Pete_ChannelFunction_Render(SPete_ChannelFunction_Settings* pSettings,U32* pSource, U32* pOutput) {
-	
+
 	const int nWidth=pSettings->m_nWidth;
 	const int nHeight=pSettings->m_nHeight;
 
@@ -39,7 +39,7 @@ void Pete_ChannelFunction_Render(SPete_ChannelFunction_Settings* pSettings,U32* 
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource!=pSourceEnd) {
-		
+
 		const U32 SourceColour=*pCurrentSource;
 
 		const unsigned int nSourceRed=(SourceColour>>SHIFT_RED)&0xff;

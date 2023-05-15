@@ -37,7 +37,7 @@ class CFreeFrameDfx: public CDFX
 public:
 	~CFreeFrameDfx();
 	CFreeFrameDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -65,7 +65,7 @@ protected:
 	// management is preferred, but in this case I have to register the
 	// addresses of the parameters with VJo, so having an area of
 	// memory that may be moved around won't work, so I fall back to
-	// new/delete	
+	// new/delete
 	float*	m_pFreeFrameParameters;
 	VideoInfoStruct m_VideoInfo;
 	U32 m_InstanceCookie;
@@ -81,7 +81,7 @@ BEGIN_OUTPUTSCREENS_DESC(CFreeFrameDfx)
 END_OUTPUTSCREENS_DESC(CFreeFrameDfx)
 
 BEGIN_EFFECT_DESC(CFreeFrameDfx, 10203216861479997, 0 , "Petes\\FreeFrame", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CFreeFrameDfx) 
+END_EFFECT_DESC(CFreeFrameDfx)
 
 REGISTER_DFXFACTORY(CFreeFrameDfx)
 
@@ -125,7 +125,7 @@ CFreeFrameDfx::~CFreeFrameDfx()
 
 }
 
-HBITMAP	CFreeFrameDfx::GetLabelBitmap()			
+HBITMAP	CFreeFrameDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -144,7 +144,7 @@ BOOL	CFreeFrameDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CFreeFrameDfx::UpdateConfig()
@@ -181,7 +181,7 @@ BOOL	CFreeFrameDfx::Initialize()
 		FreeLibrary(m_hFreeFrameModule);
 		m_hFreeFrameModule=NULL;
 	}
-	
+
 	m_hFreeFrameModule=LoadLibrary(&m_pFreeFrameFileName[0]);
 
 	if (m_hFreeFrameModule!=NULL) {
@@ -199,10 +199,10 @@ BOOL	CFreeFrameDfx::Initialize()
 	}
 
 	if (m_pFreeFrameMain!=NULL) {
-	
+
 		m_VideoInfo.frameWidth=m_nXRes;
 		m_VideoInfo.frameHeight=m_nYRes;
-		
+
 		if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)2,0)==FF_TRUE) {
 			m_VideoInfo.bitDepth=2;
 		} else if ((DWORD)m_pFreeFrameMain(FF_GETPLUGINCAPS,(void*)1,0)==FF_TRUE) {
@@ -212,11 +212,11 @@ BOOL	CFreeFrameDfx::Initialize()
 		} else {
 			ASSERT(FALSE);
 			m_VideoInfo.bitDepth=2;
-		}	
+		}
 
 		m_pFreeFrameMain(FF_INITIALISE,&m_VideoInfo,0);
 		const int nNumParameters=(int)m_pFreeFrameMain(FF_GETNUMPARAMETERS,NULL,0);
-		
+
 		if (m_pFreeFrameParameters!=NULL) {
 			free(m_pFreeFrameParameters);
 		}
@@ -227,9 +227,9 @@ BOOL	CFreeFrameDfx::Initialize()
 
 			static void* pCastCount;
 			pCastCount=reinterpret_cast<void*>(nCount);
-			
+
 			char* pName=(char*)(m_pFreeFrameMain(FF_GETPARAMETERNAME,pCastCount,0));
-			
+
 			bool bNullCharFound=false;
 			int nCharCount;
 			for (nCharCount=0; ((nCharCount<15)&&(!bNullCharFound)); nCharCount+=1) {
@@ -249,15 +249,15 @@ BOOL	CFreeFrameDfx::Initialize()
 
 			static U32 Type;
 			Type=(U32)m_pFreeFrameMain(FF_GETPARAMETERTYPE,pCastCount,0);
-		
+
 			if (Type==FF_TYPE_BOOLEAN) {
 
 				RegisterBool(m_pEngine,&(m_pFreeFrameParameters[nCount]),pName);
-			
+
 			} else {
 
 				RegisterFloat(m_pEngine,&(m_pFreeFrameParameters[nCount]),pName,0.0f,1.0f);
-			
+
 			}
 
 		}
@@ -294,7 +294,7 @@ BOOL	CFreeFrameDfx::Render(CScreen **ppInput, CScreen *pOutput)
 		if (Type!=FF_TYPE_BOOLEAN) {
 
 			ArgStruct.value=pParameterData[nCount];
-	
+
 		} else {
 
 			BOOL bIsOn=*((BOOL*)(&pParameterData[nCount]));
@@ -324,18 +324,18 @@ BOOL	CFreeFrameDfx::Render(CScreen **ppInput, CScreen *pOutput)
 //			memcpy(pOutputMem,pInputMem,nNumBytes);
 //			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,m_InstanceCookie);
 //		}break;
-//	
+//
 //		case 1: {
 //			Pete_CopyAndConvert32BitTo24Bit(pInputMem,pOutputMem,nNumPixels);
 //			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,0);
 //			Pete_InPlaceConvert24BitTo32Bit(pOutputMem,nNumPixels);
 //		}break;
-//	
+//
 //		case 0: {
 //			memcpy(pOutputMem,pInputMem,nNumBytes);
 //			m_pFreeFrameMain(FF_PROCESSFRAME,pOutputMem,m_InstanceCookie);
 //		}break;
-//	
+//
 //		default: {
 //			ASSERT(FALSE);
 //		}break;

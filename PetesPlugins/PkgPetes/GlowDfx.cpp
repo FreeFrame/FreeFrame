@@ -35,7 +35,7 @@ class CGlowDfx: public CDFX
 public:
 	~CGlowDfx();
 	CGlowDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -85,7 +85,7 @@ BEGIN_OUTPUTSCREENS_DESC(CGlowDfx)
 END_OUTPUTSCREENS_DESC(CGlowDfx)
 
 BEGIN_EFFECT_DESC(CGlowDfx, 10203216861471919, PETE_VJO_VERSION , "Petes\\Glow", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CGlowDfx) 
+END_EFFECT_DESC(CGlowDfx)
 
 REGISTER_DFXFACTORY(CGlowDfx)
 
@@ -113,7 +113,7 @@ CGlowDfx::~CGlowDfx()
 
 }
 
-HBITMAP	CGlowDfx::GetLabelBitmap()			
+HBITMAP	CGlowDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -122,7 +122,7 @@ BOOL	CGlowDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -142,7 +142,7 @@ BOOL	CGlowDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CGlowDfx::UpdateConfig()
@@ -174,7 +174,7 @@ BOOL	CGlowDfx::Initialize()
 
 BOOL	CGlowDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

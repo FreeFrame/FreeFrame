@@ -42,7 +42,7 @@ void	RegisterDFXFactory(DFXFACTORY);
 class	vjopkg_self_registrator
 {
 public:
-	vjopkg_self_registrator(DFXFACTORY factory)	
+	vjopkg_self_registrator(DFXFACTORY factory)
 	{
 		RegisterDFXFactory(factory);
 	}

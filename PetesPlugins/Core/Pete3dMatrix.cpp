@@ -73,7 +73,7 @@ void Pete_3dMatrix_SetToAxisScale(float ScaleX,float ScaleY,float ScaleZ,SPete_3
 void Pete_3dMatrix_Concatenate(SPete_3dMatrix* pinFirst,SPete_3dMatrix* pinSecond,SPete_3dMatrix* poutResult) {
 
 	SPete_3dMatrix TempResult;
-	
+
 	int nY=0;
 	for (nY=0; nY<4; nY+=1) {
 
@@ -95,7 +95,7 @@ void Pete_3dMatrix_Concatenate(SPete_3dMatrix* pinFirst,SPete_3dMatrix* pinSecon
 
 void Pete_3dMatrix_TransformVector(SPete_3dVector* pinVector,SPete_3dMatrix* pinMatrix,SPete_3dVector* poutResult) {
 
-	SPete_3dVector Result;	
+	SPete_3dVector Result;
 
 	Result.x=
 		(pinMatrix->m[0][0]*pinVector->x)+

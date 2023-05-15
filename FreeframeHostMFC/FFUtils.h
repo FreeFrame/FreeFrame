@@ -24,12 +24,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 #if !defined ___FFUTILS_H__
 #define ___FFUTILS_H__
 
-//converts an integer value 0<= int <= 100 to a parameter value 0 <= float <= 1.0 
+//converts an integer value 0<= int <= 100 to a parameter value 0 <= float <= 1.0
 float intToParam(DWORD num, DWORD nMin, DWORD nMax) {
 	return (float)(num - nMin) / (float)(nMax - nMin);
 }
 
-//converts a parameter value 0 <= float <= 1.0 to an integer value 0<= int <= 100  
+//converts a parameter value 0 <= float <= 1.0 to an integer value 0<= int <= 100
 DWORD paramToInt(float param,  DWORD nMin, DWORD nMax) {
 	return (DWORD) (param * (nMax - nMin)) + nMin ;
 }

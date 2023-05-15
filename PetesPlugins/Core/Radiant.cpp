@@ -138,7 +138,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 	int nSourceY=0;
 	U32* pCurrentSource=pSource;
 	while (pCurrentSource!=pSourceEnd) {
-		
+
 		const U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
 
@@ -192,7 +192,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 			const int nClipMaxX=GateInt((nOriginX+nYDistanceFromOrigin+1),1,nWidth);
 
 			const int nStartPixelsClipped=(nClipMinX-nFanLineStartX);
-	
+
 			nSourceFPX+=(nSourceFPXInc*nStartPixelsClipped);
 
 			int nWeight;
@@ -235,7 +235,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 				movq		mm3,MultiplyMask
 
 			}
-			
+
 			int nDestX;
 			for (nDestX=nClipMinX; nDestX<nClipMaxX; nDestX+=1,nSourceFPX+=nSourceFPXInc) {
 
@@ -276,8 +276,8 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 					mov			esi,pCurrentSource
 					movq		mm7,[esi]		// load the source colour
 					punpcklbw	mm7,mm0			// unpack the source colour into 16 bit words
-					
-					psllw		mm7,7			// put the lower bytes into the top bytes of the source				
+
+					psllw		mm7,7			// put the lower bytes into the top bytes of the source
 
 					mov			edi,pCurrentDest
 					movq		mm6,[edi]		// load the average buffer entry
@@ -291,7 +291,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 					paddusw		mm6,mm7			// add the colour to the average buffer entry
 
 					movq		[edi],mm6		// store the average buffer entry
-				
+
 				}
 #endif
 
@@ -317,7 +317,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 	U32* pSourceLineEnd=(pSource+nWidth);
 	pCurrentSource=pSource;
 	while (pCurrentSource!=pSourceLineEnd) {
-		
+
 		const U32* pSourceRowStart=pCurrentSource;
 
 		const int nDeltaX=(nSourceX-nOriginX);
@@ -370,7 +370,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 			const int nClipMaxY=GateInt((nOriginY+nXDistanceFromOrigin+1),1,nHeight);
 
 			const int nStartPixelsClipped=(nClipMinY-nFanLineStartY);
-	
+
 			nSourceFPY+=(nSourceFPYInc*nStartPixelsClipped);
 
 			int nWeight;
@@ -453,8 +453,8 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 					mov			esi,pCurrentSource
 					movq		mm7,[esi]		// load the source colour
 					punpcklbw	mm7,mm0			// unpack the source colour into 16 bit words
-					
-					psllw		mm7,7			// put the lower bytes into the top bytes of the source				
+
+					psllw		mm7,7			// put the lower bytes into the top bytes of the source
 
 					mov			edi,pCurrentDest
 					movq		mm6,[edi]		// load the average buffer entry
@@ -468,7 +468,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 					paddusw		mm6,mm7			// add the colour to the average buffer entry
 
 					movq		[edi],mm6		// store the average buffer entry
-				
+
 				}
 #endif
 
@@ -492,7 +492,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 		if (nWeight==0) {
 			*pCurrentOutput=0x00000000;
 		} else {
-		
+
 			const unsigned int nAverageRed=(pCurrentAverage->nRed<<8);
 			const unsigned int nAverageGreen=(pCurrentAverage->nGreen<<8);
 			const unsigned int nAverageBlue=(pCurrentAverage->nBlue<<8);
@@ -519,7 +519,7 @@ void Pete_Radiant_Render(SPete_Radiant_Data* pInstanceData,SPete_Radiant_Setting
 			}
 
 			const unsigned int nOutputAlpha=0xff;
-	
+
 			const U32 OutputColour=
 				(nOutputRed<<SHIFT_RED)|
 				(nOutputGreen<<SHIFT_GREEN)|
@@ -578,7 +578,7 @@ void Pete_Radiant_Render_CVersion(SPete_Radiant_Data* pInstanceData,SPete_Radian
 	int nSourceY=0;
 	U32* pCurrentSource=pSource;
 	while (pCurrentSource!=pSourceEnd) {
-		
+
 		const U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
 
@@ -632,7 +632,7 @@ void Pete_Radiant_Render_CVersion(SPete_Radiant_Data* pInstanceData,SPete_Radian
 			const int nClipMaxX=GateInt((nOriginX+nYDistanceFromOrigin+1),1,nWidth);
 
 			const int nStartPixelsClipped=(nClipMinX-nFanLineStartX);
-	
+
 			nSourceFPX+=(nSourceFPXInc*nStartPixelsClipped);
 
 			int nWeight=((1<<16)-nLerpValueFP)>>8;
@@ -682,7 +682,7 @@ void Pete_Radiant_Render_CVersion(SPete_Radiant_Data* pInstanceData,SPete_Radian
 	U32* pSourceLineEnd=(pSource+nWidth);
 	pCurrentSource=pSource;
 	while (pCurrentSource!=pSourceLineEnd) {
-		
+
 		const U32* pSourceRowStart=pCurrentSource;
 
 		const int nDeltaX=(nSourceX-nOriginX);
@@ -735,7 +735,7 @@ void Pete_Radiant_Render_CVersion(SPete_Radiant_Data* pInstanceData,SPete_Radian
 			const int nClipMaxY=GateInt((nOriginY+nXDistanceFromOrigin+1),1,nHeight);
 
 			const int nStartPixelsClipped=(nClipMinY-nFanLineStartY);
-	
+
 			nSourceFPY+=(nSourceFPYInc*nStartPixelsClipped);
 
 			const int nWeight=((1<<16)-nLerpValueFP)>>8;
@@ -783,7 +783,7 @@ void Pete_Radiant_Render_CVersion(SPete_Radiant_Data* pInstanceData,SPete_Radian
 		if (nWeight==0) {
 			*pCurrentOutput=0x00000000;
 		} else {
-		
+
 			const unsigned int nAverageRed=(pCurrentAverage->nRed<<8);
 			const unsigned int nAverageGreen=(pCurrentAverage->nGreen<<8);
 			const unsigned int nAverageBlue=(pCurrentAverage->nBlue<<8);
@@ -792,7 +792,7 @@ void Pete_Radiant_Render_CVersion(SPete_Radiant_Data* pInstanceData,SPete_Radian
 			const unsigned int nOutputGreen=(nAverageGreen/nWeight);
 			const unsigned int nOutputBlue=(nAverageBlue/nWeight);
 			const unsigned int nOutputAlpha=0xff;
-	
+
 			const U32 OutputColour=
 				(nOutputRed<<SHIFT_RED)|
 				(nOutputGreen<<SHIFT_GREEN)|

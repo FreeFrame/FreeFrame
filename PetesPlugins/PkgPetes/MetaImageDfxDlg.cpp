@@ -48,14 +48,14 @@ void CMetaImageDfxDlg::EnableControls()
 	UpdateData();
 }
 
-BOOL CMetaImageDfxDlg::OnInitDialog() 
+BOOL CMetaImageDfxDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
 	PlaceDfxDialog(GetSafeHwnd()); // replaces the window so that it is not over the preview! the "Center"-property of your dialog must be enabled to center it horizontally!
 
 	SetDlgItemInt(IDC_METAIMAGE_NUMBEROFINPUTS_EDIT,m_nInputCount,FALSE);
- 
+
 	EnableControls();
 
 	return TRUE;

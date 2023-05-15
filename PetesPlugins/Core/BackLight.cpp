@@ -97,7 +97,7 @@ void Pete_BackLight_Render(SPete_BackLight_Data* pInstanceData,SPete_BackLight_S
 
 	int nY=0;
 	while (pCurrentSource!=pSourceEnd) {
-		
+
 		const U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
 
@@ -105,12 +105,12 @@ void Pete_BackLight_Render(SPete_BackLight_Data* pInstanceData,SPete_BackLight_S
 		while (pCurrentSource!=pSourceLineEnd) {
 
 			U32 SourceColour=*pCurrentSource;
-		
+
 			int nRed=(SourceColour&(0xff<<SHIFT_RED))>>SHIFT_RED;
 			int nGreen=(SourceColour&(0xff<<SHIFT_GREEN))>>SHIFT_GREEN;
 			int nBlue=(SourceColour&(0xff<<SHIFT_BLUE))>>SHIFT_BLUE;
 
-			int nLuminance = 
+			int nLuminance =
 				((90 * nRed)+
 				(115 * nGreen)+
 				(51 * nBlue));
@@ -192,7 +192,7 @@ void Pete_BackLight_Render(SPete_BackLight_Data* pInstanceData,SPete_BackLight_S
 
 					}
 #endif // PETE_DEBUG_BACKLIGHT
-					
+
 					const U32 DestColour=*pDest;
 					if (DestColour<SourceColour) {
 						*pDest=SourceColour;
@@ -251,7 +251,7 @@ void Pete_BackLight_Render(SPete_BackLight_Data* pInstanceData,SPete_BackLight_S
 					nCounter+=nDeltaX;
 
 				};
-				
+
 			}
 
 			pCurrentSource+=1;

@@ -35,7 +35,7 @@ class CVectorizeDfx: public CDFX
 public:
 	~CVectorizeDfx();
 	CVectorizeDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -85,7 +85,7 @@ BEGIN_OUTPUTSCREENS_DESC(CVectorizeDfx)
 END_OUTPUTSCREENS_DESC(CVectorizeDfx)
 
 BEGIN_EFFECT_DESC(CVectorizeDfx, 10203216861471976, PETE_VJO_VERSION , "Petes\\Vectorize", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CVectorizeDfx) 
+END_EFFECT_DESC(CVectorizeDfx)
 
 REGISTER_DFXFACTORY(CVectorizeDfx)
 
@@ -97,7 +97,7 @@ CVectorizeDfx::CVectorizeDfx()
 	m_PreFilterSize = 5.0f;
 	m_Resolution = 8.0f;
 	m_bMonochrome = false;
-	m_ColourReduceColours = 4.0f;	
+	m_ColourReduceColours = 4.0f;
 	m_ColourReducePalettePersistence = 0.99f;
 	m_DifferenceThreshold=0.1f;
 
@@ -113,7 +113,7 @@ CVectorizeDfx::~CVectorizeDfx()
 
 }
 
-HBITMAP	CVectorizeDfx::GetLabelBitmap()			
+HBITMAP	CVectorizeDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -122,7 +122,7 @@ BOOL	CVectorizeDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -142,7 +142,7 @@ BOOL	CVectorizeDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CVectorizeDfx::UpdateConfig()
@@ -174,7 +174,7 @@ BOOL	CVectorizeDfx::Initialize()
 
 BOOL	CVectorizeDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

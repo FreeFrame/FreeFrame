@@ -176,7 +176,7 @@ void Pete_SpiralBlur_Render(SPete_SpiralBlur_Data* pInstanceData,SPete_SpiralBlu
 
 		U32* pOutputLineStart=pCurrentOutput;
 		U32* pOutputLineEnd=(pOutputLineStart+nWidth);
-		
+
 		int nSourceX[nMaxLayerCount];
 		int nSourceY[nMaxLayerCount];
 		int nSourceXInc[nMaxLayerCount];
@@ -258,7 +258,7 @@ void Pete_SpiralBlur_Render(SPete_SpiralBlur_Data* pInstanceData,SPete_SpiralBlu
 				pxor		mm1,mm1
 
 			}
-			
+
 			int nCount;
 			for (nCount=0; nCount<nLayerCount; nCount+=1) {
 
@@ -298,7 +298,7 @@ void Pete_SpiralBlur_Render(SPete_SpiralBlur_Data* pInstanceData,SPete_SpiralBlu
 				nSourceX[nCount]+=nSourceXInc[nCount];
 				nSourceY[nCount]+=nSourceYInc[nCount];
 
-			}	
+			}
 
 			__asm {
 
@@ -406,7 +406,7 @@ void Pete_SpiralBlur_Render(SPete_SpiralBlur_Data* pInstanceData,SPete_SpiralBlu
 
 		U32* pOutputLineStart=pCurrentOutput;
 		U32* pOutputLineEnd=(pOutputLineStart+nWidth);
-		
+
 		int nSourceX[nMaxLayerCount];
 		int nSourceY[nMaxLayerCount];
 		int nSourceXInc[nMaxLayerCount];
@@ -497,16 +497,16 @@ void Pete_SpiralBlur_Render(SPete_SpiralBlur_Data* pInstanceData,SPete_SpiralBlu
 				const int nSourceGreen=(SourceColour>>SHIFT_GREEN)&0xff;
 				const int nSourceBlue=(SourceColour>>SHIFT_BLUE)&0xff;
 				const int nSourceAlpha=(SourceColour>>SHIFT_ALPHA)&0xff;
-				
+
 				nTotalRed+=nSourceRed;
 				nTotalGreen+=nSourceGreen;
 				nTotalBlue+=nSourceBlue;
 				nTotalAlpha+=nSourceAlpha;
-	
+
 				nSourceX[nCount]+=nSourceXInc[nCount];
 				nSourceY[nCount]+=nSourceYInc[nCount];
 
-			}	
+			}
 
 			const int nAverageRed=(nTotalRed*nReciprocalLayerCount)>>16;
 			const int nAverageGreen=(nTotalGreen*nReciprocalLayerCount)>>16;

@@ -35,7 +35,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
-// includes 
+// includes
 //
 
 #include "FreeFrame.h"
@@ -48,8 +48,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 // notes: we may want to capture hModule as the instance of the host...
 
 #ifdef WIN32
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
                        LPVOID lpReserved
 					 )
 {
@@ -59,7 +59,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // plugMain - The one and only exposed function
-// parameters: 
+// parameters:
 //	functionCode - tells the plugin which function is being called
 //  pParam - 32-bit parameter or 32-bit pointer to parameter structure
 //
@@ -67,17 +67,17 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 //
 // All parameters are cast as 32-bit untyped pointers and cast to appropriate
 // types here
-// 
-// All return values are cast to 32-bit untyped pointers here before return to 
+//
+// All return values are cast to 32-bit untyped pointers here before return to
 // the host
 //
 
 #ifdef WIN32
- __declspec(dllexport) plugMainUnion __stdcall plugMain(DWORD functionCode, LPVOID pParam, LPVOID instanceID ) 
+ __declspec(dllexport) plugMainUnion __stdcall plugMain(DWORD functionCode, LPVOID pParam, LPVOID instanceID )
 #elif LINUX
 extern "C" {
    plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, LPVOID instanceID )
-#endif	
+#endif
 {
 	plugMainUnion retval;
 
@@ -109,7 +109,7 @@ extern "C" {
 		break;
 	case FF_GETPARAMETERDISPLAY:
 		retval.svalue =  pPlugObj->getParameterDisplay( (DWORD) pParam );
-		break;	
+		break;
 	// parameters are passed in here as a packed struct of two DWORDS:
 	// index and value
 	case FF_SETPARAMETER:
@@ -133,13 +133,13 @@ extern "C" {
 	case FF_DEINSTANTIATE:
 		retval.ivalue = deInstantiate(pPlugObj);
 		break;
-	case FF_GETEXTENDEDINFO: 
+	case FF_GETEXTENDEDINFO:
 		retval.ivalue = (DWORD) getExtendedInfo();
 		break;
 	case FF_PROCESSFRAMECOPY:
 		retval.ivalue = pPlugObj->processFrameCopy((ProcessFrameCopyStruct*)pParam);
 		break;
-	case FF_GETPARAMETERTYPE:		
+	case FF_GETPARAMETERTYPE:
 		// not implemented yet
 		retval.ivalue = FF_FAIL;
 		break;
@@ -152,7 +152,7 @@ extern "C" {
 	}
 	return retval;
 }
-#ifdef linux	
+#ifdef linux
 
 } /* extern "C" */
 #endif

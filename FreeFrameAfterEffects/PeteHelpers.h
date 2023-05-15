@@ -6,8 +6,8 @@
 #include "string.h"
 
 // Pete- Put this in a per-platform section, or remove as appropriate
-typedef unsigned long U32; 
-typedef unsigned short U16; 
+typedef unsigned long U32;
+typedef unsigned short U16;
 
 #define SHIFT_ALPHA	(24)
 #define SHIFT_RED	(16)
@@ -49,7 +49,7 @@ inline int GetLuminance(const U32 inColour) {
 	const int nGreen=(inColour&(0xff<<8))>>8;
 	const int nBlue=(inColour&(0xff<<0))>>0;
 
-	const int nLuminance = 
+	const int nLuminance =
 		((90 * nRed)+
 		(115 * nGreen)+
 		(51 * nBlue));
@@ -184,7 +184,7 @@ static inline void Pete_CopyAndConvert32BitTo24Bit(PETE_PIXELDATA32* pSource,PET
 static inline void Pete_InPlaceConvert24BitTo32Bit(PETE_PIXELDATA24* pBuffer,int nPixelCount) {
 
 	char* pBufferStart=(char*)pBuffer;
-	
+
 	char* pBuffer32Current=(pBufferStart+((nPixelCount-1)*SIZEOF_PETE_PIXELDATA32));
 	char* pBuffer24Current=(pBufferStart+((nPixelCount-1)*SIZEOF_PETE_PIXELDATA24));
 

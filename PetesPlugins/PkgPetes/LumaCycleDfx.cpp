@@ -35,7 +35,7 @@ class CLumaCycleDfx: public CDFX
 public:
 	~CLumaCycleDfx();
 	CLumaCycleDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLumaCycleDfx)
 END_OUTPUTSCREENS_DESC(CLumaCycleDfx)
 
 BEGIN_EFFECT_DESC(CLumaCycleDfx, 10203215862323929, PETE_VJO_VERSION , "Petes\\LumaCycle", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLumaCycleDfx) 
+END_EFFECT_DESC(CLumaCycleDfx)
 
 REGISTER_DFXFACTORY(CLumaCycleDfx)
 
@@ -102,7 +102,7 @@ CLumaCycleDfx::~CLumaCycleDfx()
 
 }
 
-HBITMAP	CLumaCycleDfx::GetLabelBitmap()			
+HBITMAP	CLumaCycleDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CLumaCycleDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CLumaCycleDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CLumaCycleDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CLumaCycleDfx::Initialize()
 
 BOOL	CLumaCycleDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

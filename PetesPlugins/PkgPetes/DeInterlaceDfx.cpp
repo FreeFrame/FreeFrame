@@ -36,7 +36,7 @@ class CDeInterlaceDfx: public CDFX
 public:
 	~CDeInterlaceDfx();
 	CDeInterlaceDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -73,7 +73,7 @@ BEGIN_OUTPUTSCREENS_DESC(CDeInterlaceDfx)
 END_OUTPUTSCREENS_DESC(CDeInterlaceDfx)
 
 BEGIN_EFFECT_DESC(CDeInterlaceDfx, 10203216861479923, PETE_VJO_VERSION , "Petes\\DeInterlace", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CDeInterlaceDfx) 
+END_EFFECT_DESC(CDeInterlaceDfx)
 
 REGISTER_DFXFACTORY(CDeInterlaceDfx)
 
@@ -95,7 +95,7 @@ CDeInterlaceDfx::~CDeInterlaceDfx()
 	Pete_DeInterlace_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CDeInterlaceDfx::GetLabelBitmap()			
+HBITMAP	CDeInterlaceDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -104,7 +104,7 @@ BOOL	CDeInterlaceDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -124,7 +124,7 @@ BOOL	CDeInterlaceDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CDeInterlaceDfx::UpdateConfig()
@@ -135,7 +135,7 @@ BOOL	CDeInterlaceDfx::UpdateConfig()
 
 	m_nPalStretchFixID=
 		RegisterBool(m_pEngine,&m_bPalStretchFix,"PAL Stretch Fix");
-	
+
 	return TRUE;
 }
 
@@ -152,7 +152,7 @@ BOOL	CDeInterlaceDfx::Initialize()
 
 BOOL	CDeInterlaceDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

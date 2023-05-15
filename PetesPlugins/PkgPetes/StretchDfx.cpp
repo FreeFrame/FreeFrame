@@ -36,7 +36,7 @@ class CStretchDfx: public CDFX
 public:
 	~CStretchDfx();
 	CStretchDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -93,7 +93,7 @@ BEGIN_OUTPUTSCREENS_DESC(CStretchDfx)
 END_OUTPUTSCREENS_DESC(CStretchDfx)
 
 BEGIN_EFFECT_DESC(CStretchDfx, 10203216861479961, PETE_VJO_VERSION , "Petes\\Stretch", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CStretchDfx) 
+END_EFFECT_DESC(CStretchDfx)
 
 REGISTER_DFXFACTORY(CStretchDfx)
 
@@ -127,7 +127,7 @@ CStretchDfx::~CStretchDfx()
 	Pete_Stretch_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CStretchDfx::GetLabelBitmap()			
+HBITMAP	CStretchDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -136,7 +136,7 @@ BOOL	CStretchDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 }
@@ -153,7 +153,7 @@ BOOL	CStretchDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CStretchDfx::UpdateConfig()
@@ -177,7 +177,7 @@ BOOL	CStretchDfx::UpdateConfig()
 		RegisterFloat(m_pEngine,&m_BottomLeftX,"Top Left X",-2.0f,2.0f);
 	m_nBottomLeftYID=
 		RegisterFloat(m_pEngine,&m_BottomLeftY,"Top Left Y",-2.0f,2.0f);
-	
+
 	m_nTopLeftXID=
 		RegisterFloat(m_pEngine,&m_TopLeftX,"Bottom Left X",-2.0f,2.0f);
 	m_nTopLeftYID=
@@ -204,7 +204,7 @@ BOOL	CStretchDfx::Initialize()
 
 BOOL	CStretchDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

@@ -119,12 +119,12 @@ void Pete_Slide_Render(SPete_Slide_Data* pInstanceData,SPete_Slide_Settings* pSe
 		if (nXOffset2<0) {
 			nXOffset2+=nWidth;
 		}
-		
+
 		const int nYThreshold=static_cast<int>(pSettings->m_Proportion*nHeight);
 
 		int nY=0;
 		while (pCurrentOutput!=pOutputEnd) {
-			
+
 			const U32* pOutputLineStart=pCurrentOutput;
 			const U32* pOutputLineEnd=pOutputLineStart+nWidth;
 
@@ -148,14 +148,14 @@ void Pete_Slide_Render(SPete_Slide_Data* pInstanceData,SPete_Slide_Settings* pSe
 				} else {
 					nSourceY=nY;
 				}
-				
+
 			} else {
 
 				if (bMirror&&!bMirrorFlip) {
 					nSourceY=nMirroredY;
 				} else {
 					nSourceY=nY;
-				}				
+				}
 			}
 
 			nSourceY%=nHeight;
@@ -200,7 +200,7 @@ void Pete_Slide_Render(SPete_Slide_Data* pInstanceData,SPete_Slide_Settings* pSe
 
 		int nY=0;
 		while (pCurrentOutput!=pOutputEnd) {
-			
+
 			const U32* pOutputLineStart=pCurrentOutput;
 			const U32* pOutputLineEnd=pOutputLineStart+nWidth;
 
@@ -243,7 +243,7 @@ void Pete_Slide_Render(SPete_Slide_Data* pInstanceData,SPete_Slide_Settings* pSe
 				nSourceX+=nXInc;
 
 			}
-			
+
 			nSourceY=nY+nYOffset2;
 			nSourceY%=nHeight;
 

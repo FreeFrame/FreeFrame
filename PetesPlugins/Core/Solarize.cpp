@@ -151,7 +151,7 @@ void Pete_Solarize_SetupCFSettings(SPete_Solarize_Data* pInstanceData,SPete_Sola
 
 		int nOutput;
 		if (nParam<nUpLength) {
-			
+
 			nOutput=(nParam*nHeightScale);
 			nOutput/=nUpLength;
 			nOutput+=nFloor;

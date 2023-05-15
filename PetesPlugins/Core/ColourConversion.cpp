@@ -111,15 +111,15 @@ U32 Pete_ConvertHSVToRGB(U32 ColourHSV) {
 	const int xSaturation = (nSaturation<<(cnFixedShift-8));
 
 	const int xp = (xValue * (cnFixedPrec - xSaturation))>>cnFixedShift;
-	const int xq = (xValue * (cnFixedPrec - 
+	const int xq = (xValue * (cnFixedPrec -
 		((xSaturation * xf)>>cnFixedShift)))>>cnFixedShift;
-	const int xt = (xValue * (cnFixedPrec - 
+	const int xt = (xValue * (cnFixedPrec -
 		((xSaturation * (cnFixedPrec - xf))>>cnFixedShift) ))>>cnFixedShift;
 
 	int nOutputRed;
 	int nOutputGreen;
 	int nOutputBlue;
-	
+
 	switch (nIntSextant) {
 		case 0:
 		nOutputRed = xValue>>(cnFixedShift-8);

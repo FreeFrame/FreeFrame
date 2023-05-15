@@ -194,7 +194,7 @@ void Pete_FishEye_Render(SPete_FishEye_Data* pInstanceData,SPete_FishEye_Setting
 
 	float OutputY=0.0f;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineStart=pCurrentOutput;
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
 
@@ -222,7 +222,7 @@ void Pete_FishEye_Render(SPete_FishEye_Data* pInstanceData,SPete_FishEye_Setting
 				*pCurrentOutput=0x00000000;
 
 			} else {
-			
+
 				const float ACosInput=
 					(CurrentRadius*MaxRadiusRecip);
 
@@ -242,7 +242,7 @@ void Pete_FishEye_Render(SPete_FishEye_Data* pInstanceData,SPete_FishEye_Setting
 				const float CurrentScale=NewRadius;
 
 #ifndef PETE_BICUBICSAMPLE
-				
+
 				const int nSourceX=(CentreX+(DeltaX*CurrentScale));
 				const int nSourceY=(CentreY+(DeltaY*CurrentScale));
 
@@ -263,7 +263,7 @@ void Pete_FishEye_Render(SPete_FishEye_Data* pInstanceData,SPete_FishEye_Setting
 					U32 OutputColour=SourceColour;
 
 					*pCurrentOutput=OutputColour;
-				
+
 				}
 
 #else // PETE_BICUBICSAMPLE
@@ -328,7 +328,7 @@ void Pete_FishEye_Render(SPete_FishEye_Data* pInstanceData,SPete_FishEye_Setting
 						((pLeftBottomSource->alpha*nOneMinusXFraction)+
 						(pRightBottomSource->alpha*nSourceXFraction))>>16;
 
-					
+
 					PF_Pixel SourceColour;
 					SourceColour.red=
 						((TopColour.red*nOneMinusYFraction)+
@@ -344,7 +344,7 @@ void Pete_FishEye_Render(SPete_FishEye_Data* pInstanceData,SPete_FishEye_Setting
 						(BottomColour.alpha*nSourceYFraction))>>16;
 
 					*(PF_Pixel*)pCurrentOutput=SourceColour;
-				
+
 				}
 
 #endif // PETE_BICUBICSAMPLE

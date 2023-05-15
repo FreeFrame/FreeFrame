@@ -141,13 +141,13 @@ void Pete_ColourSuppress_Render(SPete_ColourSuppress_Data* pInstanceData,SPete_C
 	const bool bBluePreservesRed=(BalanceBlue<0.0f);
 
 	const int nOneMinusLerpRed=(int)(SuppressionRed*nFPMult);
-	const int nLerpValueRed=(nFPMult-nOneMinusLerpRed);	
+	const int nLerpValueRed=(nFPMult-nOneMinusLerpRed);
 
 	const int nOneMinusLerpGreen=(int)(SuppressionGreen*nFPMult);
-	const int nLerpValueGreen=(nFPMult-nOneMinusLerpGreen);	
+	const int nLerpValueGreen=(nFPMult-nOneMinusLerpGreen);
 
 	const int nOneMinusLerpBlue=(int)(SuppressionBlue*nFPMult);
-	const int nLerpValueBlue=(nFPMult-nOneMinusLerpBlue);	
+	const int nLerpValueBlue=(nFPMult-nOneMinusLerpBlue);
 
 	const int nBalanceLerpValueRed=AbsInt(BalanceRed*nFPMult);
 	const int nBalanceOneMinusLerpRed=(nFPMult-nBalanceLerpValueRed);
@@ -157,7 +157,7 @@ void Pete_ColourSuppress_Render(SPete_ColourSuppress_Data* pInstanceData,SPete_C
 
 	const int nBalanceLerpValueBlue=AbsInt(BalanceBlue*nFPMult);
 	const int nBalanceOneMinusLerpBlue=(nFPMult-nBalanceLerpValueBlue);
-	
+
 	const int nWidth=pInstanceData->nWidth;
 	const int nHeight=pInstanceData->nHeight;
 
@@ -186,7 +186,7 @@ void Pete_ColourSuppress_Render(SPete_ColourSuppress_Data* pInstanceData,SPete_C
 		int nNonBlueReference;
 
 		if (bUseMinimum) {
-		
+
 			if (bIsGreenLessThanBlue) {
 
 				if (bRedPreservesGreen) {
@@ -265,7 +265,7 @@ void Pete_ColourSuppress_Render(SPete_ColourSuppress_Data* pInstanceData,SPete_C
 			nNonBlueReference=MaximumInt(nSourceRed,nSourceGreen);
 
 		}
-		
+
 		int nOutputRed;
 		if (nSourceRed>nNonRedReference) {
 
@@ -281,7 +281,7 @@ void Pete_ColourSuppress_Render(SPete_ColourSuppress_Data* pInstanceData,SPete_C
 			nOutputRed=nSourceRed;
 
 		}
-		
+
 		int nOutputGreen;
 		if (nSourceGreen>nNonGreenReference) {
 

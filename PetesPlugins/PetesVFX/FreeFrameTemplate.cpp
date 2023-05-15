@@ -29,13 +29,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #endif // PLUGIN_INPUT_COUNT
 
 #ifndef TARGET_OS_MAC
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
                        LPVOID lpReserved
 					 )
 {
 
-    
+
 	switch (ul_reason_for_call)
 	{
 		case DLL_PROCESS_ATTACH:
@@ -111,7 +111,7 @@ float* getSettingsValue(int nIndex,SPete_GlobalData* pGlobalData) {
 /*-------------------------------------------------*/
 
 #ifndef TARGET_OS_MAC
-__declspec(dllexport) void* __stdcall plugMain(DWORD functionCode, LPVOID pParam,DWORD InstanceCookie) 
+__declspec(dllexport) void* __stdcall plugMain(DWORD functionCode, LPVOID pParam,DWORD InstanceCookie)
 #else // TARGET_OS_MAC
 extern "C" void* plugMain(DWORD functionCode,void* pParam,DWORD InstanceCookie)
 #endif // TARGET_OS_MAC
@@ -285,7 +285,7 @@ char* getParameterDisplay(int n,SPete_GlobalData* pGlobalData) {
 	int nType=g_pParameters[n].Type;
 
 	switch (nType) {
-	
+
 		case PETE_PARAM_FLOAT: {
 			sprintf(pResult,"%.1f",Value);
 		}break;
@@ -329,7 +329,7 @@ int setParameter(int n,float Value,SPete_GlobalData* pGlobalData) {
 
 	Value*=Range;
 	Value+=Minimum;
-	
+
 	*(getSettingsValue(n,pGlobalData))=Value;
 
 	return FF_SUCCESS;
@@ -386,9 +386,9 @@ void processFrame(void* pFrame,SPete_GlobalData* pGlobalData) {
 /*-------------------------------------------------*/
 
 void processFrame16Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
-	
+
 #ifndef PLUGIN_INPUT_COUNT
-	
+
 	PETE_PIXELDATA16* pOutput=(PETE_PIXELDATA16*)pFrame;
 
 	const int nWidth=pGlobalData->m_VideoInfo.frameWidth;
@@ -400,14 +400,14 @@ void processFrame16Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
 	PETE_PIXELDATA32* pSourceBuffer=pGlobalData->m_pSourceBuffer;
 	PETE_PIXELDATA32* pOutputBuffer=pGlobalData->m_pOutputBuffer;
 
-	Pete_CopyAndConvert16Bit565To32Bit(pOutput,pSourceBuffer,nNumPixels);	
+	Pete_CopyAndConvert16Bit565To32Bit(pOutput,pSourceBuffer,nNumPixels);
 
 	PLUGIN_RENDER(&pGlobalData->m_InstanceData,
 		&pGlobalData->m_Settings,
 		pSourceBuffer,
 		pOutputBuffer);
 
-	Pete_CopyAndConvert32BitTo16Bit565(pOutputBuffer,pOutput,nNumPixels);	
+	Pete_CopyAndConvert32BitTo16Bit565(pOutputBuffer,pOutput,nNumPixels);
 
 #endif // PLUGIN
 
@@ -416,7 +416,7 @@ void processFrame16Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
 /*-------------------------------------------------*/
 
 void processFrame24Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
-	
+
 	PETE_PIXELDATA24* pOutput=(PETE_PIXELDATA24*)pFrame;
 
 	const int nWidth=pGlobalData->m_VideoInfo.frameWidth;
@@ -428,21 +428,21 @@ void processFrame24Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
 	PETE_PIXELDATA32* pSourceBuffer=pGlobalData->m_pSourceBuffer;
 	PETE_PIXELDATA32* pOutputBuffer=pGlobalData->m_pOutputBuffer;
 
-	Pete_CopyAndConvert24BitTo32Bit(pOutput,pSourceBuffer,nNumPixels);	
+	Pete_CopyAndConvert24BitTo32Bit(pOutput,pSourceBuffer,nNumPixels);
 
 	PLUGIN_RENDER(&pGlobalData->m_InstanceData,
 		&pGlobalData->m_Settings,
 		pSourceBuffer,
 		pOutputBuffer);
 
-	Pete_CopyAndConvert32BitTo24Bit(pOutputBuffer,pOutput,nNumPixels);	
+	Pete_CopyAndConvert32BitTo24Bit(pOutputBuffer,pOutput,nNumPixels);
 
 }
 
 /*-------------------------------------------------*/
 
 void processFrame32Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
-	
+
 	PETE_PIXELDATA32* pOutput=(PETE_PIXELDATA32*)pFrame;
 	PETE_PIXELDATA32* pSource=pGlobalData->m_pSourceBuffer;
 
@@ -452,7 +452,7 @@ void processFrame32Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
 	const int nNumPixels=(nWidth*nHeight);
 	const int nNumBytes=(nNumPixels*SIZEOF_PETE_PIXELDATA32);
 
-	memcpy(pSource,pOutput,nNumBytes);	
+	memcpy(pSource,pOutput,nNumBytes);
 
 	PLUGIN_RENDER(&pGlobalData->m_InstanceData,
 		&pGlobalData->m_Settings,
@@ -468,7 +468,7 @@ void processFrame32Bit(void* pFrame,SPete_GlobalData* pGlobalData) {
 int deInitialise(SPete_GlobalData* pGlobalData) {
 
 	return FF_SUCCESS;
-	
+
 }
 
 /*-------------------------------------------------*/
@@ -476,7 +476,7 @@ int deInitialise(SPete_GlobalData* pGlobalData) {
 U32 getPluginCaps(U32 nIndex,SPete_GlobalData* pGlobalData) {
 
 	U32 Result;
-	
+
 	switch (nIndex) {
 
 		case FF_CAP_16BITVIDEO:
@@ -496,7 +496,7 @@ U32 getPluginCaps(U32 nIndex,SPete_GlobalData* pGlobalData) {
 		break;
 
 #ifndef PLUGIN_HAS_MULTIPLE_INPUTS
-		
+
 		case FF_CAP_MINIMUMINPUTFRAMES:
 			Result=1;
 		break;
@@ -641,7 +641,7 @@ PlugExtendedInfoStruct*	getExtendedInfo(SPete_GlobalData* pGlobalData) {
 	g_ExtendedInfoStruct.PluginMajorVersion=0;
 	g_ExtendedInfoStruct.About="Effects Plugin by Pete Warden";
 	g_ExtendedInfoStruct.Description="No description written";
-	
+
 	return &g_ExtendedInfoStruct;
 
 }
@@ -675,7 +675,7 @@ void processFrameCopy(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlobalDat
 /*-------------------------------------------------*/
 
 void processFrameCopy16Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlobalData) {
-	
+
 #ifndef PLUGIN_HAS_MULTIPLE_INPUTS
 
 	PETE_PIXELDATA16* pInput=*((PETE_PIXELDATA16**)(pArgs->InputFrames));
@@ -690,7 +690,7 @@ void processFrameCopy16Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlob
 	PETE_PIXELDATA32* pSourceBuffer=pGlobalData->m_pSourceBuffer;
 	PETE_PIXELDATA32* pOutputBuffer=pGlobalData->m_pOutputBuffer;
 
-	Pete_CopyAndConvert16Bit565To32Bit(pInput,pSourceBuffer,nNumPixels);	
+	Pete_CopyAndConvert16Bit565To32Bit(pInput,pSourceBuffer,nNumPixels);
 
 	PLUGIN_RENDER(&pGlobalData->m_InstanceData,
 		&pGlobalData->m_Settings,
@@ -713,7 +713,7 @@ void processFrameCopy16Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlob
 
 	int nCount;
 	for (nCount=0; nCount<PLUGIN_INPUT_COUNT; nCount+=1) {
-	
+
 		Pete_CopyAndConvert16Bit565To32Bit(ppInputs[nCount],ppSourceBuffers[nCount],nNumPixels);
 
 	}
@@ -725,7 +725,7 @@ void processFrameCopy16Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlob
 
 #endif // PLUGIN_HAS_MULTIPLE_INPUTS
 
-	Pete_CopyAndConvert32BitTo16Bit565(pOutputBuffer,pOutput,nNumPixels);	
+	Pete_CopyAndConvert32BitTo16Bit565(pOutputBuffer,pOutput,nNumPixels);
 
 }
 
@@ -734,7 +734,7 @@ void processFrameCopy16Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlob
 void processFrameCopy24Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlobalData) {
 
 #ifndef PLUGIN_HAS_MULTIPLE_INPUTS
-	
+
 	PETE_PIXELDATA24* pInput=*((PETE_PIXELDATA24**)(pArgs->InputFrames));
 	PETE_PIXELDATA24* pOutput=(PETE_PIXELDATA24*)(pArgs->OutputFrame);
 
@@ -747,7 +747,7 @@ void processFrameCopy24Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlob
 	PETE_PIXELDATA32* pSourceBuffer=pGlobalData->m_pSourceBuffer;
 	PETE_PIXELDATA32* pOutputBuffer=pGlobalData->m_pOutputBuffer;
 
-	Pete_CopyAndConvert24BitTo32Bit(pInput,pSourceBuffer,nNumPixels);	
+	Pete_CopyAndConvert24BitTo32Bit(pInput,pSourceBuffer,nNumPixels);
 
 	PLUGIN_RENDER(&pGlobalData->m_InstanceData,
 		&pGlobalData->m_Settings,
@@ -770,7 +770,7 @@ void processFrameCopy24Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlob
 
 	int nCount;
 	for (nCount=0; nCount<PLUGIN_INPUT_COUNT; nCount+=1) {
-	
+
 		Pete_CopyAndConvert24BitTo32Bit(ppInputs[nCount],ppSourceBuffers[nCount],nNumPixels);
 
 	}
@@ -782,7 +782,7 @@ void processFrameCopy24Bit(ProcessFrameCopyStruct* pArgs,SPete_GlobalData* pGlob
 
 #endif // PLUGIN_HAS_MULTIPLE_INPUTS
 
-	Pete_CopyAndConvert32BitTo24Bit(pOutputBuffer,pOutput,nNumPixels);	
+	Pete_CopyAndConvert32BitTo24Bit(pOutputBuffer,pOutput,nNumPixels);
 
 }
 
@@ -831,7 +831,7 @@ int getParameterType(int n,SPete_GlobalData* pGlobalData) {
 	int nType=g_pParameters[n].Type;
 
 	switch (nType) {
-	
+
 		case PETE_PARAM_FLOAT: {
 			nResult=FF_TYPE_STANDARD;
 		}break;

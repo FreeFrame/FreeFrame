@@ -35,7 +35,7 @@ class CTimeBlurDfx: public CDFX
 public:
 	~CTimeBlurDfx();
 	CTimeBlurDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CTimeBlurDfx)
 END_OUTPUTSCREENS_DESC(CTimeBlurDfx)
 
 BEGIN_EFFECT_DESC(CTimeBlurDfx, 10205216861272929, PETE_VJO_VERSION , "Petes\\TimeBlur", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CTimeBlurDfx) 
+END_EFFECT_DESC(CTimeBlurDfx)
 
 REGISTER_DFXFACTORY(CTimeBlurDfx)
 
@@ -102,7 +102,7 @@ CTimeBlurDfx::~CTimeBlurDfx()
 
 }
 
-HBITMAP	CTimeBlurDfx::GetLabelBitmap()			
+HBITMAP	CTimeBlurDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CTimeBlurDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CTimeBlurDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CTimeBlurDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CTimeBlurDfx::Initialize()
 
 BOOL	CTimeBlurDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

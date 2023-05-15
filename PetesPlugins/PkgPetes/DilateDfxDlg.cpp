@@ -48,7 +48,7 @@ void CDilateDfxDlg::EnableControls()
 	UpdateData();
 }
 
-BOOL CDilateDfxDlg::OnInitDialog() 
+BOOL CDilateDfxDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -59,7 +59,7 @@ BOOL CDilateDfxDlg::OnInitDialog()
 		IDC_TIMEWARP_PLAYBACKSTYLE_LIST,
 		CB_SETCURSEL,
 		m_eStyle,
-		0L);                             
+		0L);
 	EnableControls();
 
 	return TRUE;

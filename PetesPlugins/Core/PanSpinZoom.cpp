@@ -126,7 +126,7 @@ void Pete_PanSpinZoom_Render(SPete_PanSpinZoom_Data* pInstanceData,SPete_PanSpin
 			pCurrentOutput+=1;
 
 		}
-	
+
 	}
 
 }
@@ -150,7 +150,7 @@ void Pete_PanSpinZoom_CreateTransform(SPete_PanSpinZoom_Data* pInstanceData,SPet
 
 	const float Rotation=pSettings->Rotation;
 
-	SPete_2dMatrix RotationTransform;	
+	SPete_2dMatrix RotationTransform;
 	Pete_2dMatrix_SetToRotation(Rotation,&RotationTransform);
 
 	const float Scale=pSettings->Scale;

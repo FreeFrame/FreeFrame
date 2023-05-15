@@ -37,7 +37,7 @@ class CColourWarpDfx: public CDFX
 public:
 	~CColourWarpDfx();
 	CColourWarpDfx();
-	
+
 	BOOL	UpdateConfig(void);
 	BOOL	Initialize(void);
 	BOOL	SetupDialog(void);
@@ -104,7 +104,7 @@ BEGIN_OUTPUTSCREENS_DESC(CColourWarpDfx)
 END_OUTPUTSCREENS_DESC(CColourWarpDfx)
 
 BEGIN_EFFECT_DESC(CColourWarpDfx, 10203216861479949, PETE_VJO_VERSION , "Petes\\ColourWarp", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CColourWarpDfx) 
+END_EFFECT_DESC(CColourWarpDfx)
 
 REGISTER_DFXFACTORY(CColourWarpDfx)
 
@@ -134,7 +134,7 @@ CColourWarpDfx::~CColourWarpDfx()
 	Pete_ColourWarp_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CColourWarpDfx::GetLabelBitmap()			
+HBITMAP	CColourWarpDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -143,7 +143,7 @@ BOOL	CColourWarpDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 }
@@ -162,7 +162,7 @@ BOOL	CColourWarpDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CColourWarpDfx::UpdateConfig()
@@ -214,7 +214,7 @@ BOOL	CColourWarpDfx::Initialize()
 
 BOOL	CColourWarpDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

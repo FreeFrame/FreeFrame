@@ -77,7 +77,7 @@ void Pete_SummedAreaTable_Construct(U32* pSource,int nWidth,int nHeight,SPete_SA
 			pCurrentTable+=nWidth;
 
 		}
-	
+
 	}
 
 }

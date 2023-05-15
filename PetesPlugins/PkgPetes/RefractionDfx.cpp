@@ -34,7 +34,7 @@ class CRefractionDfx: public CDFX
 public:
 	~CRefractionDfx();
 	CRefractionDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -79,7 +79,7 @@ BEGIN_OUTPUTSCREENS_DESC(CRefractionDfx)
 END_OUTPUTSCREENS_DESC(CRefractionDfx)
 
 BEGIN_EFFECT_DESC(CRefractionDfx, 10203216861479958, PETE_VJO_VERSION , "Petes\\Refraction", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CRefractionDfx) 
+END_EFFECT_DESC(CRefractionDfx)
 
 REGISTER_DFXFACTORY(CRefractionDfx)
 
@@ -110,7 +110,7 @@ CRefractionDfx::~CRefractionDfx()
 	Pete_Refraction_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CRefractionDfx::GetLabelBitmap()			
+HBITMAP	CRefractionDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -136,7 +136,7 @@ BOOL	CRefractionDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CRefractionDfx::UpdateConfig()
@@ -167,7 +167,7 @@ BOOL	CRefractionDfx::Initialize()
 
 BOOL	CRefractionDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

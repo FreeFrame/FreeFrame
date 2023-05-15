@@ -36,7 +36,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
-// includes 
+// includes
 //
 
 #include "MemCopy.h"
@@ -105,7 +105,7 @@ void *amd3dnowextmemcpy(void *dest, const void *src, size_t n)
 
 		mov edi, dest;
 		mov esi, src;
-	
+
 		xor edx, edx;
 		mov eax, n;
 		mov ebx, 16;
@@ -149,7 +149,7 @@ void *mmxmemcpy(void *dest, const void *src, size_t n)
 
 		mov edi, dest;
 		mov esi, src;
-	
+
 		xor edx, edx;
 		mov eax, n;
 		mov ebx, 16;

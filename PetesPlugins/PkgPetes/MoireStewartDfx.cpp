@@ -35,7 +35,7 @@ class CMoireStewartDfx: public CDFX
 public:
 	~CMoireStewartDfx();
 	CMoireStewartDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -69,7 +69,7 @@ BEGIN_OUTPUTSCREENS_DESC(CMoireStewartDfx)
 END_OUTPUTSCREENS_DESC(CMoireStewartDfx)
 
 BEGIN_EFFECT_DESC(CMoireStewartDfx, 10201236861232929, PETE_VJO_VERSION , "Petes\\MoireStewart", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CMoireStewartDfx) 
+END_EFFECT_DESC(CMoireStewartDfx)
 
 REGISTER_DFXFACTORY(CMoireStewartDfx)
 
@@ -101,7 +101,7 @@ CMoireStewartDfx::~CMoireStewartDfx()
 
 }
 
-HBITMAP	CMoireStewartDfx::GetLabelBitmap()			
+HBITMAP	CMoireStewartDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -110,7 +110,7 @@ BOOL	CMoireStewartDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -130,7 +130,7 @@ BOOL	CMoireStewartDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CMoireStewartDfx::UpdateConfig()
@@ -179,7 +179,7 @@ BOOL	CMoireStewartDfx::Initialize()
 
 BOOL	CMoireStewartDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 //	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

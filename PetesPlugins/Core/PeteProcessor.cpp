@@ -8,7 +8,7 @@ bool Pete_IsAltiVecAvailable(void) {
 
 	long cpuAttributes;
 	bool hasAltiVec=false;
-	OSErr err=Gestalt(gestaltPowerPCProcessorFeatures,&cpuAttributes); 
+	OSErr err=Gestalt(gestaltPowerPCProcessorFeatures,&cpuAttributes);
 
 	if (noErr==err) {
 		hasAltiVec=(1<< gestaltPowerPCHasVectorInstructions)&cpuAttributes;

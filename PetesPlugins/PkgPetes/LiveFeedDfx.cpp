@@ -35,7 +35,7 @@ class CLiveFeedDfx: public CDFX
 public:
 	~CLiveFeedDfx();
 	CLiveFeedDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -69,7 +69,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLiveFeedDfx)
 END_OUTPUTSCREENS_DESC(CLiveFeedDfx)
 
 BEGIN_EFFECT_DESC(CLiveFeedDfx, 10203216851272929, PETE_VJO_VERSION , "Petes\\LiveFeed", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLiveFeedDfx) 
+END_EFFECT_DESC(CLiveFeedDfx)
 
 REGISTER_DFXFACTORY(CLiveFeedDfx)
 
@@ -101,7 +101,7 @@ CLiveFeedDfx::~CLiveFeedDfx()
 
 }
 
-HBITMAP	CLiveFeedDfx::GetLabelBitmap()			
+HBITMAP	CLiveFeedDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -110,7 +110,7 @@ BOOL	CLiveFeedDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -130,7 +130,7 @@ BOOL	CLiveFeedDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CLiveFeedDfx::UpdateConfig()
@@ -179,7 +179,7 @@ BOOL	CLiveFeedDfx::Initialize()
 
 BOOL	CLiveFeedDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 
 	Pete_LiveFeed_Render(&m_InstanceData,&m_Settings,NULL,pOutputMem);

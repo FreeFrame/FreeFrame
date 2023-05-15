@@ -35,7 +35,7 @@ class CKaleidascopeDfx: public CDFX
 public:
 	~CKaleidascopeDfx();
 	CKaleidascopeDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -63,7 +63,7 @@ protected:
 
 	float	m_SourceCentreX;
 	int		m_nSourceCentreXID;
-	
+
 	float	m_SourceCentreY;
 	int		m_nSourceCentreYID;
 
@@ -94,7 +94,7 @@ BEGIN_OUTPUTSCREENS_DESC(CKaleidascopeDfx)
 END_OUTPUTSCREENS_DESC(CKaleidascopeDfx)
 
 BEGIN_EFFECT_DESC(CKaleidascopeDfx, 10203216861271919, PETE_VJO_VERSION , "Petes\\Kaleidascope", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CKaleidascopeDfx) 
+END_EFFECT_DESC(CKaleidascopeDfx)
 
 REGISTER_DFXFACTORY(CKaleidascopeDfx)
 
@@ -125,7 +125,7 @@ CKaleidascopeDfx::~CKaleidascopeDfx()
 
 }
 
-HBITMAP	CKaleidascopeDfx::GetLabelBitmap()			
+HBITMAP	CKaleidascopeDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -134,7 +134,7 @@ BOOL	CKaleidascopeDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -154,7 +154,7 @@ BOOL	CKaleidascopeDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CKaleidascopeDfx::UpdateConfig()
@@ -189,7 +189,7 @@ BOOL	CKaleidascopeDfx::Initialize()
 
 BOOL	CKaleidascopeDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

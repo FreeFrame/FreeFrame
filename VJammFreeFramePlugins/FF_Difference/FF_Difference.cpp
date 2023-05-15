@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // FreeFrameSample.cpp
 //
-// FreeFrame Open Video Plugin 
+// FreeFrame Open Video Plugin
 // C Version
 //
 // Implementation of the Free Frame sample plugin
@@ -32,7 +32,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
-// includes 
+// includes
 //
 
 #include "FF_Difference.h"
@@ -55,9 +55,9 @@ PlugStruct plug;
 ///////////////////////////////////////////////////////////////////////////////////////
 // getInfo
 //
-// gets information about the plugin - version, unique id, short name and type 
+// gets information about the plugin - version, unique id, short name and type
 // This function should be identical in all future versions of the FreeFrame API
-//  
+//
 // return values (32-bit pointer to PlugInfoStruct)
 // FF_FAIL on error
 // 32-bit pointer to PlugInfoStruct
@@ -66,14 +66,14 @@ PlugStruct plug;
 //       the version defines the other fucntion codes that are supported
 //       supported function codes are listed in the documentation www.freeframe.org
 
-PlugInfoStruct* getInfo() 
+PlugInfoStruct* getInfo()
 {
 	plug.plugInfo.APIMajorVersion = 0;
 	plug.plugInfo.APIMinorVersion = 500; // lets keep this in sync with the delphi host for now
-	char ID[5] = "Dif1";		 // this *must* be unique to your plugin 
+	char ID[5] = "Dif1";		 // this *must* be unique to your plugin
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "Difference";
-	
+
 	memcpy(plug.plugInfo.uniqueID, ID, 4);
 	memcpy(plug.plugInfo.pluginName, name, 16);
 	plug.plugInfo.pluginType = FF_EFFECT;
@@ -84,7 +84,7 @@ PlugInfoStruct* getInfo()
 ///////////////////////////////////////////////////////////////////////////////////////
 // initialise
 //
-// Prepare the Plug-in for processing.  
+// Prepare the Plug-in for processing.
 // Set default values, allocate memory
 // When the plug-in returns from this function it must be ready to proces a frame
 //
@@ -144,7 +144,7 @@ DWORD initialise(VideoInfoStruct* pVideoInfo)
 ///////////////////////////////////////////////////////////////////////////////////////
 // deinitialise
 //
-// Tidy up   
+// Tidy up
 // Deallocate memory
 //
 // return values (DWORD)
@@ -163,10 +163,10 @@ DWORD deInitialise()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-// getNumParameters 
+// getNumParameters
 //
 // returns number of parameters in plugin
-// 
+//
 // return values (DWORD)
 // number of parameters
 // FF_FAIL on error
@@ -174,7 +174,7 @@ DWORD deInitialise()
 
 DWORD getNumParameters()
 {
-	return NUM_PARAMS;  
+	return NUM_PARAMS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -183,7 +183,7 @@ DWORD getNumParameters()
 // returns pointer to 16 byte char array containing the name of parameter specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -202,7 +202,7 @@ char* getParameterName(DWORD index)
 // returns default value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -221,7 +221,7 @@ float getParameterDefault(DWORD index)
 // parameter index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -245,7 +245,7 @@ char* getParameterDisplay(DWORD index)
 // value is a 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // 32-bit float value
 //
 // return values (DWORD):
@@ -280,7 +280,7 @@ DWORD setParameter(SetParameterStruct* pParam)
 // returns value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -311,7 +311,7 @@ DWORD processFrame(LPVOID pFrame)
 	VideoPixel24bit *pDest;
 
 	memcpy(plug.tempFrame, pFrame, plug.frameSize * sizeof(VideoPixel24bit));
-	
+
 	VideoPixel24bit *pLastFrame = plug.lastFrame;
 	VideoPixel24bit *pFade = plug.fadeFactor;
 	signed int blueDiff, greenDiff, redDiff, blue, green, red;
@@ -341,14 +341,14 @@ DWORD processFrame(LPVOID pFrame)
 				val = pFade->green + rate;
 				if (val > 255) pFade->green = 255;
 				else pFade->green += rate;
-				
+
 				rate = plug.fadeOutRate - redDiff;
 				if (rate <0) rate = 0;
 				if (rate > plug.fadeOutRate) rate = plug.fadeOutRate;
 				val = pFade->red + rate;
 				if (val > 255) pFade->red = 255;
 				else pFade->red += rate;
-				
+
 			}
 			else {
 				rate = plug.fadeInRate;
@@ -375,7 +375,7 @@ DWORD processFrame(LPVOID pFrame)
 			val = pDest->green - pFade->green;
 			if (val < 0) pDest->green = 0;
 			else pDest->green = (BYTE) val;
-			
+
 			val = pDest->red - pFade->red;
 			if (val < 0) pDest->red = 0;
 			else pDest->red = (BYTE) val;
@@ -383,10 +383,10 @@ DWORD processFrame(LPVOID pFrame)
 			pDest++;
 			pLastFrame++;
 			pFade++;
-			
+
 		}
 	}
-	
+
 	memcpy(plug.lastFrame, plug.tempFrame, plug.frameSize * sizeof(VideoPixel24bit));
 
 	plug.firstFrame = false;
@@ -399,7 +399,7 @@ DWORD processFrame(LPVOID pFrame)
 // returns true or false to indicate whether cappable of feature specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // allowed values:
 // 0 - 16 bit video
 // 1 - 24 bit video

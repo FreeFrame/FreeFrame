@@ -90,7 +90,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nWidth=pInstanceData->nWidth;
 	const int nHeight=pInstanceData->nHeight;
 
@@ -100,10 +100,10 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 	const int nLineGap=static_cast<int>(pSettings->m_LineGap);
 
 	Pete_ZeroMemory(pOutput,(nNumPixels*sizeof(U32)));
-	
+
 	U32* pCurrentSource=pSource;
 	U32* pCurrentOutput=pOutput;
-	
+
 	U32* pSourceEnd=(pSource+nNumPixels);
 	U32* pOutputEnd=(pOutput+nNumPixels);
 
@@ -112,16 +112,16 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 	if (!bDoFilledLines) {
 
 		while (pCurrentSource<pSourceEnd) {
-			
+
 			const U32* pSourceLineEnd=pCurrentSource+nWidth;
-				
+
 			while (pCurrentSource!=pSourceLineEnd) {
 
 				const U32 SourceColour=*pCurrentSource;
 
 				int nLuma=GetLuminance(SourceColour);
 				nLuma-=(128*255);
-				
+
 				const int nOffset=(nLuma*nOffsetScale)>>16;
 
 				U32*const pOffsetOutput=
@@ -136,7 +136,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 
 				pCurrentSource+=1;
 				pCurrentOutput+=1;
-				
+
 			}
 
 			pCurrentSource+=(nWidth*nLineGap);
@@ -157,9 +157,9 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 
 		int nCurrentY=0;
 		while (pCurrentSource<pSourceEnd) {
-			
+
 			const U32* pSourceLineEnd=pCurrentSource+nWidth;
-				
+
 			U32** ppCurrentLineHeight=ppPreviousLineHeights;
 
 			if (bDoSmoothFill) {
@@ -174,7 +174,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 
 					int nLuma=GetLuminance(SourceColour);
 					nLuma-=(128*255);
-					
+
 					const int nOffset=(nLuma*nOffsetScale)>>16;
 
 					U32* pOffsetOutputStart=
@@ -237,7 +237,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 						nCurrentGreen+=nIncGreen;
 						nCurrentBlue+=nIncBlue;
 						nCurrentAlpha+=nIncAlpha;
-					
+
 						pOffsetOutput-=nWidth;
 
 					}
@@ -247,7 +247,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 					pCurrentSource+=1;
 					pCurrentOutput+=1;
 					ppCurrentLineHeight+=1;
-					
+
 				}
 
 			} else {
@@ -258,7 +258,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 
 					int nLuma=GetLuminance(SourceColour);
 					nLuma-=(128*255);
-					
+
 					const int nOffset=(nLuma*nOffsetScale)>>16;
 
 					U32* pOffsetOutputStart=
@@ -272,7 +272,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 						(pOffsetOutput>pPreviousOffsetOutput)) {
 
 						*pOffsetOutput=SourceColour;
-					
+
 						pOffsetOutput-=nWidth;
 
 					}
@@ -282,7 +282,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 					pCurrentSource+=1;
 					pCurrentOutput+=1;
 					ppCurrentLineHeight+=1;
-					
+
 				}
 
 
@@ -295,7 +295,7 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 
 		U32* pFinalLineStart=pOutputEnd-nWidth;
 		U32* pFinalLineEnd=pOutputEnd;
-				
+
 		U32** ppCurrentLineHeight=ppPreviousLineHeights;
 
 		U32* pCurrentOutput=pFinalLineStart;
@@ -313,14 +313,14 @@ void Pete_LumaOffset_Render(SPete_LumaOffset_Data* pInstanceData,SPete_LumaOffse
 				(pOffsetOutput>pPreviousOffsetOutput)) {
 
 				*pOffsetOutput=SourceColour;
-			
+
 				pOffsetOutput-=nWidth;
 
 			}
 
 			pCurrentOutput+=1;
 			ppCurrentLineHeight+=1;
-			
+
 		}
 
 

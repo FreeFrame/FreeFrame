@@ -38,7 +38,7 @@ class CRadialBlurDfx: public CDFX
 public:
 	~CRadialBlurDfx();
 	CRadialBlurDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -81,7 +81,7 @@ BEGIN_OUTPUTSCREENS_DESC(CRadialBlurDfx)
 END_OUTPUTSCREENS_DESC(CRadialBlurDfx)
 
 BEGIN_EFFECT_DESC(CRadialBlurDfx, 10203216861479969, PETE_VJO_VERSION , "Petes\\RadialBlur", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CRadialBlurDfx) 
+END_EFFECT_DESC(CRadialBlurDfx)
 
 REGISTER_DFXFACTORY(CRadialBlurDfx)
 
@@ -94,7 +94,7 @@ CRadialBlurDfx::CRadialBlurDfx()
 	m_LayerScale=0.01f;
 	m_bHighestQuality=true;
 	m_bLowestQuality=false;
-	
+
 	ZeroMemory(&m_InstanceData,sizeof(m_InstanceData));
 
 	m_nMemUsage = sizeof(CRadialBlurDfx);
@@ -105,7 +105,7 @@ CRadialBlurDfx::~CRadialBlurDfx()
 	Pete_RadialBlur_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CRadialBlurDfx::GetLabelBitmap()			
+HBITMAP	CRadialBlurDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -114,7 +114,7 @@ BOOL	CRadialBlurDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -134,7 +134,7 @@ BOOL	CRadialBlurDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CRadialBlurDfx::UpdateConfig()
@@ -168,7 +168,7 @@ BOOL	CRadialBlurDfx::Initialize()
 
 BOOL	CRadialBlurDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

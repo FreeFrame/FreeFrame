@@ -132,7 +132,7 @@ void Pete_TonyBlur_DeInit(SPete_TonyBlur_Data* pInstanceData) {
 }
 
 void Pete_TonyBlur_Render(SPete_TonyBlur_Data* pInstanceData,SPete_TonyBlur_Settings* pSettings,U32* pSource,U32* pOutput) {
-	
+
 	const int nWidth=pInstanceData->nWidth;
 	const int nHeight=pInstanceData->nHeight;
 
@@ -235,16 +235,16 @@ void Pete_TonyBlur_Render(SPete_TonyBlur_Data* pInstanceData,SPete_TonyBlur_Sett
 					const int nCeilingRadius=(nCurrentRadius+1)>>1;
 
 					int nLeft=(nX-nFloorRadius);
-					nLeft=GateInt(nLeft,0,(nWidth-1));			
+					nLeft=GateInt(nLeft,0,(nWidth-1));
 
 					int nRight=(nX+nCeilingRadius);
-					nRight=GateInt(nRight,0,(nWidth-1));			
+					nRight=GateInt(nRight,0,(nWidth-1));
 
 					int nTop=(nY-nFloorRadius);
-					nTop=GateInt(nTop,0,(nHeight-1));			
+					nTop=GateInt(nTop,0,(nHeight-1));
 
 					int nBottom=(nY+nCeilingRadius);
-					nBottom=GateInt(nBottom,0,(nHeight-1));			
+					nBottom=GateInt(nBottom,0,(nHeight-1));
 
 					const U32 OutputColour=
 						Pete_SummedAreaTable_GetAverage(
@@ -262,7 +262,7 @@ void Pete_TonyBlur_Render(SPete_TonyBlur_Data* pInstanceData,SPete_TonyBlur_Sett
 			}
 
 		}
-	
+
 	}
 
 }

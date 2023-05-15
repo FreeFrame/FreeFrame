@@ -50,7 +50,7 @@ void CLevelsDfxDlg::EnableControls()
 	UpdateData();
 }
 
-BOOL CLevelsDfxDlg::OnInitDialog() 
+BOOL CLevelsDfxDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -60,7 +60,7 @@ BOOL CLevelsDfxDlg::OnInitDialog()
 		IDC_LEVELS_STYLE_LIST,
 		CB_SETCURSEL,
 		m_eStyle,
-		0L);                             
+		0L);
 	EnableControls();
 
 	return TRUE;

@@ -65,14 +65,14 @@ int Pete_BackDropKey_Init(SPete_BackDropKey_Data* pInstanceData,int nWidth, int 
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	pInstanceData->hBackDropBuffer=Pete_NewHandle(nNumBytes);
 
 	if (pInstanceData->hBackDropBuffer==NULL) {
 		Pete_BackDropKey_DeInit(pInstanceData);
 		return 0;
 	}
-	
+
 	pInstanceData->bBackDropBufferFilled=false;
 
 	pInstanceData->nWidth=nWidth;
@@ -99,7 +99,7 @@ void Pete_BackDropKey_Render(SPete_BackDropKey_Data* pInstanceData,SPete_BackDro
 		Pete_BackDropKey_StoreBackDrop(pInstanceData,pSource);
 
 		pInstanceData->bBackDropBufferFilled=true;
-		
+
 	}
 
 	const int nWidth=pInstanceData->nWidth;
@@ -107,7 +107,7 @@ void Pete_BackDropKey_Render(SPete_BackDropKey_Data* pInstanceData,SPete_BackDro
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	const int nThreshold=static_cast<int>(pSettings->m_Threshold);
 	const int nThresholdSqrd=(nThreshold*nThreshold);
 
@@ -152,7 +152,7 @@ void Pete_BackDropKey_Render(SPete_BackDropKey_Data* pInstanceData,SPete_BackDro
 		} else {
 			*pCurrentOutput=0xffffffff;
 		}
-			
+
 		pCurrentOutput+=1;
 		pCurrentSource+=1;
 		pCurrentBackDrop+=1;

@@ -223,20 +223,20 @@ void Pete_TimeWarp_UpdatePlaybackOffset(SPete_TimeWarp_Data* pInstanceData,SPete
 			if (pInstanceData->PlaybackOffset<0.0f) {
 				pInstanceData->PlaybackOffset=FramesCount-fmodf(-pInstanceData->PlaybackOffset,FramesCount);
 			}
-						   
+
 		}break;
 
 		case eSineSlurStyle: {
 
 			pInstanceData->SineSlurAngle+=(Pete_Pi/pSettings->m_SineSlurPeriod);
 			pInstanceData->SineSlurAngle=fmodf(pInstanceData->SineSlurAngle,2.0f*Pete_Pi);
-			
+
 			const float HalfFramesCount=
 				static_cast<float>(pInstanceData->nCurrentStoredFramesCount)/2.0f;
-			
+
 			pInstanceData->PlaybackOffset=HalfFramesCount+
 				(sin(pInstanceData->SineSlurAngle)*HalfFramesCount*pSettings->m_SineSlurAmplitude);
-							 
+
 		}break;
 
 		case eStutterStyle: {
@@ -245,16 +245,16 @@ void Pete_TimeWarp_UpdatePlaybackOffset(SPete_TimeWarp_Data* pInstanceData,SPete
 
 			pInstanceData->PlaybackOffset=
 				RandomFloat*pSettings->m_StutterAmplitude*static_cast<float>(pInstanceData->nCurrentStoredFramesCount);
-							
+
 		}break;
 
 		case eCustomStyle: {
 
 			pInstanceData->PlaybackOffset=
 				pSettings->m_CustomPlaybackOffset*static_cast<float>(pInstanceData->nCurrentStoredFramesCount);
-			
+
 		}break;
-		
+
 		default: {
 			assert(false);
 		}break;

@@ -37,7 +37,7 @@ class CExclusionDfx: public CDFX
 public:
 	~CExclusionDfx();
 	CExclusionDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -72,7 +72,7 @@ BEGIN_OUTPUTSCREENS_DESC(CExclusionDfx)
 END_OUTPUTSCREENS_DESC(CExclusionDfx)
 
 BEGIN_EFFECT_DESC(CExclusionDfx, 10203216861479953, PETE_VJO_VERSION , "Petes\\Exclusion", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CExclusionDfx) 
+END_EFFECT_DESC(CExclusionDfx)
 
 REGISTER_DFXFACTORY(CExclusionDfx)
 
@@ -91,7 +91,7 @@ CExclusionDfx::~CExclusionDfx()
 	Pete_Exclusion_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CExclusionDfx::GetLabelBitmap()			
+HBITMAP	CExclusionDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -100,7 +100,7 @@ BOOL	CExclusionDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -120,7 +120,7 @@ BOOL	CExclusionDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CExclusionDfx::UpdateConfig()
@@ -145,7 +145,7 @@ BOOL	CExclusionDfx::Initialize()
 
 BOOL	CExclusionDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

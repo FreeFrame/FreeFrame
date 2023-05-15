@@ -104,14 +104,14 @@ void Pete_SimpleMirror_Render(SPete_SimpleMirror_Data* pInstanceData,SPete_Simpl
 
 		U32* pOutputLineStart=pCurrentOutput;
 		U32* pOutputLineEnd=(pOutputLineStart+nWidth);
-		
+
 		const float StartX=-HalfWidth;
 
 		const float StartVDotNMinusD=
 			((StartX*NormalX)+
 			(CurrentY*NormalY))-
 			PlaneD;
-		
+
 		const float EndX=HalfWidth;
 
 		float EndVDotNMinusD=
@@ -138,7 +138,7 @@ void Pete_SimpleMirror_Render(SPete_SimpleMirror_Data* pInstanceData,SPete_Simpl
 
 				const float SourceX=CurrentX-(TwoVDotNMinusD*NormalX);
 				const float SourceY=CurrentY-(TwoVDotNMinusD*NormalY);
-		
+
 				int nSourceX=static_cast<int>(SourceX+HalfWidth);
 				int nSourceY=static_cast<int>(SourceY+HalfHeight);
 
@@ -151,7 +151,7 @@ void Pete_SimpleMirror_Render(SPete_SimpleMirror_Data* pInstanceData,SPete_Simpl
 					nSourceX;
 
 				*pCurrentOutput=*pSimpleMirrorSource;
-			
+
 			}
 
 			CurrentX+=1.0f;
@@ -161,7 +161,7 @@ void Pete_SimpleMirror_Render(SPete_SimpleMirror_Data* pInstanceData,SPete_Simpl
 			pCurrentSource+=1;
 
 		}
-		
+
 		CurrentY+=1.0f;
 
 	}

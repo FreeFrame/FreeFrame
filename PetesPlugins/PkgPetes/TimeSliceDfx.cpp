@@ -48,7 +48,7 @@ class CTimeSliceDfx: public CDFX
 public:
 	~CTimeSliceDfx();
 	CTimeSliceDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -123,7 +123,7 @@ BEGIN_OUTPUTSCREENS_DESC(CTimeSliceDfx)
 END_OUTPUTSCREENS_DESC(CTimeSliceDfx)
 
 BEGIN_EFFECT_DESC(CTimeSliceDfx, 10203216861479981, PETE_VJO_VERSION , "Petes\\TimeSlice", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CTimeSliceDfx) 
+END_EFFECT_DESC(CTimeSliceDfx)
 
 REGISTER_DFXFACTORY(CTimeSliceDfx)
 
@@ -187,7 +187,7 @@ INT CTimeSliceDfx::__getInputScreensCount(void) {
 
 }
 
-HBITMAP	CTimeSliceDfx::GetLabelBitmap()			
+HBITMAP	CTimeSliceDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -234,7 +234,7 @@ BOOL	CTimeSliceDfx::GetConfigData(CConfigData *p)
 	m_nMaxStoredFramesCount = p->GetInt("M", m_nMaxStoredFramesCount);
 	m_eStyle = static_cast<ETimeSliceStyle>(p->GetInt("S", m_eStyle));
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CTimeSliceDfx::UpdateConfig()
@@ -286,7 +286,7 @@ BOOL	CTimeSliceDfx::Initialize()
 
 BOOL	CTimeSliceDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 
@@ -295,11 +295,11 @@ BOOL	CTimeSliceDfx::Render(CScreen **ppInput, CScreen *pOutput)
 	if (m_eStyle==eImageMapStyle) {
 
 		DWORD* pImageMap = (DWORD*)(ppInput[1]->GetBuffer());
-	
+
 		WriteOutputFrameImageMap(pInputMem,pImageMap,pOutputMem);
-	
+
 	} else {
-	
+
 		WriteOutputFrame(pInputMem,pOutputMem);
 
 	}
@@ -338,7 +338,7 @@ void	CTimeSliceDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 		}
 
 		DWORD*const pStoredSource=pStoredFrames+(nNumPixels*nCurrentPlaybackFrame);
-		
+
 		int nLeftX;
 		int nTopY;
 		int nRightX;
@@ -410,7 +410,7 @@ void	CTimeSliceDfx::WriteOutputFrameImageMap(DWORD* pSource, DWORD* pImageMap,DW
 	DWORD* pCurrentImageMap=pImageMap;
 
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const DWORD ImageMapColour=*pCurrentImageMap;
 
 		unsigned int nTimeOffset=GetLuminance(ImageMapColour);
@@ -486,20 +486,20 @@ void	CTimeSliceDfx::UpdatePlaybackOffset(float Time) {
 			}
 
 			m_PlaybackOffset+=1.0f;
-						   
+
 		}break;
 
 		case eSineSlurStyle: {
 
 			m_SineSlurAngle+=(PI/m_SineSlurPeriod);
 			m_SineSlurAngle=fmodf(m_SineSlurAngle,2.0f*PI);
-			
+
 			const float HalfFramesCount=
 				static_cast<float>(m_nCurrentStoredFramesCount)/2.0f;
-			
+
 			m_PlaybackOffset=HalfFramesCount+
 				(sinf(m_SineSlurAngle)*HalfFramesCount*m_SineSlurAmplitude);
-							 
+
 		}break;
 
 		case eStutterStyle: {
@@ -508,14 +508,14 @@ void	CTimeSliceDfx::UpdatePlaybackOffset(float Time) {
 
 			m_PlaybackOffset=
 				RandomFloat*m_StutterAmplitude*static_cast<float>(m_nCurrentStoredFramesCount);
-							
+
 		}break;
 
 		case eCustomStyle: {
 
 			m_PlaybackOffset=
 				m_CustomPlaybackOffset*static_cast<float>(m_nCurrentStoredFramesCount);
-			
+
 		}break;
 
 		default: {
@@ -546,7 +546,7 @@ void	CTimeSliceDfx::SetupPlayback(void) {
 		}break;
 
 		case eSineSlurStyle: {
-			m_SineSlurAngle = 0.0f;							 
+			m_SineSlurAngle = 0.0f;
 			m_nSineSlurPeriodID=
 				RegisterFloat(m_pEngine,&m_SineSlurPeriod,"Period",1.0f,10000.0f,1.0f,100000.0f,2000.0f);
 			m_nSineSlurAmplitudeID=
@@ -557,7 +557,7 @@ void	CTimeSliceDfx::SetupPlayback(void) {
 
 			m_nStutterAmplitudeID=
 				RegisterFloat(m_pEngine,&m_StutterAmplitude,"Amplitude",0.0f,1.0f);
-							
+
 		}break;
 
 		case eCustomStyle: {
@@ -574,7 +574,7 @@ void	CTimeSliceDfx::SetupPlayback(void) {
 		}
 
 	}
-	
+
 	m_SineSlurAngle = 0.0f;
 
 }
@@ -634,7 +634,7 @@ void	CTimeSliceDfx::UnregisterUsedVariables(void) {
 		m_pEngine->UnregisterVariable(m_nSineSlurPeriodID);
 		m_nSineSlurPeriodID=0;
 	}
-	
+
 	if (m_nSineSlurAmplitudeID!=0) {
 		m_pEngine->UnregisterVariable(m_nSineSlurAmplitudeID);
 		m_nSineSlurAmplitudeID=0;

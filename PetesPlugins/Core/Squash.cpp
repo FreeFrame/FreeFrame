@@ -94,7 +94,7 @@ void Pete_Squash_Render(SPete_Squash_Data* pInstanceData,SPete_Squash_Settings* 
 
 	float OutputY=-nHalfHeight;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
 
 		float OutputX=-nHalfWidth;
@@ -114,11 +114,11 @@ void Pete_Squash_Render(SPete_Squash_Data* pInstanceData,SPete_Squash_Settings* 
 				(nSourceY*nWidth)+
 				nSourceX;
 
-			*pCurrentOutput=*pCurrentSource;				
+			*pCurrentOutput=*pCurrentSource;
 
 			pCurrentOutput+=1;
 			OutputX+=1;
-			
+
 		}
 
 		OutputY+=1;

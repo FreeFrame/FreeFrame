@@ -36,7 +36,7 @@ class CSquashDfx: public CDFX
 public:
 	~CSquashDfx();
 	CSquashDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -78,7 +78,7 @@ BEGIN_OUTPUTSCREENS_DESC(CSquashDfx)
 END_OUTPUTSCREENS_DESC(CSquashDfx)
 
 BEGIN_EFFECT_DESC(CSquashDfx, 10203216861479972, PETE_VJO_VERSION , "Petes\\Squash", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CSquashDfx) 
+END_EFFECT_DESC(CSquashDfx)
 
 REGISTER_DFXFACTORY(CSquashDfx)
 
@@ -101,7 +101,7 @@ CSquashDfx::~CSquashDfx()
 	Pete_Squash_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CSquashDfx::GetLabelBitmap()			
+HBITMAP	CSquashDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -110,7 +110,7 @@ BOOL	CSquashDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -128,7 +128,7 @@ BOOL	CSquashDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CSquashDfx::UpdateConfig()
@@ -156,7 +156,7 @@ BOOL	CSquashDfx::Initialize()
 	m_nYRes = sz.cy;
 
 	Pete_Squash_Init(&m_InstanceData,m_nXRes,m_nYRes);
-	
+
 	return TRUE;
 }
 

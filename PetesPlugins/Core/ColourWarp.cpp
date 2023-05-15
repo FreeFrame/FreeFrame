@@ -142,7 +142,7 @@ void Pete_ColourWarp_Render(SPete_ColourWarp_Data* pInstanceData,SPete_ColourWar
 		Pete_ColourWarp_RenderHSVToRGB(pInstanceData,pSettings,pSource,pOutput);
 
 	} else if (pSettings->m_DoRGBToHSV>0.0f) {
-	
+
 		Pete_ColourWarp_RenderRGBToHSV(pInstanceData,pSettings,pSource,pOutput);
 
 	} else {
@@ -156,7 +156,7 @@ void Pete_ColourWarp_Render(SPete_ColourWarp_Data* pInstanceData,SPete_ColourWar
 void Pete_ColourWarp_SetupTables(void) {
 
 	int nCount;
-	
+
 	for (nCount=0; nCount<cnRGBToHSVTableCount; nCount+=1) {
 
 		int nRed=(((nCount>>10)&0x1f)<<3)+3;
@@ -170,7 +170,7 @@ void Pete_ColourWarp_SetupTables(void) {
 		g_RGBToHSVTable[nCount]=ColourHSV;
 
 	}
-	
+
 	for (nCount=0; nCount<cnHSVToRGBTableCount; nCount+=1) {
 
 		int nHue=(((nCount>>10)&0x1f)<<3)+3;
@@ -191,7 +191,7 @@ void Pete_ColourWarp_RenderNormal(SPete_ColourWarp_Data* pInstanceData,SPete_Col
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nNumPixels = pInstanceData->nWidth*pInstanceData->nHeight;
 
 	const int nHueOffset = static_cast<int>(pSettings->m_HueOffset*(64*6));
@@ -208,7 +208,7 @@ void Pete_ColourWarp_RenderNormal(SPete_ColourWarp_Data* pInstanceData,SPete_Col
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource!=pSourceEnd) {
-	
+
 		const U32 SourceColour=*pCurrentSource;
 		pCurrentSource+=1;
 
@@ -219,7 +219,7 @@ void Pete_ColourWarp_RenderNormal(SPete_ColourWarp_Data* pInstanceData,SPete_Col
 		int nHue;
 		int nSaturation;
 		int nValue;
-	
+
 		int iMax, iMin;
 
 		// Calculate the value component
@@ -270,7 +270,7 @@ void Pete_ColourWarp_RenderNormal(SPete_ColourWarp_Data* pInstanceData,SPete_Col
 			}
 
 			nHue = xHue>>cnFixedShift;
-	
+
 		}
 
 		nHue=(((nHue*nHueScale)>>cnFixedShift)+nHueOffset)%(64*6);
@@ -290,7 +290,7 @@ void Pete_ColourWarp_RenderNormal(SPete_ColourWarp_Data* pInstanceData,SPete_Col
 		} else if (nValue&256) {
 			nValue=255;
 		}
-		
+
 		const int xHueSextant = (nHue*cnFixedPrec) / 64;
 		const int nIntSextant = (xHueSextant>>cnFixedShift);
 		const int xf = xHueSextant%cnFixedPrec;;
@@ -298,15 +298,15 @@ void Pete_ColourWarp_RenderNormal(SPete_ColourWarp_Data* pInstanceData,SPete_Col
 		const int xSaturation = (nSaturation<<(cnFixedShift-8));
 
 		const int xp = (xValue * (cnFixedPrec - xSaturation))>>cnFixedShift;
-		const int xq = (xValue * (cnFixedPrec - 
+		const int xq = (xValue * (cnFixedPrec -
 			((xSaturation * xf)>>cnFixedShift)))>>cnFixedShift;
-		const int xt = (xValue * (cnFixedPrec - 
+		const int xt = (xValue * (cnFixedPrec -
 			((xSaturation * (cnFixedPrec - xf))>>cnFixedShift) ))>>cnFixedShift;
 
 		int nOutputRed;
 		int nOutputGreen;
 		int nOutputBlue;
-		
+
 		switch (nIntSextant) {
 			case 0:
 			nOutputRed = xValue>>(cnFixedShift-8);
@@ -360,7 +360,7 @@ void Pete_ColourWarp_RenderRGBToHSV(SPete_ColourWarp_Data* pInstanceData,SPete_C
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nNumPixels = pInstanceData->nWidth*pInstanceData->nHeight;
 
 	U32* pCurrentSource=pSource;
@@ -368,7 +368,7 @@ void Pete_ColourWarp_RenderRGBToHSV(SPete_ColourWarp_Data* pInstanceData,SPete_C
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource!=pSourceEnd) {
-	
+
 		const U32 SourceColour=*pCurrentSource;
 		pCurrentSource+=1;
 
@@ -379,7 +379,7 @@ void Pete_ColourWarp_RenderRGBToHSV(SPete_ColourWarp_Data* pInstanceData,SPete_C
 		int nHue;
 		int nSaturation;
 		int nValue;
-	
+
 		int iMax, iMin;
 
 		// Calculate the value component
@@ -430,7 +430,7 @@ void Pete_ColourWarp_RenderRGBToHSV(SPete_ColourWarp_Data* pInstanceData,SPete_C
 			}
 
 			nHue = xHue>>cnFixedShift;
-	
+
 		}
 
 		const int nOutputRed=nHue;
@@ -452,7 +452,7 @@ void Pete_ColourWarp_RenderHSVToRGB(SPete_ColourWarp_Data* pInstanceData,SPete_C
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nNumPixels = pInstanceData->nWidth*pInstanceData->nHeight;
 
 	const int nHueOffset = static_cast<int>(pSettings->m_HueOffset*(64*6));
@@ -469,14 +469,14 @@ void Pete_ColourWarp_RenderHSVToRGB(SPete_ColourWarp_Data* pInstanceData,SPete_C
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource!=pSourceEnd) {
-	
+
 		const U32 SourceColour=*pCurrentSource;
 		pCurrentSource+=1;
 
 		const int nHue=(SourceColour&(0xff<<SHIFT_RED))>>SHIFT_RED;
 		const int nSaturation=(SourceColour&(0xff<<SHIFT_GREEN))>>SHIFT_GREEN;
 		const int nValue=(SourceColour&(0xff<<SHIFT_BLUE))>>SHIFT_BLUE;
-		
+
 		const int xHueSextant = (nHue*cnFixedPrec) / 64;
 		const int nIntSextant = (xHueSextant>>cnFixedShift);
 		const int xf = xHueSextant%cnFixedPrec;;
@@ -484,15 +484,15 @@ void Pete_ColourWarp_RenderHSVToRGB(SPete_ColourWarp_Data* pInstanceData,SPete_C
 		const int xSaturation = (nSaturation<<(cnFixedShift-8));
 
 		const int xp = (xValue * (cnFixedPrec - xSaturation))>>cnFixedShift;
-		const int xq = (xValue * (cnFixedPrec - 
+		const int xq = (xValue * (cnFixedPrec -
 			((xSaturation * xf)>>cnFixedShift)))>>cnFixedShift;
-		const int xt = (xValue * (cnFixedPrec - 
+		const int xt = (xValue * (cnFixedPrec -
 			((xSaturation * (cnFixedPrec - xf))>>cnFixedShift) ))>>cnFixedShift;
 
 		int nOutputRed;
 		int nOutputGreen;
 		int nOutputBlue;
-		
+
 		switch (nIntSextant) {
 			case 0:
 			nOutputRed = xValue>>(cnFixedShift-8);
@@ -546,7 +546,7 @@ void Pete_ColourWarp_RenderUsingTable(SPete_ColourWarp_Data* pInstanceData,SPete
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nNumPixels = pInstanceData->nWidth*pInstanceData->nHeight;
 
 	const int nHueOffset = static_cast<int>(pSettings->m_HueOffset*255.0f);
@@ -562,7 +562,7 @@ void Pete_ColourWarp_RenderUsingTable(SPete_ColourWarp_Data* pInstanceData,SPete
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource!=pSourceEnd) {
-	
+
 		const U32 SourceColour=*pCurrentSource;
 		pCurrentSource+=1;
 

@@ -39,7 +39,7 @@ class CRectDistort: public CDFX
 public:
 	~CRectDistort();
 	CRectDistort();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -94,7 +94,7 @@ BEGIN_OUTPUTSCREENS_DESC(CRectDistort)
 END_OUTPUTSCREENS_DESC(CRectDistort)
 
 BEGIN_EFFECT_DESC(CRectDistort, 10203216861479970, PETE_VJO_VERSION , "Petes\\RectDistort", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CRectDistort) 
+END_EFFECT_DESC(CRectDistort)
 
 REGISTER_DFXFACTORY(CRectDistort)
 
@@ -124,7 +124,7 @@ CRectDistort::~CRectDistort()
 	Pete_RectDistort_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CRectDistort::GetLabelBitmap()			
+HBITMAP	CRectDistort::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -147,7 +147,7 @@ BOOL	CRectDistort::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CRectDistort::UpdateConfig()
@@ -161,7 +161,7 @@ BOOL	CRectDistort::UpdateConfig()
 
 	m_nEnableRectanglesID=RegisterBool(
 		m_pEngine,&m_bEnableRectangles,"Enable Rects");
-	
+
 	m_nRectangleRateID=RegisterFloat(
 		m_pEngine,&m_RectangleRate,"Rectangle Rate",0.0f,32.0f);
 
@@ -196,7 +196,7 @@ BOOL	CRectDistort::Initialize()
 
 BOOL	CRectDistort::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

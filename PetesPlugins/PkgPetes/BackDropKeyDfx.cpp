@@ -38,7 +38,7 @@ class CBackDropKeyDfx: public CDFX
 public:
 	~CBackDropKeyDfx();
 	CBackDropKeyDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -79,7 +79,7 @@ BEGIN_OUTPUTSCREENS_DESC(CBackDropKeyDfx)
 END_OUTPUTSCREENS_DESC(CBackDropKeyDfx)
 
 BEGIN_EFFECT_DESC(CBackDropKeyDfx, 10203216861479901, PETE_VJO_VERSION , "Petes\\BackDropKey", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CBackDropKeyDfx) 
+END_EFFECT_DESC(CBackDropKeyDfx)
 
 REGISTER_DFXFACTORY(CBackDropKeyDfx)
 
@@ -104,7 +104,7 @@ CBackDropKeyDfx::~CBackDropKeyDfx()
 
 }
 
-HBITMAP	CBackDropKeyDfx::GetLabelBitmap()			
+HBITMAP	CBackDropKeyDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -113,7 +113,7 @@ BOOL	CBackDropKeyDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return TRUE;
 
@@ -133,7 +133,7 @@ BOOL	CBackDropKeyDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CBackDropKeyDfx::UpdateConfig()
@@ -167,7 +167,7 @@ BOOL	CBackDropKeyDfx::Initialize()
 
 BOOL	CBackDropKeyDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

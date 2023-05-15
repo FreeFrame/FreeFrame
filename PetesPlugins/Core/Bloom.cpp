@@ -167,7 +167,7 @@ void Pete_Bloom_Render(SPete_Bloom_Data* pInstanceData,SPete_Bloom_Settings* pSe
 		&LevelSettings,
 		pSource,
 		pOutput);
-	
+
 	Pete_DoBoxFilterBlur(
 		pOutput,
 		pIntermediateBuffer,

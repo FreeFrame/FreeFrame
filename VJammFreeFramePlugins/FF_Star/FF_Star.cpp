@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // FreeFrameSample.cpp
 //
-// FreeFrame Open Video Plugin 
+// FreeFrame Open Video Plugin
 // C Version
 //
 // Implementation of the Free Frame sample plugin
@@ -32,7 +32,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
-// includes 
+// includes
 //
 
 #include "FF_Star.h"
@@ -57,9 +57,9 @@ PlugStruct plug;
 ///////////////////////////////////////////////////////////////////////////////////////
 // getInfo
 //
-// gets information about the plugin - version, unique id, short name and type 
+// gets information about the plugin - version, unique id, short name and type
 // This function should be identical in all future versions of the FreeFrame API
-//  
+//
 // return values (32-bit pointer to PlugInfoStruct)
 // FF_FAIL on error
 // 32-bit pointer to PlugInfoStruct
@@ -68,14 +68,14 @@ PlugStruct plug;
 //       the version defines the other fucntion codes that are supported
 //       supported function codes are listed in the documentation www.freeframe.org
 
-PlugInfoStruct* getInfo() 
+PlugInfoStruct* getInfo()
 {
 	plug.plugInfo.APIMajorVersion = 0;
 	plug.plugInfo.APIMinorVersion = 53; // lets keep this in sync with the delphi host for now
-	char ID[5] = "Star";		 // this *must* be unique to your plugin 
+	char ID[5] = "Star";		 // this *must* be unique to your plugin
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "Star Filter";
-	
+
 	memcpy(plug.plugInfo.uniqueID, ID, 4);
 	memcpy(plug.plugInfo.pluginName, name, 16);
 	plug.plugInfo.pluginType = FF_EFFECT;
@@ -86,7 +86,7 @@ PlugInfoStruct* getInfo()
 ///////////////////////////////////////////////////////////////////////////////////////
 // initialise
 //
-// Prepare the Plug-in for processing.  
+// Prepare the Plug-in for processing.
 // Set default values, allocate memory
 // When the plug-in returns from this function it must be ready to proces a frame
 //
@@ -146,7 +146,7 @@ DWORD initialise(VideoInfoStruct* pVideoInfo)
 ///////////////////////////////////////////////////////////////////////////////////////
 // deinitialise
 //
-// Tidy up   
+// Tidy up
 // Deallocate memory
 //
 // return values (DWORD)
@@ -167,10 +167,10 @@ DWORD deInitialise()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-// getNumParameters 
+// getNumParameters
 //
 // returns number of parameters in plugin
-// 
+//
 // return values (DWORD)
 // number of parameters
 // FF_FAIL on error
@@ -178,7 +178,7 @@ DWORD deInitialise()
 
 DWORD getNumParameters()
 {
-	return NUM_PARAMS;  
+	return NUM_PARAMS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -187,7 +187,7 @@ DWORD getNumParameters()
 // returns pointer to 16 byte char array containing the name of parameter specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -206,7 +206,7 @@ char* getParameterName(DWORD index)
 // returns default value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -225,7 +225,7 @@ float getParameterDefault(DWORD index)
 // parameter index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -249,7 +249,7 @@ char* getParameterDisplay(DWORD index)
 // value is a 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // 32-bit float value
 //
 // return values (DWORD):
@@ -283,7 +283,7 @@ DWORD setParameter(SetParameterStruct* pParam)
 // returns value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -321,7 +321,7 @@ DWORD processFrame(LPVOID pFrame)
 
 	DWORD x, y, n;
 	DWORD ty, tx;
-	
+
 	int lume;
 	DWORD starSize = 10;
 	BYTE starFade = 4;
@@ -331,7 +331,7 @@ DWORD processFrame(LPVOID pFrame)
 	int lowestLume = 0;
 	n=0;
 	memcpy(plug.tempFrame, pFrame, plug.frameSize * sizeof(VideoPixel24bit));
-	
+
 	struct coord {
 		int lum;
 		DWORD x;
@@ -349,7 +349,7 @@ DWORD processFrame(LPVOID pFrame)
 
 	for ( y=0; y < plug.videoInfo.frameHeight; y++) {
 		for ( x=0; x < plug.videoInfo.frameWidth; x++) {
-			lume = pSource->blue + pSource->green + pSource->red;			
+			lume = pSource->blue + pSource->green + pSource->red;
 			if (lume > plug.threshold  && lume>lowestLume) {
 				//Collect points of highest luminance
 				int newLowestLume = pointArray[0].lum;
@@ -371,16 +371,16 @@ DWORD processFrame(LPVOID pFrame)
 			pSource++;
 		}
 	}
-	
+
 	pSource = (VideoPixel24bit*) pFrame;
-	
+
 	for (n=0; n<NUMSTARS; n++) {
 
 		ty = pointArray[n].y;
 		tx = pointArray[n].x;
 		VideoPixel24bit* pOrigin = pDest + (tx) + ((plug.videoInfo.frameWidth) * ty );
 		pPixel = pOrigin;
-		
+
 		blue = 0xFF;
 		red = 0xFF;
 		green = 0xFF;
@@ -400,12 +400,12 @@ DWORD processFrame(LPVOID pFrame)
 			pPixel++;
 			tx++;
 		}
-		
+
 		pPixel = pOrigin;
 		blue = 0xFF;
 		red = 0xFF;
 		green = 0xFF;
-		
+
 		while (ty < plug.videoInfo.frameHeight && ty < y+starSize) {
 			//if (blue < pSource->blue) blue = pSource->blue;
 			//if (green < pSource->green) green = pSource->green;
@@ -425,7 +425,7 @@ DWORD processFrame(LPVOID pFrame)
 		blue = 0xFF;
 		red = 0xFF;
 		green = 0xFF;
-		
+
 		while (tx > 0 && tx > x-starSize) {
 			//if (blue < pSource->blue) blue = pSource->blue;
 			//if (green < pSource->green) green = pSource->green;
@@ -443,7 +443,7 @@ DWORD processFrame(LPVOID pFrame)
 		blue = 0xFF;
 		red = 0xFF;
 		green = 0xFF;
-		
+
 		while (ty > 0 && ty > y-starSize) {
 			//if (blue < pSource->blue) blue = pSource->blue;
 			//if (green < pSource->green) green = pSource->green;
@@ -457,10 +457,10 @@ DWORD processFrame(LPVOID pFrame)
 			pPixel -= (plug.videoInfo.frameWidth);
 			ty--;
 		}
-		
+
 	}
 	//overlay stars on these points
-				
+
 	memcpy(pFrame, plug.tempFrame, plug.frameSize * sizeof(VideoPixel24bit));
 	plug.firstFrame = false;
 	return FF_SUCCESS;
@@ -472,7 +472,7 @@ DWORD processFrame(LPVOID pFrame)
 // returns true or false to indicate whether cappable of feature specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // allowed values:
 // 0 - 16 bit video
 // 1 - 24 bit video

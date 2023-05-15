@@ -51,7 +51,7 @@ void Pete_DoInPlaceSubtract(U32* pImage,U32* pInputToSubtract,int nWidth,int nHe
 			psubusb	mm1,[esi]
 
 			movq	[esi],mm1
-		
+
 		}
 
 		pCurrentImage+=2;
@@ -86,7 +86,7 @@ void Pete_DoInPlaceAddition(U32* pImage,U32* pInputToAdd,int nWidth,int nHeight)
 			paddusb	mm1,[esi]
 
 			movq	[esi],mm1
-		
+
 		}
 
 		pCurrentImage+=2;
@@ -127,7 +127,7 @@ void Pete_DoInPlaceSubtract_OddButNice(U32* pImage,U32* pInputToSubtract,int nWi
 			psubusb		mm1,[esi]
 
 			movq		[esi],mm1
-		
+
 		}
 
 		pCurrentImage+=1;
@@ -181,7 +181,7 @@ void Pete_DoInPlaceAdditionScaled(U32* pImage,U32* pInputToSubtract,int nWidth,i
 			movq		mm4,mm3		// mm4 will hold the higher pixel from mm3
 
 			punpcklbw	mm1,mm0		// mm1 holds 16 bpc lower image pixel
-			punpckhbw	mm2,mm0		// mm2 holds 16 bpc higher image pixel 
+			punpckhbw	mm2,mm0		// mm2 holds 16 bpc higher image pixel
 
 			punpcklbw	mm3,mm0		// mm3 holds 16 bpc lower additive pixel
 			punpckhbw	mm4,mm0		// mm4 holds 16 bpc higher additive pixel
@@ -194,11 +194,11 @@ void Pete_DoInPlaceAdditionScaled(U32* pImage,U32* pInputToSubtract,int nWidth,i
 
 			paddusw		mm1,mm3		// add the lower scaled additive pixel to the image
 			paddusw		mm2,mm4		// add the higher scaled additive pixel to the image
-			
+
 			packuswb	mm1,mm2		// pack the two 16bpc result pixels back into a 8bpc pixel
 
 			movq		[esi],mm1	// store the result back in the image
-		
+
 		}
 
 		pCurrentImage+=2;
@@ -270,7 +270,7 @@ void Pete_DoInPlaceSubtractScaled(U32* pImage,U32* pInputToSubtract,int nWidth,i
 			paddusb		mm1,mm2
 
 			movq		[esi],mm1
-		
+
 		}
 
 		pCurrentImage+=2;
@@ -313,10 +313,10 @@ void Pete_DoInPlaceSubtract(U32* pImage,U32* pInputToSubtract,int nWidth,int nHe
 
                 int nOutputGreen=(nImageGreen-nInputGreen);
                 nOutputGreen=GateInt(nOutputGreen,0,255);
-                
-                int nOutputBlue=(nImageBlue-nInputBlue);                
+
+                int nOutputBlue=(nImageBlue-nInputBlue);
                 nOutputBlue=GateInt(nOutputBlue,0,255);
-                
+
                 int nOutputAlpha=(nImageAlpha-nInputAlpha);
                 nOutputAlpha=GateInt(nOutputAlpha,0,255);
 
@@ -325,7 +325,7 @@ void Pete_DoInPlaceSubtract(U32* pImage,U32* pInputToSubtract,int nWidth,int nHe
                     (nOutputGreen<<SHIFT_GREEN)|
                     (nOutputBlue<<SHIFT_BLUE)|
                     (nOutputAlpha<<SHIFT_ALPHA);
-                    
+
                 *pCurrentImage=OutputColour;
 
 		pCurrentImage+=1;
@@ -364,10 +364,10 @@ void Pete_DoInPlaceAddition(U32* pImage,U32* pInputToAdd,int nWidth,int nHeight)
 
                 int nOutputGreen=(nImageGreen+nInputGreen);
                 nOutputGreen=GateInt(nOutputGreen,0,255);
-                
-                int nOutputBlue=(nImageBlue+nInputBlue);                
+
+                int nOutputBlue=(nImageBlue+nInputBlue);
                 nOutputBlue=GateInt(nOutputBlue,0,255);
-                
+
                 int nOutputAlpha=(nImageAlpha+nInputAlpha);
                 nOutputAlpha=GateInt(nOutputAlpha,0,255);
 
@@ -376,7 +376,7 @@ void Pete_DoInPlaceAddition(U32* pImage,U32* pInputToAdd,int nWidth,int nHeight)
                     (nOutputGreen<<SHIFT_GREEN)|
                     (nOutputBlue<<SHIFT_BLUE)|
                     (nOutputAlpha<<SHIFT_ALPHA);
-                    
+
                 *pCurrentImage=OutputColour;
 
 		pCurrentImage+=1;
@@ -422,10 +422,10 @@ void Pete_DoInPlaceAdditionScaled(U32* pImage,U32* pInputToAdd,int nWidth,int nH
 
                 int nOutputGreen=(nImageGreen+nScaledGreen);
                 nOutputGreen=GateInt(nOutputGreen,0,255);
-                
-                int nOutputBlue=(nImageBlue+nScaledBlue);                
+
+                int nOutputBlue=(nImageBlue+nScaledBlue);
                 nOutputBlue=GateInt(nOutputBlue,0,255);
-                
+
                 int nOutputAlpha=(nImageAlpha+nScaledAlpha);
                 nOutputAlpha=GateInt(nOutputAlpha,0,255);
 
@@ -434,7 +434,7 @@ void Pete_DoInPlaceAdditionScaled(U32* pImage,U32* pInputToAdd,int nWidth,int nH
                     (nOutputGreen<<SHIFT_GREEN)|
                     (nOutputBlue<<SHIFT_BLUE)|
                     (nOutputAlpha<<SHIFT_ALPHA);
-                    
+
                 *pCurrentImage=OutputColour;
 
 		pCurrentImage+=1;
@@ -473,10 +473,10 @@ void Pete_DoInPlaceSubtract_OddButNice(U32* pImage,U32* pInputToSubtract,int nWi
 
                 int nOutputGreen=(nImageGreen-nInputGreen);
                 nOutputGreen=GateInt(nOutputGreen,0,255);
-                
-                int nOutputBlue=(nImageBlue-nInputBlue);                
+
+                int nOutputBlue=(nImageBlue-nInputBlue);
                 nOutputBlue=GateInt(nOutputBlue,0,255);
-                
+
                 int nOutputAlpha=(nImageAlpha-nInputAlpha);
                 nOutputAlpha=GateInt(nOutputAlpha,0,255);
 
@@ -485,10 +485,10 @@ void Pete_DoInPlaceSubtract_OddButNice(U32* pImage,U32* pInputToSubtract,int nWi
 
                 nOutputGreen-=nInputGreen;
                 nOutputGreen=GateInt(nOutputGreen,0,255);
-                
-                nOutputBlue-=nInputBlue;                
+
+                nOutputBlue-=nInputBlue;
                 nOutputBlue=GateInt(nOutputBlue,0,255);
-                
+
                 nOutputAlpha-=nInputAlpha;
                 nOutputAlpha=GateInt(nOutputAlpha,0,255);
 
@@ -497,7 +497,7 @@ void Pete_DoInPlaceSubtract_OddButNice(U32* pImage,U32* pInputToSubtract,int nWi
                     (nOutputGreen<<SHIFT_GREEN)|
                     (nOutputBlue<<SHIFT_BLUE)|
                     (nOutputAlpha<<SHIFT_ALPHA);
-                    
+
                 *pCurrentImage=OutputColour;
 
 		pCurrentImage+=1;
@@ -542,12 +542,12 @@ void Pete_DoInPlaceSubtractScaled(U32* pImage,U32* pInputToSubtract,int nWidth,i
                 nOutputGreen*=nScaleFixedPoint;
                 nOutputGreen>>=8;
                 nOutputGreen=GateInt(nOutputGreen,0,255);
-                
-                int nOutputBlue=(nImageBlue-nInputBlue);                
+
+                int nOutputBlue=(nImageBlue-nInputBlue);
                 nOutputBlue*=nScaleFixedPoint;
                 nOutputBlue>>=8;
                 nOutputBlue=GateInt(nOutputBlue,0,255);
-                
+
                 int nOutputAlpha=(nImageAlpha-nInputAlpha);
                 nOutputAlpha*=nScaleFixedPoint;
                 nOutputAlpha>>=8;
@@ -558,7 +558,7 @@ void Pete_DoInPlaceSubtractScaled(U32* pImage,U32* pInputToSubtract,int nWidth,i
                     (nOutputGreen<<SHIFT_GREEN)|
                     (nOutputBlue<<SHIFT_BLUE)|
                     (nOutputAlpha<<SHIFT_ALPHA);
-                    
+
                 *pCurrentImage=OutputColour;
 
 		pCurrentImage+=1;
@@ -606,7 +606,7 @@ U32 Pete_GetImageAreaAverage(int nLeftX,int nTopY,int nDeltaX,int nDeltaY,U32* p
 		(nDeltaY*nImageWidth);
 
 	U32* pCurrentSource=pSourceStart;
-	
+
 	int nRedTotal=0;
 	int nGreenTotal=0;
 	int nBlueTotal=0;
@@ -679,10 +679,10 @@ void Pete_DoInPlaceAdditionReplaceAlpha(U32* pImage,U32* pInputToAdd,int nWidth,
 
                 int nOutputGreen=(nImageGreen+nInputGreen);
                 nOutputGreen=GateInt(nOutputGreen,0,255);
-                
-                int nOutputBlue=(nImageBlue+nInputBlue);                
+
+                int nOutputBlue=(nImageBlue+nInputBlue);
                 nOutputBlue=GateInt(nOutputBlue,0,255);
-                
+
                 int nOutputAlpha;
                 if (nImageAlpha>nInputAlpha) {
                 	nOutputAlpha=nImageAlpha;
@@ -695,7 +695,7 @@ void Pete_DoInPlaceAdditionReplaceAlpha(U32* pImage,U32* pInputToAdd,int nWidth,
                     (nOutputGreen<<SHIFT_GREEN)|
                     (nOutputBlue<<SHIFT_BLUE)|
                     (nOutputAlpha<<SHIFT_ALPHA);
-                    
+
                 *pCurrentImage=OutputColour;
 
 		pCurrentImage+=1;

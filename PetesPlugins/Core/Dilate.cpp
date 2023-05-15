@@ -59,7 +59,7 @@ void Pete_Dilate_Render(SPete_Dilate_Data* pInstanceData,SPete_Dilate_Settings* 
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nWidth=pInstanceData->nWidth;
 	const int nHeight=pInstanceData->nHeight;
 
@@ -72,10 +72,10 @@ void Pete_Dilate_Render(SPete_Dilate_Data* pInstanceData,SPete_Dilate_Settings* 
 	if (pSettings->m_DoErode>0.0f) {
 
 		while (pCurrentSource!=pSourceEnd) {
-		
+
 			const U32* pSourceLineStart=pCurrentSource;
 			const U32* pSourceLineEnd=pCurrentSource+nWidth;
-			
+
 			while (pCurrentSource!=pSourceLineEnd) {
 				const U32 SourceColour=*pCurrentSource;
 
@@ -83,7 +83,7 @@ void Pete_Dilate_Render(SPete_Dilate_Data* pInstanceData,SPete_Dilate_Settings* 
 				if (pUp<pSource) {
 					pUp=pCurrentSource;
 				}
-				
+
 				U32* pLeft=(pCurrentSource-1);
 				if (pLeft<pSourceLineStart) {
 					pLeft=pCurrentSource;
@@ -93,7 +93,7 @@ void Pete_Dilate_Render(SPete_Dilate_Data* pInstanceData,SPete_Dilate_Settings* 
 				if (pDown>=pSourceEnd) {
 					pDown=pCurrentSource;
 				}
-				
+
 				U32* pRight=(pCurrentSource+1);
 				if (pRight>=pSourceLineEnd) {
 					pRight=pCurrentSource;
@@ -143,10 +143,10 @@ void Pete_Dilate_Render(SPete_Dilate_Data* pInstanceData,SPete_Dilate_Settings* 
 	} else {
 
 		while (pCurrentSource!=pSourceEnd) {
-		
+
 			const U32* pSourceLineStart=pCurrentSource;
 			const U32* pSourceLineEnd=pCurrentSource+nWidth;
-			
+
 			while (pCurrentSource!=pSourceLineEnd) {
 				const U32 SourceColour=*pCurrentSource;
 
@@ -154,7 +154,7 @@ void Pete_Dilate_Render(SPete_Dilate_Data* pInstanceData,SPete_Dilate_Settings* 
 				if (pUp<pSource) {
 					pUp=pCurrentSource;
 				}
-				
+
 				U32* pLeft=(pCurrentSource-1);
 				if (pLeft<pSourceLineStart) {
 					pLeft=pCurrentSource;
@@ -164,7 +164,7 @@ void Pete_Dilate_Render(SPete_Dilate_Data* pInstanceData,SPete_Dilate_Settings* 
 				if (pDown>=pSourceEnd) {
 					pDown=pCurrentSource;
 				}
-				
+
 				U32* pRight=(pCurrentSource+1);
 				if (pRight>=pSourceLineEnd) {
 					pRight=pCurrentSource;

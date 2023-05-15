@@ -63,7 +63,7 @@ void Pete_TVPixel_Render(SPete_TVPixel_Data* pInstanceData,SPete_TVPixel_Setting
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	const int nPixelHeight=static_cast<int>(pSettings->m_Height);
 	const int nHalfPixelHeight=(nPixelHeight/2);
 
@@ -115,7 +115,7 @@ void Pete_TVPixel_Render(SPete_TVPixel_Data* pInstanceData,SPete_TVPixel_Setting
 			GreenComponentLeft>>=1;
 			GreenComponentLeft=GateInt(GreenComponentLeft,0,0x0000ff00);
 			GreenComponentLeft&=0x0000ff00;
-			
+
 			U32 BlueComponentLeft=
 				(AverageColourLeft&0x000000ff);
 			BlueComponentLeft*=3;
@@ -137,9 +137,9 @@ void Pete_TVPixel_Render(SPete_TVPixel_Data* pInstanceData,SPete_TVPixel_Setting
 			GreenComponentRight>>=1;
 			GreenComponentRight=GateInt(GreenComponentRight,0,0x0000ff00);
 			GreenComponentRight&=0x0000ff00;
-			
+
 			U32 BlueComponentRight=
-				(AverageColourRight&0x000000ff);			
+				(AverageColourRight&0x000000ff);
 			BlueComponentRight*=3;
 			BlueComponentRight>>=1;
 			BlueComponentRight=GateInt(BlueComponentRight,0,0x000000ff);
@@ -161,7 +161,7 @@ void Pete_TVPixel_Render(SPete_TVPixel_Data* pInstanceData,SPete_TVPixel_Setting
 
 				*pCurrentOutput=0x00000000;
 				pCurrentOutput+=1;
-				
+
 				pCurrentOutput+=(nWidth-4);
 
 			}
@@ -194,7 +194,7 @@ void Pete_TVPixel_Render(SPete_TVPixel_Data* pInstanceData,SPete_TVPixel_Setting
 
 				*pCurrentOutput=0x00000000;
 				pCurrentOutput+=1;
-				
+
 				pCurrentOutput+=(nWidth-4);
 
 			}
@@ -213,7 +213,7 @@ void Pete_TVPixel_Render(SPete_TVPixel_Data* pInstanceData,SPete_TVPixel_Setting
 			}
 
 		}
-	
+
 	}
 
 }

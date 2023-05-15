@@ -31,7 +31,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #ifndef PETE_MAC_OSX
 void Pete_DoBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutputBuffer,int nKernelSizeX,int nKernelSizeY,int nWidth,int nHeight,int nPassCount) {
-	
+
 	if ((pSourceBuffer==NULL)||
 		(pIntermediateBuffer==NULL)||
 		(pOutputBuffer==NULL)) {
@@ -69,7 +69,7 @@ void Pete_DoBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutp
 		_mm_set_pi32(
 		0xffffffff,
 		0x00000000);
-	
+
 	int nY;
 	for (nY=0; nY<nHeight; ++nY) {
 
@@ -125,7 +125,7 @@ void Pete_DoBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutp
 				pxor		mm4,mm4
 
 				movq		mm7,InitMultRegX
-				
+
 				mov			esi,pSourceLineStart;
 				movq		mm1,[esi]
 				punpcklbw	mm1,mm4
@@ -260,7 +260,7 @@ void Pete_DoBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutp
 				pRightSample+=1;
 
 				pCurrentOutput+=1;
-				
+
 			}
 
 			// Pete- Most pixels are dealt with here, so optimize to buggery
@@ -385,13 +385,13 @@ Pete_DoBoxFilterBlur_MidLoopX_Start:
 					jmp			Pete_DoBoxFilterBlur_MidLoopX_Start
 
 Pete_DoBoxFilterBlur_MidLoopX_End:
-				
+
 				mov			pCurrentOutput,eax
 				mov			pLeftSample,ebx
 				mov			pRightSample,ecx
 
 				mov			nX,edx
-				
+
 			}
 
 			// Pete- Ending case, should only be a few pixels (comparatively), so
@@ -484,7 +484,7 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 				pRightSample+=1;
 
 				pCurrentOutput+=1;
-				
+
 			}
 
 
@@ -553,7 +553,7 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 //			const int nFirstPixelRed=(FirstPixelColour>>SHIFT_RED)&0xff;
 //			const int nFirstPixelGreen=(FirstPixelColour>>SHIFT_GREEN)&0xff;
 //			const int nFirstPixelBlue=(FirstPixelColour>>SHIFT_BLUE)&0xff;
-//	
+//
 //			U32 LastPixelColour=*pSourceRowLast;
 //			const int nLastPixelRed=(LastPixelColour>>SHIFT_RED)&0xff;
 //			const int nLastPixelGreen=(LastPixelColour>>SHIFT_GREEN)&0xff;
@@ -595,7 +595,7 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 				movq		mm3,RecipRegY
 
 				movq		mm7,InitMultRegY
-				
+
 				movq		mm0,mm1
 				pmullw		mm0,mm7
 
@@ -604,7 +604,7 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 
 			}
 
-			
+
 			U32* pBottomSample=pSourceRowStart+nWidth;
 
 			__asm {
@@ -620,7 +620,7 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 //				const int nPixelRed=(PixelColour>>SHIFT_RED)&0xff;
 //				const int nPixelGreen=(PixelColour>>SHIFT_GREEN)&0xff;
 //				const int nPixelBlue=(PixelColour>>SHIFT_BLUE)&0xff;
-//	
+//
 //				nRedTotal+=nPixelRed;
 //				nGreenTotal+=nPixelGreen;
 //				nBlueTotal+=nPixelBlue;
@@ -654,12 +654,12 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 //				const int nOutputRed=(nRedTotal*nKernelSizeMult)>>SHIFT_RED;
 //				const int nOutputGreen=(nGreenTotal*nKernelSizeMult)>>16;
 //				const int nOutputBlue=(nBlueTotal*nKernelSizeMult)>>16;
-//	
+//
 //				const U32 OutputColour=
 //					(nOutputRed<<SHIFT_RED)|
 //					(nOutputGreen<<SHIFT_GREEN)|
 //					(nOutputBlue<<SHIFT_BLUE);
-//	
+//
 //				*pCurrentOutput=OutputColour;
 
 
@@ -670,7 +670,7 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 
 					movq		mm6,mm4
 					pmulhw		mm6,mm3
-					
+
 					packuswb	mm7,mm6
 					mov			esi,pCurrentOutput
 					movq		[esi],mm7
@@ -731,7 +731,7 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 					 __asm {
 
 						paddw		mm0,mm2
-						
+
 						movq		mm6,SecondRowLastPixelColour
 						paddw		mm4,mm6
 
@@ -763,10 +763,10 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 
 //				nRedTotal+=nBottomRed;
 //				nRedTotal-=nTopRed;
-//	
+//
 //				nGreenTotal+=nBottomGreen;
 //				nGreenTotal-=nTopGreen;
-//	
+//
 //				nBlueTotal+=nBottomBlue;
 //				nBlueTotal-=nTopBlue;
 
@@ -774,10 +774,10 @@ Pete_DoBoxFilterBlur_MidLoopX_End:
 				pBottomSample+=nWidth;
 
 				pCurrentOutput+=nWidth;
-				
-			}	
 
-			
+			}
+
+
 		}
 
 	}
@@ -794,17 +794,17 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
 void Pete_DoBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutputBuffer,int nKernelSizeX,int nKernelSizeY,int nWidth,int nHeight,int nPassCount) {
 
 //	const bool bHasAltiVec=Pete_IsAltiVecAvailable();
-//	
+//
 //	if (bHasAltiVec) {
 //		Pete_DoBoxFilterBlur_AltiVecVersion(pSourceBuffer,pIntermediateBuffer,pOutputBuffer,nKernelSizeX,nKernelSizeY,nWidth,nHeight,nPassCount);
 //	} else {
-		Pete_DoBoxFilterBlur_CVersion(pSourceBuffer,pIntermediateBuffer,pOutputBuffer,nKernelSizeX,nKernelSizeY,nWidth,nHeight,nPassCount);	
+		Pete_DoBoxFilterBlur_CVersion(pSourceBuffer,pIntermediateBuffer,pOutputBuffer,nKernelSizeX,nKernelSizeY,nWidth,nHeight,nPassCount);
 //	}
 
 }
 
 void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutputBuffer,int nKernelSizeX,int nKernelSizeY,int nWidth,int nHeight,int nPassCount) {
-        
+
     if ((pSourceBuffer==NULL)||
         (pIntermediateBuffer==NULL)||
         (pOutputBuffer==NULL)) {
@@ -969,13 +969,13 @@ void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U
                 pRightSample+=1;
 
                 pCurrentOutput+=1;
-				
+
             }
 
         }
 
     }
-    
+
     int nX;
     for (nX=0; nX<nWidth; ++nX) {
 
@@ -1023,7 +1023,7 @@ void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U
             const int nFirstPixelGreen=(FirstPixelColour>>SHIFT_GREEN)&0xff;
             const int nFirstPixelBlue=(FirstPixelColour>>SHIFT_BLUE)&0xff;
             const int nFirstPixelAlpha=(FirstPixelColour>>SHIFT_ALPHA)&0xff;
-	
+
             U32 LastPixelColour=*pSourceRowLast;
             const int nLastPixelRed=(LastPixelColour>>SHIFT_RED)&0xff;
             const int nLastPixelGreen=(LastPixelColour>>SHIFT_GREEN)&0xff;
@@ -1034,7 +1034,7 @@ void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U
             int nGreenTotal=(nFirstPixelGreen*(nKernelSizeY+1));
             int nBlueTotal=(nFirstPixelBlue*(nKernelSizeY+1));
             int nAlphaTotal=(nFirstPixelAlpha*(nKernelSizeY+1));
-			
+
             U32* pBottomSample=pSourceRowStart+nWidth;
 
             int nK;
@@ -1045,7 +1045,7 @@ void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U
 		const int nPixelGreen=(PixelColour>>SHIFT_GREEN)&0xff;
 		const int nPixelBlue=(PixelColour>>SHIFT_BLUE)&0xff;
 		const int nPixelAlpha=(PixelColour>>SHIFT_ALPHA)&0xff;
-	
+
 		nRedTotal+=nPixelRed;
                 nGreenTotal+=nPixelGreen;
 		nBlueTotal+=nPixelBlue;
@@ -1118,10 +1118,10 @@ void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U
 
                 nRedTotal+=nBottomRed;
                 nRedTotal-=nTopRed;
-	
+
                 nGreenTotal+=nBottomGreen;
                 nGreenTotal-=nTopGreen;
-	
+
                 nBlueTotal+=nBottomBlue;
                 nBlueTotal-=nTopBlue;
 
@@ -1132,7 +1132,7 @@ void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U
                 pBottomSample+=nWidth;
 
                 pCurrentOutput+=nWidth;
-                				
+
             }
 
         }
@@ -1144,9 +1144,9 @@ void Pete_DoBoxFilterBlur_CVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U
 void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutputBuffer,int nKernelSizeX,int nKernelSizeY,int nWidth,int nHeight,int nPassCount) {
 
 #if 1
-		Pete_DoBoxFilterBlur_CVersion(pSourceBuffer,pIntermediateBuffer,pOutputBuffer,nKernelSizeX,nKernelSizeY,nWidth,nHeight,nPassCount);	
+		Pete_DoBoxFilterBlur_CVersion(pSourceBuffer,pIntermediateBuffer,pOutputBuffer,nKernelSizeX,nKernelSizeY,nWidth,nHeight,nPassCount);
 #else
-        
+
     if ((pSourceBuffer==NULL)||
         (pIntermediateBuffer==NULL)||
         (pOutputBuffer==NULL)) {
@@ -1224,7 +1224,7 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
                 const int nPixelBlue=(PixelColour>>SHIFT_BLUE)&0xff;
 
 				vector int CurrentPixel={0,nPixelRed,nPixelGreen,nPixelBlue};
-		
+
 				TotalOverall=vec_add(TotalOverall,CurrentPixel);
 
                 pRightSample+=1;
@@ -1233,7 +1233,7 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
 
             U32* pLeftSample=pSourceLineStart-nKernelSizeX;
 
-			vector 
+			vector
 
             int nX;
             for (nX=0; nX<nWidth; ++nX) {
@@ -1299,13 +1299,13 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
                 pRightSample+=1;
 
                 pCurrentOutput+=1;
-				
+
             }
 
         }
 
     }
-    
+
     int nX;
     for (nX=0; nX<nWidth; ++nX) {
 
@@ -1352,7 +1352,7 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
             const int nFirstPixelRed=(FirstPixelColour>>SHIFT_RED)&0xff;
             const int nFirstPixelGreen=(FirstPixelColour>>SHIFT_GREEN)&0xff;
             const int nFirstPixelBlue=(FirstPixelColour>>SHIFT_BLUE)&0xff;
-	
+
             U32 LastPixelColour=*pSourceRowLast;
             const int nLastPixelRed=(LastPixelColour>>SHIFT_RED)&0xff;
             const int nLastPixelGreen=(LastPixelColour>>SHIFT_GREEN)&0xff;
@@ -1361,7 +1361,7 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
             int nRedTotal=(nFirstPixelRed*(nKernelSizeY+1));
             int nGreenTotal=(nFirstPixelGreen*(nKernelSizeY+1));
             int nBlueTotal=(nFirstPixelBlue*(nKernelSizeY+1));
-			
+
             U32* pBottomSample=pSourceRowStart+nWidth;
 
             int nK;
@@ -1371,7 +1371,7 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
 		const int nPixelRed=(PixelColour>>SHIFT_RED)&0xff;
 		const int nPixelGreen=(PixelColour>>SHIFT_GREEN)&0xff;
 		const int nPixelBlue=(PixelColour>>SHIFT_BLUE)&0xff;
-	
+
 		nRedTotal+=nPixelRed;
                 nGreenTotal+=nPixelGreen;
 		nBlueTotal+=nPixelBlue;
@@ -1435,10 +1435,10 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
 
                 nRedTotal+=nBottomRed;
                 nRedTotal-=nTopRed;
-	
+
                 nGreenTotal+=nBottomGreen;
                 nGreenTotal-=nTopGreen;
-	
+
                 nBlueTotal+=nBottomBlue;
                 nBlueTotal-=nTopBlue;
 
@@ -1446,13 +1446,13 @@ void Pete_DoBoxFilterBlur_AltiVecVersion(U32* pSourceBuffer,U32* pIntermediateBu
                 pBottomSample+=nWidth;
 
                 pCurrentOutput+=nWidth;
-                				
+
             }
 
         }
 
     }
-    
+
 #endif
 
 }

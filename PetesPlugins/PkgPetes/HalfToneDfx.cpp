@@ -35,7 +35,7 @@ class CHalfToneDfx: public CDFX
 public:
 	~CHalfToneDfx();
 	CHalfToneDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CHalfToneDfx)
 END_OUTPUTSCREENS_DESC(CHalfToneDfx)
 
 BEGIN_EFFECT_DESC(CHalfToneDfx, 10203216863272929, PETE_VJO_VERSION , "Petes\\HalfTone", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CHalfToneDfx) 
+END_EFFECT_DESC(CHalfToneDfx)
 
 REGISTER_DFXFACTORY(CHalfToneDfx)
 
@@ -102,7 +102,7 @@ CHalfToneDfx::~CHalfToneDfx()
 
 }
 
-HBITMAP	CHalfToneDfx::GetLabelBitmap()			
+HBITMAP	CHalfToneDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CHalfToneDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CHalfToneDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CHalfToneDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CHalfToneDfx::Initialize()
 
 BOOL	CHalfToneDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

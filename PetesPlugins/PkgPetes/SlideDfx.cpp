@@ -36,7 +36,7 @@ class CSlideDfx: public CDFX
 public:
 	~CSlideDfx();
 	CSlideDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -87,7 +87,7 @@ BEGIN_OUTPUTSCREENS_DESC(CSlideDfx)
 END_OUTPUTSCREENS_DESC(CSlideDfx)
 
 BEGIN_EFFECT_DESC(CSlideDfx, 10203216861479959, PETE_VJO_VERSION , "Petes\\Slide", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CSlideDfx) 
+END_EFFECT_DESC(CSlideDfx)
 
 REGISTER_DFXFACTORY(CSlideDfx)
 
@@ -124,7 +124,7 @@ CSlideDfx::~CSlideDfx()
 	Pete_Slide_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CSlideDfx::GetLabelBitmap()			
+HBITMAP	CSlideDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -133,7 +133,7 @@ BOOL	CSlideDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -153,7 +153,7 @@ BOOL	CSlideDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CSlideDfx::UpdateConfig()
@@ -185,7 +185,7 @@ BOOL	CSlideDfx::Initialize()
 
 BOOL	CSlideDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

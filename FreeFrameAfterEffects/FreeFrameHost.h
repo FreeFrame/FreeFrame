@@ -21,7 +21,7 @@
 
 /*
 	SDK_Noise.h
-	
+
 	Part of the Adobe After Effects 5.5 SDK.
 	Copyright 2001 Adobe Systems Incorporated.
 	All Rights Reserved.
@@ -132,9 +132,9 @@ typedef struct {
 
 } FilterInfo;
 
-DllExport 
-PF_Err 
-main (	
+DllExport
+PF_Err
+main (
 	PF_Cmd			cmd,
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
@@ -142,40 +142,40 @@ main (
 	PF_LayerDef		*output,
 	void*			pExtra);
 
-static PF_Err 
-About (	
+static PF_Err
+About (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output );
 
-static PF_Err 
+static PF_Err
 GlobalSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output );
 
-static PF_Err 
+static PF_Err
 ParamsSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output);
 
-static PF_Err 
-Render ( 
+static PF_Err
+Render (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output );
 
-static PF_Err 
-FilterImage ( 
-	long		refcon, 
+static PF_Err
+FilterImage (
+	long		refcon,
 	long		x,
-	long		y, 
-	PF_Pixel	*in, 
+	long		y,
+	PF_Pixel	*in,
 	PF_Pixel	*out);
 
 #endif // SDK_NOISE_H

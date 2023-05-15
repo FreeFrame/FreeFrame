@@ -35,7 +35,7 @@ class CBloomDfx: public CDFX
 public:
 	~CBloomDfx();
 	CBloomDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -82,7 +82,7 @@ BEGIN_OUTPUTSCREENS_DESC(CBloomDfx)
 END_OUTPUTSCREENS_DESC(CBloomDfx)
 
 BEGIN_EFFECT_DESC(CBloomDfx, 10203216861478919, PETE_VJO_VERSION , "Petes\\Bloom", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CBloomDfx) 
+END_EFFECT_DESC(CBloomDfx)
 
 REGISTER_DFXFACTORY(CBloomDfx)
 
@@ -109,7 +109,7 @@ CBloomDfx::~CBloomDfx()
 
 }
 
-HBITMAP	CBloomDfx::GetLabelBitmap()			
+HBITMAP	CBloomDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -118,7 +118,7 @@ BOOL	CBloomDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -138,7 +138,7 @@ BOOL	CBloomDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CBloomDfx::UpdateConfig()
@@ -169,7 +169,7 @@ BOOL	CBloomDfx::Initialize()
 
 BOOL	CBloomDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

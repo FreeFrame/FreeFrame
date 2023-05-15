@@ -292,11 +292,11 @@ try
 	m_hNewFontImageData=ALLOCBUFFER(lpbi->bmiHeader.biSizeImage,nDummy);
 
 	char* pNewFontImageData=(char*)GETPTR(m_hNewFontImageData);
-	
+
 	memcpy(pNewFontImageData,lpvBits,lpbi->bmiHeader.biSizeImage);
 
 	FREEPTR(m_hNewFontImageData);
-	
+
 	m_nNewFontImageDataWidth=lpbi->bmiHeader.biWidth;
 	m_nNewFontImageDataHeight=lpbi->bmiHeader.biHeight;
 
@@ -390,11 +390,11 @@ void CTextOverlayDfxDlg::BuildFontImage(void)
 	m_hNewFontImageData=ALLOCBUFFER(lpbi->bmiHeader.biSizeImage,nDummy);
 
 	char* pNewFontImageData=(char*)GETPTR(m_hNewFontImageData);
-	
+
 	memcpy(pNewFontImageData,lpvBits,lpbi->bmiHeader.biSizeImage);
 
 	FREEPTR(m_hNewFontImageData);
-	
+
 	m_nNewFontImageDataWidth=lpbi->bmiHeader.biWidth;
 	m_nNewFontImageDataHeight=lpbi->bmiHeader.biHeight;
 
@@ -427,7 +427,7 @@ void CTextOverlayDfxDlg::EnableControls()
 	UpdateData();
 }
 
-BOOL CTextOverlayDfxDlg::OnInitDialog() 
+BOOL CTextOverlayDfxDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -448,7 +448,7 @@ BOOL CTextOverlayDfxDlg::OnInitDialog()
     // Initialize CFontInfo fi:
     fi.InitChooseFont(hWnd,&m_CandidateFont);
 
-	
+
 //    HDC hdc = ::GetDC(hWnd);
 //    GetObject(GetCurrentObject(hdc, OBJ_FONT), sizeof(LOGFONT), m_pLogFont);
 //    MeasureFont(hdc);
@@ -478,7 +478,7 @@ BOOL CTextOverlayDfxDlg::OnInitDialog()
 //		IDC_TextOverlay_PLAYBACKSTYLE_LIST,
 //		CB_SETCURSEL,
 //		m_eStyle,
-//		0L);                             
+//		0L);
 	EnableControls();
 
 	return TRUE;

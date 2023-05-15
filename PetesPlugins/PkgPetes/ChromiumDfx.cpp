@@ -36,7 +36,7 @@ class CChromiumDfx: public CDFX
 public:
 	~CChromiumDfx();
 	CChromiumDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -83,7 +83,7 @@ BEGIN_OUTPUTSCREENS_DESC(CChromiumDfx)
 END_OUTPUTSCREENS_DESC(CChromiumDfx)
 
 BEGIN_EFFECT_DESC(CChromiumDfx, 10203216861479957, PETE_VJO_VERSION , "Petes\\Chromium", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CChromiumDfx) 
+END_EFFECT_DESC(CChromiumDfx)
 
 REGISTER_DFXFACTORY(CChromiumDfx)
 
@@ -117,7 +117,7 @@ CChromiumDfx::~CChromiumDfx()
 	Pete_Chromium_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CChromiumDfx::GetLabelBitmap()			
+HBITMAP	CChromiumDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -126,7 +126,7 @@ BOOL	CChromiumDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -146,7 +146,7 @@ BOOL	CChromiumDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CChromiumDfx::UpdateConfig()
@@ -177,7 +177,7 @@ BOOL	CChromiumDfx::Initialize()
 
 BOOL	CChromiumDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

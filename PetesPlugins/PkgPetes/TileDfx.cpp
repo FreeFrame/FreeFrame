@@ -35,7 +35,7 @@ class CTileDfx: public CDFX
 public:
 	~CTileDfx();
 	CTileDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CTileDfx)
 END_OUTPUTSCREENS_DESC(CTileDfx)
 
 BEGIN_EFFECT_DESC(CTileDfx, 10203216861273929, PETE_VJO_VERSION , "Petes\\Tile", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CTileDfx) 
+END_EFFECT_DESC(CTileDfx)
 
 REGISTER_DFXFACTORY(CTileDfx)
 
@@ -102,7 +102,7 @@ CTileDfx::~CTileDfx()
 
 }
 
-HBITMAP	CTileDfx::GetLabelBitmap()			
+HBITMAP	CTileDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CTileDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CTileDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CTileDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CTileDfx::Initialize()
 
 BOOL	CTileDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

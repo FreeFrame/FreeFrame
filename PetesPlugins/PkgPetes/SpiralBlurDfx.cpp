@@ -35,7 +35,7 @@ class CSpiralBlurDfx: public CDFX
 public:
 	~CSpiralBlurDfx();
 	CSpiralBlurDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CSpiralBlurDfx)
 END_OUTPUTSCREENS_DESC(CSpiralBlurDfx)
 
 BEGIN_EFFECT_DESC(CSpiralBlurDfx, 10203215861272929, PETE_VJO_VERSION , "Petes\\SpiralBlur", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CSpiralBlurDfx) 
+END_EFFECT_DESC(CSpiralBlurDfx)
 
 REGISTER_DFXFACTORY(CSpiralBlurDfx)
 
@@ -102,7 +102,7 @@ CSpiralBlurDfx::~CSpiralBlurDfx()
 
 }
 
-HBITMAP	CSpiralBlurDfx::GetLabelBitmap()			
+HBITMAP	CSpiralBlurDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CSpiralBlurDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CSpiralBlurDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CSpiralBlurDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CSpiralBlurDfx::Initialize()
 
 BOOL	CSpiralBlurDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

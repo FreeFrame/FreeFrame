@@ -51,7 +51,7 @@ public:
 };
 
 
-class FreeframeHost  
+class FreeframeHost
 {
 public:
 	void setParameter(DWORD index, float value);

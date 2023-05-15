@@ -117,7 +117,7 @@ int Pete_LumaCycle_Init(SPete_LumaCycle_Data* pInstanceData,int nWidth, int nHei
 
 	const int nPaletteByteCount=
 		(cnPaletteEntries*sizeof(U32));
-	
+
 	pInstanceData->hPalette=
 		Pete_NewHandle(nPaletteByteCount);
 	if (pInstanceData->hPalette==NULL) {
@@ -144,7 +144,7 @@ void Pete_LumaCycle_DeInit(SPete_LumaCycle_Data* pInstanceData) {
 void Pete_LumaCycle_Render(SPete_LumaCycle_Data* pInstanceData,SPete_LumaCycle_Settings* pSettings,U32* pSource,U32* pOutput) {
 
 	Pete_LumaCycle_SetupPalette(pInstanceData,pSettings);
-	
+
 	U32* pPalette=(U32*)Pete_LockHandle(pInstanceData->hPalette);
 
 	if (pPalette==NULL) {

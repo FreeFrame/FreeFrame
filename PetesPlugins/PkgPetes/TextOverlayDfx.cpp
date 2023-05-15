@@ -45,7 +45,7 @@ class CTextOverlayDfx: public CDFX
 public:
 	~CTextOverlayDfx();
 	CTextOverlayDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -76,7 +76,7 @@ protected:
 	int GetNextLineOffset(char* pTextData);
 	char* GetPreviousNewLine(char* pString,char* pStringStart);
 	int GetPreviousLineOffset(char* pTextData);
-	
+
 	BOOL	GetConfigData(CConfigData *p);
 	void	SetConfigData(CConfigData *p);
 
@@ -110,7 +110,7 @@ protected:
 
 	bool	m_bEnabled;
 	int		m_nEnabledID;
-	
+
 	bool	m_bCentreJustify;
 	int		m_nCentreJustifyID;
 
@@ -119,7 +119,7 @@ protected:
 
 	float	m_TextColourRed;
 	int		m_nTextColourRedID;
-	
+
 	float	m_TextColourGreen;
 	int		m_nTextColourGreenID;
 
@@ -161,7 +161,7 @@ BEGIN_OUTPUTSCREENS_DESC(CTextOverlayDfx)
 END_OUTPUTSCREENS_DESC(CTextOverlayDfx)
 
 BEGIN_EFFECT_DESC(CTextOverlayDfx, 10203216861479968, PETE_VJO_VERSION , "Petes\\TextOverlay", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CTextOverlayDfx) 
+END_EFFECT_DESC(CTextOverlayDfx)
 
 REGISTER_DFXFACTORY(CTextOverlayDfx)
 
@@ -182,7 +182,7 @@ CTextOverlayDfx::CTextOverlayDfx()
 {
 	m_nXRes = 0;
 	m_nYRes = 0;
-	
+
 	m_hFontImageData=NULL;
 	m_nFontImageDataWidth=0;
 	m_nFontImageDataHeight=0;
@@ -199,9 +199,9 @@ CTextOverlayDfx::CTextOverlayDfx()
 	m_bCentreJustify=true;
 	m_bWordWrap=true;
 	m_bEnabled=true;
-	
+
 	m_bShowSingleLine=true;
-	
+
 	m_bGoToNextLine=false;
 	m_bLastGoToNextLine=false;
 
@@ -247,7 +247,7 @@ void CTextOverlayDfx::BuildFontImage(void) {
 
     // select font:
     SelectObject(hdc, hFont);
-    
+
 	if (hFont) SelectObject(OffscrDC, hFont);
 
 	MeasureFont(OffscrDC);
@@ -306,11 +306,11 @@ void CTextOverlayDfx::BuildFontImage(void) {
 	m_hFontImageData=ALLOCBUFFER(lpbi->bmiHeader.biSizeImage,m_nMemUsage);
 
 	char* pNewFontImageData=(char*)GETPTR(m_hFontImageData);
-	
+
 	memcpy(pNewFontImageData,lpvBits,lpbi->bmiHeader.biSizeImage);
 
 	FREEPTR(m_hFontImageData);
-	
+
 	m_nFontImageDataWidth=width;
 	m_nFontImageDataHeight=height;
 
@@ -322,7 +322,7 @@ void CTextOverlayDfx::BuildFontImage(void) {
 
 void CTextOverlayDfx::MeasureFont(HDC hdc)
 {
-    
+
 	GetTextMetrics(hdc, &m_FontTextMetrics);
     // Measure TrueType fonts with GetCharABCWidths:
     if (!GetCharABCWidths(hdc, 32, 255, &m_FontCharacterSizes[0]))
@@ -360,7 +360,7 @@ CTextOverlayDfx::~CTextOverlayDfx()
 
 }
 
-HBITMAP	CTextOverlayDfx::GetLabelBitmap()			
+HBITMAP	CTextOverlayDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -377,7 +377,7 @@ BOOL	CTextOverlayDfx::SetupDialog()
 	if(dlg.DoModal() != IDOK) return FALSE;
 
 	DeinitializeFont();
-	
+
 	BuildFontImage();
 
 	LoadTextFile();
@@ -419,8 +419,8 @@ BOOL	CTextOverlayDfx::GetConfigData(CConfigData *p)
 	{
 		memcpy(&m_FontInfo, pFontInfo, nFontInfoSize);
 	}
-	
-	return TRUE;	
+
+	return TRUE;
 }
 
 BOOL	CTextOverlayDfx::UpdateConfig()
@@ -453,7 +453,7 @@ BOOL	CTextOverlayDfx::UpdateConfig()
 
 	m_nShowSingleLineID=
 		RegisterBool(m_pEngine,&m_bShowSingleLine,"Show Single Line");
-	
+
 	m_nGoToNextLineID=
 		RegisterBool(m_pEngine,&m_bGoToNextLine,"Go To Next Line");
 
@@ -486,7 +486,7 @@ void	CTextOverlayDfx::LoadTextFile(void) {
 	if (strlen(m_TextFileName)==0) {
 		return;
 	}
-	
+
 	HANDLE OpenFileHandle=CreateFile(
 		(&m_TextFileName[0]),
 		GENERIC_READ,
@@ -506,7 +506,7 @@ void	CTextOverlayDfx::LoadTextFile(void) {
 	int nFileSize=GetFileSize(OpenFileHandle,NULL);
 
 	REALLOCBUFFER(m_hTextData,nFileSize+1,m_nMemUsage);
-	
+
 	if (m_hTextData==NULL) {
 		MessageBox(NULL,"Couldn't allocate memory!","Error",MB_OK);
 		return;
@@ -568,7 +568,7 @@ char* CTextOverlayDfx::GetStringLineWidth(char* pString,int* poutWidth) {
 
 	int nCurrentWidth=0;
 	bool bHitNewLine=false;
-	
+
 	while ((*pString!='\0')&&(!bHitNewLine)) {
 
 		const char Character=*pString;
@@ -586,7 +586,7 @@ char* CTextOverlayDfx::GetStringLineWidth(char* pString,int* poutWidth) {
 				const char DefaultChar='i';
 				const int nDefaultCharWidth=GetCharWidth(DefaultChar);
 				nCurrentWidth+=nDefaultCharWidth;
-				
+
 			}
 
 			default: {
@@ -609,7 +609,7 @@ char* CTextOverlayDfx::GetStringLineWidth(char* pString,int* poutWidth) {
 		return pString;
 
 	} else {
-		
+
 		return NULL;
 
 	}
@@ -625,7 +625,7 @@ char* CTextOverlayDfx::GetStringLineWidthWithWrap(char* pString,int nWrapWidth,i
 	int nLastSpaceWidth=0;
 	bool bNonSpaceHit=false;
 
-	
+
 	while ((*pString!='\0')&&(!bHitNewLine)&&(!bHitLineWrap)) {
 
 		const char Character=*pString;
@@ -645,7 +645,7 @@ char* CTextOverlayDfx::GetStringLineWidthWithWrap(char* pString,int nWrapWidth,i
 					pLastSpace=pString;
 					nLastSpaceWidth=nCurrentWidth;
 				}
-				
+
 				const char DefaultChar='i';
 				const int nDefaultCharWidth=GetCharWidth(DefaultChar);
 				nCurrentWidth+=nDefaultCharWidth;
@@ -703,7 +703,7 @@ char* CTextOverlayDfx::GetStringLineWidthWithWrap(char* pString,int nWrapWidth,i
 
 
 	} else {
-		
+
 		pResult=NULL;
 		nResultWidth=nCurrentWidth;
 
@@ -741,7 +741,7 @@ void CTextOverlayDfx::DrawString(DWORD* pOutput,int nXOrigin,int nYOrigin,char* 
 				const char DefaultChar='i';
 				const int nDefaultCharWidth=GetCharWidth(DefaultChar);
 				nCurrentX+=nDefaultCharWidth;
-				
+
 				bIsVisibleCharacter=false;
 			}
 
@@ -754,7 +754,7 @@ void CTextOverlayDfx::DrawString(DWORD* pOutput,int nXOrigin,int nYOrigin,char* 
 		}
 
 		if (bIsVisibleCharacter) {
-		
+
 			const int nCharWidth=DrawCharacter(pOutput,nCurrentX,nCurrentY,Character,dwColour);
 
 			nCurrentX+=nCharWidth;
@@ -791,7 +791,7 @@ int	CTextOverlayDfx::DrawCharacter(DWORD* pOutput,int nXOrigin,int nYOrigin,char
 
 	const int nStartX=nXOrigin;
 	const int nGatedStartX=Gate(nStartX,0,(nWidth-1));
-	
+
 	const int nEndX=nXOrigin+nFontCharWidth;
 	const int nGatedEndX=Gate(nEndX,0,(nWidth-1));
 
@@ -861,7 +861,7 @@ void	CTextOverlayDfx::WriteOutputFrameTest(DWORD* pSource,DWORD* pOutput) {
 	if (pFontImageData==NULL) {
 		return;
 	}
-	
+
 	const int nFontImageWidth=m_nFontImageDataWidth;
 	const int nFontImageHeight=m_nFontImageDataHeight;
 
@@ -895,7 +895,7 @@ void	CTextOverlayDfx::WriteOutputFrameTest(DWORD* pSource,DWORD* pOutput) {
 			*pCurrentOutput=*pCurrentSource;
 
 		}
-		
+
 		pCurrentSource+=1;
 		pCurrentOutput+=1;
 
@@ -1031,7 +1031,7 @@ char* CTextOverlayDfx::GetPreviousNewLine(char* pString,char* pStringStart) {
 	if (pString!=pStringStart) {
 		pString-=1;
 	}
-	
+
 	while ((pString!=pStringStart)&&(*pString!='\n')) {
 		pString-=1;
 	}
@@ -1055,7 +1055,7 @@ int CTextOverlayDfx::GetPreviousLineOffset(char* pTextData) {
 		pPreviousLine=GetPreviousNewLine(pTextData+strlen(pTextData),pTextData);
 
 	}
-		
+
 	if (pPreviousLine==NULL) {
 		return 0;
 	} else {
@@ -1132,7 +1132,7 @@ void	CTextOverlayDfx::WriteOutputFrame(DWORD* pSource,DWORD* pOutput) {
 			} else {
 				DrawTextLeftJustifiedWrap(pOutput,pStartData,pEndData,nCurrentX,nCurrentY,dwColour);
 			}
-		
+
 		} else {
 
 			if (m_bCentreJustify) {
@@ -1143,7 +1143,7 @@ void	CTextOverlayDfx::WriteOutputFrame(DWORD* pSource,DWORD* pOutput) {
 
 		}
 
-		
+
 //		DrawString(pOutput,0,100,pTextData,0x00000000);
 
 		if (!m_bTypedTextMode) {
@@ -1246,7 +1246,7 @@ void	CTextOverlayDfx::ReadTypedText(void) {
 		const int nStringLength=strlen(m_pInputText);
 
 		if (nStringLength<(cnTextBufferSize-1)) {
-			sprintf(m_pInputText,"%s%c",m_pInputText,cKeyPressed);			
+			sprintf(m_pInputText,"%s%c",m_pInputText,cKeyPressed);
 		}
 
 	}

@@ -63,7 +63,7 @@ extern "C" int Pete_Kaleidascope_LinesSortFunction(const void* pElem1,const void
 void Pete_Kaleidascope_Dev(SPete_Kaleidascope_Data* pInstanceData,SPete_Kaleidascope_Settings* pSettings,U32* pSource,U32* pOutput);
 void Pete_Kaleidascope_RenderAE(SPete_Kaleidascope_Data* pInstanceData,SPete_Kaleidascope_Settings* pSettings,U32* pSource,U32* pOutput);
 
-static int* g_pCurrentCosTable; // Pete- Hack to avoid accessing this table via 2 indirections 
+static int* g_pCurrentCosTable; // Pete- Hack to avoid accessing this table via 2 indirections
 // (eg pInstanceData->hCosTable==2 memory accesses)
 
 const int nMaxLines=128;
@@ -229,7 +229,7 @@ void Pete_Kaleidascope_Render_Old(SPete_Kaleidascope_Data* pInstanceData,SPete_K
 	if (g_pCurrentCosTable==NULL) {
 		return;
 	}
-	
+
 	const int nWidth=pInstanceData->nWidth;
 	const int nHeight=pInstanceData->nHeight;
 	const float Width=(float)(nWidth);
@@ -261,20 +261,20 @@ void Pete_Kaleidascope_Render_Old(SPete_Kaleidascope_Data* pInstanceData,SPete_K
 	}
 
 	SPete_AngleTable_Entry* pTableCurrent=pTableStart;
-	
+
 	U32*const pSourceStart=pSource;
 	U32* pCurrentOutput=pOutput;
 	const U32* pOutputEnd=(pOutput+nNumPixels);
 
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
-			
+
 		while (pCurrentOutput!=pOutputLineEnd) {
 
 			int nAngleFA=pTableCurrent->nAngleFA;
 			int nDist=pTableCurrent->nDist;
-			
+
 			nAngleFA+=nAnglePreIncrementFA;
 
 			int nMirroredAngleFA=(nAngleFA%nAngleIntervalFA);
@@ -286,7 +286,7 @@ void Pete_Kaleidascope_Render_Old(SPete_Kaleidascope_Data* pInstanceData,SPete_K
 
 			int nResultXFP=Pete_Kaleidascope_CosFA(nMirroredAngleFA);
 			int nResultYFP=Pete_Kaleidascope_SinFA(nMirroredAngleFA);
-			
+
 			nResultXFP*=nDist;
 			nResultYFP*=nDist;
 
@@ -304,11 +304,11 @@ void Pete_Kaleidascope_Render_Old(SPete_Kaleidascope_Data* pInstanceData,SPete_K
 				(nSourceY*nWidth)+
 				nSourceX;
 
-			*pCurrentOutput=*pCurrentSource;				
+			*pCurrentOutput=*pCurrentSource;
 
 			pCurrentOutput+=1;
 			pTableCurrent+=1;
-			
+
 		}
 
 	}
@@ -329,7 +329,7 @@ void Pete_Kaleidascope_SetupAngleTable(SPete_Kaleidascope_Data* pInstanceData) {
 	const float HalfWidth=(Width/2.0f);
 	const float Height=(float)(nHeight);
 	const float HalfHeight=(Height/2.0f);
-	
+
 	const int nNumPixels=(nWidth*nHeight);
 
 	SPete_AngleTable_Entry* pCurrent=pTableStart;
@@ -337,7 +337,7 @@ void Pete_Kaleidascope_SetupAngleTable(SPete_Kaleidascope_Data* pInstanceData) {
 
 	float YPos=-HalfHeight;
 	while (pCurrent!=pTableEnd) {
-		
+
 		const SPete_AngleTable_Entry* pLineEnd=pCurrent+nWidth;
 
 		float XPos=-HalfWidth;
@@ -443,7 +443,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 
 	SPete_Kaleidascope_PartitionData PartitionData;
 	Pete_Kaleidascope_PartitionLines(pLinesStart,nLinesCount,&PartitionData);
-	
+
 	const float OutputCentreX=(pSettings->m_OutputCentreX*(Width-1));
 	const float OutputCentreY=(pSettings->m_OutputCentreY*(Height-1));
 
@@ -485,10 +485,10 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 		U32* pOutputLineStart=pOutput+(nScanLine*nWidth);
 
 		while ((pCurrentLine<=pLinesGroupEnd)&&(PreviousIntersectionX<RightX)) {
-		
+
 			const bool bIsFinalSpan=(pCurrentLine==pLinesGroupEnd);
 			const bool bIsFirstSpan=(pCurrentLine==pLinesGroupStart);
-			
+
 			float IntersectionX;
 			float IntersectionT;
 			if (bIsFinalSpan) {
@@ -510,7 +510,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 			float RowEndV;
 
 			bool bDebugIsHalfLine;
-			
+
 			if (bIsFirstSpan) {
 
 				SPete_Kaleidascope_Line* pLine1=pFirstLineOtherGroup;
@@ -580,7 +580,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 				} else {
 					PreviousIntersectionX=(pLine1->X*Line1IntersectionT);
 				}
-				
+
 				if (bIsHalfLine) {
 					RowEndU=HalfUOffset+(IntersectionT*HalfUGradient);
 					RowEndV=HalfVOffset+(IntersectionT*HalfVGradient);
@@ -614,7 +614,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 					Line2IntersectionY=(pLine2->Y*Line2IntersectionT);
 				}
 
-				
+
 				bool bIsHalfLine=(pLine2->Flags&PETE_KALEIDASCOPE_HALFLINE_BIT);
 				bDebugIsHalfLine=bIsHalfLine;
 
@@ -644,7 +644,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 				RowEndV=(Line1V*LerpValue)+(Line2V*OneMinusLerpValue);
 
 			} else {
-		
+
 				bool bIsHalfLine=(pCurrentLine->Flags&PETE_KALEIDASCOPE_HALFLINE_BIT);
 				bDebugIsHalfLine=bIsHalfLine;
 
@@ -661,7 +661,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 			if (IntersectionX>LeftX) {
 
 				int nRowStartX;
-	
+
 				if (PreviousIntersectionX<LeftX) {
 
 					nRowStartX=0;
@@ -674,7 +674,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 					PreviousRowV=(PreviousRowV*LerpValue)+(RowEndV*OneMinusLerpValue);
 
 				} else {
-			
+
 					nRowStartX=static_cast<int>(PreviousIntersectionX-LeftX);
 
 				}
@@ -698,7 +698,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 					nRowEndX=static_cast<int>(IntersectionX-LeftX);
 				}
 
-				
+
 				U32* pRowStart=pOutputLineStart+nRowStartX;
 				int nRowLength=(nRowEndX-nRowStartX);
 				if (nRowLength<=0) {
@@ -817,7 +817,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 
 						const int nUIntegral=(nLocalCurrentU>>nFPShift);
 						const int nVIntegral=(nLocalCurrentV>>nFPShift);
-		
+
 //						if ((nUIntegral>=nWidth)||
 //							(nUIntegral<0)||
 //							(nVIntegral>=nHeight)||
@@ -834,7 +834,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 //						} else {
 //							*pCurrentOutput=0x00000000;
 //						}
-						
+
 						U32* pCurrentSource=
 							pSource+(nVIntegral*nWidth)+nUIntegral;
 
@@ -865,7 +865,7 @@ void Pete_Kaleidascope_Render(SPete_Kaleidascope_Data* pInstanceData,SPete_Kalei
 			PreviousRowV=RowEndV;
 
 			pCurrentLine+=1;
-			
+
 		}
 
 		CurrentY+=1.0f;
@@ -927,7 +927,7 @@ void Pete_Kaleidascope_SetupLines(SPete_Kaleidascope_Data* pInstanceData,SPete_K
 	}
 
 	*poutLinesCount=nLinesCount;
-	
+
 }
 
 extern "C" int Pete_Kaleidascope_LinesSortFunction(const void* pElem1,const void* pElem2) {
@@ -975,7 +975,7 @@ void Pete_Kaleidascope_PartitionLines(SPete_Kaleidascope_Line* pLinesStart,int n
 	}
 
 	const int nYNegCount=pCurrentLine-pLinesStart;
-	
+
 	poutPartitionData->pYNegLines=pLinesStart;
 	poutPartitionData->nYNegLinesCount=nYNegCount;
 	poutPartitionData->pYPosLines=pLinesStart+nYNegCount;
@@ -1005,7 +1005,7 @@ void Pete_Kaleidascope_RenderAE(SPete_Kaleidascope_Data* pInstanceData,SPete_Kal
 	for (Y=0.0f; Y<nHeight; Y+=1.0f) {
 
 		const float DeltaY=(Y-CentreY);
-		
+
 		float X;
 		for (X=0.0f; X<nWidth; X+=1.0f) {
 
@@ -1038,7 +1038,7 @@ void Pete_Kaleidascope_RenderAE(SPete_Kaleidascope_Data* pInstanceData,SPete_Kal
 			pCurrentOutput+=1;
 
 		}
-	
+
 	}
 
 }
@@ -1088,7 +1088,7 @@ void Pete_Kaleidascope_CreateAllTransforms(SPete_Kaleidascope_Data* pInstanceDat
 			RotationAngle=DivisionAngle*(nCurrentDivision-1);
 		}
 
-		SPete_2dMatrix RotationTransform;	
+		SPete_2dMatrix RotationTransform;
 		Pete_2dMatrix_SetToRotation(RotationAngle,&RotationTransform);
 
 		Pete_2dMatrix_SetToIdentity(pCurrentTransform);
@@ -1096,11 +1096,11 @@ void Pete_Kaleidascope_CreateAllTransforms(SPete_Kaleidascope_Data* pInstanceDat
 		Pete_2dMatrix_Concatenate(pCurrentTransform,&ScreenToWorld,pCurrentTransform);
 
 		Pete_2dMatrix_Concatenate(pCurrentTransform,&RotationTransform,pCurrentTransform);
-		
+
 		if (bIsMirroredDivision) {
 			Pete_2dMatrix_Concatenate(pCurrentTransform,&DirectionalScaleTransform,pCurrentTransform);
 		}
-		
+
 		Pete_2dMatrix_Concatenate(pCurrentTransform,&PanTransform,pCurrentTransform);
 
 		Pete_2dMatrix_Concatenate(pCurrentTransform,&WorldToScreen,pCurrentTransform);
@@ -1144,8 +1144,8 @@ void Pete_Kaleidascope_Dev(SPete_Kaleidascope_Data* pInstanceData,SPete_Kaleidas
 
 			SPete_2dVector CurrentPos={X,Y};
 
-			const float PosDotA=Pete_2dVector_DotProduct(&CurrentPos,&GridA);			
-			const float PosDotB=Pete_2dVector_DotProduct(&CurrentPos,&GridB);			
+			const float PosDotA=Pete_2dVector_DotProduct(&CurrentPos,&GridA);
+			const float PosDotB=Pete_2dVector_DotProduct(&CurrentPos,&GridB);
 
 			const float IntegralPosDotA=(floorf(PosDotA*RecipGridMagA)+0.5f)*GridMagA;
 			const float IntegralPosDotB=(floorf(PosDotB*RecipGridMagB)+0.5f)*GridMagB;
@@ -1180,7 +1180,7 @@ void Pete_Kaleidascope_Dev(SPete_Kaleidascope_Data* pInstanceData,SPete_Kaleidas
 			pCurrentOutput+=1;
 
 		}
-	
+
 	}
 
 }

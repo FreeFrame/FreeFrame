@@ -40,7 +40,7 @@ Parameter::Parameter()
 {
 	defaultValue = 0;
 	value = 0;
-	
+
 	sprintf(displayValue, "Display_Value___");
 	sprintf(name, "Name____________");
 }
@@ -82,22 +82,22 @@ FreeframeHost::~FreeframeHost()
 
 void FreeframeHost::loadPlugin(char* pluginFile)
 {
-   BOOL fRunTimeLinkSuccess = FALSE; 
+   BOOL fRunTimeLinkSuccess = FALSE;
 
     // Get a handle to the DLL module.
    CString plugFileFull("C:\\xdk85_win\\FreeframeHostMFC\\Release\\plugins\\");
- 
+
    plugFileFull += pluginFile;
 
-    hinstLib = LoadLibrary(plugFileFull.GetBuffer(1)); 
- 
+    hinstLib = LoadLibrary(plugFileFull.GetBuffer(1));
+
     // If the handle is valid, try to get the function address.
- 
-    if (hinstLib != NULL) 
-    { 
-        plugMain = (FF_Main_FuncPtr) GetProcAddress(hinstLib, "plugMain"); 
- 
-    } 
+
+    if (hinstLib != NULL)
+    {
+        plugMain = (FF_Main_FuncPtr) GetProcAddress(hinstLib, "plugMain");
+
+    }
 	else MessageBox(0, "Couldn't load Plugin", "Freeframe Error", MB_OK);
 }
 
@@ -115,7 +115,7 @@ void FreeframeHost::unloadPlugin()
   // free the DLL module
   BOOL fFreeResult;
   if (hinstLib) {
-	  fFreeResult = FreeLibrary(hinstLib); 
+	  fFreeResult = FreeLibrary(hinstLib);
 	  hinstLib = 0;
   }
 
@@ -184,7 +184,7 @@ void FreeframeHost::getNumParameters()
 
 void FreeframeHost::getParameterName(DWORD param)
 {
-	char *pName = (char *)(plugMain)(FF_GETPARAMETERNAME, (LPVOID)param, 0); 
+	char *pName = (char *)(plugMain)(FF_GETPARAMETERNAME, (LPVOID)param, 0);
 	memcpy(parameters[param]->name, pName, 16);
 }
 
@@ -223,7 +223,7 @@ void FreeframeHost::getParameters()
 
 void FreeframeHost::getParameterDisplay(DWORD index)
 {
-	char *pDisplay = (char *)(plugMain)(FF_GETPARAMETERDISPLAY, (LPVOID)index, instance); 
+	char *pDisplay = (char *)(plugMain)(FF_GETPARAMETERDISPLAY, (LPVOID)index, instance);
 	memcpy(parameters[index]->displayValue, pDisplay, 16);
 }
 
@@ -241,7 +241,7 @@ void FreeframeHost::setParameter(DWORD index, float value)
 		paramStruct.index = index;
 		paramStruct.value = value;
 		parameters[index]->value = value;
-		if ((plugMain)(FF_SETPARAMETER, &paramStruct, instance) != FF_SUCCESS) MessageBox(0,"setParameter error","",MB_OK); 
+		if ((plugMain)(FF_SETPARAMETER, &paramStruct, instance) != FF_SUCCESS) MessageBox(0,"setParameter error","",MB_OK);
 		LPVOID test = (plugMain)(FF_GETPARAMETER, (LPVOID)index, 0);
 	}
 }

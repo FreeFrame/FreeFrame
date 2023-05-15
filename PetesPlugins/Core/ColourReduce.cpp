@@ -144,7 +144,7 @@ inline U32 Pete_ColourReduce_GetClosestColour(U32 Colour,SPete_ColourReduce_Inve
 	if (BoundarySmoothing==0.0f) {
 		return ClosestColour;
 	}
-	
+
 	U32 NextClosestColour=(pInvColourMapEntry->NextClosestColour);
 
 	const int nClosestRed=(ClosestColour>>SHIFT_RED)&0xff;
@@ -183,7 +183,7 @@ inline U32 Pete_ColourReduce_GetClosestColour(U32 Colour,SPete_ColourReduce_Inve
 	}
 
 	const float UnWeightedLerpValue=(NextClosestDist/TotalDist);
-	
+
 	float WeightedLerpValue=(UnWeightedLerpValue-0.5f)/BoundarySmoothing;
 	WeightedLerpValue+=0.5f;
 	if (WeightedLerpValue>1.0f) {
@@ -238,7 +238,7 @@ void Pete_ColourReduce_Render(SPete_ColourReduce_Data* pInstanceData,SPete_Colou
 	if (pInverseColourMap==NULL) {
 		return;
 	}
-	
+
 	const int nSampleSpacing=4;
 
 	Pete_ColourReduce_CalcHistogram(pSource,nWidth,nHeight,nSampleSpacing,pHistogram,PalettePersistence);
@@ -263,7 +263,7 @@ void Pete_ColourReduce_Render(SPete_ColourReduce_Data* pInstanceData,SPete_Colou
 		pCurrentOutput+=1;
 
 	}
-	
+
 	Pete_UnLockHandle(pInstanceData->hRGBHistogram);
 	Pete_UnLockHandle(pInstanceData->hSortedColours);
 	Pete_UnLockHandle(pInstanceData->hInverseColourMap);
@@ -294,19 +294,19 @@ void Pete_ColourReduce_CalcHistogram(
 	}
 
 	const int nNumPixels = nWidth*nHeight;
-	
+
 	U32* pCurrentSource=pSource;
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource<pSourceEnd) {
-		
+
 		U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
-			
+
 		while (pCurrentSource<pSourceLineEnd) {
 
 			U32 SourceColour=*pCurrentSource;
-			
+
 			const int nSourceRed=(SourceColour>>SHIFT_RED)&0xff;
 			const int nSourceGreen=(SourceColour>>SHIFT_GREEN)&0xff;
 			const int nSourceBlue=(SourceColour>>SHIFT_BLUE)&0xff;
@@ -358,7 +358,7 @@ void Pete_ColourReduce_SortColours(int* pHistogram,int** ppSortedColours) {
 	for (nCount=0; nCount<cnGridCellCount; nCount+=1) {
 
 		ppSortedColours[nCount]=&(pHistogram[nCount]);
-	
+
 	}
 
 	qsort((void*)ppSortedColours,cnGridCellCount,sizeof(int*),&Pete_ColourReduce_HistogramSortFunction);
@@ -401,7 +401,7 @@ void Pete_ColourReduce_SetupInverseColourMap(int** ppSortedColours,int nColours,
 			for (nRedIndex=0; nRedIndex<cnGridSize; nRedIndex+=1) {
 
 				int nRed=(nRedIndex*cnGridCellWidth)+(cnGridCellHalfWidth);
-			
+
 				int nClosestDistance=cnBiggestSignedInt;
 				int nNextClosestDistance=cnBiggestSignedInt;
 				U32 ResultColour;
@@ -416,7 +416,7 @@ void Pete_ColourReduce_SetupInverseColourMap(int** ppSortedColours,int nColours,
 
 					const int nRedDist=nRed-nCandRed;
 					const int nRedDistSquared=(nRedDist*nRedDist);
-					
+
 					const int nGreenDist=nGreen-nCandGreen;
 					const int nGreenDistSquared=(nGreenDist*nGreenDist);
 

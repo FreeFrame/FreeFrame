@@ -35,7 +35,7 @@ class CDirectionalBlurDfx: public CDFX
 public:
 	~CDirectionalBlurDfx();
 	CDirectionalBlurDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -72,7 +72,7 @@ BEGIN_OUTPUTSCREENS_DESC(CDirectionalBlurDfx)
 END_OUTPUTSCREENS_DESC(CDirectionalBlurDfx)
 
 BEGIN_EFFECT_DESC(CDirectionalBlurDfx, 10223216862379956, PETE_VJO_VERSION , "Petes\\DirectionalBlur", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CDirectionalBlurDfx) 
+END_EFFECT_DESC(CDirectionalBlurDfx)
 
 REGISTER_DFXFACTORY(CDirectionalBlurDfx)
 
@@ -104,7 +104,7 @@ CDirectionalBlurDfx::~CDirectionalBlurDfx()
 
 }
 
-HBITMAP	CDirectionalBlurDfx::GetLabelBitmap()			
+HBITMAP	CDirectionalBlurDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -113,7 +113,7 @@ BOOL	CDirectionalBlurDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -133,7 +133,7 @@ BOOL	CDirectionalBlurDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CDirectionalBlurDfx::UpdateConfig()
@@ -182,7 +182,7 @@ BOOL	CDirectionalBlurDfx::Initialize()
 
 BOOL	CDirectionalBlurDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

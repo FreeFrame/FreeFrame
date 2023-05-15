@@ -111,7 +111,7 @@ void Pete_MetaImage_Render(SPete_MetaImage_Data* pInstanceData,SPete_MetaImage_S
 	U32* pSubImageData=(U32*)Pete_LockHandle(pInstanceData->hSubImage);
 	if (pSubImageData==NULL) {
 		return;
-	} 
+	}
 
 	U32 AverageColour=Pete_MetaImage_CreateSubImage(pInstanceData,pSettings,pSource,pSubImageData,SubWidth,SubHeight);
 
@@ -139,7 +139,7 @@ void Pete_MetaImage_DrawSubImages(SPete_MetaImage_Data* pInstanceData,SPete_Meta
 
 	const int nWidth=pInstanceData->nWidth;
 	const int nHeight=pInstanceData->nHeight;
-	
+
 	const int nHalfWidth=nWidth/2;
 	const int nHalfHeight=nHeight/2;
 
@@ -237,7 +237,7 @@ void Pete_MetaImage_DrawSubImage(SPete_MetaImage_Data* pInstanceData,U32* pSourc
 	U32*const pOutputEnd=(pCurrentOutput+(nYDelta*nWidth)+nXDelta);
 
 	while (pCurrentOutput<pOutputEnd) {
-		
+
 		U32*const pOutputLineStart=pCurrentOutput;
 		U32*const pOutputLineEnd=pCurrentOutput+nXDelta;
 
@@ -286,7 +286,7 @@ U32	Pete_MetaImage_GetAreaAverage(SPete_MetaImage_Data* pInstanceData,U32* pImag
 		(nYDelta<=0)) {
 		return 0x00000000;
 	}
-	
+
 	U32* pCurrentImage=pImage+(nTopY*nWidth)+nLeftX;
 	U32*const pImageEnd=(pCurrentImage+(nYDelta*nWidth)+nXDelta);
 
@@ -296,7 +296,7 @@ U32	Pete_MetaImage_GetAreaAverage(SPete_MetaImage_Data* pInstanceData,U32* pImag
 	int nSampleCount=0;
 
 	while (pCurrentImage<pImageEnd) {
-		
+
 		U32*const pImageLineStart=pCurrentImage;
 		U32*const pImageLineEnd=pCurrentImage+nXDelta;
 
@@ -313,7 +313,7 @@ U32	Pete_MetaImage_GetAreaAverage(SPete_MetaImage_Data* pInstanceData,U32* pImag
 			nBlueTotal+=nImageBlue;
 
 			nSampleCount+=1;
-			
+
 			pCurrentImage+=nStride;
 
 		}
@@ -332,7 +332,7 @@ U32	Pete_MetaImage_GetAreaAverage(SPete_MetaImage_Data* pInstanceData,U32* pImag
 		(nAverageBlue<<SHIFT_BLUE);
 
 	return Average;
-	
+
 }
 
 U32	Pete_MetaImage_ShrinkSourceImage(SPete_MetaImage_Data* pInstanceData,U32* pSource,U32* pOutput,float SubWidth,float SubHeight) {
@@ -357,7 +357,7 @@ U32	Pete_MetaImage_ShrinkSourceImage(SPete_MetaImage_Data* pInstanceData,U32* pS
 	int nSampleCount=0;
 
 	U32* pCurrentOutput=pOutput;
-	
+
 	float SourceY;
 	for (SourceY=0.0f; SourceY<nHeight; SourceY+=SourceYInc) {
 
@@ -431,7 +431,7 @@ U32	Pete_MetaImage_ShrinkSourceImageFast(SPete_MetaImage_Data* pInstanceData,U32
 	int nSampleCount=0;
 
 	U32* pCurrentOutput=pOutput;
-	
+
 	float SourceY;
 	for (SourceY=0.0f; SourceY<nHeight; SourceY+=SourceYInc) {
 

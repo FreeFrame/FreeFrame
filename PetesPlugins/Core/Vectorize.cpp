@@ -338,19 +338,19 @@ void Pete_SampleLuminance(
 	Pete_ZeroMemory(&nBlueHistogram[0],256*sizeof(int));
 
 	const int nNumPixels = nWidth*nHeight;
-	
+
 	U32* pCurrentSource=pSource;
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource<pSourceEnd) {
-		
+
 		U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
-			
+
 		while (pCurrentSource<pSourceLineEnd) {
 
 			U32 SourceColour=*pCurrentSource;
-			
+
 			const int nSourceRed=(SourceColour>>SHIFT_RED)&0xff;
 			const int nSourceGreen=(SourceColour>>SHIFT_GREEN)&0xff;
 			const int nSourceBlue=(SourceColour>>SHIFT_BLUE)&0xff;
@@ -434,12 +434,12 @@ void Pete_SampleLuminance(
 
 	const int nBlueHigh=(nCurrentSlot+1);
 
-	const int nLowLuminance = 
+	const int nLowLuminance =
 		((90 * nRedLow)+
 		(115 * nGreenLow)+
 		(51 * nBlueLow))/256;
 
-	const int nHighLuminance = 
+	const int nHighLuminance =
 		((90 * nRedHigh)+
 		(115 * nGreenHigh)+
 		(51 * nBlueHigh))/256;
@@ -457,14 +457,14 @@ void Pete_Vectorize_GetEdgePosition(int nIndex,int nDeltaX,int nDeltaY,int* pout
 
 	int nResultX;
 	int nResultY;
-	
+
 	if (nIndex<nDeltaX) {
 
 		nResultX=nIndex;
 		nResultY=0;
 
 	} else {
-		
+
 		nIndex-=nDeltaX;
 
 		if (nIndex<nDeltaY) {
@@ -554,12 +554,12 @@ void Pete_Vectorize_DoCell(int nX,int nY,int nWidth,int nHeight,int nDiffThresho
 		if (CurrentColour!=PreviousColour) {
 
 			if (nTransitionCount==0) {
-				
+
 				AlternateColour=CurrentColour;
 
 				nTransitionX[0]=nCurrentX;
 				nTransitionY[0]=nCurrentY;
-	
+
 				nTransitionCount=1;
 
 			} else if ((nTransitionCount==1)&&(CurrentColour==StartingColour)) {
@@ -599,7 +599,7 @@ void Pete_Vectorize_DoCell(int nX,int nY,int nWidth,int nHeight,int nDiffThresho
 			StartingColour,
 			AlternateColour,
 			pImage);
-		
+
 		const int nCellAverageRed=(CellAverageColour>>SHIFT_RED)&0xff;
 		const int nCellAverageGreen=(CellAverageColour>>SHIFT_GREEN)&0xff;
 		const int nCellAverageBlue=(CellAverageColour>>SHIFT_BLUE)&0xff;
@@ -664,12 +664,12 @@ void Pete_Vectorize_DoCell(int nX,int nY,int nWidth,int nHeight,int nDiffThresho
 				pImage);
 
 		}
-	
+
 	} else {
 
 		const int nHalfWidth=nWidth/2;
 		const int nHalfHeight=nHeight/2;
-	
+
 		Pete_Vectorize_DoCell(nX,nY,nHalfWidth,nHalfHeight,nDiffThreshold,pImage);
 		Pete_Vectorize_DoCell(nX+nHalfWidth,nY,nHalfWidth,nHalfHeight,nDiffThreshold,pImage);
 		Pete_Vectorize_DoCell(nX,nY+nHalfHeight,nHalfWidth,nHalfHeight,nDiffThreshold,pImage);
@@ -924,7 +924,7 @@ U32 Pete_Vectorize_GetImageAverage(int nLeftX,int nTopY,int nDeltaX,int nDeltaY,
 		(nDeltaY*nImageWidth);
 
 	U32* pCurrentSource=pSourceStart;
-	
+
 	int nRedTotal=0;
 	int nGreenTotal=0;
 	int nBlueTotal=0;

@@ -101,7 +101,7 @@ int Pete_GaussianBlur_Init(SPete_GaussianBlur_Data* pInstanceData,int nWidth, in
 
 	pInstanceData->nWidth=nWidth;
 	pInstanceData->nHeight=nHeight;
-	
+
 	const int nChannels=4;
 	const int nSizeOfIntermediateBuffer=
 		nWidth*nHeight*nChannels*sizeof(float);
@@ -124,7 +124,7 @@ int Pete_GaussianBlur_Init(SPete_GaussianBlur_Data* pInstanceData,int nWidth, in
 	if (pInstanceData->hKernel==NULL) {
 		Pete_GaussianBlur_DeInit(pInstanceData);
 		return 0;
-	}	
+	}
 
 	return 1;
 
@@ -145,7 +145,7 @@ void Pete_GaussianBlur_DeInit(SPete_GaussianBlur_Data* pInstanceData) {
 }
 
 void Pete_GaussianBlur_Render(SPete_GaussianBlur_Data* pInstanceData,SPete_GaussianBlur_Settings* pSettings,U32* pSource,U32* pOutput) {
-		
+
 	if (pSettings->m_DoFakeIt>0.0f) {
 
 		U32* pIntermediateBuffer=
@@ -186,7 +186,7 @@ void Pete_GaussianBlur_Render(SPete_GaussianBlur_Data* pInstanceData,SPete_Gauss
 			pInstanceData->nWidth,
 			pInstanceData->nHeight,
 			nMaxIterations);
-		
+
 		Pete_UnLockHandle(pInstanceData->hIntermediateBuffer);
 
 	} else {
@@ -217,7 +217,7 @@ void Pete_DoGaussianBlur(SPete_GaussianBlur_Data* pInstanceData,SPete_GaussianBl
 	if (pIntermediateBuffer==NULL) {
 		return;
 	}
-	
+
 	if ((pIntermediateBuffer==NULL)||
 		(pKernel==NULL)) {
 		return;
@@ -280,7 +280,7 @@ void Pete_DoGaussianBlur(SPete_GaussianBlur_Data* pInstanceData,SPete_GaussianBl
 			for (pCurrentKernel=pKernel; pCurrentKernel!=pKernelEnd; pCurrentKernel+=1,pCurrentSample+=nWidth) {
 
 				const float KernelScale=*pCurrentKernel;
-				
+
 				const U32* const pCurrentSource=(U32*)
 					GatePtr(pCurrentSample,pSampleRowStart,pSampleRowEnd);
 
@@ -315,7 +315,7 @@ void Pete_DoGaussianBlur(SPete_GaussianBlur_Data* pInstanceData,SPete_GaussianBl
 	}
 
 	U32* pCurrentOutput=pOutput;
-	
+
 	for (nY=0; nY<nHeight; ++nY) {
 
 		float*const pCurrentSourceLineStart=
@@ -375,7 +375,7 @@ void Pete_DoGaussianBlur(SPete_GaussianBlur_Data* pInstanceData,SPete_GaussianBl
 		}
 
 	}
-	
+
 	Pete_UnLockHandle(pInstanceData->hKernel);
 	Pete_UnLockHandle(pInstanceData->hIntermediateBuffer);
 
@@ -438,7 +438,7 @@ int Pete_GaussianBlur_SetupKernel(float* pKernel,int nKernelMaxSize,float Radius
 
 		pKernel[nCount]*=KernelScale;
 
-	}	
+	}
 
 	return nKernelSize;
 }

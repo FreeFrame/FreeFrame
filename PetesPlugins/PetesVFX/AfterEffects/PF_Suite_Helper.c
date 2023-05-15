@@ -22,19 +22,19 @@
 /* PF_Suite_Helper.c
 
 	Contains helper routines for working with the suites.
-	
+
 	1.0	developed 9/98 by jja
 */
 
 #include "PF_Suite_Helper.h"
 
 
-PF_Err AEFX_AcquireSuite(	PF_InData		*in_data,		
-							PF_OutData		*out_data,		
-							const char		*name,			
-							long			version,		
+PF_Err AEFX_AcquireSuite(	PF_InData		*in_data,
+							PF_OutData		*out_data,
+							const char		*name,
+							long			version,
 							const char		*error_stringPC0,
-							void			**suite)			
+							void			**suite)
 {
 	PF_Err			err = PF_Err_NONE;
 	SPBasicSuite	*bsuite = in_data->pica_basicP;;
@@ -44,7 +44,7 @@ PF_Err AEFX_AcquireSuite(	PF_InData		*in_data,
 		if (!*suite) {
 			err = PF_Err_BAD_CALLBACK_PARAM;
 		}
-	} 
+	}
 	else {
 		err = PF_Err_BAD_CALLBACK_PARAM;
 	}
@@ -57,10 +57,10 @@ PF_Err AEFX_AcquireSuite(	PF_InData		*in_data,
 	return err;
 }
 
-PF_Err AEFX_ReleaseSuite(	PF_InData		*in_data,	
-							PF_OutData		*out_data,	
-							const char		*name,		
-							long			version,	
+PF_Err AEFX_ReleaseSuite(	PF_InData		*in_data,
+							PF_OutData		*out_data,
+							const char		*name,
+							long			version,
 							const char		*error_stringPC0)
 {
 	PF_Err			err = PF_Err_NONE;
@@ -68,7 +68,7 @@ PF_Err AEFX_ReleaseSuite(	PF_InData		*in_data,
 
 	if (bsuite) {
 		(*bsuite->ReleaseSuite)((char*)name, version);
-	} 
+	}
 	else {
 		err = PF_Err_BAD_CALLBACK_PARAM;
 	}

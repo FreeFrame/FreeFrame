@@ -51,7 +51,7 @@ int Pete_LumaKey_Init(SPete_LumaKey_Data* pInstanceData,int nWidth, int nHeight)
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	pInstanceData->nWidth=nWidth;
 	pInstanceData->nHeight=nHeight;
 
@@ -146,9 +146,9 @@ void Pete_LumaKey_Render(SPete_LumaKey_Data* pInstanceData,SPete_LumaKey_Setting
 				(nOutputBlue<<SHIFT_BLUE);
 
 			*pCurrentOutput=OutputColour;
-		
+
 		}
-			
+
 		pCurrentOutput+=1;
 		pCurrentSourceA+=1;
 		pCurrentSourceB+=1;

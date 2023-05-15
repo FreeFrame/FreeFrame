@@ -49,7 +49,7 @@ void CTimeWarpDfxDlg::EnableControls()
 	UpdateData();
 }
 
-BOOL CTimeWarpDfxDlg::OnInitDialog() 
+BOOL CTimeWarpDfxDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -60,7 +60,7 @@ BOOL CTimeWarpDfxDlg::OnInitDialog()
 		IDC_TIMEWARP_PLAYBACKSTYLE_LIST,
 		CB_SETCURSEL,
 		m_eStyle,
-		0L);                             
+		0L);
 	EnableControls();
 
 	return TRUE;

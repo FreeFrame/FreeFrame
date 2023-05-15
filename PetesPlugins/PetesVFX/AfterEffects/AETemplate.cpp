@@ -31,14 +31,14 @@ struct SAETemplate_InstanceData {
 	SPete_Parameter* m_pParameterData;
 	int m_nParameterCount;
 	int m_nSuperSampleSize;
-	bool m_bIsSuperSampleAvailable;	
+	bool m_bIsSuperSampleAvailable;
 };
 
 static funcptr_AENewHandle g_pfnAENewHandle=NULL;
 static funcptr_AEDisposeHandle g_pfnAEDisposeHandle=NULL;
 
 const int nSliderUnits=1000;
-#define PETE_FLOAT_AS_INT_SLIDER_OFFSET (32) // Pete- Changed float sliders to integral to work with FCP, 
+#define PETE_FLOAT_AS_INT_SLIDER_OFFSET (32) // Pete- Changed float sliders to integral to work with FCP,
 // Disk IDs of what used to be float params are offset by this, see AE SDK docs for how this prevents problems
 
 static PF_Err SequenceSetup(PF_InData* in_data,PF_OutData* out_data,PF_ParamDef* params[],PF_LayerDef* output);
@@ -63,7 +63,7 @@ float Pete_SliderToParamUnits(SPete_Parameter* pParam,int nInput);
 PF_Err Pete_NewWorld(int nWidth,int nHeight,PF_NewWorldFlags Flags,PF_World* poutWorld,SPete_MemHandle* poutHandle);
 void Pete_DisposeWorld(SPete_MemHandle hHandle);
 
-PF_Err 
+PF_Err
 main (
 	PF_Cmd			cmd,
 	PF_InData		*in_data,
@@ -79,9 +79,9 @@ main (
 		g_pfnAEDisposeHandle=in_data->utils->host_dispose_handle;
 	}
 
-	switch (cmd) 
+	switch (cmd)
 	{
-	
+
 		case PF_Cmd_ABOUT:
 			err = About(in_data,out_data,params,output);
 			break;
@@ -110,31 +110,31 @@ main (
 			err = HandleChangedParam(	in_data,
 										out_data,
 										params,
-										output, 
+										output,
 										reinterpret_cast<PF_UserChangedParamExtra*>(pExtra));
 			break;
 	}
 	return err;
 }
 
-static PF_Err 
-About (	
+static PF_Err
+About (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output )
 {
-	PF_SPRINTF(	out_data->return_msg, 
+	PF_SPRINTF(	out_data->return_msg,
 				"%s, v%d.%d\r%s",
-				NAME, 
-				MAJOR_VERSION, 
-				MINOR_VERSION, 
+				NAME,
+				MAJOR_VERSION,
+				MINOR_VERSION,
 				DESCRIPTION);
 
 	return PF_Err_NONE;
 }
 
-static PF_Err 
+static PF_Err
 GlobalSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
@@ -143,20 +143,20 @@ GlobalSetup (
 {
 	PF_Err	err				= PF_Err_NONE;
 
-	out_data->my_version	= PF_VERSION(	MAJOR_VERSION, 
+	out_data->my_version	= PF_VERSION(	MAJOR_VERSION,
 											MINOR_VERSION,
-											BUG_VERSION, 
-											STAGE_VERSION, 
+											BUG_VERSION,
+											STAGE_VERSION,
 											BUILD_VERSION);
 
 	out_data->global_data=NULL;
-	
+
 	out_data->out_flags|=PF_OutFlag_SEQUENCE_DATA_NEEDS_FLATTENING;
 
 	return err;
 }
 
-static PF_Err 
+static PF_Err
 ParamsSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
@@ -164,14 +164,14 @@ ParamsSetup (
 	PF_LayerDef		*output)
 {
 	PF_Err			err = PF_Err_NONE;
-	PF_ParamDef		def;	
+	PF_ParamDef		def;
 
 
 	AEFX_CLR_STRUCT(def);
 	def.flags=(PF_ParamFlag_SUPERVISE|
 		PF_ParamFlag_CANNOT_TIME_VARY);
 
-	PF_ADD_POPUP(	"Super-Sample", 
+	PF_ADD_POPUP(	"Super-Sample",
 					4,
 					1,
 					"1x|4x|9x|16x",
@@ -187,7 +187,7 @@ ParamsSetup (
 	for (nCount=0; nCount<nParameterCount; nCount+=1) {
 
 		SPete_Parameter* pCurrentParam=(pParameterData+nCount);
-	
+
 		AEFX_CLR_STRUCT(def);
 
 		switch (pCurrentParam->Type) {
@@ -344,7 +344,7 @@ static PF_Err SequenceSetup (	PF_InData		*in_data,
 	PF_Handle hInstanceData=PF_NEW_HANDLE(nSizeOfInstanceData);
 
 	out_data->sequence_data=hInstanceData;
-	
+
 	SAETemplate_InstanceData* pInstanceData=
 		(SAETemplate_InstanceData*)(*hInstanceData);
 	Pete_ZeroMemory(pInstanceData,nSizeOfInstanceData);
@@ -355,7 +355,7 @@ static PF_Err SequenceSetup (	PF_InData		*in_data,
 
 	PLUGIN_DATA* pPluginInstanceData=
 		&pInstanceData->m_PluginData;
-	
+
 	PLUGIN_INIT(pPluginInstanceData,nWidth,nHeight);
 
 	return PF_Err_NONE;
@@ -372,9 +372,9 @@ static PF_Err SequenceSetdown (	PF_InData		*in_data,
 
 	PLUGIN_DATA* pPluginInstanceData=
 		&pInstanceData->m_PluginData;
-	
+
 	PLUGIN_DEINIT(pPluginInstanceData);
-	
+
 	if (in_data->sequence_data) {
 		PF_DISPOSE_HANDLE(in_data->sequence_data);
 		out_data->sequence_data = NULL;
@@ -425,7 +425,7 @@ HandleChangedParam(
 
 		PLUGIN_DATA* pPluginInstanceData=
 			&pInstanceData->m_PluginData;
-		
+
 		PLUGIN_DEINIT(pPluginInstanceData);
 
 		const int nWidth=(in_data->width*nNewSuperSampleSize);
@@ -468,7 +468,7 @@ void Pete_SuperSampleUp(PF_World* pSource,PF_World* pSuperSampledSource,int nSup
 		PF_Pixel* pSourceRow=(PF_Pixel*)
 			(pSourceData+
 			(nSourceY*nSourceRowBytes));
-		
+
 		PF_Pixel* pSuperSampleRow=(PF_Pixel*)
 			(pSuperSampleData+
 			(nY*nSuperSampleRowBytes));
@@ -517,7 +517,7 @@ void Pete_SuperSampleDown(PF_World* pSuperSampledOutput,PF_World* pOutput,int nS
 		PF_Pixel* pOutputRow=(PF_Pixel*)
 			(pOutputData+
 			(nY*nOutputRowBytes));
-		
+
 		int nX;
 		for (nX=0; nX<nOutputWidth; nX+=1) {
 
@@ -584,7 +584,7 @@ void Pete_SuperSampleDown(PF_World* pSuperSampledOutput,PF_World* pOutput,int nS
 
 }
 
-static PF_Err Render ( 
+static PF_Err Render (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
@@ -618,7 +618,7 @@ static PF_Err Render (
 
 	const float AxisScaleX=1.0f/DownSampleX;
 	const float AxisScaleY=AspectRatio/DownSampleY;
-	
+
 	PF_World* pOriginalSource=&params[SOURCELAYER_PARAMINDEX]->u.ld;
 	PF_World* pOriginalOutput=output;
 
@@ -676,7 +676,7 @@ static PF_Err Render (
 				const int nPositionY=pPositionParam->u.td.y_value;
 				pCurrentPluginParam[0]=(nPositionX)/(float)(pOriginalSource->width*(1<<16));
 				pCurrentPluginParam[1]=(nPositionY)/(float)(pOriginalSource->height*(1<<16));
-								   
+
 				nCurrentAEParam+=1;
 
 			}break;
@@ -698,7 +698,7 @@ static PF_Err Render (
 			case PETE_PARAM_COLOUR_G: {
 				// do nothing, handled in case above
 			}break;
-			
+
 			case PETE_PARAM_COLOUR_B: {
 				// do nothing, handled in case above
 			}break;
@@ -734,9 +734,9 @@ static PF_Err Render (
 	if (bDoTransfer) {
 
 		err = Pete_NewWorld(
-			output->width, 
-			output->height, 
-			PF_NewWorldFlag_NONE, 
+			output->width,
+			output->height,
+			PF_NewWorldFlag_NONE,
 			&OutputCopy,
 			&hOutputCopyMemory);
 
@@ -758,12 +758,12 @@ static PF_Err Render (
 
 	if ((nOriginalPluginWidth!=nDesiredSSBufferWidth)||
 		(nOriginalPluginHeight!=nDesiredSSBufferHeight)) {
-		
+
 		PLUGIN_DEINIT(pPluginInstanceData);
 		PLUGIN_INIT(pPluginInstanceData,nDesiredSSBufferWidth,nDesiredSSBufferHeight);
-		
-	}		
-	
+
+	}
+
 	const int nSSBufferWidth=pPluginInstanceData->nWidth;
 	const int nSSBufferHeight=pPluginInstanceData->nHeight;
 
@@ -773,18 +773,18 @@ static PF_Err Render (
 		(nSSBufferHeight!=pOriginalSource->height)) {
 
 		err = Pete_NewWorld(
-			nSSBufferWidth, 
-			nSSBufferHeight, 
-			PF_NewWorldFlag_NONE, 
+			nSSBufferWidth,
+			nSSBufferHeight,
+			PF_NewWorldFlag_NONE,
 			&SuperSampledSource,
 			&hSuperSampledSourceMemory);
 
 		if (!err) {
 
 			err = Pete_NewWorld(
-				nSSBufferWidth, 
-				nSSBufferHeight, 
-				PF_NewWorldFlag_NONE, 
+				nSSBufferWidth,
+				nSSBufferHeight,
+				PF_NewWorldFlag_NONE,
 				&SuperSampledOutput,
 				&hSuperSampledOutputMemory);
 
@@ -822,7 +822,7 @@ static PF_Err Render (
 
 	U32* pOutputData=(U32*)pOutput->data;
 	const int nOutputRowBytes=pOutput->rowbytes;
-	
+
 	const int nScreenPixelCount=(nWidth*nHeight);
 	const int nScreenByteCount=(nScreenPixelCount*sizeof(U32));
 
@@ -836,7 +836,7 @@ static PF_Err Render (
 		return err;
 
 	}
-	
+
 	U32* pConversionSourceBuffer=(U32*)*(hConversionBuffer);
 	U32* pConversionOutputBuffer=(U32*)*(hConversionBuffer);
 	pConversionOutputBuffer+=(nWidth*nHeight);
@@ -878,18 +878,18 @@ static PF_Err Render (
 
 			pCurrentConv+=1;
 			pCurrentSource+=1;
-				
+
 		}
 
 	}
-	
+
 	PLUGIN_RENDER(pPluginInstanceData,pPluginSettings,pConversionSourceBuffer,pConversionOutputBuffer);
 
 	for (nY=0; nY<nHeight; nY+=1) {
 
 		U32* pSourceRowStart=(U32*)
 			(((char*)pSourceData)+(nY*nSourceRowBytes));
-			
+
 		U32* pOutputRowStart=(U32*)
 			(((char*)pOutputData)+(nY*nOutputRowBytes));
 		U32* pOutputRowEnd=(pOutputRowStart+nWidth);
@@ -956,7 +956,7 @@ static PF_Err Render (
 
 			pCurrentOutput+=1;
 			pCurrentOriginalSource+=1;
-				
+
 		}
 
 	}
@@ -1054,7 +1054,7 @@ void* Pete_LockHandle(SPete_MemHandle InHandle) {
 void Pete_UnLockHandle(SPete_MemHandle InHandle) {
 
 	//do nothing
-	
+
 }
 
 int Pete_GetTransferModeFromPopupIndex(int nPopupIndex) {

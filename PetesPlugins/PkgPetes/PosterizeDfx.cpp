@@ -35,7 +35,7 @@ class CPosterizeDfx: public CDFX
 public:
 	~CPosterizeDfx();
 	CPosterizeDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CPosterizeDfx)
 END_OUTPUTSCREENS_DESC(CPosterizeDfx)
 
 BEGIN_EFFECT_DESC(CPosterizeDfx, 10203216861479815, PETE_VJO_VERSION , "Petes\\Posterize", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CPosterizeDfx) 
+END_EFFECT_DESC(CPosterizeDfx)
 
 REGISTER_DFXFACTORY(CPosterizeDfx)
 
@@ -90,10 +90,10 @@ CPosterizeDfx::~CPosterizeDfx()
 {
 
 	Pete_Posterize_DeInit(&m_InstanceData);
-	
+
 }
 
-HBITMAP	CPosterizeDfx::GetLabelBitmap()			
+HBITMAP	CPosterizeDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -102,7 +102,7 @@ BOOL	CPosterizeDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -122,7 +122,7 @@ BOOL	CPosterizeDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CPosterizeDfx::UpdateConfig()
@@ -149,7 +149,7 @@ BOOL	CPosterizeDfx::Initialize()
 
 BOOL	CPosterizeDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

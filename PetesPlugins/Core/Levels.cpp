@@ -401,21 +401,21 @@ void Pete_Levels_CalculateAutoLevels(SPete_Levels_Data* pInstanceData,SPete_Leve
 	const int nHeight=pInstanceData->nHeight;
 
 	const int nNumPixels = nWidth*nHeight;
-	
+
 	U32* pCurrentSource=pSource;
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	const int nSampleSpacing=8;
 
 	while (pCurrentSource<pSourceEnd) {
-		
+
 		U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
-			
+
 		while (pCurrentSource<pSourceLineEnd) {
 
 			U32 SourceColour=*pCurrentSource;
-			
+
 			const int nSourceRed=(SourceColour>>SHIFT_RED)&0xff;
 			const int nSourceGreen=(SourceColour>>SHIFT_GREEN)&0xff;
 			const int nSourceBlue=(SourceColour>>SHIFT_BLUE)&0xff;
@@ -526,12 +526,12 @@ void Pete_Levels_CalculateAutoLevels(SPete_Levels_Data* pInstanceData,SPete_Leve
 		pSettings->m_BlueInputCeiling=(float)(nBlueHigh-1);
 	}
 
-	int nLowLuminance = 
+	int nLowLuminance =
 		((90 * nRedLow)+
 		(115 * nGreenLow)+
 		(51 * nBlueLow))/256;
 
-	int nHighLuminance = 
+	int nHighLuminance =
 		((90 * nRedHigh)+
 		(115 * nGreenHigh)+
 		(51 * nBlueHigh))/256;

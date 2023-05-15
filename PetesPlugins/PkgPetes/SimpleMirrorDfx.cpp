@@ -35,7 +35,7 @@ class CSimpleMirrorDfx: public CDFX
 public:
 	~CSimpleMirrorDfx();
 	CSimpleMirrorDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CSimpleMirrorDfx)
 END_OUTPUTSCREENS_DESC(CSimpleMirrorDfx)
 
 BEGIN_EFFECT_DESC(CSimpleMirrorDfx, 10203216862323929, PETE_VJO_VERSION , "Petes\\SimpleMirror", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CSimpleMirrorDfx) 
+END_EFFECT_DESC(CSimpleMirrorDfx)
 
 REGISTER_DFXFACTORY(CSimpleMirrorDfx)
 
@@ -102,7 +102,7 @@ CSimpleMirrorDfx::~CSimpleMirrorDfx()
 
 }
 
-HBITMAP	CSimpleMirrorDfx::GetLabelBitmap()			
+HBITMAP	CSimpleMirrorDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CSimpleMirrorDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CSimpleMirrorDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CSimpleMirrorDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CSimpleMirrorDfx::Initialize()
 
 BOOL	CSimpleMirrorDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

@@ -37,7 +37,7 @@ class CDodgeDfx: public CDFX
 public:
 	~CDodgeDfx();
 	CDodgeDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -72,7 +72,7 @@ BEGIN_OUTPUTSCREENS_DESC(CDodgeDfx)
 END_OUTPUTSCREENS_DESC(CDodgeDfx)
 
 BEGIN_EFFECT_DESC(CDodgeDfx, 10203216861479751, PETE_VJO_VERSION , "Petes\\Dodge", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CDodgeDfx) 
+END_EFFECT_DESC(CDodgeDfx)
 
 REGISTER_DFXFACTORY(CDodgeDfx)
 
@@ -91,7 +91,7 @@ CDodgeDfx::~CDodgeDfx()
 	Pete_Dodge_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CDodgeDfx::GetLabelBitmap()			
+HBITMAP	CDodgeDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -100,7 +100,7 @@ BOOL	CDodgeDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -120,7 +120,7 @@ BOOL	CDodgeDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CDodgeDfx::UpdateConfig()
@@ -145,7 +145,7 @@ BOOL	CDodgeDfx::Initialize()
 
 BOOL	CDodgeDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

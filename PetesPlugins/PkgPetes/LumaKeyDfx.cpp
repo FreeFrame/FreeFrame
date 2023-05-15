@@ -35,7 +35,7 @@ class CLumaKeyDfx: public CDFX
 public:
 	~CLumaKeyDfx();
 	CLumaKeyDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -71,7 +71,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLumaKeyDfx)
 END_OUTPUTSCREENS_DESC(CLumaKeyDfx)
 
 BEGIN_EFFECT_DESC(CLumaKeyDfx, 10204216861273929, PETE_VJO_VERSION , "Petes\\LumaKey", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLumaKeyDfx) 
+END_EFFECT_DESC(CLumaKeyDfx)
 
 REGISTER_DFXFACTORY(CLumaKeyDfx)
 
@@ -103,7 +103,7 @@ CLumaKeyDfx::~CLumaKeyDfx()
 
 }
 
-HBITMAP	CLumaKeyDfx::GetLabelBitmap()			
+HBITMAP	CLumaKeyDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -112,7 +112,7 @@ BOOL	CLumaKeyDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -132,7 +132,7 @@ BOOL	CLumaKeyDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CLumaKeyDfx::UpdateConfig()
@@ -181,7 +181,7 @@ BOOL	CLumaKeyDfx::Initialize()
 
 BOOL	CLumaKeyDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMemA = (DWORD*)ppInput[0]->GetBuffer();
 	DWORD* pInputMemB = (DWORD*)ppInput[1]->GetBuffer();

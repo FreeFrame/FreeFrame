@@ -190,7 +190,7 @@ void Pete_Glow_Render(SPete_Glow_Data* pInstanceData,SPete_Glow_Settings* pSetti
 
 	const int nMaxIterations=
 		(int)(ceilf(pSettings->m_FakeItPasses));
-		
+
 	Pete_DoBoxFilterBlur(
 		pSource,
 		pIntermediateBuffer,
@@ -227,8 +227,8 @@ void Pete_Glow_Render(SPete_Glow_Data* pInstanceData,SPete_Glow_Settings* pSetti
 		&LevelSettings,
 		pOutput,
 		pOutput);
-	
+
 	Pete_DoInPlaceAddition(pOutput,pSource,pInstanceData->nWidth,pInstanceData->nHeight);
-	
+
 }
 

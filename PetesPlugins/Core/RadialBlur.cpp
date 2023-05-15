@@ -65,12 +65,12 @@ void Pete_RadialBlur_GetParameters(SPete_Parameter** poutpParameters,int* poutnP
 void Pete_RadialBlur_Render4(SPete_RadialBlur_Settings* pSettings,U32* pSource, U32* pOutput,int nWidth,int nHeight);
 void Pete_RadialBlur_Render8(SPete_RadialBlur_Settings* pSettings,U32* pSource, U32* pOutput,int nWidth,int nHeight);
 void Pete_RadialBlur_Render16(SPete_RadialBlur_Settings* pSettings,U32* pSource, U32* pOutput,int nWidth,int nHeight);
-#else 
+#else
 void Pete_RadialBlur_RenderCVersion(SPete_RadialBlur_Settings* pSettings,U32* pSource, U32* pOutput,int nWidth,int nHeight,int nLayersCountShift);
 #endif // PETE_USE_C
 
 int Pete_RadialBlur_Init(SPete_RadialBlur_Data* pInstanceData,int nWidth,int nHeight) {
-	
+
 	pInstanceData->nWidth=nWidth;
 	pInstanceData->nHeight=nHeight;
 
@@ -123,7 +123,7 @@ void Pete_RadialBlur_Render(SPete_RadialBlur_Data* pInstanceData,SPete_RadialBlu
 			Pete_RadialBlur_Render16(pSettings,pSource,pOutput,nWidth,nHeight);
 		break;
 	}
-	
+
 #endif // PETE_USE_C
 
 }
@@ -143,7 +143,7 @@ void Pete_RadialBlur_Render4(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 	const int nLayersCountShift=2;
 	const int nLayersCount=(1<<nLayersCountShift);
 	const int nLayerScaleIncrement=static_cast<int>(pSettings->m_LayerScale*nFixedMult);
-	
+
 	U32* pCurrentSource=pSource;
 	U32* pCurrentOutput=pOutput;
 	const U32* pOutputEnd=(pOutput+nNumPixels);
@@ -159,7 +159,7 @@ void Pete_RadialBlur_Render4(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 
 	int nY=-nHalfHeight;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineStart=pCurrentOutput;
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
 
@@ -236,7 +236,7 @@ void Pete_RadialBlur_Render8(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 	const int nLayersCountShift=3;
 	const int nLayersCount=(1<<nLayersCountShift);
 	const int nLayerScaleIncrement=static_cast<int>(pSettings->m_LayerScale*nFixedMult);
-	
+
 	U32* pCurrentSource=pSource;
 	U32* pCurrentOutput=pOutput;
 	const U32* pOutputEnd=(pOutput+nNumPixels);
@@ -252,7 +252,7 @@ void Pete_RadialBlur_Render8(SPete_RadialBlur_Settings* pSettings,U32* pSource, 
 
 	int nY=-nHalfHeight;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineStart=pCurrentOutput;
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
 
@@ -329,7 +329,7 @@ void Pete_RadialBlur_Render16(SPete_RadialBlur_Settings* pSettings,U32* pSource,
 	const int nLayersCountShift=4;
 	const int nLayersCount=(1<<nLayersCountShift);
 	const int nLayerScaleIncrement=static_cast<int>(pSettings->m_LayerScale*nFixedMult);
-	
+
 	U32* pCurrentSource=pSource;
 	U32* pCurrentOutput=pOutput;
 	const U32* pOutputEnd=(pOutput+nNumPixels);
@@ -345,7 +345,7 @@ void Pete_RadialBlur_Render16(SPete_RadialBlur_Settings* pSettings,U32* pSource,
 
 	int nY=-nHalfHeight;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineStart=pCurrentOutput;
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
 
@@ -423,7 +423,7 @@ void Pete_RadialBlur_RenderCVersion(SPete_RadialBlur_Settings* pSettings,U32* pS
 
 	const int nLayersCount=(1<<nLayersCountShift);
 	const int nLayerScaleIncrement=static_cast<int>(pSettings->m_LayerScale*nFixedMult);
-	
+
 	U32* pCurrentSource=pSource;
 	U32* pCurrentOutput=pOutput;
 	const U32* pOutputEnd=(pOutput+nNumPixels);
@@ -432,7 +432,7 @@ void Pete_RadialBlur_RenderCVersion(SPete_RadialBlur_Settings* pSettings,U32* pS
 
 	int nY=-nHalfHeight;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineStart=pCurrentOutput;
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
 

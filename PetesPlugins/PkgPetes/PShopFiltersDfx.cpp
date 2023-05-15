@@ -41,7 +41,7 @@ class CPShopFiltersDfx: public CDFX
 public:
 	~CPShopFiltersDfx();
 	CPShopFiltersDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -116,7 +116,7 @@ BEGIN_OUTPUTSCREENS_DESC(CPShopFiltersDfx)
 END_OUTPUTSCREENS_DESC(CPShopFiltersDfx)
 
 BEGIN_EFFECT_DESC(CPShopFiltersDfx, 10203216861459948, PETE_VJO_VERSION , "Petes\\PShopFilters", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CPShopFiltersDfx) 
+END_EFFECT_DESC(CPShopFiltersDfx)
 
 REGISTER_DFXFACTORY(CPShopFiltersDfx)
 
@@ -124,7 +124,7 @@ CPShopFiltersDfx::CPShopFiltersDfx()
 {
 	m_nXRes = 0;
 	m_nYRes = 0;
-	
+
 	m_eStyle = eBurnStyle;
 	m_ePreviousStyle = eBurnStyle;
 
@@ -178,7 +178,7 @@ CPShopFiltersDfx::~CPShopFiltersDfx()
 
 }
 
-HBITMAP	CPShopFiltersDfx::GetLabelBitmap()			
+HBITMAP	CPShopFiltersDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -215,8 +215,8 @@ BOOL	CPShopFiltersDfx::GetConfigData(CConfigData *p)
 	if(!p->GetInt("!", 0)) return FALSE;
 
 	m_eStyle = static_cast<EPShopFiltersStyle>(p->GetInt("S", m_eStyle));
-	
-	return TRUE;	
+
+	return TRUE;
 }
 
 BOOL	CPShopFiltersDfx::UpdateConfig()
@@ -224,9 +224,9 @@ BOOL	CPShopFiltersDfx::UpdateConfig()
 	CConfigData *pConfigData = m_pEngine->GetCurrentConfig();
 	if(!GetConfigData(pConfigData))
 		SetConfigData(pConfigData);
-	
+
 	UnRegisterAllVariables();
-	
+
 	switch (m_eStyle) {
 
 		case eBurnStyle: {
@@ -240,19 +240,19 @@ BOOL	CPShopFiltersDfx::UpdateConfig()
 			m_nChromiumGreenTintID=RegisterFloat(m_pEngine,&m_ChromiumGreenTint,"Green Tint",0.0f,255.0f);
 			m_nChromiumBlueTintID=RegisterFloat(m_pEngine,&m_ChromiumBlueTint,"Blue Tint",0.0f,255.0f);
 		}break;
-		
+
 		case eDodgeStyle: {
-			// Do nothing						  
+			// Do nothing
 		}break;
-		
+
 		case eExclusionStyle: {
 			// Do nothing
 		}break;
-		
+
 		case ePosterizeStyle: {
 			m_nPosterizeLevelsID=RegisterFloat(m_pEngine,&m_PosterizeLevels,"Levels",1.0f,255.0f);
 		}break;
-		
+
 		case eSolarizeStyle: {
 			m_nSolarizeThresholdID=RegisterFloat(m_pEngine,&m_SolarizeThreshold,"Threshold",0.0f,255.0f);
 			m_nSolarizeStartID=RegisterFloat(m_pEngine,&m_SolarizeStart,"Start",0.0f,255.0f);
@@ -265,7 +265,7 @@ BOOL	CPShopFiltersDfx::UpdateConfig()
 		default: {
 			ASSERT(FALSE);
 		}break;
-	
+
 	}
 
 	return TRUE;
@@ -287,19 +287,19 @@ BOOL	CPShopFiltersDfx::Initialize()
 		case eChromiumStyle: {
 			Pete_Chromium_Init(&m_ChromiumInstanceData,m_nXRes,m_nYRes);
 		}break;
-		
+
 		case eDodgeStyle: {
 			Pete_Dodge_Init(&m_DodgeInstanceData,m_nXRes,m_nYRes);
 		}break;
-		
+
 		case eExclusionStyle: {
 			Pete_Exclusion_Init(&m_ExclusionInstanceData,m_nXRes,m_nYRes);
 		}break;
-		
+
 		case ePosterizeStyle: {
 			Pete_Posterize_Init(&m_PosterizeInstanceData,m_nXRes,m_nYRes);
 		}break;
-		
+
 		case eSolarizeStyle: {
 			Pete_Solarize_Init(&m_SolarizeInstanceData,m_nXRes,m_nYRes);
 		}break;
@@ -307,7 +307,7 @@ BOOL	CPShopFiltersDfx::Initialize()
 		default: {
 			ASSERT(FALSE);
 		}break;
-	
+
 	}
 
 	return TRUE;
@@ -319,7 +319,7 @@ BOOL	CPShopFiltersDfx::Render(CScreen **ppInput, CScreen *pOutput)
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 
-	
+
 	switch (m_eStyle) {
 
 		case eBurnStyle: {
@@ -342,32 +342,32 @@ BOOL	CPShopFiltersDfx::Render(CScreen **ppInput, CScreen *pOutput)
 			Pete_Chromium_Render(&m_ChromiumInstanceData,&Settings,pInputMem,pOutputMem);
 
 		}break;
-		
+
 		case eDodgeStyle: {
 
 			SPete_Dodge_Settings Settings;
-			
+
 			Pete_Dodge_Render(&m_DodgeInstanceData,&Settings,pInputMem,pOutputMem);
 
 		}break;
-		
+
 		case eExclusionStyle: {
 
 			SPete_Exclusion_Settings Settings;
-			
+
 			Pete_Exclusion_Render(&m_ExclusionInstanceData,&Settings,pInputMem,pOutputMem);
 
 		}break;
-		
+
 		case ePosterizeStyle: {
-	
+
 			SPete_Posterize_Settings Settings;
 			Settings.m_PosterizeLevels=m_PosterizeLevels;
 
 			Pete_Posterize_Render(&m_PosterizeInstanceData,&Settings,pInputMem,pOutputMem);
 
 		}break;
-		
+
 		case eSolarizeStyle: {
 
 			SPete_Solarize_Settings Settings;
@@ -390,7 +390,7 @@ BOOL	CPShopFiltersDfx::Render(CScreen **ppInput, CScreen *pOutput)
 		default: {
 			ASSERT(FALSE);
 		}break;
-	
+
 	}
 
 	return TRUE;

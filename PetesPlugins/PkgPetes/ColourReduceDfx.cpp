@@ -35,7 +35,7 @@ class CColourReduceDfx: public CDFX
 public:
 	~CColourReduceDfx();
 	CColourReduceDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CColourReduceDfx)
 END_OUTPUTSCREENS_DESC(CColourReduceDfx)
 
 BEGIN_EFFECT_DESC(CColourReduceDfx, 10203216861479715, PETE_VJO_VERSION , "Petes\\ColourReduce", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CColourReduceDfx) 
+END_EFFECT_DESC(CColourReduceDfx)
 
 REGISTER_DFXFACTORY(CColourReduceDfx)
 
@@ -102,7 +102,7 @@ CColourReduceDfx::~CColourReduceDfx()
 
 }
 
-HBITMAP	CColourReduceDfx::GetLabelBitmap()			
+HBITMAP	CColourReduceDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CColourReduceDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CColourReduceDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CColourReduceDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CColourReduceDfx::Initialize()
 
 BOOL	CColourReduceDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

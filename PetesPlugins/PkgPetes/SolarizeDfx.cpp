@@ -35,7 +35,7 @@ class CSolarizeDfx: public CDFX
 public:
 	~CSolarizeDfx();
 	CSolarizeDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -85,7 +85,7 @@ BEGIN_OUTPUTSCREENS_DESC(CSolarizeDfx)
 END_OUTPUTSCREENS_DESC(CSolarizeDfx)
 
 BEGIN_EFFECT_DESC(CSolarizeDfx, 10203216861479915, PETE_VJO_VERSION , "Petes\\Solarize", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CSolarizeDfx) 
+END_EFFECT_DESC(CSolarizeDfx)
 
 REGISTER_DFXFACTORY(CSolarizeDfx)
 
@@ -113,7 +113,7 @@ CSolarizeDfx::~CSolarizeDfx()
 
 }
 
-HBITMAP	CSolarizeDfx::GetLabelBitmap()			
+HBITMAP	CSolarizeDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -122,7 +122,7 @@ BOOL	CSolarizeDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -142,7 +142,7 @@ BOOL	CSolarizeDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CSolarizeDfx::UpdateConfig()
@@ -174,7 +174,7 @@ BOOL	CSolarizeDfx::Initialize()
 
 BOOL	CSolarizeDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

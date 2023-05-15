@@ -100,8 +100,8 @@ int Pete_MoireStewart_Init(SPete_MoireStewart_Data* pInstanceData,int nWidth, in
 		Pete_MoireStewart_DeInit(pInstanceData);
 		return 0;
 	}
-	
-	pInstanceData->nSqrtTableSize=nSqrtTableSize;	
+
+	pInstanceData->nSqrtTableSize=nSqrtTableSize;
 	Pete_MoireStewart_BuildSqrtTable(pInstanceData);
 
 	pInstanceData->nWidth=nWidth;
@@ -154,7 +154,7 @@ void Pete_MoireStewart_Render(SPete_MoireStewart_Data* pInstanceData,SPete_Moire
 
 		U32* pOutputLineStart=pCurrentOutput;
 		U32* pOutputLineEnd=(pOutputLineStart+nWidth);
-		
+
 		const int nStartX=(-HalfWidth*nFPMult);
 
 		int nCurrentX=nStartX;
@@ -163,7 +163,7 @@ void Pete_MoireStewart_Render(SPete_MoireStewart_Data* pInstanceData,SPete_Moire
 		const int nDeltaSquared1Y=
 			(nDelta1Y>>nHalfFPShift)*
 			(nDelta1Y>>nHalfFPShift);
-		
+
 		const int nDelta2Y=(nCurrentY-nCircleCentre2Y);
 		const int nDeltaSquared2Y=
 			(nDelta2Y>>nHalfFPShift)*
@@ -224,7 +224,7 @@ void Pete_MoireStewart_Render(SPete_MoireStewart_Data* pInstanceData,SPete_Moire
 			pCurrentSource+=1;
 
 		}
-		
+
 		nCurrentY+=nFPMult;
 
 	}

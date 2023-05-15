@@ -107,7 +107,7 @@ void Pete_Smear_Render(SPete_Smear_Data* pInstanceData,SPete_Smear_Settings* pSe
 	const float BevelStartD=((PosX*NormalX)+(PosY*NormalY));
 	const float BevelSize=pSettings->m_BevelSize;
 	const float BevelScale=0.5f-(pSettings->m_BevelScale/2.0f);
-	
+
 	const bool bSmearEverything=(pSettings->m_DoSmearAll>0.0f);
 
 	const int nPixelsCount=(nWidth*nHeight);
@@ -123,14 +123,14 @@ void Pete_Smear_Render(SPete_Smear_Data* pInstanceData,SPete_Smear_Settings* pSe
 
 		U32* pOutputLineStart=pCurrentOutput;
 		U32* pOutputLineEnd=(pOutputLineStart+nWidth);
-		
+
 		const float StartX=-HalfWidth;
 
 		const float StartVDotNMinusD=
 			((StartX*NormalX)+
 			(CurrentY*NormalY))-
 			BevelStartD;
-		
+
 		const float EndX=HalfWidth;
 
 		float EndVDotNMinusD=
@@ -155,25 +155,25 @@ void Pete_Smear_Render(SPete_Smear_Data* pInstanceData,SPete_Smear_Settings* pSe
 
 				float NormalScale;
 				if (-VDotNMinusD<BevelSize) {
-				
+
 					const float LerpValue=
 						(-VDotNMinusD/BevelSize);
-						
+
 					const float CurrentScale=
 						(LerpValue*BevelScale);
 
 					NormalScale=(VDotNMinusD*CurrentScale);
-					
+
 				} else {
-				
+
 					NormalScale=(VDotNMinusD+BevelSize)-
 						(BevelSize*BevelScale);
-					
-				}			
+
+				}
 
 				const float SourceX=CurrentX-(NormalScale*NormalX);
 				const float SourceY=CurrentY-(NormalScale*NormalY);
-		
+
 				int nSourceX=static_cast<int>(SourceX+HalfWidth);
 				int nSourceY=static_cast<int>(SourceY+HalfHeight);
 
@@ -186,7 +186,7 @@ void Pete_Smear_Render(SPete_Smear_Data* pInstanceData,SPete_Smear_Settings* pSe
 					nSourceX;
 
 				*pCurrentOutput=*pSmearSource;
-			
+
 			}
 
 			CurrentX+=1.0f;
@@ -196,7 +196,7 @@ void Pete_Smear_Render(SPete_Smear_Data* pInstanceData,SPete_Smear_Settings* pSe
 			pCurrentSource+=1;
 
 		}
-		
+
 		CurrentY+=1.0f;
 
 	}

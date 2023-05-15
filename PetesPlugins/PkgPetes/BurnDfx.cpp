@@ -37,7 +37,7 @@ class CBurnDfx: public CDFX
 public:
 	~CBurnDfx();
 	CBurnDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -72,7 +72,7 @@ BEGIN_OUTPUTSCREENS_DESC(CBurnDfx)
 END_OUTPUTSCREENS_DESC(CBurnDfx)
 
 BEGIN_EFFECT_DESC(CBurnDfx, 10203216861479951, PETE_VJO_VERSION , "Petes\\Burn", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CBurnDfx) 
+END_EFFECT_DESC(CBurnDfx)
 
 REGISTER_DFXFACTORY(CBurnDfx)
 
@@ -91,7 +91,7 @@ CBurnDfx::~CBurnDfx()
 	Pete_Burn_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CBurnDfx::GetLabelBitmap()			
+HBITMAP	CBurnDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -100,7 +100,7 @@ BOOL	CBurnDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -120,7 +120,7 @@ BOOL	CBurnDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CBurnDfx::UpdateConfig()
@@ -145,7 +145,7 @@ BOOL	CBurnDfx::Initialize()
 
 BOOL	CBurnDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

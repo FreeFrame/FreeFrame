@@ -35,7 +35,7 @@ class CStaticDfx: public CDFX
 public:
 	~CStaticDfx();
 	CStaticDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -73,7 +73,7 @@ BEGIN_OUTPUTSCREENS_DESC(CStaticDfx)
 END_OUTPUTSCREENS_DESC(CStaticDfx)
 
 BEGIN_EFFECT_DESC(CStaticDfx, 10203216861479964, PETE_VJO_VERSION , "Petes\\Static", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CStaticDfx) 
+END_EFFECT_DESC(CStaticDfx)
 
 REGISTER_DFXFACTORY(CStaticDfx)
 
@@ -96,7 +96,7 @@ CStaticDfx::~CStaticDfx()
 	Pete_Static_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CStaticDfx::GetLabelBitmap()			
+HBITMAP	CStaticDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -105,7 +105,7 @@ BOOL	CStaticDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -125,7 +125,7 @@ BOOL	CStaticDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CStaticDfx::UpdateConfig()

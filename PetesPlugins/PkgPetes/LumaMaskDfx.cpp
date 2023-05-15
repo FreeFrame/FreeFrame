@@ -35,7 +35,7 @@ class CLumaMaskDfx: public CDFX
 public:
 	~CLumaMaskDfx();
 	CLumaMaskDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -72,7 +72,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLumaMaskDfx)
 END_OUTPUTSCREENS_DESC(CLumaMaskDfx)
 
 BEGIN_EFFECT_DESC(CLumaMaskDfx, 10204217861273929, PETE_VJO_VERSION , "Petes\\LumaMask", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLumaMaskDfx) 
+END_EFFECT_DESC(CLumaMaskDfx)
 
 REGISTER_DFXFACTORY(CLumaMaskDfx)
 
@@ -104,7 +104,7 @@ CLumaMaskDfx::~CLumaMaskDfx()
 
 }
 
-HBITMAP	CLumaMaskDfx::GetLabelBitmap()			
+HBITMAP	CLumaMaskDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -113,7 +113,7 @@ BOOL	CLumaMaskDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -133,7 +133,7 @@ BOOL	CLumaMaskDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CLumaMaskDfx::UpdateConfig()
@@ -182,7 +182,7 @@ BOOL	CLumaMaskDfx::Initialize()
 
 BOOL	CLumaMaskDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMemA = (DWORD*)ppInput[0]->GetBuffer();
 	DWORD* pInputMemB = (DWORD*)ppInput[1]->GetBuffer();

@@ -37,7 +37,7 @@ class CVisualsFXDfx: public CDFX
 public:
 	~CVisualsFXDfx();
 	CVisualsFXDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -64,7 +64,7 @@ protected:
 	// management is preferred, but in this case I have to register the
 	// addresses of the parameters with VJo, so having an area of
 	// memory that may be moved around won't work, so I fall back to
-	// new/delete	
+	// new/delete
 	float*	m_pVisualsFXParameters;
 
 };
@@ -78,7 +78,7 @@ BEGIN_OUTPUTSCREENS_DESC(CVisualsFXDfx)
 END_OUTPUTSCREENS_DESC(CVisualsFXDfx)
 
 BEGIN_EFFECT_DESC(CVisualsFXDfx, 10203216861479997, PETE_VJO_VERSION , "Petes\\VisualsFX", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CVisualsFXDfx) 
+END_EFFECT_DESC(CVisualsFXDfx)
 
 REGISTER_DFXFACTORY(CVisualsFXDfx)
 
@@ -121,7 +121,7 @@ CVisualsFXDfx::~CVisualsFXDfx()
 
 }
 
-HBITMAP	CVisualsFXDfx::GetLabelBitmap()			
+HBITMAP	CVisualsFXDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -140,7 +140,7 @@ BOOL	CVisualsFXDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CVisualsFXDfx::UpdateConfig()
@@ -188,7 +188,7 @@ BOOL	CVisualsFXDfx::Initialize()
 	}
 
 	if (m_pFunctionTable!=NULL) {
-	
+
 		videoInfoStruct VideoInfo;
 
 		VideoInfo.frameWidth=m_nXRes;
@@ -197,7 +197,7 @@ BOOL	CVisualsFXDfx::Initialize()
 		m_pFunctionTable->initialise(&VideoInfo);
 
 		const int nNumParameters=m_pFunctionTable->getNumParameters();
-		
+
 		if (m_pVisualsFXParameters!=NULL) {
 			delete m_pVisualsFXParameters;
 		}

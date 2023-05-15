@@ -101,7 +101,7 @@ SPete_UIPos g_DrawOrigin;
 void EditGraph_SaveDataFile(SPete_GraphData* pGraph,char* pFileName) {
 
 	g_Selection.m_pNodeEntry=NULL;
-	
+
 	GraphUtil_FlattenGraph(pGraph);
 
 	FILE* pOutputFile=fopen(pFileName,"wb");
@@ -246,7 +246,7 @@ void EditGraph_DrawNode(HWND hWindow,HDC hDeviceContext,SPete_Node* pNode) {
 				hDeviceContext,
 				(SPete_EffectNode*)pNode,
 				pSelection);
-								  
+
 		}break;
 
 		case eType_Effect_Input: {
@@ -308,7 +308,7 @@ void EditGraph_DrawNode(HWND hWindow,HDC hDeviceContext,SPete_Node* pNode) {
 				pSelection);
 
 		}break;
-		
+
 		case eType_Parameter_Midi: {
 
 			EditGraph_DrawMidiParamNode(
@@ -316,7 +316,7 @@ void EditGraph_DrawNode(HWND hWindow,HDC hDeviceContext,SPete_Node* pNode) {
 				hDeviceContext,
 				(SPete_ParameterNode*)pNode,
 				pSelection);
-			
+
 		}break;
 
 		default: {
@@ -718,7 +718,7 @@ void EditGraph_DrawMidiParamNode(HWND hWindow,HDC hDeviceContext,SPete_Parameter
 void EditGraph_DrawUnfilledBox(HDC hDeviceContext,int nPosX,int nPosY,int nWidth,int nHeight,U32 Colour,int nLineWidth) {
 
 	EditGraph_GraphToWindowSpace(nPosX,nPosY,&nPosX,&nPosY);
-	
+
 	HPEN hCurrentPen=
 		CreatePen(PS_SOLID,nLineWidth,Colour);
 
@@ -777,7 +777,7 @@ void EditGraph_DrawEffectConnections(HDC hDeviceContext,SPete_EffectNode* pEffec
 
 	const int nInputCount=GraphUtil_GetInputCount(pEffectNode);
 	const int nParamCount=GraphUtil_GetParameterCount(pEffectNode);
-	
+
 	SPete_UIPos* pNodePos=(&pEffectNode->m_Pos);
 
 	if (nInputCount>0) {
@@ -870,7 +870,7 @@ void EditGraph_DrawLine(HDC hDeviceContext,int nStartX,int nStartY,int nEndX,int
 void EditGraph_DrawInputTrident(HDC hDeviceContext,SPete_Node* pNode,int nInputCount) {
 
 	const U32 TridentColour=0x00de6100;
-	
+
 	SPete_UIPos* pOrigin=&pNode->m_Pos;
 
 	const int nHeight=pNode->m_Size.nY;
@@ -1032,7 +1032,7 @@ void EditGraph_DrawParameterConnections(HDC hDeviceContext,SPete_Node* pNode,SPe
 		(pSelection->m_eType==eSelect_Parameter_Output));
 
 	const int nParamCount=GraphUtil_GetParameterCount(pNode);
-	
+
 	SPete_UIPos* pNodePos=(&pNode->m_Pos);
 
 	if (nParamCount>0) {
@@ -1106,9 +1106,9 @@ void EditGraph_DrawParameterTrident(HDC hDeviceContext,SPete_Node* pNode,int nPa
 	if (nParamCount==0) {
 		return;
 	}
-	
+
 	const U32 TridentColour=0x00de6100;
-	
+
 	SPete_UIPos* pOrigin=&pNode->m_Pos;
 
 	const int nWidth=pNode->m_Size.nX;
@@ -1179,7 +1179,7 @@ void EditGraph_GetParameterPos(SPete_Node* pNode,int nParamIndex,int nParamTotal
 	const int nTridentHeight=((nParamTotal-1)*nForkSeperation);
 
 	const int nForkTopY=(pOrigin->nY-(nTridentHeight/2));
-	
+
 	poutPos->nX=nTridentEndX;
 
 	poutPos->nY=
@@ -1337,7 +1337,7 @@ void EditGraph_DrawArrowHead(HDC hDeviceContext,int nPosX,int nPosY,int nSize,bo
 		{(nPosX+nSize),	(nPosY-nSize)}};
 
 	if (bIsVertical) {
-	
+
 		Polygon(hDeviceContext,pVerticalPoints,3);
 
 	} else {
@@ -1510,14 +1510,14 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 				switch (nMenuSelection) {
 
 					case IDM_NEWEFFECT: {
-						
+
 						char pEffectFileName[MAX_PATH]="";
 
 						bool bFileFound=
 							EditGraph_GetFileToOpen(
 							"dll",
 							"Open a FreeFrame Effect",
-							pEffectFileName);						
+							pEffectFileName);
 
 						if (bFileFound) {
 
@@ -1529,7 +1529,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 								GraphUtil_MakePluginNode(pGraph,pPluginInfo,nPosX,nPosY);
 
 							}
-							
+
 						}
 
 
@@ -1554,7 +1554,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 								if (pParamNode->m_nExternalIndex>nHighestFFParam) {
 									nHighestFFParam=pParamNode->m_nExternalIndex;
 								}
-							
+
 							}
 
 							pCurrentEntry=pCurrentEntry->m_pNext;
@@ -1612,7 +1612,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 								if (pEffectNode->m_nInputIndex>nHighestInputIndex) {
 									nHighestInputIndex=pEffectNode->m_nInputIndex;
 								}
-							
+
 							}
 
 							pCurrentEntry=pCurrentEntry->m_pNext;
@@ -1679,7 +1679,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 					case IDM_FILE_PROPERTIES: {
 
 						EditGraph_FilePropertiesDialog(pGraph);
-												   
+
 					}break;
 
 					default: {
@@ -1754,7 +1754,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 					case IDM_PROPERTIES: {
 
 						switch (eNodeType) {
-								
+
 							case eType_Parameter_External: {
 
 								SPete_ParameterNode* pParamNode=
@@ -1780,9 +1780,9 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 
 								}
 
-														   
+
 							}break;
-								
+
 							case eType_Effect_Input: {
 
 								SPete_EffectNode* pEffectNode=
@@ -1808,7 +1808,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 
 								}
 
-														   
+
 							}break;
 
 							case eType_Effect_Switcher: {
@@ -1836,7 +1836,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 
 								}
 
-														   
+
 							}break;
 
 							default: {
@@ -1859,7 +1859,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 							pEffectNode->m_ppInputs[nInputIndex]=NULL;
 
 						} else if (eSelectType==eSelect_Parameter_Input) {
-						
+
 							const int nParamIndex=g_Selection.m_nIndex;
 
 							pNode->m_ppParameters[nParamIndex]=NULL;
@@ -1873,7 +1873,7 @@ bool EditGraph_UIEvent_Idle(SPete_GraphData* pGraph,EEditGraph_UIEvent eEvent,in
 				}
 
 			}
-			
+
 			bUpdateWindow=true;
 
 		}break;
@@ -1947,7 +1947,7 @@ bool EditGraph_UIEvent_Dragging(SPete_GraphData* pGraph,EEditGraph_UIEvent eEven
 							SPete_Node* pCandidateNode=Candidate.m_pNodeEntry->m_pNode;
 
 							EditGraph_GetOutputPos(pCandidateNode,&EndPos);
-				
+
 							SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 
 							pEffectNode->m_ppInputs[nInputIndex]=
@@ -2007,7 +2007,7 @@ bool EditGraph_UIEvent_Dragging(SPete_GraphData* pGraph,EEditGraph_UIEvent eEven
 
 							SPete_ParameterNode* pOtherNode=(SPete_ParameterNode*)
 								Candidate.m_pNodeEntry->m_pNode;
-							
+
 							pNode->m_ppParameters[nParamIndex]=pOtherNode;
 
 							if ((pOtherNode->m_eType==eType_Parameter_External)&&
@@ -2240,7 +2240,7 @@ bool EditGraph_UIEvent_Dragging(SPete_GraphData* pGraph,EEditGraph_UIEvent eEven
 						g_Selection.m_ConnectionEnd=EndPos;
 
 					}break;
-				
+
 					case eSelect_Parameter_Output: {
 
 						SPete_UISelection Candidate;
@@ -2295,7 +2295,7 @@ void EditGraph_GetSelectionAtPos(SPete_GraphData* pGraph,int nPosX,int nPosY,SPe
 
 	SPete_NodeListEntry* pCurrent=pGraph->m_pNodeListHead;
 
-	bool bSelectionFound=false;	
+	bool bSelectionFound=false;
 
 	SPete_UIPos Pos={nPosX,nPosY};
 
@@ -2555,7 +2555,7 @@ bool EditGraph_GetFileToOpen(char* pExtension,char* pTitle,char* poutFileName) {
 //	if (bOpenFileNameResult) {
 //		strcpy(poutFileName,OpenFileData.lpstrFile);
 //	}
-	
+
 	return bOpenFileNameResult;
 
 }
@@ -2569,37 +2569,37 @@ BOOL CALLBACK EditGraph_FFParamProperties_Callback(HWND hDialogBox,UINT Message,
 
 		case WM_INITDIALOG: {
 
-			HWND hwndOwner; 
-			RECT rc, rcDlg, rcOwner; 
- 
-			if ((hwndOwner = GetParent(hDialogBox)) == NULL) 
+			HWND hwndOwner;
+			RECT rc, rcDlg, rcOwner;
+
+			if ((hwndOwner = GetParent(hDialogBox)) == NULL)
 			{
-				hwndOwner = GetDesktopWindow(); 
+				hwndOwner = GetDesktopWindow();
 			}
 
-			GetWindowRect(hwndOwner, &rcOwner); 
-			GetWindowRect(hDialogBox, &rcDlg); 
-			CopyRect(&rc, &rcOwner); 
- 
-			 // Offset the owner and dialog box rectangles so that 
-			 // right and bottom values represent the width and 
-			 // height, and then offset the owner again to discard 
-			 // space taken up by the dialog box. 
- 
-			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top); 
-			OffsetRect(&rc, -rc.left, -rc.top); 
-			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom); 
- 
-			 // The new position is the sum of half the remaining 
-			 // space and the owner's original position. 
- 
-			SetWindowPos(hDialogBox, 
-				HWND_TOP, 
-				rcOwner.left + (rc.right / 2), 
-				rcOwner.top + (rc.bottom / 2), 
-				0, 0,          // ignores size arguments 
-				SWP_NOSIZE); 
- 
+			GetWindowRect(hwndOwner, &rcOwner);
+			GetWindowRect(hDialogBox, &rcDlg);
+			CopyRect(&rc, &rcOwner);
+
+			 // Offset the owner and dialog box rectangles so that
+			 // right and bottom values represent the width and
+			 // height, and then offset the owner again to discard
+			 // space taken up by the dialog box.
+
+			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top);
+			OffsetRect(&rc, -rc.left, -rc.top);
+			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom);
+
+			 // The new position is the sum of half the remaining
+			 // space and the owner's original position.
+
+			SetWindowPos(hDialogBox,
+				HWND_TOP,
+				rcOwner.left + (rc.right / 2),
+				rcOwner.top + (rc.bottom / 2),
+				0, 0,          // ignores size arguments
+				SWP_NOSIZE);
+
 			SPete_DialogArgs* pDialogArgs=(SPete_DialogArgs*)(lParam);
 
 			pParamNode=(SPete_ParameterNode*)(pDialogArgs->m_pNode);
@@ -2683,7 +2683,7 @@ BOOL CALLBACK EditGraph_FFParamProperties_Callback(HWND hDialogBox,UINT Message,
 						if (pParamNode->m_nExternalIndex==nExternalIndex) {
 							bIsInUse=true;
 						}
-					
+
 					}
 
 					pCurrentEntry=pCurrentEntry->m_pNext;
@@ -2728,8 +2728,8 @@ BOOL CALLBACK EditGraph_FFParamProperties_Callback(HWND hDialogBox,UINT Message,
 				}
 
 				EndDialog(hDialogBox, LOWORD(wParam));
-				return TRUE;				
-				
+				return TRUE;
+
 			} else if (LOWORD(wParam)==IDCANCEL) {
 
 				EndDialog(hDialogBox, LOWORD(wParam));
@@ -2773,7 +2773,7 @@ bool EditGraph_IsInBox(SPete_UIPos* pPos,SPete_UIRect* pBox) {
 		(pPos->nX<pBox->right)&&
 		(pPos->nY>=pBox->top)&&
 		(pPos->nY<pBox->bottom));
-	
+
 }
 
 void EditGraph_GetParameterOutputBox(SPete_Node* pNode,SPete_UIRect* poutBox) {
@@ -2884,7 +2884,7 @@ void EditGraph_LoadFreeFrameDLL(SPete_GraphData* pGraph,char* pFileName) {
 		MessageBox(NULL,"CHAIN_DATA resource not found","",MB_OK);
 		return;
 	}
-	
+
 	HGLOBAL hChainData=LoadResource(
 		hModule,hChainDataResource);
 
@@ -2921,7 +2921,7 @@ void EditGraph_LoadFreeFrameDLL(SPete_GraphData* pGraph,char* pFileName) {
 	GraphUtil_InitFromFlat(pGraph,pFlatDataCopy,nSizeOfChainData);
 
 	FreeLibrary(hModule);
-	
+
 }
 
 BOOL CALLBACK EditGraph_InputProperties_Callback(HWND hDialogBox,UINT Message,WPARAM wParam,LPARAM lParam) {
@@ -2933,37 +2933,37 @@ BOOL CALLBACK EditGraph_InputProperties_Callback(HWND hDialogBox,UINT Message,WP
 
 		case WM_INITDIALOG: {
 
-			HWND hwndOwner; 
-			RECT rc, rcDlg, rcOwner; 
- 
-			if ((hwndOwner = GetParent(hDialogBox)) == NULL) 
+			HWND hwndOwner;
+			RECT rc, rcDlg, rcOwner;
+
+			if ((hwndOwner = GetParent(hDialogBox)) == NULL)
 			{
-				hwndOwner = GetDesktopWindow(); 
+				hwndOwner = GetDesktopWindow();
 			}
 
-			GetWindowRect(hwndOwner, &rcOwner); 
-			GetWindowRect(hDialogBox, &rcDlg); 
-			CopyRect(&rc, &rcOwner); 
- 
-			 // Offset the owner and dialog box rectangles so that 
-			 // right and bottom values represent the width and 
-			 // height, and then offset the owner again to discard 
-			 // space taken up by the dialog box. 
- 
-			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top); 
-			OffsetRect(&rc, -rc.left, -rc.top); 
-			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom); 
- 
-			 // The new position is the sum of half the remaining 
-			 // space and the owner's original position. 
- 
-			SetWindowPos(hDialogBox, 
-				HWND_TOP, 
-				rcOwner.left + (rc.right / 2), 
-				rcOwner.top + (rc.bottom / 2), 
-				0, 0,          // ignores size arguments 
-				SWP_NOSIZE); 
- 
+			GetWindowRect(hwndOwner, &rcOwner);
+			GetWindowRect(hDialogBox, &rcDlg);
+			CopyRect(&rc, &rcOwner);
+
+			 // Offset the owner and dialog box rectangles so that
+			 // right and bottom values represent the width and
+			 // height, and then offset the owner again to discard
+			 // space taken up by the dialog box.
+
+			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top);
+			OffsetRect(&rc, -rc.left, -rc.top);
+			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom);
+
+			 // The new position is the sum of half the remaining
+			 // space and the owner's original position.
+
+			SetWindowPos(hDialogBox,
+				HWND_TOP,
+				rcOwner.left + (rc.right / 2),
+				rcOwner.top + (rc.bottom / 2),
+				0, 0,          // ignores size arguments
+				SWP_NOSIZE);
+
 			SPete_DialogArgs* pDialogArgs=(SPete_DialogArgs*)(lParam);
 
 			pEffectNode=(SPete_EffectNode*)(pDialogArgs->m_pNode);
@@ -3014,7 +3014,7 @@ BOOL CALLBACK EditGraph_InputProperties_Callback(HWND hDialogBox,UINT Message,WP
 						if (pEffectNode->m_nInputIndex==nInputIndex) {
 							bIsInUse=true;
 						}
-					
+
 					}
 
 					pCurrentEntry=pCurrentEntry->m_pNext;
@@ -3033,8 +3033,8 @@ BOOL CALLBACK EditGraph_InputProperties_Callback(HWND hDialogBox,UINT Message,WP
 				pEffectNode->m_nInputIndex=nInputIndex;
 
 				EndDialog(hDialogBox, LOWORD(wParam));
-				return TRUE;				
-				
+				return TRUE;
+
 			} else if (LOWORD(wParam)==IDCANCEL) {
 
 				EndDialog(hDialogBox, LOWORD(wParam));
@@ -3127,9 +3127,9 @@ bool EditGraph_IsNearLine(SPete_UIPos* pPos,SPete_UILine* pLine,int nTolerance) 
 
 	}
 
-	const float NearestX=PosDotDirection*DirectionX;	
+	const float NearestX=PosDotDirection*DirectionX;
 	const float NearestY=PosDotDirection*DirectionY;
-	
+
 	const float PosToNearestX=(PosX-NearestX);
 	const float PosToNearestY=(PosY-NearestY);
 
@@ -3160,7 +3160,7 @@ bool EditGraph_WriteResourceAsFile(char* pFileName) {
 		MessageBox(NULL,"FLAT_DLL resource not found","",MB_OK);
 		return false;
 	}
-	
+
 	HGLOBAL hFlatDLL=LoadResource(
 		hModule,hFlatDLLResource);
 
@@ -3210,37 +3210,37 @@ BOOL CALLBACK EditGraph_SwitcherProperties_Callback(HWND hDialogBox,UINT Message
 
 		case WM_INITDIALOG: {
 
-			HWND hwndOwner; 
-			RECT rc, rcDlg, rcOwner; 
- 
-			if ((hwndOwner = GetParent(hDialogBox)) == NULL) 
+			HWND hwndOwner;
+			RECT rc, rcDlg, rcOwner;
+
+			if ((hwndOwner = GetParent(hDialogBox)) == NULL)
 			{
-				hwndOwner = GetDesktopWindow(); 
+				hwndOwner = GetDesktopWindow();
 			}
 
-			GetWindowRect(hwndOwner, &rcOwner); 
-			GetWindowRect(hDialogBox, &rcDlg); 
-			CopyRect(&rc, &rcOwner); 
- 
-			 // Offset the owner and dialog box rectangles so that 
-			 // right and bottom values represent the width and 
-			 // height, and then offset the owner again to discard 
-			 // space taken up by the dialog box. 
- 
-			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top); 
-			OffsetRect(&rc, -rc.left, -rc.top); 
-			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom); 
- 
-			 // The new position is the sum of half the remaining 
-			 // space and the owner's original position. 
- 
-			SetWindowPos(hDialogBox, 
-				HWND_TOP, 
-				rcOwner.left + (rc.right / 2), 
-				rcOwner.top + (rc.bottom / 2), 
-				0, 0,          // ignores size arguments 
-				SWP_NOSIZE); 
- 
+			GetWindowRect(hwndOwner, &rcOwner);
+			GetWindowRect(hDialogBox, &rcDlg);
+			CopyRect(&rc, &rcOwner);
+
+			 // Offset the owner and dialog box rectangles so that
+			 // right and bottom values represent the width and
+			 // height, and then offset the owner again to discard
+			 // space taken up by the dialog box.
+
+			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top);
+			OffsetRect(&rc, -rc.left, -rc.top);
+			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom);
+
+			 // The new position is the sum of half the remaining
+			 // space and the owner's original position.
+
+			SetWindowPos(hDialogBox,
+				HWND_TOP,
+				rcOwner.left + (rc.right / 2),
+				rcOwner.top + (rc.bottom / 2),
+				0, 0,          // ignores size arguments
+				SWP_NOSIZE);
+
 			SPete_DialogArgs* pDialogArgs=(SPete_DialogArgs*)(lParam);
 
 			pEffectNode=(SPete_EffectNode*)(pDialogArgs->m_pNode);
@@ -3289,8 +3289,8 @@ BOOL CALLBACK EditGraph_SwitcherProperties_Callback(HWND hDialogBox,UINT Message
 				pEffectNode->m_nSwitcherInputCount=nInputCount;
 
 				EndDialog(hDialogBox, LOWORD(wParam));
-				return TRUE;				
-				
+				return TRUE;
+
 			} else if (LOWORD(wParam)==IDCANCEL) {
 
 				EndDialog(hDialogBox, LOWORD(wParam));
@@ -3333,37 +3333,37 @@ BOOL CALLBACK EditGraph_FileProperties_Callback(HWND hDialogBox,UINT Message,WPA
 
 		case WM_INITDIALOG: {
 
-			HWND hwndOwner; 
-			RECT rc, rcDlg, rcOwner; 
- 
-			if ((hwndOwner = GetParent(hDialogBox)) == NULL) 
+			HWND hwndOwner;
+			RECT rc, rcDlg, rcOwner;
+
+			if ((hwndOwner = GetParent(hDialogBox)) == NULL)
 			{
-				hwndOwner = GetDesktopWindow(); 
+				hwndOwner = GetDesktopWindow();
 			}
 
-			GetWindowRect(hwndOwner, &rcOwner); 
-			GetWindowRect(hDialogBox, &rcDlg); 
-			CopyRect(&rc, &rcOwner); 
- 
-			 // Offset the owner and dialog box rectangles so that 
-			 // right and bottom values represent the width and 
-			 // height, and then offset the owner again to discard 
-			 // space taken up by the dialog box. 
- 
-			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top); 
-			OffsetRect(&rc, -rc.left, -rc.top); 
-			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom); 
- 
-			 // The new position is the sum of half the remaining 
-			 // space and the owner's original position. 
- 
-			SetWindowPos(hDialogBox, 
-				HWND_TOP, 
-				rcOwner.left + (rc.right / 2), 
-				rcOwner.top + (rc.bottom / 2), 
-				0, 0,          // ignores size arguments 
-				SWP_NOSIZE); 
- 
+			GetWindowRect(hwndOwner, &rcOwner);
+			GetWindowRect(hDialogBox, &rcDlg);
+			CopyRect(&rc, &rcOwner);
+
+			 // Offset the owner and dialog box rectangles so that
+			 // right and bottom values represent the width and
+			 // height, and then offset the owner again to discard
+			 // space taken up by the dialog box.
+
+			OffsetRect(&rcDlg, -rcDlg.left, -rcDlg.top);
+			OffsetRect(&rc, -rc.left, -rc.top);
+			OffsetRect(&rc, -rcDlg.right, -rcDlg.bottom);
+
+			 // The new position is the sum of half the remaining
+			 // space and the owner's original position.
+
+			SetWindowPos(hDialogBox,
+				HWND_TOP,
+				rcOwner.left + (rc.right / 2),
+				rcOwner.top + (rc.bottom / 2),
+				0, 0,          // ignores size arguments
+				SWP_NOSIZE);
+
 			pGraph=(SPete_GraphData*)(lParam);
 
 			SendDlgItemMessage(
@@ -3430,8 +3430,8 @@ BOOL CALLBACK EditGraph_FileProperties_Callback(HWND hDialogBox,UINT Message,WPA
 					(LPARAM)(pGraph->m_pDescription));
 
 				EndDialog(hDialogBox, LOWORD(wParam));
-				return TRUE;				
-				
+				return TRUE;
+
 			} else if (LOWORD(wParam)==IDCANCEL) {
 
 				EndDialog(hDialogBox, LOWORD(wParam));

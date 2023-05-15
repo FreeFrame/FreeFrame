@@ -36,7 +36,7 @@ class CMultiMirrorDfx: public CDFX
 public:
 	~CMultiMirrorDfx();
 	CMultiMirrorDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -68,7 +68,7 @@ BEGIN_OUTPUTSCREENS_DESC(CMultiMirrorDfx)
 END_OUTPUTSCREENS_DESC(CMultiMirrorDfx)
 
 BEGIN_EFFECT_DESC(CMultiMirrorDfx, 10203216861479924, PETE_VJO_VERSION , "Petes\\MultiMirror", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CMultiMirrorDfx) 
+END_EFFECT_DESC(CMultiMirrorDfx)
 
 REGISTER_DFXFACTORY(CMultiMirrorDfx)
 
@@ -85,7 +85,7 @@ CMultiMirrorDfx::~CMultiMirrorDfx()
 	// do nothing
 }
 
-HBITMAP	CMultiMirrorDfx::GetLabelBitmap()			
+HBITMAP	CMultiMirrorDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -94,7 +94,7 @@ BOOL	CMultiMirrorDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -114,7 +114,7 @@ BOOL	CMultiMirrorDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CMultiMirrorDfx::UpdateConfig()
@@ -137,7 +137,7 @@ BOOL	CMultiMirrorDfx::Initialize()
 
 BOOL	CMultiMirrorDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 
@@ -151,7 +151,7 @@ void	CMultiMirrorDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nWidth=m_nXRes;
 	const int nHeight=m_nYRes;
 
@@ -164,7 +164,7 @@ void	CMultiMirrorDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 	DWORD* pSourceVertFlip=pSourceEnd-(nWidth);
 
 	while (pCurrentSource!=pSourceEnd) {
-		
+
 		DWORD*const pSourceLineEnd=pCurrentSource+nWidth;
 		DWORD*const pSourceVertFlipLineEnd=pSourceVertFlip+nWidth;
 

@@ -45,7 +45,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	GraphUtil_Init(&g_GraphData);
 
 	// Perform application initialization:
-	if (!InitInstance (hInstance, nCmdShow)) 
+	if (!InitInstance (hInstance, nCmdShow))
 	{
 		return FALSE;
 	}
@@ -53,9 +53,9 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_PETESCHAINMAKER);
 
 	// Main message loop:
-	while (GetMessage(&msg, NULL, 0, 0)) 
+	while (GetMessage(&msg, NULL, 0, 0))
 	{
-		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg)) 
+		if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -84,7 +84,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEX wcex;
 
-	wcex.cbSize = sizeof(WNDCLASSEX); 
+	wcex.cbSize = sizeof(WNDCLASSEX);
 
 	wcex.style			= CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS ;
 	wcex.lpfnWndProc	= (WNDPROC)WndProc;
@@ -157,12 +157,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	int wmId, wmEvent;
 
 	bool bUpdateWindow=false;
-	
-	switch (message) 
+
+	switch (message)
 	{
 		case WM_COMMAND:
-			wmId    = LOWORD(wParam); 
-			wmEvent = HIWORD(wParam); 
+			wmId    = LOWORD(wParam);
+			wmEvent = HIWORD(wParam);
 			// Parse the menu selections:
 			switch (wmId)
 			{
@@ -178,7 +178,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //					GraphUtil_FlattenGraph(&g_GraphData);
 //					char* pFlatData=g_GraphData.m_pFlattenedData;
 //					int nFlatDataSize=g_GraphData.m_nFlattenedDataSize;
-//					
+//
 //					char* pStoredData=(char*)malloc(nFlatDataSize);
 //					memcpy(pStoredData,pFlatData,nFlatDataSize);
 //
@@ -202,7 +202,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 
 				}break;
-				
+
 				case IDM_SAVEAS: {
 
 					char pOutputFileName[MAX_PATH]="";
@@ -228,7 +228,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					OpenFileData.lCustData=0;
 					OpenFileData.lpfnHook=NULL;
 					OpenFileData.lpTemplateName=NULL;
-				
+
 					BOOL bOpenFileNameResult=
 						GetSaveFileName(&OpenFileData);
 
@@ -267,7 +267,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					OpenFileData.lCustData=0;
 					OpenFileData.lpfnHook=NULL;
 					OpenFileData.lpTemplateName=NULL;
-				
+
 					BOOL bOpenFileNameResult=
 						GetOpenFileName(&OpenFileData);
 
@@ -278,7 +278,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							OpenFileData.lpstrFile);
 
 						bUpdateWindow=true;
-						
+
 					}
 
 				}break;
@@ -321,7 +321,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			DeleteObject(hMemoryDC);
 			DeleteObject(hMemoryBitmap);
-			
+
 			EndPaint(hWnd, &PaintStruct);
 		}break;
 
@@ -331,45 +331,45 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case WM_LBUTTONDOWN: {
-			const int nPosX=LOWORD(lParam); 
+			const int nPosX=LOWORD(lParam);
 			const int nPosY=HIWORD(lParam);
-			
+
 			bUpdateWindow=EditGraph_UIEvent(&g_GraphData,eEvent_Mouse_LDown,nPosX,nPosY,NULL);
 
 		}break;
 
 		case WM_LBUTTONUP: {
-			const int nPosX=LOWORD(lParam); 
+			const int nPosX=LOWORD(lParam);
 			const int nPosY=HIWORD(lParam);
-			
+
 			bUpdateWindow=EditGraph_UIEvent(&g_GraphData,eEvent_Mouse_LUp,nPosX,nPosY,NULL);
 
 		}break;
 
 		case WM_LBUTTONDBLCLK: {
-			const int nPosX=LOWORD(lParam); 
+			const int nPosX=LOWORD(lParam);
 			const int nPosY=HIWORD(lParam);
-			
+
 			bUpdateWindow=EditGraph_UIEvent(&g_GraphData,eEvent_Mouse_LDoubleClick,nPosX,nPosY,NULL);
 
 		}break;
 
 		case WM_RBUTTONDOWN: {
-			const int nPosX=LOWORD(lParam); 
+			const int nPosX=LOWORD(lParam);
 			const int nPosY=HIWORD(lParam);
-			
+
 			bUpdateWindow=EditGraph_UIEvent(&g_GraphData,eEvent_Mouse_RDown,nPosX,nPosY,NULL);
 
 		}break;
 
 		case WM_MOUSEMOVE: {
-			const int nPosX=LOWORD(lParam); 
+			const int nPosX=LOWORD(lParam);
 			const int nPosY=HIWORD(lParam);
-			
+
 			bUpdateWindow=EditGraph_UIEvent(&g_GraphData,eEvent_Mouse_Move,nPosX,nPosY,NULL);
 
 		}break;
-			
+
 		default:
 			return DefWindowProc(hWnd, message, wParam, lParam);
    }
@@ -391,7 +391,7 @@ LRESULT CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 				return TRUE;
 
 		case WM_COMMAND:
-			if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) 
+			if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
 			{
 				EndDialog(hDlg, LOWORD(wParam));
 				return TRUE;

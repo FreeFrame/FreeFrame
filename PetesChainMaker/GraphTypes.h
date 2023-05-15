@@ -86,7 +86,7 @@ typedef struct SPete_ParameterNode : public SPete_Node {
 typedef struct SPete_NodeListEntry {
 	SPete_Node* m_pNode;
 	struct SPete_NodeListEntry* m_pNext;
-	U32 m_FlattenedOffset;	
+	U32 m_FlattenedOffset;
 } SPete_NodeListEntry;
 
 typedef struct SPete_GraphData {

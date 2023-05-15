@@ -51,7 +51,7 @@ int Pete_LumaMask_Init(SPete_LumaMask_Data* pInstanceData,int nWidth, int nHeigh
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	pInstanceData->nWidth=nWidth;
 	pInstanceData->nHeight=nHeight;
 
@@ -70,7 +70,7 @@ void Pete_LumaMask_Render(SPete_LumaMask_Data* pInstanceData,SPete_LumaMask_Sett
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	const int nThresholdStart=static_cast<int>(pSettings->m_ThresholdStart);
 
 	int nThresholdEnd=static_cast<int>(pSettings->m_ThresholdEnd);
@@ -151,9 +151,9 @@ void Pete_LumaMask_Render(SPete_LumaMask_Data* pInstanceData,SPete_LumaMask_Sett
 				(nOutputBlue<<SHIFT_BLUE);
 
 			*pCurrentOutput=OutputColour;
-		
+
 		}
-			
+
 		pCurrentOutput+=1;
 		pCurrentSourceA+=1;
 		pCurrentSourceB+=1;

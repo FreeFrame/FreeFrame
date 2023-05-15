@@ -36,7 +36,7 @@ class CHardWiredMixer4Dfx: public CDFX
 public:
 	~CHardWiredMixer4Dfx();
 	CHardWiredMixer4Dfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -76,7 +76,7 @@ BEGIN_OUTPUTSCREENS_DESC(CHardWiredMixer4Dfx)
 END_OUTPUTSCREENS_DESC(CHardWiredMixer4Dfx)
 
 BEGIN_EFFECT_DESC(CHardWiredMixer4Dfx, 10203216861479977, PETE_VJO_VERSION , "Petes\\HardWiredMixer4", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CHardWiredMixer4Dfx) 
+END_EFFECT_DESC(CHardWiredMixer4Dfx)
 
 REGISTER_DFXFACTORY(CHardWiredMixer4Dfx)
 
@@ -101,7 +101,7 @@ CHardWiredMixer4Dfx::~CHardWiredMixer4Dfx()
 	// do nothing
 }
 
-HBITMAP	CHardWiredMixer4Dfx::GetLabelBitmap()			
+HBITMAP	CHardWiredMixer4Dfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -110,7 +110,7 @@ BOOL	CHardWiredMixer4Dfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -130,7 +130,7 @@ BOOL	CHardWiredMixer4Dfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CHardWiredMixer4Dfx::UpdateConfig()
@@ -153,7 +153,7 @@ BOOL	CHardWiredMixer4Dfx::Initialize()
 
 BOOL	CHardWiredMixer4Dfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)(pOutput->GetBuffer());
 	DWORD* pInputMem = (DWORD*)(ppInput[m_nInputIndex]->GetBuffer());
 
@@ -164,7 +164,7 @@ BOOL	CHardWiredMixer4Dfx::Render(CScreen **ppInput, CScreen *pOutput)
 		int nNumberOfKeysPressed=0;
 
 		bool bInputKeyPressed[cnNumberOfInputs];
-		
+
 		int nCount;
 		for (nCount=0; nCount<cnNumberOfInputs; ++nCount) {
 
@@ -183,7 +183,7 @@ BOOL	CHardWiredMixer4Dfx::Render(CScreen **ppInput, CScreen *pOutput)
 				(m_nFrameCount%nNumberOfKeysPressed);
 
 			int nCurrentIndex=0;
-			
+
 			for (nCount=0; nCount<cnNumberOfInputs; ++nCount) {
 
 				if (bInputKeyPressed[nCount]) {

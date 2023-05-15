@@ -1,7 +1,7 @@
 ///////////////////////////////////////////////////////////////////////////////////
 // FF_Mosaic.cpp
 //
-// FreeFrame Open Video Plugin 
+// FreeFrame Open Video Plugin
 // C Version
 //
 // Implementation of the Difference plugin
@@ -22,7 +22,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //
-// includes 
+// includes
 //
 
 #include "FF_Mosaic.h"
@@ -54,9 +54,9 @@ int blockHeight;
 ///////////////////////////////////////////////////////////////////////////////////////
 // getInfo
 //
-// gets information about the plugin - version, unique id, short name and type 
+// gets information about the plugin - version, unique id, short name and type
 // This function should be identical in all future versions of the FreeFrame API
-//  
+//
 // return values (32-bit pointer to PlugInfoStruct)
 // FF_FAIL on error
 // 32-bit pointer to PlugInfoStruct
@@ -65,14 +65,14 @@ int blockHeight;
 //       the version defines the other fucntion codes that are supported
 //       supported function codes are listed in the documentation www.freeframe.org
 
-PlugInfoStruct* getInfo() 
+PlugInfoStruct* getInfo()
 {
 	plugInfo.APIMajorVersion = 0;
 	plugInfo.APIMinorVersion = 500; // lets keep this in sync with the delphi host for now
-	char ID[5] = "FFM1";		 // this *must* be unique to your plugin 
+	char ID[5] = "FFM1";		 // this *must* be unique to your plugin
 								 // see www.freeframe.org for a list of ID's already taken
 	char name[17] = "Mosaic 1";
-	
+
 	memcpy(plugInfo.uniqueID, ID, 4);
 	memcpy(plugInfo.pluginName, name, 16);
 	plugInfo.pluginType = FF_EFFECT;
@@ -83,7 +83,7 @@ PlugInfoStruct* getInfo()
 ///////////////////////////////////////////////////////////////////////////////////////
 // initialise
 //
-// Prepare the Plug-in for processing.  
+// Prepare the Plug-in for processing.
 // Set default values, allocate memory
 // When the plug-in returns from this function it must be ready to proces a frame
 //
@@ -128,7 +128,7 @@ DWORD initialise(VideoInfoStruct* pVideoInfo)
 ///////////////////////////////////////////////////////////////////////////////////////
 // deinitialise
 //
-// Tidy up   
+// Tidy up
 // Deallocate memory
 //
 // return values (DWORD)
@@ -143,10 +143,10 @@ DWORD deInitialise()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
-// getNumParameters 
+// getNumParameters
 //
 // returns number of parameters in plugin
-// 
+//
 // return values (DWORD)
 // number of parameters
 // FF_FAIL on error
@@ -154,7 +154,7 @@ DWORD deInitialise()
 
 DWORD getNumParameters()
 {
-	return NUM_PARAMS;  
+	return NUM_PARAMS;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -163,7 +163,7 @@ DWORD getNumParameters()
 // returns pointer to 16 byte char array containing the name of parameter specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -182,7 +182,7 @@ char* getParameterName(DWORD index)
 // returns default value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -201,7 +201,7 @@ float getParameterDefault(DWORD index)
 // parameter index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit pointer to char):
 // 32-bit pointer to array of char
@@ -241,7 +241,7 @@ char* getParameterDisplay(DWORD index)
 // value is a 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // 32-bit float value
 //
 // return values (DWORD):
@@ -274,7 +274,7 @@ DWORD setParameter(SetParameterStruct* pParam)
 // returns value of parameter specified by index as 32-bit float 0<=value<=1
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 //
 // return values (32-bit float):
 // 32-bit float value
@@ -306,20 +306,20 @@ DWORD processFrame(LPVOID pFrame)
 		BYTE *tempPtr;
 		DWORD x=0;
 		DWORD y=0;
-		
+
 		long averageBlue = 0;
 		long averageGreen = 0;
 		long averageRed = 0;
-		
+
 		VideoPixel24bit avPixel;
 		DWORD sx, sy;
-		
-		
+
+
 		DWORD tempBlockWidth, tempBlockHeight;
-		
+
 		if (blockWidth == 1 && blockHeight == 1)
 			return FF_SUCCESS;
-		
+
 		for (y = 0; y < videoInfo.frameHeight; y+=blockHeight) {
 			if (videoInfo.frameHeight - y < blockHeight)
 				tempBlockHeight = videoInfo.frameHeight - y;
@@ -336,7 +336,7 @@ DWORD processFrame(LPVOID pFrame)
 					for (sx=0; sx<tempBlockWidth; sx++) {
 						byteWidth = sx * 3;
 						averageBlue += *(tempPtr + byteWidth);
-						averageGreen += *(tempPtr + byteWidth + 1); 
+						averageGreen += *(tempPtr + byteWidth + 1);
 						averageRed += *(tempPtr + byteWidth + 2);
 					}
 					tempPtr += videoInfo.frameWidth * 3;
@@ -360,7 +360,7 @@ DWORD processFrame(LPVOID pFrame)
 			}
 			pBuffer += videoInfo.frameWidth*(tempBlockHeight -1) * 3;
 		}
-		
+
 		return FF_SUCCESS;
 	}
 	catch (...) {
@@ -373,7 +373,7 @@ DWORD processFrame(LPVOID pFrame)
 // returns true or false to indicate whether cappable of feature specified by index
 //
 // parameters:
-// DWORD index - index of parameter 
+// DWORD index - index of parameter
 // allowed values:
 // 0 - 16 bit video
 // 1 - 24 bit video
@@ -399,7 +399,7 @@ DWORD getPluginCaps(DWORD index)
 }
 
 //----------------------------------------------------------------------------------------------------------
-// 
+//
 float powerToFrac(int power)
 {
     float returnParm;
@@ -418,7 +418,7 @@ float powerToFrac(int power)
 // Slider moved changing number of slices
 int fracToPower(float frac)
 {
-    
+
     if      (frac < 0.15) return 1;
     else if (frac < 0.3) return 2;
     else if (frac < 0.45) return 4;

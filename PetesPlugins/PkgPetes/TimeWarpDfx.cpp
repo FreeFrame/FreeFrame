@@ -36,7 +36,7 @@ class CTimeWarpDfx: public CDFX
 public:
 	~CTimeWarpDfx();
 	CTimeWarpDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -105,7 +105,7 @@ BEGIN_OUTPUTSCREENS_DESC(CTimeWarpDfx)
 END_OUTPUTSCREENS_DESC(CTimeWarpDfx)
 
 BEGIN_EFFECT_DESC(CTimeWarpDfx, 10203216861479948, PETE_VJO_VERSION , "Petes\\TimeWarp", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CTimeWarpDfx) 
+END_EFFECT_DESC(CTimeWarpDfx)
 
 REGISTER_DFXFACTORY(CTimeWarpDfx)
 
@@ -115,7 +115,7 @@ CTimeWarpDfx::CTimeWarpDfx()
 {
 	m_nXRes = 0;
 	m_nYRes = 0;
-	
+
 	m_hStoredFrames = NULL;
 	m_nStoredFramesMemUsage = 0;
 	m_nCurrentStoredFramesCount=0;
@@ -129,7 +129,7 @@ CTimeWarpDfx::CTimeWarpDfx()
 	m_nPolariBPMID = 0;
 	m_bPolariDoLoop = false;
 	m_nPolariDoLoopID = 0;
-	
+
 	m_SineSlurPeriod = 30.0f;
 	m_nSineSlurPeriodID=0;
 	m_SineSlurAmplitude = 0.5f;
@@ -158,7 +158,7 @@ CTimeWarpDfx::~CTimeWarpDfx()
 	Pete_TimeWarp_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CTimeWarpDfx::GetLabelBitmap()			
+HBITMAP	CTimeWarpDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -203,8 +203,8 @@ BOOL	CTimeWarpDfx::GetConfigData(CConfigData *p)
 
 	m_nMaxStoredFramesCount = p->GetInt("M", m_nMaxStoredFramesCount);
 	m_eStyle = static_cast<ETimeWarpStyle>(p->GetInt("S", m_eStyle));
-	
-	return TRUE;	
+
+	return TRUE;
 }
 
 BOOL	CTimeWarpDfx::UpdateConfig()
@@ -251,7 +251,7 @@ BOOL	CTimeWarpDfx::Render(CScreen **ppInput, CScreen *pOutput)
 	} else {
 		Settings.m_PolariDoLoop=0.0f;
 	}
-	
+
 	Pete_TimeWarp_Render(&m_InstanceData,&Settings,pInputMem,pOutputMem);
 
 	return TRUE;
@@ -301,7 +301,7 @@ void	CTimeWarpDfx::SetupPlayback(void) {
 		}break;
 
 		case eSineSlurStyle: {
-			m_SineSlurAngle = 0.0f;							 
+			m_SineSlurAngle = 0.0f;
 			m_nSineSlurPeriodID=
 				RegisterFloat(m_pEngine,&m_SineSlurPeriod,"Period",1.0f,10000.0f,1.0f,100000.0f,2000.0f);
 			m_nSineSlurAmplitudeID=
@@ -312,7 +312,7 @@ void	CTimeWarpDfx::SetupPlayback(void) {
 
 			m_nStutterAmplitudeID=
 				RegisterFloat(m_pEngine,&m_StutterAmplitude,"Amplitude",0.0f,1.0f);
-							
+
 		}break;
 
 		case eCustomStyle: {
@@ -330,7 +330,7 @@ void	CTimeWarpDfx::SetupPlayback(void) {
 		}
 
 	}
-	
+
 	m_SineSlurAngle = 0.0f;
 
 }
@@ -351,7 +351,7 @@ void	CTimeWarpDfx::UnregisterUsedVariables(void) {
 		m_pEngine->UnregisterVariable(m_nSineSlurPeriodID);
 		m_nSineSlurPeriodID=0;
 	}
-	
+
 	if (m_nSineSlurAmplitudeID!=0) {
 		m_pEngine->UnregisterVariable(m_nSineSlurAmplitudeID);
 		m_nSineSlurAmplitudeID=0;

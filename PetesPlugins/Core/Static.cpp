@@ -98,7 +98,7 @@ void Pete_Static_Render(SPete_Static_Data* pInstanceData,SPete_Static_Settings* 
 			while (pCurrentOutput!=pOutputEnd) {
 
 				Seed^=(((Seed<<13)|(Seed>>19))+1);
-				
+
 				U32 OutputColour=(Seed&0xff);
 				OutputColour|=(OutputColour<<SHIFT_GREEN);
 				OutputColour|=(OutputColour<<SHIFT_RED);

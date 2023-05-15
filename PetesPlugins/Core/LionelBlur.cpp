@@ -70,7 +70,7 @@ void Pete_LionelBlur_Render(SPete_LionelBlur_Data* pInstanceData,SPete_LionelBlu
 
 	const int cnFixedShift=8;
 	const int cnFixedPrec=(1<<cnFixedShift);
-	
+
 	const int nWidth=pInstanceData->nWidth;
 	const int nHeight=pInstanceData->nHeight;
 
@@ -225,7 +225,7 @@ void Pete_LionelBlur_Render(SPete_LionelBlur_Data* pInstanceData,SPete_LionelBlu
 
 		int nCurrentA=nClippedLineOriginA;
 		int nCurrentB=nClippedLineOriginB;
-		
+
 		int nCurrentAddressOffset=((nCurrentB*nAddressIncB)+(nCurrentA*nAddressIncA));
 
 		const int nSignedAddressIncA=(nIncA*nAddressIncA);
@@ -233,7 +233,7 @@ void Pete_LionelBlur_Render(SPete_LionelBlur_Data* pInstanceData,SPete_LionelBlu
 
 		U32 PrevCols[nBlurMaxRadius];
 		memset(&(PrevCols[0]),0,(nBlurRadius*sizeof(U32)));
-		
+
 		int nColIndex=0;
 
 		int nAverageRed=0;
@@ -245,7 +245,7 @@ void Pete_LionelBlur_Render(SPete_LionelBlur_Data* pInstanceData,SPete_LionelBlu
 
 			U32* pCurrentSource=(pSource+nCurrentAddressOffset);
 			U32* pCurrentOutput=(pOutput+nCurrentAddressOffset);
-			
+
 			U32 SourceColour=*pCurrentSource;
 
 			const int nSourceRed=(SourceColour>>SHIFT_RED)&0xff;
@@ -255,8 +255,8 @@ void Pete_LionelBlur_Render(SPete_LionelBlur_Data* pInstanceData,SPete_LionelBlu
 
 			const int nMungedRed=(nSourceRed*nBlurRadiusRecipFP)>>16;
 			const int nMungedGreen=(nSourceGreen*nBlurRadiusRecipFP)>>16;
-			const int nMungedBlue=(nSourceBlue*nBlurRadiusRecipFP)>>16;			
-			const int nMungedAlpha=(nSourceAlpha*nBlurRadiusRecipFP)>>16;			
+			const int nMungedBlue=(nSourceBlue*nBlurRadiusRecipFP)>>16;
+			const int nMungedAlpha=(nSourceAlpha*nBlurRadiusRecipFP)>>16;
 
 			const U32 MungedSourceColour=
 				(nMungedRed<<SHIFT_RED)|
@@ -301,7 +301,7 @@ void Pete_LionelBlur_Render(SPete_LionelBlur_Data* pInstanceData,SPete_LionelBlu
 			if (nCurrentLuminance>nAverageLuminance) {
 
 				OutputColour=SourceColour;
-			
+
 			} else {
 
 				OutputColour=AverageColour;

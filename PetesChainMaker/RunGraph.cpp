@@ -47,7 +47,7 @@ void RunGraph_Init(SPete_GraphData* pGraph,int nWidth,int nHeight,SPete_RunTimeE
 
 	const int nParamsInfoByteCount=
 		(nFFParamsCount*sizeof(SPete_PluginParameter));
-	
+
 	pEnv->m_pParamsInfo=(SPete_PluginParameter*)
 		(malloc(nParamsInfoByteCount));
 
@@ -62,7 +62,7 @@ void RunGraph_Init(SPete_GraphData* pGraph,int nWidth,int nHeight,SPete_RunTimeE
 		pParamsInfo[nCount].m_Default=0.0f;
 
 	}
-	
+
 	GraphUtil_Iterate(pRootNode,RunGraph_SetFFParamsInfo,pEnv->m_pParamsInfo);
 
 	for (nCount=0; nCount<nFFParamsCount; nCount+=1) {
@@ -123,7 +123,7 @@ void RunGraph_InitNode(SPete_Node* pNode,void* pCookie) {
 		}break;
 
 		case eType_Effect_Plugin: {
-		
+
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 
 			SPete_PluginInfo* pPluginInfo=pEffectNode->m_pPluginInfo;
@@ -132,7 +132,7 @@ void RunGraph_InitNode(SPete_Node* pNode,void* pCookie) {
 			VideoInfo.frameWidth=pEnv->m_nVideoWidth;
 			VideoInfo.frameHeight=pEnv->m_nVideoHeight;
 			VideoInfo.bitDepth=FF_CAP_32BITVIDEO;
-			
+
 			const bool bLoadSucceded=
 				GraphUtil_DoLoadPlugin(pEnv->m_pGraph,pPluginInfo);
 
@@ -153,7 +153,7 @@ void RunGraph_InitNode(SPete_Node* pNode,void* pCookie) {
 
 			pEffectNode->m_InstanceCookie=(U32)
 				(*pMainFunc)(FF_INSTANTIATE,(void*)(&VideoInfo),0);
-	
+
 			pEffectNode->m_pInternalOutputBuffer=(U32*)
 				(malloc(nScreenByteCount));
 
@@ -183,15 +183,15 @@ void RunGraph_DeInitNode(SPete_Node* pNode,void* pCookie) {
 	switch (pNode->m_eType) {
 
 		case eType_Effect_Plugin: {
-		
+
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 
 			SPete_PluginInfo* pPluginInfo=pEffectNode->m_pPluginInfo;
-	
+
 			FF_Main_FuncPtr pMainFunc=pPluginInfo->m_pMainFunc;
 
 			(*pMainFunc)(FF_DEINSTANTIATE,NULL,pEffectNode->m_InstanceCookie);
-			
+
 			if (pPluginInfo->m_nReferenceCount==1) {
 
 				(*pMainFunc)(FF_DEINITIALISE,NULL,0);
@@ -205,7 +205,7 @@ void RunGraph_DeInitNode(SPete_Node* pNode,void* pCookie) {
 
 			free(pEffectNode->m_pExternalOutputBuffer);
 			pEffectNode->m_pExternalOutputBuffer=NULL;
-			
+
 			pEffectNode->m_pOutput=NULL;
 
 		}break;
@@ -240,7 +240,7 @@ void RunGraph_RunNode(SPete_Node* pNode,void* pCookie) {
 		}break;
 
 		case eType_Effect_Input: {
-			
+
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 
 			int nInputIndex=pEffectNode->m_nInputIndex;
@@ -261,7 +261,7 @@ void RunGraph_RunNode(SPete_Node* pNode,void* pCookie) {
 		}break;
 
 		case eType_Effect_Switcher: {
-			
+
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 
 			const int nInputCount=pEffectNode->m_nSwitcherInputCount;
@@ -273,7 +273,7 @@ void RunGraph_RunNode(SPete_Node* pNode,void* pCookie) {
 			pEffectNode->m_pOutput=pEffectNode->m_ppInputs[nCurrentInput]->m_pOutput;
 
 		}break;
-		
+
 		case eType_Parameter_External: {
 
 			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
@@ -300,12 +300,12 @@ void RunGraph_RunNode(SPete_Node* pNode,void* pCookie) {
 
 		}break;
 
-		case eType_Parameter_Midi: {	
+		case eType_Parameter_Midi: {
 
 			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
 
 			pParamNode->m_OutputValue=0.0f;
-			
+
 		}break;
 
 		default: {
@@ -392,7 +392,7 @@ void RunGraph_RunPluginNode(SPete_Node* pNode,SPete_RunTimeEnvironment* pEnv) {
 			ppInputFrames[nCount]=pInputData;
 
 		}
-		
+
 		PFCData.numInputFrames=nInputCount;
 		PFCData.InputFrames=(void**)ppInputFrames;
 		PFCData.OutputFrame=pEffectNode->m_pInternalOutputBuffer;
@@ -413,7 +413,7 @@ void RunGraph_RunPluginNode(SPete_Node* pNode,SPete_RunTimeEnvironment* pEnv) {
 	} else {
 
 		const int nScreenByteCount=(sizeof(U32)*pEnv->m_nVideoWidth*pEnv->m_nVideoHeight);
-		
+
 		if (nInputCount>0) {
 
 			SPete_EffectNode* pInputNode=pEffectNode->m_ppInputs[0];
@@ -503,7 +503,7 @@ void RunGraph_RunParametersOnly(SPete_Node* pNode,void* pCookie) {
 		sizeof(U32);
 
 	switch (pNode->m_eType) {
-		
+
 		case eType_Parameter_External: {
 
 			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
@@ -530,12 +530,12 @@ void RunGraph_RunParametersOnly(SPete_Node* pNode,void* pCookie) {
 
 		}break;
 
-		case eType_Parameter_Midi: {	
+		case eType_Parameter_Midi: {
 
 			SPete_ParameterNode* pParamNode=(SPete_ParameterNode*)(pNode);
 
 			pParamNode->m_OutputValue=0.0f;
-			
+
 		}break;
 
 		default: {
@@ -568,7 +568,7 @@ void RunGraph_RunEffectsOnly(SPete_Node* pNode,void* pCookie) {
 		}break;
 
 		case eType_Effect_Input: {
-			
+
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 
 			int nInputIndex=pEffectNode->m_nInputIndex;
@@ -589,7 +589,7 @@ void RunGraph_RunEffectsOnly(SPete_Node* pNode,void* pCookie) {
 		}break;
 
 		case eType_Effect_Switcher: {
-			
+
 			SPete_EffectNode* pEffectNode=(SPete_EffectNode*)(pNode);
 
 			const int nInputCount=pEffectNode->m_nSwitcherInputCount;

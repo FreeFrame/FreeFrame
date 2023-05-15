@@ -102,9 +102,9 @@ typedef char BYTE;
 #define FF_CAP_PREFER_COPY			2
 #define	FF_CAP_PREFER_BOTH			3
 
-#define FF_TYPE_BOOLEAN				0    
+#define FF_TYPE_BOOLEAN				0
 #define FF_TYPE_EVENT				1
-#define FF_TYPE_RED					2 
+#define FF_TYPE_RED					2
 #define FF_TYPE_GREEN				3
 #define FF_TYPE_BLUE				4
 #define FF_TYPE_XPOS				5
@@ -119,7 +119,7 @@ typedef char BYTE;
 #if TARGET_OS_MAC
 typedef unsigned int DWORD;
 typedef unsigned char BYTE;
-#endif // TARGET_OS_MAC 
+#endif // TARGET_OS_MAC
 
 typedef struct PlugInfoStructTag {
 	DWORD	APIMajorVersion;
@@ -170,7 +170,7 @@ typedef union plugMainUnionTag {
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // plugMain - The one and only exposed function
-// parameters: 
+// parameters:
 //	functionCode - tells the plugin which function is being called
 //  pParam - 32-bit parameter or 32-bit pointer to parameter structure
 //
@@ -178,15 +178,15 @@ typedef union plugMainUnionTag {
 //
 // All parameters are cast as 32-bit untyped pointers and cast to appropriate
 // types here
-// 
-// All return values are cast to 32-bit untyped pointers here before return to 
+//
+// All return values are cast to 32-bit untyped pointers here before return to
 // the host
 //
 
 #ifdef WIN32
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
                        LPVOID lpReserved );
 
 __declspec(dllexport) void* __stdcall plugMain(DWORD functionCode, LPVOID pParam, DWORD reserved);
@@ -194,7 +194,7 @@ __declspec(dllexport) void* __stdcall plugMain(DWORD functionCode, LPVOID pParam
 typedef __declspec(dllimport) void* (__stdcall *FF_Main_FuncPtr)(DWORD,LPVOID,DWORD);
 
 #elif LINUX
-plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD 
+plugMainUnion plugMain( DWORD functionCode, LPVOID pParam, DWORD
 reserved);
 
 #elif TARGET_OS_MAC

@@ -36,7 +36,7 @@ static int g_nCaptureHeights[nMaxDevices];
 struct SSampleGrabberCB : public ISampleGrabberCB {
 
 	U32* m_pCaptureBuffer;
-    
+
 	STDMETHODIMP SampleCB( double SampleTime, IMediaSample * pSample ) {
         return NULL;
     }
@@ -72,7 +72,7 @@ struct SSampleGrabberCB : public ISampleGrabberCB {
 
             return NOERROR;
         }
-		
+
         return E_NOINTERFACE;
     }
 
@@ -142,13 +142,13 @@ void Pete_LiveFeed_Render(SPete_LiveFeed_Data* pInstanceData,SPete_LiveFeed_Sett
 	const int nCaptureWidth=g_nCaptureWidths[nDeviceIndex];
 	const int nCaptureHeight=g_nCaptureHeights[nDeviceIndex];
 	U32* pCaptureBuffer=(U32*)(g_CallbackObjects[nDeviceIndex].m_pCaptureBuffer);
-	
+
 	if (pCaptureBuffer==NULL) {
 		return;
 	}
 
 	if ((nWidth==nCaptureWidth)&&(nHeight==nCaptureHeight)) {
-	
+
 		memcpy(pOutput, pCaptureBuffer, nNumBytes);
 
 	} else {
@@ -170,7 +170,7 @@ void Pete_LiveFeed_ClearGraph(SPete_LiveFeed_Data* pInstanceData) {
         CComQIPtr< IMediaControl, &IID_IMediaControl > pMediaControl=
 			g_pGraphs[nDeviceIndex];
 
-        if (pMediaControl!=NULL) { 
+        if (pMediaControl!=NULL) {
             pMediaControl->Stop();
 		}
 
@@ -261,7 +261,7 @@ bool Pete_LiveFeed_InitGraph(SPete_LiveFeed_Data* pInstanceData) {
         return false;
 
     }
-    
+
     VIDEOINFOHEADER* pVideoInfoHeader=reinterpret_cast<VIDEOINFOHEADER*>(MediaType.pbFormat);
     g_nCaptureWidths[nDeviceIndex]=pVideoInfoHeader->bmiHeader.biWidth;
     g_nCaptureHeights[nDeviceIndex]=pVideoInfoHeader->bmiHeader.biHeight;
@@ -302,7 +302,7 @@ IBaseFilter* Pete_LiveFeed_GetCaptureDevice(int nDeviceIndex) {
     pEnumMoniker->Reset();
 
     IBaseFilter* pResult=NULL;
- 
+
 	int nCurrentDeviceIndex=0;
 
     while (true) {
@@ -378,10 +378,10 @@ IPin* Pete_LiveFeed_GetFirstPin(IBaseFilter* pinFilter,bool bIsInput) {
 			pResult=pCurrentPin;
 
             break;
-        } 
+        }
 
         pCurrentPin->Release();
-    } 
-            
+    }
+
     return pResult;
 }

@@ -49,7 +49,7 @@ void CTimeSliceDfxDlg::EnableControls()
 	UpdateData();
 }
 
-BOOL CTimeSliceDfxDlg::OnInitDialog() 
+BOOL CTimeSliceDfxDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
@@ -60,7 +60,7 @@ BOOL CTimeSliceDfxDlg::OnInitDialog()
 		IDC_TIMESLICE_PLAYBACKSTYLE_LIST,
 		CB_SETCURSEL,
 		m_eStyle,
-		0L);                             
+		0L);
 	EnableControls();
 
 	return TRUE;

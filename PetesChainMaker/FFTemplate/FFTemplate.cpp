@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "RunGraph.h"
 
 #include "resource.h"
-	
+
 /*-------------------------------------------------*/
 
 typedef struct FrameInfoStruct {
@@ -78,8 +78,8 @@ static PlugInfoStruct g_PluginInfo={
 
 /*-------------------------------------------------*/
 
-BOOL APIENTRY DllMain( HANDLE hModule, 
-                       DWORD  ul_reason_for_call, 
+BOOL APIENTRY DllMain( HANDLE hModule,
+                       DWORD  ul_reason_for_call,
                        LPVOID lpReserved
 					 )
 {
@@ -108,7 +108,7 @@ void FFTemplate_Init(HMODULE hModule) {
 	RunGraph_Init(&g_GraphTemplate,
 		16,16,
 		&g_EnvTemplate);
-	
+
 }
 
 /*-------------------------------------------------*/
@@ -128,7 +128,7 @@ void FFTemplate_InitGraphData(HMODULE hModule) {
 		MessageBox(NULL,"CHAIN_DATA resource not found","",MB_OK);
 		return;
 	}
-	
+
 	HGLOBAL hChainData=LoadResource(
 		hModule,hChainDataResource);
 
@@ -178,7 +178,7 @@ void FFTemplate_DeInit(void) {
 /*-------------------------------------------------*/
 
 #ifndef TARGET_OS_MAC
-__declspec(dllexport) void* __stdcall plugMain(DWORD functionCode, LPVOID pParam,DWORD InstanceCookie) 
+__declspec(dllexport) void* __stdcall plugMain(DWORD functionCode, LPVOID pParam,DWORD InstanceCookie)
 #else // TARGET_OS_MAC
 extern "C" void* plugMain(DWORD functionCode,void* pParam,DWORD InstanceCookie)
 #endif // TARGET_OS_MAC
@@ -290,12 +290,12 @@ PlugInfoStruct*	FFTemplate_GetInfo(SPete_InstanceData* pInstanceData) {
 
 	FFTemplate_InitGraphData(g_hModule);
 
-	g_PluginInfo.uniqueID[0]=g_GraphTemplate.m_pUniqueID[0];	
-	g_PluginInfo.uniqueID[1]=g_GraphTemplate.m_pUniqueID[1];	
-	g_PluginInfo.uniqueID[2]=g_GraphTemplate.m_pUniqueID[2];	
-	g_PluginInfo.uniqueID[3]=g_GraphTemplate.m_pUniqueID[3];	
+	g_PluginInfo.uniqueID[0]=g_GraphTemplate.m_pUniqueID[0];
+	g_PluginInfo.uniqueID[1]=g_GraphTemplate.m_pUniqueID[1];
+	g_PluginInfo.uniqueID[2]=g_GraphTemplate.m_pUniqueID[2];
+	g_PluginInfo.uniqueID[3]=g_GraphTemplate.m_pUniqueID[3];
 
-	strncpy((char*)g_PluginInfo.pluginName,g_GraphTemplate.m_pName,15);	
+	strncpy((char*)g_PluginInfo.pluginName,g_GraphTemplate.m_pName,15);
 
 	return &g_PluginInfo;
 }
@@ -400,7 +400,7 @@ float FFTemplate_GetParameter(SPete_InstanceData* pInstanceData,int nIndex) {
 U32 FFTemplate_GetPluginCaps(SPete_InstanceData* pInstanceData,U32 nIndex) {
 
 	U32 Result;
-	
+
 	switch (nIndex) {
 
 		case FF_CAP_16BITVIDEO:
@@ -464,7 +464,7 @@ SPete_InstanceData* FFTemplate_Instantiate(VideoInfoStruct* pVideoInfo) {
 		MessageBox(NULL,"CHAIN_DATA resource not found","",MB_OK);
 		return NULL;
 	}
-	
+
 	HGLOBAL hChainData=LoadResource(
 		g_hModule,hChainDataResource);
 
@@ -535,7 +535,7 @@ PlugExtendedInfoStruct*	FFTemplate_GetExtendedInfo(SPete_InstanceData* pInstance
 	g_ExtendedInfoStruct.PluginMajorVersion=0;
 	g_ExtendedInfoStruct.About="Chained Effects Plugin (c) various authors";
 	g_ExtendedInfoStruct.Description="No description written";
-	
+
 	return &g_ExtendedInfoStruct;
 
 }

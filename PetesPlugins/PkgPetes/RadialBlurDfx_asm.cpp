@@ -34,7 +34,7 @@ class CRadialBlurDfx: public CDFX
 public:
 	~CRadialBlurDfx();
 	CRadialBlurDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -69,7 +69,7 @@ BEGIN_OUTPUTSCREENS_DESC(CRadialBlurDfx)
 END_OUTPUTSCREENS_DESC(CRadialBlurDfx)
 
 BEGIN_EFFECT_DESC(CRadialBlurDfx, 10203216861479969, PETE_VJO_VERSION , "Petes\\RadialBlur", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CRadialBlurDfx) 
+END_EFFECT_DESC(CRadialBlurDfx)
 
 REGISTER_DFXFACTORY(CRadialBlurDfx)
 
@@ -99,7 +99,7 @@ CRadialBlurDfx::~CRadialBlurDfx()
 	// do nothing
 }
 
-HBITMAP	CRadialBlurDfx::GetLabelBitmap()			
+HBITMAP	CRadialBlurDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -108,7 +108,7 @@ BOOL	CRadialBlurDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -128,7 +128,7 @@ BOOL	CRadialBlurDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CRadialBlurDfx::UpdateConfig()
@@ -154,7 +154,7 @@ BOOL	CRadialBlurDfx::Initialize()
 
 BOOL	CRadialBlurDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 
@@ -169,7 +169,7 @@ static inline int GetLuminance(const DWORD inColour) {
 	const int nGreen=(inColour&(0xff<<SHIFT_GREEN))>>SHIFT_GREEN;
 	const int nBlue=(inColour&(0xff<<SHIFT_BLUE))>>SHIFT_BLUE;
 
-	const int nLuminance = 
+	const int nLuminance =
 		((90 * nRed)+
 		(115 * nGreen)+
 		(51 * nBlue));
@@ -194,7 +194,7 @@ void	CRadialBlurDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 	const __m64 nLayersCountShiftMMX=_m_from_int(nLayersCountShift);
 	const int nLayersCount=(1<<nLayersCountShift);
 	const int nLayerScaleIncrement=static_cast<int>(m_LayerScale*nFixedMult);
-	
+
 	DWORD* pCurrentSource=pSource;
 	DWORD* pCurrentOutput=pOutput;
 	const DWORD* pOutputEnd=(pOutput+nNumPixels);
@@ -210,7 +210,7 @@ void	CRadialBlurDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 
 	int nY=-nHalfHeight;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const DWORD* pOutputLineStart=pCurrentOutput;
 		const DWORD* pOutputLineEnd=pCurrentOutput+nWidth;
 
@@ -248,7 +248,7 @@ void	CRadialBlurDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput) {
 //					sub			eax,1
 //					cmp			eax,0
 //					jnz			LoopStart
-			
+
 				psrlw		mm1,4//nLayersCountShift
 
 				packuswb	mm1,mm0

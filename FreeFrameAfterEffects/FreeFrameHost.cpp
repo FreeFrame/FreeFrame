@@ -21,15 +21,15 @@
 
 /*
 	SDK_Noise.cpp
-	
+
 	Part of the Adobe After Effects 5.5 SDK.
 	Copyright 2001 Adobe Systems Incorporated.
 	All Rights Reserved.
-	
+
 	This plug-in demonstrates parameter supervision.
 
 	Revision History
-		
+
 	Version		Change										Engineer	Date
 	=======		======										========	======
 	1.0			created										eks			8/31/99
@@ -101,7 +101,7 @@ void AEGP_SuiteHandler::MissingSuiteError() const
 //	throw PF_Err_INTERNAL_STRUCT_DAMAGED;	// quit out to the main app with an error code
 };
 
-PF_Err 
+PF_Err
 main (
 	PF_Cmd			cmd,
 	PF_InData		*in_data,
@@ -111,8 +111,8 @@ main (
 	void* pExtra) {
 
 	PF_Err		err = PF_Err_NONE;
-	
-	switch (cmd) 
+
+	switch (cmd)
 	{
 		case PF_Cmd_ABOUT:
 			err = About(in_data,out_data,params,output);
@@ -139,31 +139,31 @@ main (
 			err = HandleChangedParam(	in_data,
 										out_data,
 										params,
-										output, 
+										output,
 										reinterpret_cast<PF_UserChangedParamExtra*>(pExtra));
 			break;
 	}
 	return err;
 }
 
-static PF_Err 
-About (	
+static PF_Err
+About (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output )
 {
-	PF_SPRINTF(	out_data->return_msg, 
+	PF_SPRINTF(	out_data->return_msg,
 				"%s, v%d.%d\r%s",
-				NAME, 
-				MAJOR_VERSION, 
-				MINOR_VERSION, 
+				NAME,
+				MAJOR_VERSION,
+				MINOR_VERSION,
 				DESCRIPTION);
 
 	return PF_Err_NONE;
 }
 
-static PF_Err 
+static PF_Err
 GlobalSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
@@ -172,17 +172,17 @@ GlobalSetup (
 {
 	PF_Err	err				= PF_Err_NONE;
 
-	out_data->my_version	= PF_VERSION(	MAJOR_VERSION, 
+	out_data->my_version	= PF_VERSION(	MAJOR_VERSION,
 											MINOR_VERSION,
-											BUG_VERSION, 
-											STAGE_VERSION, 
+											BUG_VERSION,
+											STAGE_VERSION,
 											BUILD_VERSION);
 
 	const int nSizeOfInstanceData=sizeof(SFreeFrameHost_InstanceData);
 	PF_Handle hInstanceData=PF_NEW_HANDLE(nSizeOfInstanceData);
 
 	out_data->global_data=hInstanceData;
-	
+
 	SFreeFrameHost_InstanceData* pInstanceData=
 		(SFreeFrameHost_InstanceData*)(*hInstanceData);
 	Pete_ZeroMemory(pInstanceData,nSizeOfInstanceData);
@@ -194,7 +194,7 @@ GlobalSetup (
 	return err;
 }
 
-static PF_Err 
+static PF_Err
 ParamsSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
@@ -202,7 +202,7 @@ ParamsSetup (
 	PF_LayerDef		*output)
 {
 	PF_Err			err = PF_Err_NONE;
-	PF_ParamDef		def;	
+	PF_ParamDef		def;
 
 	SFreeFrameHost_InstanceData* pInstanceData=
 		(SFreeFrameHost_InstanceData*)(*out_data->global_data);
@@ -219,7 +219,7 @@ ParamsSetup (
 	def.flags=(PF_ParamFlag_SUPERVISE|
 		PF_ParamFlag_CANNOT_TIME_VARY);
 
-	PF_ADD_POPUP(	"Effect", 
+	PF_ADD_POPUP(	"Effect",
 					pInstanceData->nEffectsCount,
 					1,
 					pPopupString,
@@ -229,7 +229,7 @@ ParamsSetup (
 	def.flags=(PF_ParamFlag_SUPERVISE|
 		PF_ParamFlag_CANNOT_TIME_VARY);
 
-	PF_ADD_POPUP(	"Super-Sample", 
+	PF_ADD_POPUP(	"Super-Sample",
 					4,
 					1,
 					"1x|4x|9x|16x",
@@ -247,9 +247,9 @@ ParamsSetup (
 
 		static void* pCastCount;
 		pCastCount=reinterpret_cast<void*>(nCount);
-		
+
 		char* pName=(char*)(pEffectData->m_pMainFunc(FF_GETPARAMETERNAME,pCastCount,0));
-		
+
 		bool bNullCharFound=false;
 		int nCharCount;
 		for (nCharCount=0; ((nCharCount<15)&&(!bNullCharFound)); nCharCount+=1) {
@@ -268,14 +268,14 @@ ParamsSetup (
 		const float DefaultValue=*((float*)&ResultAsU32);
 
 		const int nParamID=(SLIDER_PARAM0_ID+nCount);
-		
+
 		AEFX_CLR_STRUCT(def);
 		def.flags&=~PF_ParamFlag_COLLAPSE_TWIRLY;
-		PF_ADD_SLIDER(	pName, 
+		PF_ADD_SLIDER(	pName,
 						0.0f,
-						1000.0f, 
-						0.0f, 
-						1000.0f, 
+						1000.0f,
+						0.0f,
+						1000.0f,
 						DefaultValue*1000.0f,
 						nParamID);
 	}
@@ -290,16 +290,16 @@ ParamsSetup (
 		if (nCount==nNumParameters) {
 			def.ui_flags|=PF_PUI_ECW_SEPARATOR;
 		}
-		
-		PF_ADD_SLIDER("Unused", 
+
+		PF_ADD_SLIDER("Unused",
 			0.0f,
-			1000.0f, 
-			0.0f, 
-			1000.0f, 
+			1000.0f,
+			0.0f,
+			1000.0f,
 			500.0f,
 			nParamID);
 
-	}		
+	}
 
 	out_data->num_params = FILTER_NUM_PARAMS;
 
@@ -315,7 +315,7 @@ static PF_Err SequenceSetup (	PF_InData		*in_data,
 	const int nHeight=in_data->height;
 	const int nScreenPixelCount=(nWidth*nHeight);
 	const int nScreenByteCount=(nScreenPixelCount*sizeof(U32));
-	
+
 	const int nTotalByteCount=(nScreenByteCount*16);
 
 	out_data->sequence_data = PF_NEW_HANDLE(nTotalByteCount);
@@ -330,7 +330,7 @@ static PF_Err SequenceSetup (	PF_InData		*in_data,
 	pInstanceData->nSourceHeight=nHeight;
 
 	FreeFrame_InitEffect(pInstanceData);
-	
+
 	return PF_Err_NONE;
 
 }
@@ -366,10 +366,10 @@ void FreeFrame_InitEffect(SFreeFrameHost_InstanceData* pInstanceData) {
 		} else {
 			assert(FALSE);
 			pVideoInfo->bitDepth=2;
-		}	
+		}
 
 		pFreeFrameMain(FF_INITIALISE,pVideoInfo,0);
-	
+
 	}
 
 }
@@ -385,7 +385,7 @@ void FreeFrame_DeInitEffect(SFreeFrameHost_InstanceData* pInstanceData) {
 	if (pFreeFrameMain!=NULL) {
 
 		pFreeFrameMain(FF_DEINITIALISE,NULL,0);
-	
+
 	}
 
 }
@@ -398,13 +398,13 @@ void FreeFrame_InitEffectParams(PF_InData		*in_data,
 								bool bValueChangeAllowed) {
 
 	PF_ParamUtilsSuite1* pus=NULL;
-	PF_Err err=AEFX_AcquireSuite(in_data, 
-		out_data, 
-		kPFParamUtilsSuite, 
-		kPFParamUtilsSuiteVersion1, 
+	PF_Err err=AEFX_AcquireSuite(in_data,
+		out_data,
+		kPFParamUtilsSuite,
+		kPFParamUtilsSuiteVersion1,
 		"Couldn't load suite.",
 		(void**)&pus);
-	
+
 	PF_ParamDef			def;
 
 	const int nSelectedEffect=pInstanceData->nSelectedEffect;
@@ -421,13 +421,13 @@ void FreeFrame_InitEffectParams(PF_InData		*in_data,
 		} else {
 			nNumParameters=0;
 		}
-		
+
 		int nCount;
 		for (nCount=nNumParameters; nCount<nFreeFrameParamCount; nCount+=1) {
 
 			const int nParamID=(SLIDER_PARAM0_ID+nCount);
 			PF_ParamDef* pParamDef=params[nParamID];
-			
+
 			def=*pParamDef;
 
 			def.flags|=PF_ParamFlag_COLLAPSE_TWIRLY;
@@ -436,21 +436,21 @@ void FreeFrame_InitEffectParams(PF_InData		*in_data,
 				def.ui_flags|=PF_PUI_ECW_SEPARATOR;
 			}
 			PF_STRCPY(def.name,"Unused");
-			
+
 			err=(pus->PF_UpdateParamUI)(
-				in_data->effect_ref, 
+				in_data->effect_ref,
 				nParamID,
 				&def);
 
-		}		
+		}
 
 		for (nCount=0; nCount<nNumParameters; nCount+=1) {
 
 			static void* pCastCount;
 			pCastCount=reinterpret_cast<void*>(nCount);
-			
+
 			char* pName=(char*)(pEffectData->m_pMainFunc(FF_GETPARAMETERNAME,pCastCount,0));
-			
+
 			bool bNullCharFound=false;
 			int nCharCount;
 			for (nCharCount=0; ((nCharCount<15)&&(!bNullCharFound)); nCharCount+=1) {
@@ -470,14 +470,14 @@ void FreeFrame_InitEffectParams(PF_InData		*in_data,
 
 			const int nParamID=(SLIDER_PARAM0_ID+nCount);
 			PF_ParamDef* pParamDef=params[nParamID];
-			
+
 			def=*pParamDef;
 			PF_STRCPY(def.name,pName);
 			def.flags&=~PF_ParamFlag_COLLAPSE_TWIRLY;
 			def.ui_flags&=~(PF_PUI_DISABLED|PF_PUI_ECW_SEPARATOR);
 
 			err=(pus->PF_UpdateParamUI)(
-				in_data->effect_ref, 
+				in_data->effect_ref,
 				nParamID,
 				&def);
 
@@ -514,9 +514,9 @@ static PF_Err SequenceSetdown (	PF_InData		*in_data,
 	FF_Main_FuncPtr pFreeFrameMain=pEffectData->m_pMainFunc;
 
 	if (pFreeFrameMain!=NULL) {
-	
+
 		pFreeFrameMain(FF_DEINITIALISE,NULL,0);
-	
+
 	}
 
 	return PF_Err_NONE;
@@ -553,17 +553,17 @@ HandleChangedParam(
 	if (nNewEffect!=nOldEffect) {
 		FreeFrame_DeInitEffect(pInstanceData);
 	}
-		
+
 	pInstanceData->nSelectedEffect=nNewEffect;
 
 	pInstanceData->nSuperSampleSize=(params[FILTER_SUPERSAMPLE]->u.bd.value);
 
 	FreeFrame_InitEffect(pInstanceData);
-	
+
 	if (nNewEffect!=nOldEffect) {
 		FreeFrame_InitEffectParams(in_data,out_data,params,output,pInstanceData,true);
 	}
-	
+
 	return err;
 
 }
@@ -597,7 +597,7 @@ void Pete_SuperSampleUp(PF_World* pSource,PF_World* pSuperSampledSource,int nSup
 		PF_Pixel* pSourceRow=(PF_Pixel*)
 			(pSourceData+
 			(nSourceY*nSourceRowBytes));
-		
+
 		PF_Pixel* pSuperSampleRow=(PF_Pixel*)
 			(pSuperSampleData+
 			(nY*nSuperSampleRowBytes));
@@ -646,7 +646,7 @@ void Pete_SuperSampleDown(PF_World* pSuperSampledOutput,PF_World* pOutput,int nS
 		PF_Pixel* pOutputRow=(PF_Pixel*)
 			(pOutputData+
 			(nY*nOutputRowBytes));
-		
+
 		int nX;
 		for (nX=0; nX<nOutputWidth; nX+=1) {
 
@@ -713,7 +713,7 @@ void Pete_SuperSampleDown(PF_World* pSuperSampledOutput,PF_World* pOutput,int nS
 
 }
 
-static PF_Err Render ( 
+static PF_Err Render (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
@@ -724,7 +724,7 @@ static PF_Err Render (
 
 	FilterInfo			fi;
 	short				lines	= 0;
-	
+
 	// Suites
 	PF_Iterate8Suite1		*isP	= NULL;
 	PF_WorldTransformSuite1	*wtsP	= NULL;
@@ -746,7 +746,7 @@ static PF_Err Render (
 								kPFWorldTransformSuiteVersion1,
 								"Couldn't load World Transform Suite",
 								reinterpret_cast<void**>(&wtsP));
-	}	
+	}
 
 	if(!err && isP && wtsP)
 	{
@@ -768,7 +768,7 @@ static PF_Err Render (
 
 		const float AxisScaleX=1.0f/DownSampleX;
 		const float AxisScaleY=AspectRatio/DownSampleY;
-		
+
 		PF_World* pOriginalSource=&params[FILTER_INPUT]->u.ld;
 		PF_World* pOriginalOutput=output;
 
@@ -786,17 +786,17 @@ static PF_Err Render (
 			(nSSBufferHeight!=pOriginalSource->height)) {
 
 			err = suites.PFWorldSuite()->new_world(NULL,
-													nSSBufferWidth, 
-													nSSBufferHeight, 
-													PF_NewWorldFlag_NONE, 
+													nSSBufferWidth,
+													nSSBufferHeight,
+													PF_NewWorldFlag_NONE,
 													&SuperSampledSource);
 
 			if (!err) {
 
 				err = suites.PFWorldSuite()->new_world(NULL,
-														nSSBufferWidth, 
-														nSSBufferHeight, 
-														PF_NewWorldFlag_NONE, 
+														nSSBufferWidth,
+														nSSBufferHeight,
+														PF_NewWorldFlag_NONE,
 														&SuperSampledOutput);
 
 			}
@@ -879,15 +879,15 @@ static PF_Err Render (
 			case 2: {
 				nConversionRowBytes=(4*nWidth);
 			}break;
-		
+
 			case 1: {
 				nConversionRowBytes=(3*nWidth);
 			}break;
-		
+
 			case 0: {
 				nConversionRowBytes=(2*nWidth);
 			}break;
-		
+
 			default: {
 				assert(FALSE);
 				nConversionRowBytes=nWidth*sizeof(U32);
@@ -922,7 +922,7 @@ static PF_Err Render (
 
 				pCurrentConv+=1;
 				pCurrentSource+=1;
-					
+
 			}
 
 			switch (nBitDepth) {
@@ -930,15 +930,15 @@ static PF_Err Render (
 				case 2: { // 32 bit
 					// do nothing
 				}break;
-			
+
 				case 1: { // 24 bit
 					Pete_CopyAndConvert32BitTo24Bit(pConvRowStart,pConvRowStart,nWidth);
 				}break;
-			
+
 				case 0: { // 16 bit
 					Pete_CopyAndConvert32BitTo16Bit565(pConvRowStart,(U16*)pConvRowStart,nWidth);
 				}break;
-			
+
 				default: {
 					assert(FALSE);
 				}break;
@@ -946,7 +946,7 @@ static PF_Err Render (
 			}
 
 		}
-		
+
 		pFreeFrameMain(FF_PROCESSFRAME,pConversionBuffer,0);
 
 		for (nY=0; nY<nHeight; nY+=1) {
@@ -963,15 +963,15 @@ static PF_Err Render (
 				case 2: { // 32 bit
 					memcpy(pOutputRowStart,pConvRowStart,(nWidth*sizeof(U32)));
 				}break;
-			
+
 				case 1: { // 24 bit
 					Pete_CopyAndConvert24BitTo32Bit(pConvRowStart,pOutputRowStart,nWidth);
 				}break;
-			
+
 				case 0: { // 16 bit
 					Pete_CopyAndConvert16Bit565To32Bit((U16*)pConvRowStart,pOutputRowStart,nWidth);
 				}break;
-			
+
 				default: {
 					assert(FALSE);
 				}break;
@@ -993,7 +993,7 @@ static PF_Err Render (
 				*pCurrentOutput=OutputColour;
 
 				pCurrentOutput+=1;
-					
+
 			}
 
 		}
@@ -1007,9 +1007,9 @@ static PF_Err Render (
 			(void)suites.PFWorldSuite()->dispose_world(NULL, &SuperSampledOutput);
 
 		}
-		
+
 	}
-	
+
 	if(isP)
 	{
 		err2 = AEFX_ReleaseSuite(in_data,
@@ -1055,7 +1055,7 @@ char* FreeFrame_GetPluginDirPrefix(void) {
 	LONG RegEnumKeyResult;
 
 	do {
-		
+
 		char pSubKeyName[1024];
 		DWORD nSubKeyNameLength=1024;
 
@@ -1127,7 +1127,7 @@ void FreeFrame_LoadAllPlugins(SFreeFrameHost_InstanceData* pInstanceData) {
 void FreeFrame_LoadPluginsFromDir(SFreeFrameHost_InstanceData* pInstanceData,char* pCurrentDir,int nRecursionLevel) {
 
 	char pSearchString[1024];
-	
+
 	strcpy(pSearchString,pCurrentDir);
 	strcat(pSearchString,"*.dll");
 
@@ -1166,7 +1166,7 @@ void FreeFrame_LoadPluginsFromDir(SFreeFrameHost_InstanceData* pInstanceData,cha
 	if (nRecursionLevel>=10) {
 		return;
 	}
-	
+
 	strcpy(pSearchString,pCurrentDir);
 	strcat(pSearchString,"*.");
 
@@ -1185,7 +1185,7 @@ void FreeFrame_LoadPluginsFromDir(SFreeFrameHost_InstanceData* pInstanceData,cha
 			strcat(pFullFileName,FindDataStruct.cFileName);
 			strcat(pFullFileName,"\\");
 
-			FreeFrame_LoadPluginsFromDir(pInstanceData,pFullFileName,nRecursionLevel);		
+			FreeFrame_LoadPluginsFromDir(pInstanceData,pFullFileName,nRecursionLevel);
 
 		}
 
@@ -1194,9 +1194,9 @@ void FreeFrame_LoadPluginsFromDir(SFreeFrameHost_InstanceData* pInstanceData,cha
 	}
 
 }
-		
+
 bool FreeFrame_LoadPlugin(SFreeFrameHost_EffectData* pEffectData,char* pFileName) {
-	
+
 	bool bLoadSucceeded=false;
 
 	pEffectData->m_hModuleHandle=LoadLibrary(pFileName);
@@ -1231,14 +1231,14 @@ char* FreeFrame_GetEffectName(SFreeFrameHost_EffectData* pEffectData) {
 	}
 
 	PlugInfoStruct* pInfoStruct=(PlugInfoStruct*)pEffectData->m_pMainFunc(FF_GETINFO,NULL,0);
-	
+
 	if (pInfoStruct==NULL) {
 		return "<PNULL>";
 	}
 
 	char* pPluginName=(char*)(&pInfoStruct->pluginName[0]);
 	static char TerminatedName[MAX_PATH];
-	
+
 	int nCharCount=0;
 	while ((pPluginName[nCharCount]!='\0')&&(nCharCount<16)) {
 		TerminatedName[nCharCount]=pPluginName[nCharCount];

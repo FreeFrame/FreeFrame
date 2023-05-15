@@ -61,7 +61,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define POPUP_SUPERSAMPLE_ID		(1)
 
 #define SLIDER_OPACITY_IDOFFSET		(0)
-#define POPUP_TRANSFERMODE_IDOFFSET	(1)			
+#define POPUP_TRANSFERMODE_IDOFFSET	(1)
 
 #define SUPERSAMPLE_SIZE_MAX		(4)
 #define SUPERSAMPLE_SAMPLE_MAX		(SUPERSAMPLE_SIZE_MAX*SUPERSAMPLE_SIZE_MAX)
@@ -70,9 +70,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define FIX_SLIDER_PRECISION	1
 #define DISPLAY_FLAGS			1
 
-DllExport 
-PF_Err 
-main (	
+DllExport
+PF_Err
+main (
 	PF_Cmd			cmd,
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
@@ -80,40 +80,40 @@ main (
 	PF_LayerDef		*output,
 	void*			pExtra);
 
-static PF_Err 
-About (	
+static PF_Err
+About (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output );
 
-static PF_Err 
+static PF_Err
 GlobalSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output );
 
-static PF_Err 
+static PF_Err
 ParamsSetup (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output);
 
-static PF_Err 
-Render ( 
+static PF_Err
+Render (
 	PF_InData		*in_data,
 	PF_OutData		*out_data,
 	PF_ParamDef		*params[],
 	PF_LayerDef		*output );
 
-static PF_Err 
-FilterImage ( 
-	long		refcon, 
+static PF_Err
+FilterImage (
+	long		refcon,
 	long		x,
-	long		y, 
-	PF_Pixel	*in, 
+	long		y,
+	PF_Pixel	*in,
 	PF_Pixel	*out);
 
 #endif // SDK_NOISE_H

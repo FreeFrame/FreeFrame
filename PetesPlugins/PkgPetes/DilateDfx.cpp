@@ -37,7 +37,7 @@ class CDilateDfx: public CDFX
 public:
 	~CDilateDfx();
 	CDilateDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -74,7 +74,7 @@ BEGIN_OUTPUTSCREENS_DESC(CDilateDfx)
 END_OUTPUTSCREENS_DESC(CDilateDfx)
 
 BEGIN_EFFECT_DESC(CDilateDfx, 10203216861479950, PETE_VJO_VERSION , "Petes\\Dilate", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CDilateDfx) 
+END_EFFECT_DESC(CDilateDfx)
 
 REGISTER_DFXFACTORY(CDilateDfx)
 
@@ -96,7 +96,7 @@ CDilateDfx::~CDilateDfx()
 	Pete_Dilate_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CDilateDfx::GetLabelBitmap()			
+HBITMAP	CDilateDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -105,7 +105,7 @@ BOOL	CDilateDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -127,8 +127,8 @@ BOOL	CDilateDfx::GetConfigData(CConfigData *p)
 	if(!p->GetInt("!", 0)) return FALSE;
 
 	m_bErode=p->GetInt("E", m_bErode);
-	
-	return TRUE;	
+
+	return TRUE;
 }
 
 BOOL	CDilateDfx::UpdateConfig()
@@ -156,10 +156,10 @@ BOOL	CDilateDfx::Initialize()
 
 BOOL	CDilateDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
-	
+
 	SPete_Dilate_Settings Settings;
 	Settings.m_DoErode=(m_bErode?100.0f:0.0f);
 

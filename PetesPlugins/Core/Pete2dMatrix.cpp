@@ -58,7 +58,7 @@ void Pete_2dMatrix_SetToRotation(float Rotation,SPete_2dMatrix* poutResult) {
 
 	const float CosRotation=cos(Rotation);
 	const float SinRotation=sin(Rotation);
-	
+
 	poutResult->m[0][0]=CosRotation;
 	poutResult->m[0][1]=-SinRotation;
 	poutResult->m[0][2]=0.0f;
@@ -111,7 +111,7 @@ void Pete_2dMatrix_SetToDirectionalScale(float NormalX,float NormalY,float Scale
 void Pete_2dMatrix_Concatenate(SPete_2dMatrix* pinFirst,SPete_2dMatrix* pinSecond,SPete_2dMatrix* poutResult) {
 
 	SPete_2dMatrix TempResult;
-	
+
 	int nY=0;
 	for (nY=0; nY<3; nY+=1) {
 
@@ -133,7 +133,7 @@ void Pete_2dMatrix_Concatenate(SPete_2dMatrix* pinFirst,SPete_2dMatrix* pinSecon
 
 void Pete_2dMatrix_TransformVector(SPete_2dVector* pinVector,SPete_2dMatrix* pinMatrix,SPete_2dVector* poutResult) {
 
-	SPete_2dVector Result;	
+	SPete_2dVector Result;
 
 	Result.x=
 		(pinMatrix->m[0][0]*pinVector->x)+

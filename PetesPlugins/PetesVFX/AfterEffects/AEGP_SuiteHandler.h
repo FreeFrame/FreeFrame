@@ -28,17 +28,17 @@
 
 	USAGE INSTRUCTIONS:
 
-		The accompanying file, AEGP_SuiteHandler.cpp, is designed to be compiled right into 
-		the client application or plug-in. 
+		The accompanying file, AEGP_SuiteHandler.cpp, is designed to be compiled right into
+		the client application or plug-in.
 
-		You'll get a link error. 
+		You'll get a link error.
 
-		This is because AEGP_SuiteHandler.cpp lacks a definition for the MissingSuiteError() 
+		This is because AEGP_SuiteHandler.cpp lacks a definition for the MissingSuiteError()
 		method. You must provide one to define the error handling behaviour of the class.
-		This function may or may not display an error message etc. but it must end 
+		This function may or may not display an error message etc. but it must end
 		by throwing an exception. It cannot return.
-		
-		Other than that, usage is pretty trivial. Construct with a pointer to the PICA 
+
+		Other than that, usage is pretty trivial. Construct with a pointer to the PICA
 		basic suite, and then call the public method to obtain lazily loaded pointers
 		to other AEGP suites. Upon desctruction, all loaded suites are freed (so this class
 		is really handy for writing exception-safe AEGP code.)
@@ -330,7 +330,7 @@ public:
 
 	AEGP_CompositeSuite1 *CompositeSuite() const
 	{
-		if (!i_composite_suiteP) 
+		if (!i_composite_suiteP)
 		{
 			i_composite_suiteP = (AEGP_CompositeSuite1*) LoadSuite(kAEGPCompositeSuite, kAEGPCompositeSuiteVersion1);
 		}
@@ -339,9 +339,9 @@ public:
 
 	PF_WorldSuite1 *PFWorldSuite() const
 	{
-		if (!i_world_suiteP) 
+		if (!i_world_suiteP)
 		{
-			i_world_suiteP = (PF_WorldSuite1*) 
+			i_world_suiteP = (PF_WorldSuite1*)
 				LoadSuite(kPFWorldSuite, kPFWorldSuiteVersion1);
 		}
 		return i_world_suiteP;
@@ -349,19 +349,19 @@ public:
 
 	AEGP_IOInSuite1 *IOInSuite() const
 	{
-		if (!i_io_in_suiteP) 
+		if (!i_io_in_suiteP)
 		{
-			i_io_in_suiteP = (AEGP_IOInSuite1*) 
+			i_io_in_suiteP = (AEGP_IOInSuite1*)
 				LoadSuite(kAEGPIOInSuite, kAEGPIOInSuiteVersion1);
 		}
 		return i_io_in_suiteP;
 	}
-	
+
 	AEGP_IOOutSuite1 *IOOutSuite() const
 	{
-		if (!i_io_out_suiteP) 
+		if (!i_io_out_suiteP)
 		{
-			i_io_out_suiteP = (AEGP_IOOutSuite1*) 
+			i_io_out_suiteP = (AEGP_IOOutSuite1*)
 				LoadSuite(kAEGPIOOutSuite, kAEGPIOOutSuiteVersion1);
 		}
 		return i_io_out_suiteP;

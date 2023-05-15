@@ -35,7 +35,7 @@ class CPanSpinZoomDfx: public CDFX
 public:
 	~CPanSpinZoomDfx();
 	CPanSpinZoomDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CPanSpinZoomDfx)
 END_OUTPUTSCREENS_DESC(CPanSpinZoomDfx)
 
 BEGIN_EFFECT_DESC(CPanSpinZoomDfx, 1023215862323929, PETE_VJO_VERSION , "Petes\\PanSpinZoom", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CPanSpinZoomDfx) 
+END_EFFECT_DESC(CPanSpinZoomDfx)
 
 REGISTER_DFXFACTORY(CPanSpinZoomDfx)
 
@@ -102,7 +102,7 @@ CPanSpinZoomDfx::~CPanSpinZoomDfx()
 
 }
 
-HBITMAP	CPanSpinZoomDfx::GetLabelBitmap()			
+HBITMAP	CPanSpinZoomDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CPanSpinZoomDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CPanSpinZoomDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CPanSpinZoomDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CPanSpinZoomDfx::Initialize()
 
 BOOL	CPanSpinZoomDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

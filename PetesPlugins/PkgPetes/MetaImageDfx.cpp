@@ -58,7 +58,7 @@ class CMetaImageDfx: public CDFX
 public:
 	~CMetaImageDfx();
 	CMetaImageDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -145,7 +145,7 @@ BEGIN_OUTPUTSCREENS_DESC(CMetaImageDfx)
 END_OUTPUTSCREENS_DESC(CMetaImageDfx)
 
 BEGIN_EFFECT_DESC(CMetaImageDfx, 10203216861479925, PETE_VJO_VERSION , "Petes\\MetaImage", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CMetaImageDfx) 
+END_EFFECT_DESC(CMetaImageDfx)
 
 REGISTER_DFXFACTORY(CMetaImageDfx)
 
@@ -180,7 +180,7 @@ INT CMetaImageDfx::__getInputScreensCount(void) {
 	return m_nInputCount;
 }
 
-HBITMAP	CMetaImageDfx::GetLabelBitmap()			
+HBITMAP	CMetaImageDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -223,7 +223,7 @@ BOOL	CMetaImageDfx::GetConfigData(CConfigData *p)
 
 	m_nInputCount=p->GetInt("I",m_nInputCount);
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CMetaImageDfx::UpdateConfig()
@@ -233,10 +233,10 @@ BOOL	CMetaImageDfx::UpdateConfig()
 		SetConfigData(pConfigData);
 
 	m_nSizeID=RegisterFloat(m_pEngine,&m_Size,"Size",0.0f,1.0f);
-	m_nFreezeID=RegisterBool(m_pEngine,&m_bFreeze,"Freeze");	
-	m_nDistanceBasedID=RegisterBool(m_pEngine,&m_bDistanceBased,"Distance Based");	
-	m_nUseSourceAsSubImageID=RegisterBool(m_pEngine,&m_bUseSourceAsSubImage,"Use Source As Sub Image");	
-	m_nCheapAndNastyID=RegisterBool(m_pEngine,&m_bCheapAndNasty,"Cheap And Nasty");	
+	m_nFreezeID=RegisterBool(m_pEngine,&m_bFreeze,"Freeze");
+	m_nDistanceBasedID=RegisterBool(m_pEngine,&m_bDistanceBased,"Distance Based");
+	m_nUseSourceAsSubImageID=RegisterBool(m_pEngine,&m_bUseSourceAsSubImage,"Use Source As Sub Image");
+	m_nCheapAndNastyID=RegisterBool(m_pEngine,&m_bCheapAndNasty,"Cheap And Nasty");
 
 	m_InputScreensCount = m_nInputCount;
 
@@ -259,7 +259,7 @@ BOOL	CMetaImageDfx::Initialize()
 
 BOOL	CMetaImageDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 
@@ -309,7 +309,7 @@ void	CMetaImageDfx::WriteOutputFrame(DWORD* pSource, DWORD* pOutput,DWORD** ppIn
 		SubWidth=1+(m_Size*(nWidth-1));
 		SubHeight=1+(m_Size*(nHeight-1));
 	}
-	
+
 
 	LockSubImagesData();
 
@@ -325,7 +325,7 @@ void	CMetaImageDfx::CreateSubImages(DWORD** ppInputs,int nInputsCount,float SubW
 
 	int nCount;
 	for (nCount=0; nCount<nInputsCount; ++nCount) {
-	
+
 		SSubImageHeader* pSubImageHeader=GetSubImage(nCount);
 
 		DWORD* pShrunkBuffer=GetSubImagePixelData(pSubImageHeader);
@@ -351,7 +351,7 @@ void	CMetaImageDfx::DrawAllSubImages(DWORD* pSource,DWORD* pOutput,float SubWidt
 
 	const int nWidth=m_nXRes;
 	const int nHeight=m_nYRes;
-	
+
 	const int nHalfWidth=nWidth/2;
 	const int nHalfHeight=nHeight/2;
 
@@ -448,7 +448,7 @@ void	CMetaImageDfx::DrawSubImage(DWORD* pSource,DWORD* pShrunkBuffer,DWORD* pOut
 	DWORD*const pOutputEnd=(pCurrentOutput+(nYDelta*nWidth)+nXDelta);
 
 	while (pCurrentOutput<pOutputEnd) {
-		
+
 		DWORD*const pOutputLineStart=pCurrentOutput;
 		DWORD*const pOutputLineEnd=pCurrentOutput+nXDelta;
 
@@ -497,7 +497,7 @@ DWORD	CMetaImageDfx::GetAreaAverage(DWORD* pImage,int nLeftX,int nTopY,int nRigh
 		(nYDelta<=0)) {
 		return 0x00000000;
 	}
-	
+
 	DWORD* pCurrentImage=pImage+(nTopY*nWidth)+nLeftX;
 	DWORD*const pImageEnd=(pCurrentImage+(nYDelta*nWidth)+nXDelta);
 
@@ -507,7 +507,7 @@ DWORD	CMetaImageDfx::GetAreaAverage(DWORD* pImage,int nLeftX,int nTopY,int nRigh
 	int nSampleCount=0;
 
 	while (pCurrentImage<pImageEnd) {
-		
+
 		DWORD*const pImageLineStart=pCurrentImage;
 		DWORD*const pImageLineEnd=pCurrentImage+nXDelta;
 
@@ -524,7 +524,7 @@ DWORD	CMetaImageDfx::GetAreaAverage(DWORD* pImage,int nLeftX,int nTopY,int nRigh
 			nBlueTotal+=nImageBlue;
 
 			nSampleCount+=1;
-			
+
 			pCurrentImage+=nStride;
 
 		}
@@ -543,7 +543,7 @@ DWORD	CMetaImageDfx::GetAreaAverage(DWORD* pImage,int nLeftX,int nTopY,int nRigh
 		(nAverageBlue<<SHIFT_BLUE);
 
 	return Average;
-	
+
 }
 
 DWORD	CMetaImageDfx::ShrinkSourceImage(DWORD* pSource,DWORD* pOutput,float SubWidth,float SubHeight) {
@@ -568,7 +568,7 @@ DWORD	CMetaImageDfx::ShrinkSourceImage(DWORD* pSource,DWORD* pOutput,float SubWi
 	int nSampleCount=0;
 
 	DWORD* pCurrentOutput=pOutput;
-	
+
 	float SourceY;
 	for (SourceY=0.0f; SourceY<nHeight; SourceY+=SourceYInc) {
 
@@ -642,7 +642,7 @@ DWORD	CMetaImageDfx::ShrinkSourceImageFast(DWORD* pSource,DWORD* pOutput,float S
 	int nSampleCount=0;
 
 	DWORD* pCurrentOutput=pOutput;
-	
+
 	float SourceY;
 	for (SourceY=0.0f; SourceY<nHeight; SourceY+=SourceYInc) {
 
@@ -741,11 +741,11 @@ SSubImageHeader* CMetaImageDfx::GetBestSubImage(DWORD TargetColour) {
 			nInputCount=1;
 		}
 	}
-	
+
 	const int nTargetRed=(TargetColour>>SHIFT_RED)&0xff;
 	const int nTargetGreen=(TargetColour>>SHIFT_GREEN)&0xff;
 	const int nTargetBlue=(TargetColour>>SHIFT_BLUE)&0xff;
-	
+
 	int nClosestDistance=0x7fffffff;
 	SSubImageHeader* pResult=NULL;
 

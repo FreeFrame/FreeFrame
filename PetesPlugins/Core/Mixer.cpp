@@ -60,7 +60,7 @@ int Pete_Mixer_Init(SPete_Mixer_Data* pInstanceData,int nWidth, int nHeight) {
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	pInstanceData->nWidth=nWidth;
 	pInstanceData->nHeight=nHeight;
 
@@ -82,7 +82,7 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 
 	const int nNumPixels=nWidth*nHeight;
 	const int nNumBytes=(nNumPixels*sizeof(U32));
-	
+
 	const int nMixValue=static_cast<int>(pSettings->m_MixValue);
 
 	const int nOneMinusLerp=(nMixValue<<0);
@@ -122,7 +122,7 @@ void Pete_Mixer_Render(SPete_Mixer_Data* pInstanceData,SPete_Mixer_Settings* pSe
 	while (pCurrentOutput!=pOutputEnd) {
 
 #ifndef PETE_USE_MMX
-		
+
 		const U32 SourceAColour=*pCurrentSourceA;
 
 		const int nSourceARed=(SourceAColour>>SHIFT_RED)&0xff;

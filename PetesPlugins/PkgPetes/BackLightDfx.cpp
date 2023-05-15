@@ -37,7 +37,7 @@ class CBackLightDfx: public CDFX
 public:
 	~CBackLightDfx();
 	CBackLightDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -74,7 +74,7 @@ BEGIN_OUTPUTSCREENS_DESC(CBackLightDfx)
 END_OUTPUTSCREENS_DESC(CBackLightDfx)
 
 BEGIN_EFFECT_DESC(CBackLightDfx, 10203216861479960, PETE_VJO_VERSION , "Petes\\BackLight", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CBackLightDfx) 
+END_EFFECT_DESC(CBackLightDfx)
 
 REGISTER_DFXFACTORY(CBackLightDfx)
 
@@ -97,7 +97,7 @@ CBackLightDfx::~CBackLightDfx()
 
 }
 
-HBITMAP	CBackLightDfx::GetLabelBitmap()			
+HBITMAP	CBackLightDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -106,7 +106,7 @@ BOOL	CBackLightDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -126,7 +126,7 @@ BOOL	CBackLightDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CBackLightDfx::UpdateConfig()
@@ -154,7 +154,7 @@ BOOL	CBackLightDfx::Initialize()
 
 BOOL	CBackLightDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

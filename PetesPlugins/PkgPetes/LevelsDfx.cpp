@@ -36,7 +36,7 @@ class CLevelsDfx: public CDFX
 public:
 	~CLevelsDfx();
 	CLevelsDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -71,52 +71,52 @@ protected:
 
 	float	m_UniformInputFloor;
 	int		m_nUniformInputFloorID;
-	
+
 	float	m_UniformInputCeiling;
 	int		m_nUniformInputCeilingID;
 
 	float	m_UniformOutputFloor;
 	int		m_nUniformOutputFloorID;
-	
+
 	float	m_UniformOutputCeiling;
 	int		m_nUniformOutputCeilingID;
 
 
 	float	m_RedInputFloor;
 	int		m_nRedInputFloorID;
-	
+
 	float	m_RedInputCeiling;
 	int		m_nRedInputCeilingID;
 
 	float	m_RedOutputFloor;
 	int		m_nRedOutputFloorID;
-	
+
 	float	m_RedOutputCeiling;
 	int		m_nRedOutputCeilingID;
 
 
 	float	m_GreenInputFloor;
 	int		m_nGreenInputFloorID;
-	
+
 	float	m_GreenInputCeiling;
 	int		m_nGreenInputCeilingID;
 
 	float	m_GreenOutputFloor;
 	int		m_nGreenOutputFloorID;
-	
+
 	float	m_GreenOutputCeiling;
 	int		m_nGreenOutputCeilingID;
 
 
 	float	m_BlueInputFloor;
 	int		m_nBlueInputFloorID;
-	
+
 	float	m_BlueInputCeiling;
 	int		m_nBlueInputCeilingID;
 
 	float	m_BlueOutputFloor;
 	int		m_nBlueOutputFloorID;
-	
+
 	float	m_BlueOutputCeiling;
 	int		m_nBlueOutputCeilingID;
 
@@ -139,7 +139,7 @@ BEGIN_OUTPUTSCREENS_DESC(CLevelsDfx)
 END_OUTPUTSCREENS_DESC(CLevelsDfx)
 
 BEGIN_EFFECT_DESC(CLevelsDfx, 10203216861479955, PETE_VJO_VERSION , "Petes\\Levels", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CLevelsDfx) 
+END_EFFECT_DESC(CLevelsDfx)
 
 REGISTER_DFXFACTORY(CLevelsDfx)
 
@@ -147,59 +147,59 @@ CLevelsDfx::CLevelsDfx()
 {
 	m_nXRes = 0;
 	m_nYRes = 0;
-	
+
 	m_eStyle = eUniformStyle;
 
 	m_bAllowInversion=true;
 
 	m_UniformInputFloor=0.0f;
 	m_nUniformInputFloorID=0;
-	
+
 	m_UniformInputCeiling=255.0f;
 	m_nUniformInputCeilingID=0;
 
 	m_UniformOutputFloor=0.0f;
 	m_nUniformOutputFloorID=0;
-	
+
 	m_UniformOutputCeiling=255.0f;
 	m_nUniformOutputCeilingID=0;
 
 
 	m_RedInputFloor=0.0f;
 	m_nRedInputFloorID=0;
-	
+
 	m_RedInputCeiling=255.0f;
 	m_nRedInputCeilingID=0;
 
 	m_RedOutputFloor=0.0f;
 	m_nRedOutputFloorID=0;
-	
+
 	m_RedOutputCeiling=255.0f;
 	m_nRedOutputCeilingID=0;
 
 
 	m_GreenInputFloor=0.0f;
 	m_nGreenInputFloorID=0;
-	
+
 	m_GreenInputCeiling=255.0f;
 	m_nGreenInputCeilingID=0;
 
 	m_GreenOutputFloor=0.0f;
 	m_nGreenOutputFloorID=0;
-	
+
 	m_GreenOutputCeiling=255.0f;
 	m_nGreenOutputCeilingID=0;
 
 
 	m_BlueInputFloor=0.0f;
 	m_nBlueInputFloorID=0;
-	
+
 	m_BlueInputCeiling=255.0f;
 	m_nBlueInputCeilingID=0;
 
 	m_BlueOutputFloor=0.0f;
 	m_nBlueOutputFloorID=0;
-	
+
 	m_BlueOutputCeiling=255.0f;
 	m_nBlueOutputCeilingID=0;
 
@@ -217,7 +217,7 @@ CLevelsDfx::~CLevelsDfx()
 	Pete_Levels_DeInit(&m_InstanceData);
 }
 
-HBITMAP	CLevelsDfx::GetLabelBitmap()			
+HBITMAP	CLevelsDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -260,8 +260,8 @@ BOOL	CLevelsDfx::GetConfigData(CConfigData *p)
 	if(!p->GetInt("!", 0)) return FALSE;
 
 	m_eStyle = static_cast<ELevelsStyle>(p->GetInt("S", m_eStyle));
-	
-	return TRUE;	
+
+	return TRUE;
 }
 
 BOOL	CLevelsDfx::UpdateConfig()
@@ -364,12 +364,12 @@ void	CLevelsDfx::SetupVariables(void) {
 				RegisterFloat(m_pEngine,&m_UniformInputFloor,"Input-Floor",0.0f,255.0f,1.0f);
 			m_nUniformInputCeilingID=
 				RegisterFloat(m_pEngine,&m_UniformInputCeiling,"Input-Ceiling",0.0f,255.0f,1.0f);
-	
+
 			m_nUniformOutputFloorID=
 				RegisterFloat(m_pEngine,&m_UniformOutputFloor,"Output-Floor",0.0f,255.0f,1.0f);
 			m_nUniformOutputCeilingID=
 				RegisterFloat(m_pEngine,&m_UniformOutputCeiling,"Output-Ceiling",0.0f,255.0f,1.0f);
-							
+
 		}break;
 
 		case eSeperateRGBStyle: {
@@ -381,7 +381,7 @@ void	CLevelsDfx::SetupVariables(void) {
 				RegisterFloat(m_pEngine,&m_RedInputFloor,"Red-Input-Floor",0.0f,255.0f,1.0f);
 			m_nRedInputCeilingID=
 				RegisterFloat(m_pEngine,&m_RedInputCeiling,"Red-Input-Ceiling",0.0f,255.0f,1.0f);
-	
+
 			m_nRedOutputFloorID=
 				RegisterFloat(m_pEngine,&m_RedOutputFloor,"Red-Output-Floor",0.0f,255.0f,1.0f);
 			m_nRedOutputCeilingID=
@@ -392,7 +392,7 @@ void	CLevelsDfx::SetupVariables(void) {
 				RegisterFloat(m_pEngine,&m_GreenInputFloor,"Green-Input-Floor",0.0f,255.0f,1.0f);
 			m_nGreenInputCeilingID=
 				RegisterFloat(m_pEngine,&m_GreenInputCeiling,"Green-Input-Ceiling",0.0f,255.0f,1.0f);
-	
+
 			m_nGreenOutputFloorID=
 				RegisterFloat(m_pEngine,&m_GreenOutputFloor,"Green-Output-Floor",0.0f,255.0f,1.0f);
 			m_nGreenOutputCeilingID=
@@ -403,7 +403,7 @@ void	CLevelsDfx::SetupVariables(void) {
 				RegisterFloat(m_pEngine,&m_BlueInputFloor,"Blue-Input-Floor",0.0f,255.0f,1.0f);
 			m_nBlueInputCeilingID=
 				RegisterFloat(m_pEngine,&m_BlueInputCeiling,"Blue-Input-Ceiling",0.0f,255.0f,1.0f);
-	
+
 			m_nBlueOutputFloorID=
 				RegisterFloat(m_pEngine,&m_BlueOutputFloor,"Blue-Output-Floor",0.0f,255.0f,1.0f);
 			m_nBlueOutputCeilingID=
@@ -427,7 +427,7 @@ void	CLevelsDfx::SetupVariables(void) {
 		}
 
 	}
-	
+
 
 }
 
@@ -442,7 +442,7 @@ void	CLevelsDfx::UnregisterUsedVariables(void) {
 		m_pEngine->UnregisterVariable(m_nUniformInputFloorID);
 		m_nUniformInputFloorID=0;
 	}
-	
+
 	if (m_nUniformInputCeilingID!=0) {
 		m_pEngine->UnregisterVariable(m_nUniformInputCeilingID);
 		m_nUniformInputCeilingID=0;
@@ -463,7 +463,7 @@ void	CLevelsDfx::UnregisterUsedVariables(void) {
 		m_pEngine->UnregisterVariable(m_nRedInputFloorID);
 		m_nRedInputFloorID=0;
 	}
-	
+
 	if (m_nRedInputCeilingID!=0) {
 		m_pEngine->UnregisterVariable(m_nRedInputCeilingID);
 		m_nRedInputCeilingID=0;
@@ -484,7 +484,7 @@ void	CLevelsDfx::UnregisterUsedVariables(void) {
 		m_pEngine->UnregisterVariable(m_nGreenInputFloorID);
 		m_nGreenInputFloorID=0;
 	}
-	
+
 	if (m_nGreenInputCeilingID!=0) {
 		m_pEngine->UnregisterVariable(m_nGreenInputCeilingID);
 		m_nGreenInputCeilingID=0;
@@ -505,7 +505,7 @@ void	CLevelsDfx::UnregisterUsedVariables(void) {
 		m_pEngine->UnregisterVariable(m_nBlueInputFloorID);
 		m_nBlueInputFloorID=0;
 	}
-	
+
 	if (m_nBlueInputCeilingID!=0) {
 		m_pEngine->UnregisterVariable(m_nBlueInputCeilingID);
 		m_nBlueInputCeilingID=0;

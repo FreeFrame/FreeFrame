@@ -6,8 +6,8 @@
 #include "math.h"
 
 // Pete- Put this in a per-platform section, or remove as appropriate
-typedef unsigned long U32; 
-typedef unsigned short U16; 
+typedef unsigned long U32;
+typedef unsigned short U16;
 
 #ifdef PETE_MAC_OSX
 #define assert(X) ((void)0)
@@ -142,7 +142,7 @@ static inline U32 MungeU32(U32 Seed,int nIterations) {
 	}
 
 	return Seed;
-	
+
 }
 
 const int cnBiggestSignedInt=0x7fffffff;
@@ -233,7 +233,7 @@ static inline void Pete_CopyAndConvert32BitTo24Bit(PETE_PIXELDATA32* pSource,PET
 static inline void Pete_InPlaceConvert24BitTo32Bit(PETE_PIXELDATA24* pBuffer,int nPixelCount) {
 
 	char* pBufferStart=(char*)pBuffer;
-	
+
 	char* pBuffer32Current=(pBufferStart+((nPixelCount-1)*SIZEOF_PETE_PIXELDATA32));
 	char* pBuffer24Current=(pBufferStart+((nPixelCount-1)*SIZEOF_PETE_PIXELDATA24));
 
@@ -320,7 +320,7 @@ inline int GetLuminance(const U32 inColour) {
 	const int nGreen=(inColour&(0xff<<SHIFT_GREEN))>>8;
 	const int nBlue=(inColour&(0xff<<SHIFT_BLUE))>>0;
 
-	const int nLuminance = 
+	const int nLuminance =
 		((90 * nRed)+
 		(115 * nGreen)+
 		(51 * nBlue));
@@ -341,7 +341,7 @@ void Pete_UnLockHandle(SPete_MemHandle InHandle);
 
 inline int GetLuminance(PF_Pixel Colour) {
 
-	const int nLuminance = 
+	const int nLuminance =
 		((90 * Colour.red)+
 		(115 * Colour.green)+
 		(51 * Colour.blue));
@@ -354,21 +354,21 @@ inline int GetLuminance(PF_Pixel Colour) {
 typedef void* SPete_MemHandle;
 
 inline SPete_MemHandle Pete_NewHandle(int nBytesToAlloc) {
-	
+
 	return malloc(nBytesToAlloc);
 
 }
-	
+
 inline void Pete_FreeHandle(SPete_MemHandle InHandle) {
 
 	free(InHandle);
-	
+
 }
 
 inline void* Pete_LockHandle(SPete_MemHandle InHandle) {
 
 	return InHandle;
-	
+
 }
 
 inline void Pete_UnLockHandle(SPete_MemHandle InHandle) {

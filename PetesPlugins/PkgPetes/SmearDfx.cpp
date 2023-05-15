@@ -35,7 +35,7 @@ class CSmearDfx: public CDFX
 public:
 	~CSmearDfx();
 	CSmearDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CSmearDfx)
 END_OUTPUTSCREENS_DESC(CSmearDfx)
 
 BEGIN_EFFECT_DESC(CSmearDfx, 10203216861272929, PETE_VJO_VERSION , "Petes\\Smear", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CSmearDfx) 
+END_EFFECT_DESC(CSmearDfx)
 
 REGISTER_DFXFACTORY(CSmearDfx)
 
@@ -102,7 +102,7 @@ CSmearDfx::~CSmearDfx()
 
 }
 
-HBITMAP	CSmearDfx::GetLabelBitmap()			
+HBITMAP	CSmearDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CSmearDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CSmearDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CSmearDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CSmearDfx::Initialize()
 
 BOOL	CSmearDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

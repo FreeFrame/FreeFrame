@@ -56,11 +56,11 @@ AVIPlayer::~AVIPlayer()
 	if (isOpen) closeAVI();
 }
 
-// LoadAVIFile - loads AVIFile and opens an AVI file. 
-// 
-// szfile - filename 
-// hwnd - window handle 
-// 
+// LoadAVIFile - loads AVIFile and opens an AVI file.
+//
+// szfile - filename
+// hwnd - window handle
+//
 void AVIPlayer::openAVI(char* szFile)
 {
 	unsigned int n;
@@ -69,44 +69,44 @@ void AVIPlayer::openAVI(char* szFile)
 	//szFile = "C:\\stuff\\projects\\pink flower.avi";
 	//szFile = "C:\\winnt\\clock.avi";
 
-    AVIFileInit();          // opens AVIFile library 
- 
-    hr = AVIFileOpen(&pfile, szFile, OF_SHARE_DENY_WRITE, 0L); 
-    if (hr != 0){ 
-        MessageBox(0, "Unable to open file", "Freeframe Error", MB_OK); 
-        return; 
-    } 
- 
-// 
-// Place functions here that interact with the open file. 
-// 
-	
+    AVIFileInit();          // opens AVIFile library
+
+    hr = AVIFileOpen(&pfile, szFile, OF_SHARE_DENY_WRITE, 0L);
+    if (hr != 0){
+        MessageBox(0, "Unable to open file", "Freeframe Error", MB_OK);
+        return;
+    }
+
+//
+// Place functions here that interact with the open file.
+//
+
     hr = AVIFileInfo( pfile, &fileInfo, sizeof(fileInfo) );
-    if (hr != 0){ 
-        MessageBox(0, "Unable to get avifile info", "Freeframe Error", MB_OK); 
-        return; 
-    } 
+    if (hr != 0){
+        MessageBox(0, "Unable to get avifile info", "Freeframe Error", MB_OK);
+        return;
+    }
 
 	for (n=0; n<fileInfo.dwStreams; n++) {
 		hr = AVIFileGetStream(pfile, &ptempStream, 0, n);
 		hr = AVIStreamInfo( ptempStream, &streamInfo, sizeof(streamInfo) );
-	    if (hr != 0){ 
-	        MessageBox(0, "Unable to get avistream info", "Freeframe Error", MB_OK); 
-	        return; 
-		} 
+	    if (hr != 0){
+	        MessageBox(0, "Unable to get avistream info", "Freeframe Error", MB_OK);
+	        return;
+		}
 		if (streamInfo.fccType == streamtypeVIDEO) {
 			pstream = ptempStream;
-			
+
 			pGetFrameObj = AVIStreamGetFrameOpen(pstream, 0);
-			if (pGetFrameObj == 0){ 
-				MessageBox(0, "Unable to decompress", "Freeframe Error", MB_OK); 
-	        return; 
+			if (pGetFrameObj == 0){
+				MessageBox(0, "Unable to decompress", "Freeframe Error", MB_OK);
+	        return;
 			}
 			videoInfo.bitDepth = 1;  //TODO sort this out
 			videoInfo.frameHeight = streamInfo.rcFrame.bottom;
 			videoInfo.frameWidth = streamInfo.rcFrame.right;
-			numFrames = AVIStreamEnd(pstream);	
-			 
+			numFrames = AVIStreamEnd(pstream);
+
 
 		}
 	}
@@ -115,13 +115,13 @@ void AVIPlayer::openAVI(char* szFile)
 }
 
 void AVIPlayer::getFrame() {
-	
+
 	pBitmapInfo = (BITMAPINFO*) AVIStreamGetFrame(pGetFrameObj, currentFrame);
 	if (!pBitmapInfo) {
 		MessageBox(0, "couldn't AVIStreamGetFrame","",MB_OK);
 		return;
 	}
-	pFrame = (BYTE*)((BYTE*)pBitmapInfo + pBitmapInfo->bmiHeader.biSize + 
+	pFrame = (BYTE*)((BYTE*)pBitmapInfo + pBitmapInfo->bmiHeader.biSize +
 						pBitmapInfo->bmiHeader.biClrUsed * sizeof(RGBQUAD));
 	pBitmapInfoHdr = &pBitmapInfo->bmiHeader;
 }
@@ -130,9 +130,9 @@ void AVIPlayer::getFrame() {
 void AVIPlayer::closeAVI()
 {
 	if (pGetFrameObj) AVIStreamGetFrameClose(pGetFrameObj);
-    if (pstream) AVIStreamRelease(pstream); 
-	if (pfile) AVIFileRelease(pfile);  // closes the file 
-    AVIFileExit();          // releases AVIFile library 
+    if (pstream) AVIStreamRelease(pstream);
+	if (pfile) AVIFileRelease(pfile);  // closes the file
+    AVIFileExit();          // releases AVIFile library
 }
 
 void AVIPlayer::nextFrame()

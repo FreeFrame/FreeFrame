@@ -211,7 +211,7 @@ BOOL CFreeframeMFCDlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-	
+
 	// TODO: Add extra initialization here
 	hBitmap = 0;
 	hdibdc = DrawDibOpen();
@@ -257,14 +257,14 @@ void CFreeframeMFCDlg::OnSysCommand(UINT nID, LPARAM lParam)
 //  to draw the icon.  For MFC applications using the document/view model,
 //  this is automatically done for you by the framework.
 
-void CFreeframeMFCDlg::OnPaint() 
+void CFreeframeMFCDlg::OnPaint()
 {
 	CPaintDC dc(this); // device context for painting
 	if (IsIconic())
 	{
-		
+
 		SendMessage(WM_ICONERASEBKGND, (WPARAM) dc.GetSafeHdc(), 0);
-		
+
 		// Center icon in client rectangle
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
@@ -272,32 +272,32 @@ void CFreeframeMFCDlg::OnPaint()
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
 		int y = (rect.Height() - cyIcon + 1) / 2;
-		
+
 		// Draw the icon
 		//dc.DrawIcon(x, y, m_hIcon);
 	}
 	else if (player.pBitmapInfo)
 	{
-		hBitmap = CreateDIBitmap(	
-			dc, 
-			&player.pBitmapInfo->bmiHeader, 
-			CBM_INIT, 
+		hBitmap = CreateDIBitmap(
+			dc,
+			&player.pBitmapInfo->bmiHeader,
+			CBM_INIT,
 			player.pFrame,
 			player.pBitmapInfo,
 			DIB_RGB_COLORS );
 
 		if (!hBitmap) {
 			LPVOID lpMsgBuf;
-			FormatMessage( 
-				FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-				FORMAT_MESSAGE_FROM_SYSTEM | 
+			FormatMessage(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER |
+				FORMAT_MESSAGE_FROM_SYSTEM |
 				FORMAT_MESSAGE_IGNORE_INSERTS,
 				NULL,
 				GetLastError(),
 				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
 				(LPTSTR) &lpMsgBuf,
 				0,
-				NULL 
+				NULL
 			);
 			// Process any inserts in lpMsgBuf.
 			// ...
@@ -310,18 +310,18 @@ void CFreeframeMFCDlg::OnPaint()
 			return;
 		}
 
-		if (!DrawDibDraw(	
+		if (!DrawDibDraw(
 			hdibdc,
 			dc,
-			screen.left, 
-			screen.top, 
-			player.videoInfo.frameWidth, 
+			screen.left,
+			screen.top,
+			player.videoInfo.frameWidth,
 			player.videoInfo.frameHeight,
 			&player.pBitmapInfo->bmiHeader,
 			player.pFrame,
 			0,
 			0,
-			player.videoInfo.frameWidth, 
+			player.videoInfo.frameWidth,
 			player.videoInfo.frameHeight,
 			0  ) ) {
 			MessageBox("Couldn't draw bitmap");
@@ -331,7 +331,7 @@ void CFreeframeMFCDlg::OnPaint()
 	DeleteObject(hBitmap);
 	this->ReleaseDC(&dc);
 
-	CDialog::OnPaint();	
+	CDialog::OnPaint();
 }
 
 // The system calls this to obtain the cursor to display while the user drags
@@ -341,7 +341,7 @@ HCURSOR CFreeframeMFCDlg::OnQueryDragIcon()
 	return (HCURSOR) m_hIcon;
 }
 
-void CFreeframeMFCDlg::OnLoadAVI() 
+void CFreeframeMFCDlg::OnLoadAVI()
 {
 	CFileDialog AVIfile(TRUE);
 	AVIfile.m_ofn.lpstrInitialDir = "video";
@@ -355,33 +355,33 @@ void CFreeframeMFCDlg::OnLoadAVI()
 	screen.right = player.videoInfo.frameWidth + screen.left;
 }
 
-void CFreeframeMFCDlg::OnGetFrame() 
+void CFreeframeMFCDlg::OnGetFrame()
 {
 
 	player.getFrame();
-	
+
 	if (!player.pBitmapInfo) {
 		MessageBox("No bitmap info");
 	}
 
 	player.nextFrame();
-	InvalidateRect(NULL, FALSE); 
+	InvalidateRect(NULL, FALSE);
 }
-	
 
-void CFreeframeMFCDlg::OnPlay() 
+
+void CFreeframeMFCDlg::OnPlay()
 {
 	SetTimer(0, 40, 0);
 }
 
-void CFreeframeMFCDlg::OnPause() 
+void CFreeframeMFCDlg::OnPause()
 {
 	KillTimer(0);
 	KillTimer(1);
 
 }
 
-void CFreeframeMFCDlg::OnPlugInfo() 
+void CFreeframeMFCDlg::OnPlugInfo()
 {
 	plugHost.getPlugInfo();
 	char tempStr[32];
@@ -407,7 +407,7 @@ void CFreeframeMFCDlg::OnPlugInfo()
 	UpdateData(FALSE);
 }
 
-void CFreeframeMFCDlg::OnPlugInitialise() 
+void CFreeframeMFCDlg::OnPlugInitialise()
 {
 	DWORD result = plugHost.initialise(&player.videoInfo);
 	if (result) {
@@ -417,7 +417,7 @@ void CFreeframeMFCDlg::OnPlugInitialise()
 	}
 }
 
-void CFreeframeMFCDlg::OnPlugInstantiate() 
+void CFreeframeMFCDlg::OnPlugInstantiate()
 {
 	DWORD result = plugHost.instantiate(&player.videoInfo);
 	if (result == FF_FAIL) {
@@ -430,7 +430,7 @@ void CFreeframeMFCDlg::OnPlugInstantiate()
 	MessageBox(tempStr);
 }
 
-void CFreeframeMFCDlg::OnDeinstantiate() 
+void CFreeframeMFCDlg::OnDeinstantiate()
 {
 	DWORD result = plugHost.deInstantiate();
 	if (result) {
@@ -440,7 +440,7 @@ void CFreeframeMFCDlg::OnDeinstantiate()
 	}
 }
 
-void CFreeframeMFCDlg::OnGetEffFrame() 
+void CFreeframeMFCDlg::OnGetEffFrame()
 {
 
 	player.getFrame();
@@ -448,7 +448,7 @@ void CFreeframeMFCDlg::OnGetEffFrame()
 	if (!player.pBitmapInfo) {
 		MessageBox("No bitmap info");
 	}
-	
+
 	DWORD result = plugHost.processFrame(player.pFrame);
 
 	if (result) {
@@ -458,81 +458,81 @@ void CFreeframeMFCDlg::OnGetEffFrame()
 	}
 
 	player.nextFrame();
-	InvalidateRect(NULL, FALSE); 
-	
+	InvalidateRect(NULL, FALSE);
+
 }
 
-void CFreeframeMFCDlg::OnTimer(UINT nIDEvent) 
+void CFreeframeMFCDlg::OnTimer(UINT nIDEvent)
 {
 	player.getFrame();
-	
+
 	if (nIDEvent == 1) {
-		
+
 		plugHost.processFrame(player.pFrame);
-	}	
-		
+	}
+
 	player.nextFrame();
-	
-	
-	InvalidateRect(&screen, FALSE); 
-	
-	
+
+
+	InvalidateRect(&screen, FALSE);
+
+
 	CDialog::OnTimer(nIDEvent);
 }
 
-void CFreeframeMFCDlg::OnPlayEffected() 
+void CFreeframeMFCDlg::OnPlayEffected()
 {
 	SetTimer(1, 40, 0);
-	
+
 }
 
-BOOL CFreeframeMFCDlg::DestroyWindow() 
+BOOL CFreeframeMFCDlg::DestroyWindow()
 {
 	DrawDibClose(hdibdc);
-	
+
 	return CDialog::DestroyWindow();
 }
 
-BOOL CFreeframeMFCDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
+BOOL CFreeframeMFCDlg::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 {
 	switch (wParam) {
 	case 0:
 		break;
 	case IDC_SLIDER0:
 		CSliderCtrl *slider0 = (CSliderCtrl*) this->GetDlgItem(IDC_SLIDER0);
-		
+
 		int pos = slider0->GetPos();
 		char tempStr[16];
 		sprintf(tempStr, "%d", pos);
 		SetDlgItemText(IDC_PARAM0_VAL, tempStr);
 		break;
 	}
-	
+
 	return CDialog::OnNotify(wParam, lParam, pResult);
 }
 
 
-void CFreeframeMFCDlg::OnGetNumParameters() 
+void CFreeframeMFCDlg::OnGetNumParameters()
 {
 	char tempStr[32];
 	plugHost.getNumParameters();
 	sprintf(tempStr,"%d", plugHost.numParameters);
 	m_numParameters = tempStr;
 	UpdateData(FALSE);
-	
+
 }
 
-void CFreeframeMFCDlg::OnGetparameternames() 
+void CFreeframeMFCDlg::OnGetparameternames()
 {
 	plugHost.getParameterNames();
-	if (plugHost.numParameters > 0) m_param0name = plugHost.parameters[0]->name;		
-	if (plugHost.numParameters > 1) m_param1name = plugHost.parameters[1]->name;		
-	if (plugHost.numParameters > 2) m_param2name = plugHost.parameters[2]->name;		
+	if (plugHost.numParameters > 0) m_param0name = plugHost.parameters[0]->name;
+	if (plugHost.numParameters > 1) m_param1name = plugHost.parameters[1]->name;
+	if (plugHost.numParameters > 2) m_param2name = plugHost.parameters[2]->name;
 	if (plugHost.numParameters > 3) m_param3name = plugHost.parameters[3]->name;
 	UpdateData(FALSE);
 }
 
-void CFreeframeMFCDlg::OnGetparamdefaults() 
+void CFreeframeMFCDlg::OnGetparamdefaults()
 {
 	char tempStr[32];
 	plugHost.getParameterDefaults();
@@ -555,7 +555,7 @@ void CFreeframeMFCDlg::OnGetparamdefaults()
 	UpdateData(FALSE);
 }
 
-void CFreeframeMFCDlg::OnGetParameters() 
+void CFreeframeMFCDlg::OnGetParameters()
 {
 	char tempStr[32];
 	plugHost.getParameters();
@@ -578,12 +578,12 @@ void CFreeframeMFCDlg::OnGetParameters()
 	UpdateData(FALSE);
 }
 
-void CFreeframeMFCDlg::OnGetParameterDisplays() 
+void CFreeframeMFCDlg::OnGetParameterDisplays()
 {
 	plugHost.getParameterDisplays();
-	if (plugHost.numParameters > 0) m_param0display = plugHost.parameters[0]->displayValue;		
-	if (plugHost.numParameters > 1) m_param1display = plugHost.parameters[1]->displayValue;		
-	if (plugHost.numParameters > 2) m_param2display = plugHost.parameters[2]->displayValue;		
+	if (plugHost.numParameters > 0) m_param0display = plugHost.parameters[0]->displayValue;
+	if (plugHost.numParameters > 1) m_param1display = plugHost.parameters[1]->displayValue;
+	if (plugHost.numParameters > 2) m_param2display = plugHost.parameters[2]->displayValue;
 	if (plugHost.numParameters > 3) m_param3display = plugHost.parameters[3]->displayValue;
 	UpdateData(FALSE);
 }
@@ -594,34 +594,34 @@ void CFreeframeMFCDlg::UpdateParameterDisplay(int n)
 	OnGetParameterDisplays();
 }
 
-void CFreeframeMFCDlg::OnReleasedcaptureSlider0(NMHDR* pNMHDR, LRESULT* pResult) 
+void CFreeframeMFCDlg::OnReleasedcaptureSlider0(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	SetParameterFromSlider(&m_slider0, 0);
 	*pResult = 0;
 }
 
-void CFreeframeMFCDlg::OnReleasedcaptureSlider1(NMHDR* pNMHDR, LRESULT* pResult) 
+void CFreeframeMFCDlg::OnReleasedcaptureSlider1(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	SetParameterFromSlider(&m_slider1, 1);
 	*pResult = 0;
 }
 
-void CFreeframeMFCDlg::OnReleasedcaptureSlider2(NMHDR* pNMHDR, LRESULT* pResult) 
+void CFreeframeMFCDlg::OnReleasedcaptureSlider2(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	SetParameterFromSlider(&m_slider2, 2);
 	*pResult = 0;
 }
 
-void CFreeframeMFCDlg::OnReleasedcaptureSlider3(NMHDR* pNMHDR, LRESULT* pResult) 
+void CFreeframeMFCDlg::OnReleasedcaptureSlider3(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	SetParameterFromSlider(&m_slider3, 3);
 	*pResult = 0;
 }
 
 
-void CFreeframeMFCDlg::OnDeinitialise() 
+void CFreeframeMFCDlg::OnDeinitialise()
 {
-	plugHost.deInitialise();	
+	plugHost.deInitialise();
 }
 
 void CFreeframeMFCDlg::SetParameterFromSlider(CSliderCtrl *pSlider, DWORD index)
@@ -632,27 +632,27 @@ void CFreeframeMFCDlg::SetParameterFromSlider(CSliderCtrl *pSlider, DWORD index)
 
 }
 
-void CFreeframeMFCDlg::OnButton8() 
+void CFreeframeMFCDlg::OnButton8()
 {
 	// TODO: Add your control notification handler code here
-	
+
 }
 
-void CFreeframeMFCDlg::OnChooseAvi() 
+void CFreeframeMFCDlg::OnChooseAvi()
 {
 
 }
 
 
-void CFreeframeMFCDlg::OnSelchangeChoosePlugin() 
+void CFreeframeMFCDlg::OnSelchangeChoosePlugin()
 {
 	UpdateData(FALSE);
 }
 
-void CFreeframeMFCDlg::OnLoadPlugin() 
+void CFreeframeMFCDlg::OnLoadPlugin()
 {
 	plugHost.unloadPlugin();
 	char plugName[256];
 	m_choosePlugin.GetText( m_choosePlugin.GetCurSel(), plugName);
-	plugHost.loadPlugin(plugName);	
+	plugHost.loadPlugin(plugName);
 }

@@ -109,14 +109,14 @@ void Pete_DirectionalBlur_Render(SPete_DirectionalBlur_Data* pInstanceData,SPete
 		pInstanceData->nWidth,
 		pInstanceData->nHeight,
 		nMaxIterations);
-		
-	
-	Pete_UnLockHandle(pInstanceData->hIntermediateBuffer);	
+
+
+	Pete_UnLockHandle(pInstanceData->hIntermediateBuffer);
 
 }
 
 void Pete_DoDirectionalBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer,U32* pOutputBuffer,int nKernelSize,float Angle,int nWidth,int nHeight,int nPassCount) {
-	
+
 	if ((pSourceBuffer==NULL)||
 		(pIntermediateBuffer==NULL)||
 		(pOutputBuffer==NULL)) {
@@ -285,7 +285,7 @@ void Pete_DoDirectionalBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer
 
 			int nCurrentA=nClippedLineOriginA;
 			int nCurrentB=nClippedLineOriginB;
-	
+
 			int nCurrentAddressOffset=((nCurrentB*nAddressIncB)+(nCurrentA*nAddressIncA));
 			int nLeftAddressOffset=nCurrentAddressOffset;
 			int nRightAddressOffset=nCurrentAddressOffset;
@@ -297,7 +297,7 @@ void Pete_DoDirectionalBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer
 			const int nSignedAddressIncB=(nIncB*nAddressIncB);
 
 			U32 FirstPixelColour;
-			if (nCurrentB!=nClippedLineEndB) {			
+			if (nCurrentB!=nClippedLineEndB) {
 				FirstPixelColour=*(pSource+nCurrentAddressOffset);
 			} else {
 				FirstPixelColour=0;
@@ -337,7 +337,7 @@ void Pete_DoDirectionalBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer
 				nGreenTotal+=nPixelGreen;
 				nBlueTotal+=nPixelBlue;
 				nAlphaTotal+=nPixelAlpha;
-				
+
 				nRightCounter+=nAbsDeltaA;
 				nRightAddressOffset+=nSignedAddressIncB;
 				if (nRightCounter>=nAbsDeltaB) {
@@ -357,7 +357,7 @@ void Pete_DoDirectionalBoxFilterBlur(U32* pSourceBuffer,U32* pIntermediateBuffer
 			int nLeftStart=nKernelSize;
 			const int nUnsignedDistance=((nClippedLineEndB-nCurrentB)*nIncB);
 			int nRightEnd=(nUnsignedDistance-nKernelSize);
-	
+
 			int nClipPos=0;
 
 			for (; nCurrentB!=nClippedLineEndB; nCurrentB+=nIncB) {

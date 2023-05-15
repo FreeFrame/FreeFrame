@@ -27,7 +27,7 @@ typedef struct SPete_ChainBinHeader {
 // SPete_ChainBinImageInfo * nPluginCount
 //
 // Image Data:
-// DLL image raw data * nPluginCount 
+// DLL image raw data * nPluginCount
 //
 /*-----------------------------------------*/
 

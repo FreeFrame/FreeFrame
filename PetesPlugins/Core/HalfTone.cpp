@@ -222,7 +222,7 @@ void Pete_HalfTone_Render(SPete_HalfTone_Data* pInstanceData,SPete_HalfTone_Sett
 			nSnappedU<<=nFPShift;
 			nSnappedU*=nCellSize;
 			nSnappedU-=(nCellSizeFP*1024);
-			
+
 			SPete_HalfTone_Vertex RotatedPoints[4]={
 				{{nSnappedU,nSnappedV},								{0,0}},
 				{{(nSnappedU+nCellSizeFP),nSnappedV},				{nCellSizeFP-nFPMult,0}},
@@ -341,13 +341,13 @@ void Pete_HalfTone_Render(SPete_HalfTone_Data* pInstanceData,SPete_HalfTone_Sett
 //					} else {
 //
 //						const int nDiff=(nLuminance-nDotFuncResult);
-//						
+//
 //						if (nDiff>nSmoothingThreshold) {
 //							nGreyValue=255;
 //						} else {
 //							nGreyValue=(nDiff*255)/nSmoothingThreshold;
 //						}
-//						
+//
 //					}
 
 //					if ((nTexUInt>=nCellSize)||
@@ -383,7 +383,7 @@ void Pete_HalfTone_Render(SPete_HalfTone_Data* pInstanceData,SPete_HalfTone_Sett
 			}
 
 //			TestColour^=0x00ff00ff;
-		
+
 		}
 
 	}
@@ -421,7 +421,7 @@ int Pete_HalfTone_EuclideanDotFunc(float X,float Y) {
 
 	const float AbsX=fabsf(X);
 	const float AbsY=fabsf(Y);
-	
+
 	float Result;
 
 	if ((AbsX+AbsY)>1.0f) {
@@ -445,22 +445,22 @@ int Pete_HalfTone_PSDiamondDotFunc(float X,float Y) {
 
 	const float AbsX=fabsf(X);
 	const float AbsY=fabsf(Y);
-	
+
 	float Result;
 
 	if ((AbsX+AbsY)<=1.5f) {
-		
-		Result=2.0f-(AbsX*AbsX+AbsY*AbsY); 
 
-	} else if ((AbsX+AbsY)<=1.23f) { 
+		Result=2.0f-(AbsX*AbsX+AbsY*AbsY);
+
+	} else if ((AbsX+AbsY)<=1.23f) {
 
 		Result=2.0f-((AbsY*0.76f)+AbsX);
 
 	} else {
 
 		Result=((AbsY-1.0f)*(AbsY-1.0f)+
-			(AbsX-1.0f)*(AbsX-1.0f))-2.0f;	
-	
+			(AbsX-1.0f)*(AbsX-1.0f))-2.0f;
+
 	}
 
 	Result/=2.0f;
@@ -659,7 +659,7 @@ void Pete_HalfTone_LerpAlongEdges(
 	SPete_HalfTone_Point* pMiddle,
 	SPete_HalfTone_Point* pEnd,
 	int nY,int* poutX) {
-	
+
 	if (nY<pMiddle->nY) {
 
 		const int nYDist=pMiddle->nY-pStart->nY;
@@ -667,7 +667,7 @@ void Pete_HalfTone_LerpAlongEdges(
 		if (nYDist<nFPMult) {
 
 			*poutX=pStart->nX;
-		
+
 		} else {
 
 			const int nOneMinusLerpValue=
@@ -748,7 +748,7 @@ void Pete_HalfTone_LerpAlongEdges_Vertex(
 	SPete_HalfTone_Vertex* pEnd,
 	int nY,
 	SPete_HalfTone_Vertex* poutVertex) {
-	
+
 	const int nMiddleY=pMiddle->Pos.nY;
 
 	if (nY<nMiddleY) {
@@ -765,7 +765,7 @@ void Pete_HalfTone_LerpAlongEdges_Vertex(
 			poutVertex->Pos.nX=nStartX;
 			poutVertex->TexCoords.nX=nStartU;
 			poutVertex->TexCoords.nY=nStartV;
-			
+
 		} else {
 
 			const int nMiddleX=pMiddle->Pos.nX;
@@ -859,7 +859,7 @@ void Pete_HalfTone_GetRasterizationVertices(
 //		(poutTop->Pos.nX-poutLeft->Pos.nX)*
 //		(poutBottom->Pos.nX-poutRight->Pos.nX);
 //
-//	
+//
 //	if ((poutLeft->Pos.nX==poutRight->Pos.nX)||(DirDot>0)) {
 //
 //		SPete_HalfTone_Vertex SwapTemp;
@@ -982,7 +982,7 @@ void Pete_HalfTone_MakeGreyScaleTable(unsigned char* pGreyScaleTableStart,int nS
 			} else {
 				nGreyValue=(nDiff*255)/nSmoothingThreshold;
 			}
-			
+
 		}
 
 		pGreyScaleTableStart[nCount]=nGreyValue;

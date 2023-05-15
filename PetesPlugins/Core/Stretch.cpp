@@ -168,7 +168,7 @@ void Pete_Stretch_Render(SPete_Stretch_Data* pInstanceData,SPete_Stretch_Setting
 
 	int nY=0;
 	while (pCurrentOutput!=pOutputEnd) {
-		
+
 		const U32* pOutputLineStart=pCurrentOutput;
 		const U32* pOutputLineEnd=pCurrentOutput+nWidth;
 
@@ -189,7 +189,7 @@ void Pete_Stretch_Render(SPete_Stretch_Data* pInstanceData,SPete_Stretch_Setting
 		const float RightDistStart=RightDotStart-RightD;
 		const float TopDistStart=TopDotStart-TopD;
 		const float BottomDistStart=BottomDotStart-BottomD;
-		
+
 		const float UTotalStart=LeftDistStart+RightDistStart;
 		const float VTotalStart=TopDistStart+BottomDistStart;
 
@@ -240,7 +240,7 @@ void Pete_Stretch_Render(SPete_Stretch_Data* pInstanceData,SPete_Stretch_Setting
 			int nV=static_cast<int>(CurrentV*HeightScale);
 
 			if (!bMirror) {
-			
+
 				if (nU<0) {
 					nU=-nU;
 					nU=nU%nWidth;
@@ -248,7 +248,7 @@ void Pete_Stretch_Render(SPete_Stretch_Data* pInstanceData,SPete_Stretch_Setting
 				} else {
 					nU=nU%nWidth;
 				}
-				
+
 				if (nV<0) {
 					nV=-nV;
 					nV=nV%nHeight;
@@ -266,7 +266,7 @@ void Pete_Stretch_Render(SPete_Stretch_Data* pInstanceData,SPete_Stretch_Setting
 				} else {
 					nU=nU%(nWidth*2);
 				}
-				
+
 				if (nU>=nWidth) {
 					nU=((nWidth*2)-1)-nU;
 				}
@@ -292,7 +292,7 @@ void Pete_Stretch_Render(SPete_Stretch_Data* pInstanceData,SPete_Stretch_Setting
 			U32 OutputColour=SourceColour;
 
 			*pCurrentOutput=OutputColour;
-			
+
 			pCurrentOutput+=1;
 
 			LeftDist+=LeftDistInc;

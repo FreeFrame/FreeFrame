@@ -35,7 +35,7 @@ class CTVPixelDfx: public CDFX
 public:
 	~CTVPixelDfx();
 	CTVPixelDfx();
-	
+
 	BOOL	UpdateConfig();
 	BOOL	Initialize();
 	BOOL	SetupDialog();
@@ -70,7 +70,7 @@ BEGIN_OUTPUTSCREENS_DESC(CTVPixelDfx)
 END_OUTPUTSCREENS_DESC(CTVPixelDfx)
 
 BEGIN_EFFECT_DESC(CTVPixelDfx, 10203215862372929, PETE_VJO_VERSION , "Petes\\TVPixel", "Pete Warden", "www.petewarden.com")
-END_EFFECT_DESC(CTVPixelDfx) 
+END_EFFECT_DESC(CTVPixelDfx)
 
 REGISTER_DFXFACTORY(CTVPixelDfx)
 
@@ -102,7 +102,7 @@ CTVPixelDfx::~CTVPixelDfx()
 
 }
 
-HBITMAP	CTVPixelDfx::GetLabelBitmap()			
+HBITMAP	CTVPixelDfx::GetLabelBitmap()
 {
 	return (HBITMAP)HBITMAP_LAYERS;
 }
@@ -111,7 +111,7 @@ BOOL	CTVPixelDfx::SetupDialog()
 {
 	VJO_MANAGE_STATE();
 
-	m_pEngine->ConfigureVariable(FXVARALLVARS); 
+	m_pEngine->ConfigureVariable(FXVARALLVARS);
 
 	return FALSE;
 
@@ -131,7 +131,7 @@ BOOL	CTVPixelDfx::GetConfigData(CConfigData *p)
 	ASSERT(p);
 	if(!p->GetInt("!", 0)) return FALSE;
 
-	return TRUE;	
+	return TRUE;
 }
 
 BOOL	CTVPixelDfx::UpdateConfig()
@@ -180,7 +180,7 @@ BOOL	CTVPixelDfx::Initialize()
 
 BOOL	CTVPixelDfx::Render(CScreen **ppInput, CScreen *pOutput)
 {
-	
+
 	DWORD* pOutputMem = (DWORD*)pOutput->GetBuffer();
 	DWORD* pInputMem = (DWORD*)ppInput[0]->GetBuffer();
 

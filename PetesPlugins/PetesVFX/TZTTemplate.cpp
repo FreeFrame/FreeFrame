@@ -47,8 +47,8 @@ extern "C" {
 
 typedef struct SPete_TZT_Data {
 	LPDIRECTDRAW7			lpDd;
-	LPDIRECTDRAWSURFACE7	lpddsIn;		
-	LPDIRECTDRAWSURFACE7	lpddsPlayer;	
+	LPDIRECTDRAWSURFACE7	lpddsIn;
+	LPDIRECTDRAWSURFACE7	lpddsPlayer;
 	LPDIRECTDRAWSURFACE7	lpddsOutput;
 	int						nWhichParameterSelected;
 } SPete_TZT_Data;
@@ -97,7 +97,7 @@ __declspec(dllexport) int Init(LPDIRECTDRAW7 lpdd){
 //
 //	}
 
-	return 1;	
+	return 1;
 }
 
 __declspec(dllexport) int UpdateWaveData(short *pwave,int *pspectrum){
@@ -112,7 +112,7 @@ __declspec(dllexport) int Release(void){
 	}
 
 	deInitialise(&g_TZTGlobalData);
-	
+
 	return 1;
 }
 __declspec(dllexport) int Start(void){
@@ -168,7 +168,7 @@ __declspec(dllexport) int Effect(DWORD dwmsec){
 
 	PETE_PIXELDATA32* pSourceBuffer=g_TZTGlobalData.m_pSourceBuffer;
 	PETE_PIXELDATA32* pOutputBuffer=g_TZTGlobalData.m_pOutputBuffer;
-	
+
 	int nY;
 	for (nY=0; nY<TZT_Height; nY+=1) {
 
@@ -176,8 +176,8 @@ __declspec(dllexport) int Effect(DWORD dwmsec){
 		PETE_PIXELDATA32* pSourceBufferLineStart=pSourceBuffer+(((TZT_Height-1)-nY)*TZT_Width);
 //		PETE_PIXELDATA32* pSourceBufferLineStart=pSourceBuffer+(nY*TZT_Width);
 
-		Pete_CopyAndConvert16Bit565To32Bit(pSourceLineStart,pSourceBufferLineStart,TZT_Width);	
-		
+		Pete_CopyAndConvert16Bit565To32Bit(pSourceLineStart,pSourceBufferLineStart,TZT_Width);
+
 	}
 
 	PLUGIN_RENDER(&g_TZTGlobalData.m_InstanceData,&g_TZTGlobalData.m_Settings,pSourceBuffer,pOutputBuffer);
@@ -190,19 +190,19 @@ __declspec(dllexport) int Effect(DWORD dwmsec){
 		PETE_PIXELDATA16* pDestLineStart=pDestStart+(nY*nDestPitch);
 
 		Pete_CopyAndConvert32BitTo16Bit565(pOutputBufferLineStart,pDestLineStart,TZT_Width);
-		
+
 	}
 
 	g_TZTInstanceData.lpddsPlayer->Unlock(NULL);
 	g_TZTInstanceData.lpddsOutput->Unlock(NULL);
 
 #endif // PLUGIN_INPUT_COUNT
-	
+
 	return 1;
 }
 
 LPDIRECTDRAWSURFACE7 CreateSurface(){
-	DDSURFACEDESC2 ddsd; 
+	DDSURFACEDESC2 ddsd;
 	LPDIRECTDRAWSURFACE7 lpdds;
 	ZeroMemory(&ddsd,sizeof(DDSURFACEDESC2));
     ddsd.dwSize  =sizeof(DDSURFACEDESC2);

@@ -77,7 +77,7 @@ void Pete_DeInterlace_Render(SPete_DeInterlace_Data* pInstanceData,SPete_DeInter
 	const U32* pSourceEnd=(pSource+nNumPixels);
 
 	while (pCurrentSource!=pSourceEnd) {
-		
+
 		const U32* pSourceLineStart=pCurrentSource;
 		const U32* pSourceLineEnd=pCurrentSource+nWidth;
 
@@ -91,7 +91,7 @@ void Pete_DeInterlace_Render(SPete_DeInterlace_Data* pInstanceData,SPete_DeInter
 		}
 
 		nPalFixCounter+=1;
-		
+
 		if (pPrevSource<pSource) {
 			pPrevSource=pSource;
 		}
